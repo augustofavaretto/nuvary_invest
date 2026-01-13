@@ -19,6 +19,19 @@ export const config = {
     apiKey: process.env.FINNHUB_API_KEY,
   },
 
+  newsApi: {
+    baseUrl: process.env.NEWS_API_BASE_URL || 'https://newsapi.org/v2',
+    apiKeys: [
+      process.env.NEWS_API_KEY_1,
+      process.env.NEWS_API_KEY_2,
+    ].filter(Boolean),
+  },
+
+  openai: {
+    apiKey: process.env.OPENAI_API_KEY,
+    model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+  },
+
   cache: {
     ttl: parseInt(process.env.CACHE_TTL) || 300,
   },
