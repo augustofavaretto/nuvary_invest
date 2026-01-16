@@ -1,0 +1,210 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+/* ============================================
+   NUVARY INVEST - BRAND COLORS
+   Baseado no manual_marca_nuvaryinvest.md
+   ============================================ */
+
+:root {
+  --radius: 0.5rem;
+
+  /* === LIGHT MODE (Padrão) === */
+  /* Fundos */
+  --background: #FFFFFF;
+  --card: #FFFFFF;
+  --popover: #FFFFFF;
+  --sidebar: #FFFFFF;
+
+  /* Textos - Azul Marinho #0B1F33 */
+  --foreground: #0B1F33;
+  --card-foreground: #0B1F33;
+  --popover-foreground: #0B1F33;
+  --sidebar-foreground: #0B1F33;
+
+  /* Cor Primária - Ciano Tecnológico #00B8D9 */
+  --primary: #00B8D9;
+  --primary-foreground: #FFFFFF;
+
+  /* Cor Secundária */
+  --secondary: #F3F4F6;
+  --secondary-foreground: #0B1F33;
+
+  /* Muted - Texto secundário #6B7280 */
+  --muted: #F3F4F6;
+  --muted-foreground: #6B7280;
+
+  /* Accent */
+  --accent: #E0F7FA;
+  --accent-foreground: #0B1F33;
+
+  /* Destructive - Erro/Risco #EF4444 */
+  --destructive: #EF4444;
+
+  /* Bordas e Inputs - Divisores #E5E7EB */
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: #00B8D9;
+
+  /* Sidebar */
+  --sidebar-primary: #00B8D9;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E0F7FA;
+  --sidebar-accent-foreground: #0B1F33;
+  --sidebar-border: #E5E7EB;
+  --sidebar-ring: #00B8D9;
+
+  /* Gráficos - Paleta da marca */
+  --chart-1: #00B8D9; /* Positivo / Principal */
+  --chart-2: #007EA7; /* Gradiente secundário */
+  --chart-3: #6B7280; /* Neutro */
+  --chart-4: #F59E0B; /* Atenção */
+  --chart-5: #EF4444; /* Erro/Risco */
+
+  /* Cores dos Perfis de Investidor */
+  --conservador: #3B82F6;
+  --moderado: #10B981;
+  --arrojado: #F59E0B;
+  --agressivo: #EF4444;
+}
+
+/* === DARK MODE (Dashboard) === */
+.dark {
+  /* Fundos - #081A24 */
+  --background: #081A24;
+  --card: #0D2533;
+  --popover: #0D2533;
+  --sidebar: #081A24;
+
+  /* Textos */
+  --foreground: #FFFFFF;
+  --card-foreground: #FFFFFF;
+  --popover-foreground: #FFFFFF;
+  --sidebar-foreground: #FFFFFF;
+
+  /* Cor Primária - Ciano (mantém no dark) */
+  --primary: #00B8D9;
+  --primary-foreground: #081A24;
+
+  /* Cor Secundária */
+  --secondary: #0D2533;
+  --secondary-foreground: #FFFFFF;
+
+  /* Muted - Texto secundário #9CA3AF */
+  --muted: #0D2533;
+  --muted-foreground: #9CA3AF;
+
+  /* Accent */
+  --accent: #0D2533;
+  --accent-foreground: #FFFFFF;
+
+  /* Destructive */
+  --destructive: #EF4444;
+
+  /* Bordas e Inputs */
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #00B8D9;
+
+  /* Sidebar */
+  --sidebar-primary: #00B8D9;
+  --sidebar-primary-foreground: #081A24;
+  --sidebar-accent: #0D2533;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #00B8D9;
+
+  /* Gráficos */
+  --chart-1: #00B8D9;
+  --chart-2: #00D4FF;
+  --chart-3: #9CA3AF;
+  --chart-4: #FBBF24;
+  --chart-5: #F87171;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Tipografia da marca - Inter */
+  h1, h2 {
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  h3, h4 {
+    font-weight: 600;
+  }
+  p, span {
+    font-weight: 400;
+  }
+}
+
+/* Gradiente da marca */
+.nuvary-gradient {
+  background: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+}
+
+/* Texto Azul Marinho (Nuvary) */
+.text-nuvary-dark {
+  color: #0B1F33;
+}
+
+/* Texto Ciano (Invest) */
+.text-nuvary-cyan {
+  color: #00B8D9;
+}
+
+/* Hover com gradiente */
+.hover-nuvary-gradient:hover {
+  background: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+}
