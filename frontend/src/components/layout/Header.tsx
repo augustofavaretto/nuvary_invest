@@ -33,18 +33,15 @@ export function Header() {
     return (
       <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center">
             <Image
-              src="/logo-icon.png"
+              src="/logo-nuvary.png"
               alt="Nuvary Invest"
-              width={40}
-              height={40}
-              className="h-10 w-auto"
+              width={220}
+              height={56}
+              className="h-14 w-auto"
+              priority
             />
-            <div className="flex flex-col leading-none">
-              <span className="text-lg font-bold text-[#0B1F33]">Nuvary</span>
-              <span className="text-sm font-medium text-[#00B8D9]">INVEST</span>
-            </div>
           </Link>
           <div className="w-24 h-8 bg-gray-200 animate-pulse rounded" />
         </div>
@@ -55,18 +52,15 @@ export function Header() {
   return (
     <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center">
           <Image
-            src="/logo-icon.png"
+            src="/logo-nuvary.png"
             alt="Nuvary Invest"
-            width={40}
-            height={40}
-            className="h-10 w-auto"
+            width={220}
+            height={56}
+            className="h-14 w-auto"
+            priority
           />
-          <div className="flex flex-col leading-none">
-            <span className="text-lg font-bold text-[#0B1F33]">Nuvary</span>
-            <span className="text-sm font-medium text-[#00B8D9]">INVEST</span>
-          </div>
         </Link>
 
         <nav className="flex items-center gap-4">
