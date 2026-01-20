@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from './PasswordInput';
 import { useAuth } from '@/contexts/AuthContext';
+import { login } from '@/services/authService';
+import { verificarSeTemPerfil } from '@/services/perfilService';
 import {
   Mail,
   AlertCircle,
@@ -21,7 +23,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 
-// Schema de validação
+// Schema de validacao
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
   senha: z.string().min(1, 'Senha é obrigatória'),
@@ -32,7 +34,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export function LoginForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
-  const { login, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -56,23 +58,38 @@ export function LoginForm() {
     }
   }, [searchParams]);
 
-  // Redireciona se já autenticado
+  // Redireciona se ja autenticado
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/questionario');
-    }
+    const checkAndRedirect = async () => {
+      if (isAuthenticated) {
+        const temPerfil = await verificarSeTemPerfil();
+        router.push(temPerfil ? '/chat' : '/questionario');
+      }
+    };
+    checkAndRedirect();
   }, [isAuthenticated, router]);
 
   const onSubmit = async (data: LoginFormData) => {
     setServerError(null);
 
-    const response = await login(data);
+    try {
+      await login(data.email, data.senha);
 
-    if (response.success) {
-      // Verifica se usuário tem perfil de investidor
-      router.push('/questionario');
-    } else {
-      setServerError(response.message || response.error || 'Email ou senha incorretos');
+      // Verifica se usuario tem perfil de investidor
+      const temPerfil = await verificarSeTemPerfil();
+
+      // Redireciona baseado no perfil
+      if (temPerfil) {
+        router.push('/chat');
+      } else {
+        router.push('/questionario');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setServerError('Email ou senha incorretos');
+      } else {
+        setServerError('Email ou senha incorretos');
+      }
     }
   };
 
@@ -154,7 +171,7 @@ export function LoginForm() {
                 </Label>
                 <Link
                   href="/recuperar-senha"
-                  className="text-xs text-[#00B8D9] hover:underline"
+                  className="text-xs text-[#0066CC] hover:underline"
                 >
                   Esqueci minha senha
                 </Link>
@@ -170,10 +187,10 @@ export function LoginForm() {
               )}
             </div>
 
-            {/* Botão Submit */}
+            {/* Botao Submit */}
             <Button
               type="submit"
-              className="w-full nuvary-gradient text-white"
+              className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -189,7 +206,7 @@ export function LoginForm() {
             {/* Link para Cadastro */}
             <p className="text-center text-sm text-[#6B7280]">
               Não tem conta?{' '}
-              <Link href="/cadastro" className="text-[#00B8D9] hover:underline font-medium">
+              <Link href="/cadastro" className="text-[#0066CC] hover:underline font-medium">
                 Criar conta
               </Link>
             </p>

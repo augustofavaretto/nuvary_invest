@@ -13,7 +13,7 @@ import {
 import { useState, useRef, useEffect } from 'react';
 
 export function Header() {
-  const { user, isAuthenticated, logout, isLoading } = useAuth();
+  const { profile, isAuthenticated, logout, loading } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +29,7 @@ export function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -66,7 +66,7 @@ export function Header() {
         <nav className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              {/* Links de navegação */}
+              {/* Links de navegacao */}
               <Link
                 href="/questionario"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
@@ -80,7 +80,7 @@ export function Header() {
                 Assistente IA
               </Link>
 
-              {/* Botão Chat */}
+              {/* Botao Chat */}
               <Link href="/chat" className="hidden sm:block">
                 <Button size="sm" variant="outline" className="border-[#00B8D9] text-[#00B8D9]">
                   <MessageSquare className="w-4 h-4 mr-2" />
@@ -88,17 +88,17 @@ export function Header() {
                 </Button>
               </Link>
 
-              {/* Menu do usuário */}
+              {/* Menu do usuario */}
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <div className="w-8 h-8 rounded-full nuvary-gradient flex items-center justify-center text-white font-medium text-sm">
-                    {user?.nome?.charAt(0).toUpperCase()}
+                    {profile?.nome?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <span className="text-sm font-medium text-[#0B1F33] hidden sm:block max-w-[100px] truncate">
-                    {user?.nome?.split(' ')[0]}
+                    {profile?.nome?.split(' ')[0] || 'Usuario'}
                   </span>
                   <ChevronDown className="w-4 h-4 text-[#6B7280]" />
                 </button>
@@ -106,8 +106,8 @@ export function Header() {
                 {showDropdown && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#E5E7EB] py-1 z-50">
                     <div className="px-4 py-2 border-b border-[#E5E7EB]">
-                      <p className="text-sm font-medium text-[#0B1F33] truncate">{user?.nome}</p>
-                      <p className="text-xs text-[#6B7280] truncate">{user?.email}</p>
+                      <p className="text-sm font-medium text-[#0B1F33] truncate">{profile?.nome}</p>
+                      <p className="text-xs text-[#6B7280] truncate">{profile?.email}</p>
                     </div>
                     <Link
                       href="/questionario"
@@ -133,7 +133,7 @@ export function Header() {
             </>
           ) : (
             <>
-              {/* Links para não autenticados */}
+              {/* Links para nao autenticados */}
               <Link
                 href="/login"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block"

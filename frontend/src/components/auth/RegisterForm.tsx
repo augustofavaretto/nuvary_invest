@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from './PasswordInput';
-import { useAuth } from '@/contexts/AuthContext';
+import { cadastrar } from '@/services/authService';
 import {
   User,
   Mail,
@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 
-// Schema de validação com Zod
+// Schema de validacao com Zod
 const registerSchema = z
   .object({
     nome: z
@@ -54,14 +54,12 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export function RegisterForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { register: registerUser } = useAuth();
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    setError,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -76,23 +74,28 @@ export function RegisterForm() {
   const onSubmit = async (data: RegisterFormData) => {
     setServerError(null);
 
-    const response = await registerUser(data);
+    try {
+      await cadastrar({
+        nome: data.nome,
+        email: data.email,
+        senha: data.senha,
+        aceiteTermos: data.aceiteTermos,
+      });
 
-    if (response.success) {
       setIsSuccess(true);
-      // Redireciona para login após 2 segundos
+      // Redireciona para questionario apos 2 segundos
       setTimeout(() => {
-        router.push('/login?registered=true');
+        router.push('/questionario');
       }, 2000);
-    } else {
-      if (response.errors) {
-        response.errors.forEach((err) => {
-          if (err.field === 'email' || err.field === 'nome' || err.field === 'senha' || err.field === 'confirmarSenha' || err.field === 'aceiteTermos') {
-            setError(err.field, { message: err.message });
-          }
-        });
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('already registered')) {
+          setServerError('Este email já está cadastrado');
+        } else {
+          setServerError(error.message || 'Erro ao criar conta');
+        }
       } else {
-        setServerError(response.message || 'Erro ao criar conta');
+        setServerError('Erro ao criar conta');
       }
     }
   };
@@ -106,14 +109,14 @@ export function RegisterForm() {
       >
         <Card className="border-[#E5E7EB] shadow-lg">
           <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
+            <div className="w-16 h-16 bg-[#10B981]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-8 h-8 text-[#10B981]" />
             </div>
             <h2 className="text-xl font-bold text-[#0B1F33] mb-2">
               Conta criada com sucesso!
             </h2>
             <p className="text-[#6B7280]">
-              Redirecionando para o login...
+              Redirecionando para o questionário...
             </p>
           </CardContent>
         </Card>
@@ -168,12 +171,12 @@ export function RegisterForm() {
                 <Input
                   id="nome"
                   placeholder="Seu nome"
-                  className={`pl-10 ${errors.nome ? 'border-red-500' : 'border-[#E5E7EB]'}`}
+                  className={`pl-10 ${errors.nome ? 'border-[#EF4444]' : 'border-[#E5E7EB]'}`}
                   {...register('nome')}
                 />
               </div>
               {errors.nome && (
-                <p className="text-red-500 text-xs">{errors.nome.message}</p>
+                <p className="text-[#EF4444] text-xs">{errors.nome.message}</p>
               )}
             </div>
 
@@ -188,12 +191,12 @@ export function RegisterForm() {
                   id="email"
                   type="email"
                   placeholder="seu@email.com"
-                  className={`pl-10 ${errors.email ? 'border-red-500' : 'border-[#E5E7EB]'}`}
+                  className={`pl-10 ${errors.email ? 'border-[#EF4444]' : 'border-[#E5E7EB]'}`}
                   {...register('email')}
                 />
               </div>
               {errors.email && (
-                <p className="text-red-500 text-xs">{errors.email.message}</p>
+                <p className="text-[#EF4444] text-xs">{errors.email.message}</p>
               )}
             </div>
 
@@ -209,7 +212,7 @@ export function RegisterForm() {
                 {...register('senha')}
               />
               {errors.senha && (
-                <p className="text-red-500 text-xs">{errors.senha.message}</p>
+                <p className="text-[#EF4444] text-xs">{errors.senha.message}</p>
               )}
             </div>
 
@@ -225,7 +228,7 @@ export function RegisterForm() {
                 {...register('confirmarSenha')}
               />
               {errors.confirmarSenha && (
-                <p className="text-red-500 text-xs">{errors.confirmarSenha.message}</p>
+                <p className="text-[#EF4444] text-xs">{errors.confirmarSenha.message}</p>
               )}
             </div>
 
@@ -234,29 +237,29 @@ export function RegisterForm() {
               <label className="flex items-start gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="mt-1 w-4 h-4 rounded border-[#E5E7EB] text-[#00B8D9] focus:ring-[#00B8D9]/20"
+                  className="mt-1 w-4 h-4 rounded border-[#E5E7EB] text-[#0066CC] focus:ring-[#0066CC]/20"
                   {...register('aceiteTermos')}
                 />
                 <span className="text-sm text-[#6B7280]">
-                  Li e concordo com os{' '}
-                  <Link href="/termos" className="text-[#00B8D9] hover:underline">
+                  Li e aceito os{' '}
+                  <Link href="/termos" className="text-[#0066CC] hover:underline">
                     Termos de Uso
                   </Link>{' '}
                   e{' '}
-                  <Link href="/privacidade" className="text-[#00B8D9] hover:underline">
+                  <Link href="/privacidade" className="text-[#0066CC] hover:underline">
                     Política de Privacidade
                   </Link>
                 </span>
               </label>
               {errors.aceiteTermos && (
-                <p className="text-red-500 text-xs">{errors.aceiteTermos.message}</p>
+                <p className="text-[#EF4444] text-xs">{errors.aceiteTermos.message}</p>
               )}
             </div>
 
-            {/* Botão Submit */}
+            {/* Botao Submit */}
             <Button
               type="submit"
-              className="w-full nuvary-gradient text-white"
+              className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -272,7 +275,7 @@ export function RegisterForm() {
             {/* Link para Login */}
             <p className="text-center text-sm text-[#6B7280]">
               Já tem conta?{' '}
-              <Link href="/login" className="text-[#00B8D9] hover:underline font-medium">
+              <Link href="/login" className="text-[#0066CC] hover:underline font-medium">
                 Entrar
               </Link>
             </p>
