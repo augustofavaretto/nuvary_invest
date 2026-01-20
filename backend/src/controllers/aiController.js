@@ -5,17 +5,21 @@ export const aiController = {
 
   async chat(req, res, next) {
     try {
-      const { message, history = [] } = req.body;
+      const { message, conversationHistory = [], history = [] } = req.body;
 
       if (!message) {
         return res.status(400).json({ error: 'Mensagem é obrigatória' });
       }
 
-      const response = await openaiService.assistantChat(message, history);
+      // Suporta ambos os formatos: conversationHistory (novo) e history (antigo)
+      const chatHistory = conversationHistory.length > 0 ? conversationHistory : history;
+
+      const response = await openaiService.assistantChat(message, chatHistory);
 
       res.json({
         success: true,
-        response: response.content,
+        content: response.content,
+        response: response.content, // Mantém compatibilidade
         usage: response.usage,
       });
     } catch (error) {

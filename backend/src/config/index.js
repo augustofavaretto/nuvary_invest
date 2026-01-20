@@ -35,4 +35,8 @@ export const config = {
   cache: {
     ttl: parseInt(process.env.CACHE_TTL) || 300,
   },
+
+  // JWT Configuration
+  jwtSecret: process.env.JWT_SECRET || 'nuvary-invest-jwt-secret-change-in-production',
+  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'nuvary-invest-refresh-secret-change-in-production',
 };
