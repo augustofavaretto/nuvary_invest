@@ -311,7 +311,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Versao 1.5.0</span>
+            <span class="version-badge">Versao 1.5.1</span>
             <h1>Frontend Next.js</h1>
             <p>Interface moderna com React 19, Tailwind CSS v4 e shadcn/ui</p>
         </div>
@@ -537,9 +537,14 @@ const inter = Inter({
                     <th>Uso</th>
                 </tr>
                 <tr>
+                    <td><code>logo-nuvary.png</code></td>
+                    <td>Logo horizontal completa</td>
+                    <td>Header principal (56px altura)</td>
+                </tr>
+                <tr>
                     <td><code>logo-icon.png</code></td>
                     <td>Icone (nuvem + barras)</td>
-                    <td>Header, favicon, espacos reduzidos</td>
+                    <td>Favicon, espacos reduzidos</td>
                 </tr>
                 <tr>
                     <td><code>logo-vertical.png</code></td>
@@ -555,7 +560,36 @@ const inter = Inter({
         </section>
 
         <section id="componentes">
-            <h2>Componentes do Questionario</h2>
+            <h2>Componentes</h2>
+
+            <h3>Layout</h3>
+
+            <div class="component-card">
+                <h4>Header</h4>
+                <span class="path">src/components/layout/Header.tsx</span>
+                <p>Cabecalho principal da aplicacao com navegacao e autenticacao.</p>
+                <ul>
+                    <li>Logo horizontal PNG (56px altura) com link para home</li>
+                    <li>Navegacao condicional baseada em autenticacao</li>
+                    <li>Links: Questionario, Assistente IA, Chat</li>
+                    <li>Menu dropdown do usuario com avatar e opcoes</li>
+                    <li>Botoes de login/cadastro para usuarios nao autenticados</li>
+                    <li>Design sticky com backdrop blur</li>
+                </ul>
+                <div class="code-block">
+<code>// Configuracao da logo no Header
+&lt;Image
+  src="/logo-nuvary.png"
+  alt="Nuvary Invest"
+  width={220}
+  height={56}
+  className="h-14 w-auto"
+  priority
+/&gt;</code>
+                </div>
+            </div>
+
+            <h3>Questionario</h3>
 
             <div class="component-card">
                 <h4>Questionnaire</h4>
@@ -610,8 +644,9 @@ const inter = Inter({
         <section id="estrutura">
             <h2>Estrutura de Arquivos</h2>
             <div class="file-structure">
-<span class="folder">frontend-next/</span><br>
+<span class="folder">frontend/</span><br>
 ├── <span class="folder">public/</span><br>
+│   ├── <span class="file">logo-nuvary.png</span> <span class="comment"># Logo horizontal para header</span><br>
 │   ├── <span class="file">logo-icon.png</span><br>
 │   ├── <span class="file">logo-vertical.png</span><br>
 │   └── <span class="file">logo-horizontal.png</span><br>
@@ -623,6 +658,8 @@ const inter = Inter({
 │   │   └── <span class="folder">questionario/</span><br>
 │   │       └── <span class="file">page.tsx</span> <span class="comment"># Pagina do questionario</span><br>
 │   ├── <span class="folder">components/</span><br>
+│   │   ├── <span class="folder">layout/</span><br>
+│   │   │   └── <span class="file">Header.tsx</span> <span class="comment"># Cabecalho com logo e navegacao</span><br>
 │   │   ├── <span class="folder">ui/</span> <span class="comment"># Componentes shadcn/ui</span><br>
 │   │   └── <span class="folder">questionnaire/</span><br>
 │   │       ├── <span class="file">Questionnaire.tsx</span><br>
@@ -765,7 +802,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api</code>
     </main>
 
     <footer>
-        <p>Nuvary Invest &copy; 2024 - Documentacao v1.5.0</p>
+        <p>Nuvary Invest &copy; 2024 - Documentacao v1.5.1</p>
     </footer>
 </body>
 </html>

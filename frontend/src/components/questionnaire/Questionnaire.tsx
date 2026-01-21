@@ -4,14 +4,15 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { QuestionCard } from './QuestionCard';
 import { ResultCard } from './ResultCard';
+import { salvarPerfilInvestidor } from '@/services/perfilService';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Question,
-  Questionnaire as QuestionnaireType,
   QuestionnaireResult,
   Answers,
 } from '@/types/questionnaire';
@@ -36,6 +37,8 @@ export function Questionnaire() {
   const [answers, setAnswers] = useState<Answers>({});
   const [result, setResult] = useState<QuestionnaireResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchQuestionnaire();
@@ -49,8 +52,8 @@ export function Questionnaire() {
         setQuestions(data.data.questions);
       }
     } catch (err) {
-      setError('Erro ao carregar questionario. Verifique se o servidor esta rodando.');
-      console.error('Erro ao carregar questionario:', err);
+      setError('Erro ao carregar questionário. Verifique se o servidor está rodando.');
+      console.error('Erro ao carregar questionário:', err);
     }
   };
 
@@ -83,7 +86,7 @@ export function Questionnaire() {
     setScreen('loading');
 
     try {
-      const userId = `user_${Date.now()}`;
+      const userId = user?.id || `user_${Date.now()}`;
       const response = await fetch(`${API_URL}/profile/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -94,6 +97,24 @@ export function Questionnaire() {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       if (data.success) {
+        // Salvar perfil no Supabase
+        try {
+          // Converte answers para objeto genérico para salvar
+          const respostasObj = Object.entries(answers).reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+          }, {} as Record<string, string>);
+
+          await salvarPerfilInvestidor({
+            perfilRisco: data.profile?.type || data.profile,
+            ...respostasObj,
+          });
+          console.log('Perfil salvo no Supabase com sucesso!');
+        } catch (saveError) {
+          console.error('Erro ao salvar perfil no Supabase:', saveError);
+          // Não bloqueia o fluxo, apenas loga o erro
+        }
+
         setResult(data);
         setScreen('result');
       } else {
@@ -112,6 +133,10 @@ export function Questionnaire() {
     setAnswers({});
     setResult(null);
     setScreen('intro');
+  };
+
+  const handleGoToChat = () => {
+    router.push('/chat');
   };
 
   const currentQuestion = questions[currentIndex];
@@ -176,12 +201,12 @@ export function Questionnaire() {
                   </div>
 
                   <h2 className="text-2xl font-bold mb-3 text-[#0B1F33]">
-                    Questionario de Perfil de Investidor
+                    Questionário de Perfil de Investidor
                   </h2>
                   <p className="text-[#6B7280] mb-8 leading-relaxed">
-                    Responda 10 perguntas rapidas e descubra qual e o seu perfil
+                    Responda 10 perguntas rápidas e descubra qual é o seu perfil
                     de investidor. O resultado vai te ajudar a tomar melhores
-                    decisoes de investimento.
+                    decisões de investimento.
                   </p>
 
                   <div className="grid grid-cols-3 gap-4 mb-8">
@@ -206,7 +231,7 @@ export function Questionnaire() {
                         <BarChart3 className="w-6 h-6 text-[#00B8D9]" />
                       </div>
                       <span className="text-sm text-[#6B7280]">
-                        Resultado instantaneo
+                        Resultado instantâneo
                       </span>
                     </div>
                   </div>
@@ -223,7 +248,7 @@ export function Questionnaire() {
                         Carregando...
                       </>
                     ) : (
-                      'Comecar Questionario'
+                      'Começar Questionário'
                     )}
                   </Button>
                 </CardContent>
@@ -256,7 +281,7 @@ export function Questionnaire() {
                       {currentQuestion.category === 'objetivos' && 'Objetivos'}
                       {currentQuestion.category === 'horizonte' && 'Horizonte'}
                       {currentQuestion.category === 'tolerancia_risco' &&
-                        'Tolerancia a Risco'}
+                        'Tolerância a Risco'}
                     </span>
                     <span>
                       {currentIndex + 1} de {questions.length}
@@ -290,7 +315,7 @@ export function Questionnaire() {
                   disabled={!currentAnswer}
                   className="flex-1 nuvary-gradient border-0 font-semibold"
                 >
-                  {isLastQuestion ? 'Ver Resultado' : 'Proxima'}
+                  {isLastQuestion ? 'Ver Resultado' : 'Próxima'}
                   {!isLastQuestion && <ChevronRight className="w-4 h-4 ml-2" />}
                 </Button>
               </div>
@@ -327,7 +352,7 @@ export function Questionnaire() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <ResultCard result={result} onRestart={handleRestart} />
+              <ResultCard result={result} onRestart={handleRestart} onGoToChat={handleGoToChat} />
             </motion.div>
           )}
         </AnimatePresence>

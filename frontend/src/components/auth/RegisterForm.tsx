@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -16,9 +15,10 @@ import { cadastrar } from '@/services/authService';
 import {
   User,
   Mail,
-  CheckCircle2,
   AlertCircle,
   Loader2,
+  MailCheck,
+  ExternalLink,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -51,10 +51,31 @@ const registerSchema = z
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
+// Função para obter o link do provedor de email
+function getEmailProviderUrl(email: string): string | null {
+  const domain = email.split('@')[1]?.toLowerCase();
+
+  const providers: Record<string, string> = {
+    'gmail.com': 'https://mail.google.com',
+    'googlemail.com': 'https://mail.google.com',
+    'outlook.com': 'https://outlook.live.com',
+    'hotmail.com': 'https://outlook.live.com',
+    'live.com': 'https://outlook.live.com',
+    'yahoo.com': 'https://mail.yahoo.com',
+    'yahoo.com.br': 'https://mail.yahoo.com',
+    'icloud.com': 'https://www.icloud.com/mail',
+    'me.com': 'https://www.icloud.com/mail',
+    'protonmail.com': 'https://mail.protonmail.com',
+    'proton.me': 'https://mail.protonmail.com',
+  };
+
+  return providers[domain] || null;
+}
+
 export function RegisterForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
-  const router = useRouter();
+  const [registeredEmail, setRegisteredEmail] = useState('');
 
   const {
     register,
@@ -82,11 +103,8 @@ export function RegisterForm() {
         aceiteTermos: data.aceiteTermos,
       });
 
+      setRegisteredEmail(data.email);
       setIsSuccess(true);
-      // Redireciona para questionario apos 2 segundos
-      setTimeout(() => {
-        router.push('/questionario');
-      }, 2000);
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes('already registered')) {
@@ -100,7 +118,10 @@ export function RegisterForm() {
     }
   };
 
+  // Tela de sucesso - Confirmar email
   if (isSuccess) {
+    const emailProviderUrl = getEmailProviderUrl(registeredEmail);
+
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -109,14 +130,63 @@ export function RegisterForm() {
       >
         <Card className="border-[#E5E7EB] shadow-lg">
           <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-[#10B981]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="w-8 h-8 text-[#10B981]" />
+            {/* Icone de email */}
+            <div className="w-20 h-20 bg-[#0066CC]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <MailCheck className="w-10 h-10 text-[#0066CC]" />
             </div>
-            <h2 className="text-xl font-bold text-[#0B1F33] mb-2">
-              Conta criada com sucesso!
+
+            {/* Titulo */}
+            <h2 className="text-2xl font-bold text-[#0B1F33] mb-3">
+              Verifique seu email
             </h2>
-            <p className="text-[#6B7280]">
-              Redirecionando para o questionário...
+
+            {/* Mensagem */}
+            <p className="text-[#6B7280] mb-2">
+              Enviamos um link de confirmação para:
+            </p>
+            <p className="text-[#0B1F33] font-medium mb-6">
+              {registeredEmail}
+            </p>
+
+            {/* Instrucoes */}
+            <div className="bg-[#F9FAFB] rounded-lg p-4 mb-6 text-left">
+              <p className="text-sm text-[#6B7280] mb-2">
+                <strong className="text-[#0B1F33]">Próximos passos:</strong>
+              </p>
+              <ol className="text-sm text-[#6B7280] space-y-1 list-decimal list-inside">
+                <li>Abra sua caixa de entrada</li>
+                <li>Procure o email da Nuvary Invest</li>
+                <li>Clique no link de confirmação</li>
+                <li>Volte aqui e faça login</li>
+              </ol>
+            </div>
+
+            {/* Botao abrir email */}
+            {emailProviderUrl && (
+              <a
+                href={emailProviderUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block w-full mb-4"
+              >
+                <Button className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Abrir meu email
+                  <ExternalLink className="w-4 h-4 ml-2" />
+                </Button>
+              </a>
+            )}
+
+            {/* Link para login */}
+            <Link href="/login">
+              <Button variant="outline" className="w-full border-[#E5E7EB] text-[#6B7280]">
+                Já confirmei, fazer login
+              </Button>
+            </Link>
+
+            {/* Aviso spam */}
+            <p className="text-xs text-[#9CA3AF] mt-4">
+              Não recebeu o email? Verifique sua pasta de spam ou lixo eletrônico.
             </p>
           </CardContent>
         </Card>

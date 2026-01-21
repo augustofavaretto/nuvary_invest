@@ -24,6 +24,7 @@ import {
 interface ResultCardProps {
   result: QuestionnaireResult;
   onRestart: () => void;
+  onGoToChat?: () => void;
 }
 
 // Cores dos perfis conforme manual da marca
@@ -80,7 +81,7 @@ const allocationColors = {
   internacional: 'bg-[#6B7280]',
 };
 
-export function ResultCard({ result, onRestart }: ResultCardProps) {
+export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
   const profile = result.profile;
   const config = profileConfig[profile.type];
   const ProfileIcon = config.icon;
@@ -249,14 +250,21 @@ export function ResultCard({ result, onRestart }: ResultCardProps) {
             Quer saber mais sobre seu perfil?
           </h3>
           <p className="text-[#6B7280] text-sm mb-4">
-            Converse com nosso assistente de IA para tirar duvidas e receber recomendacoes personalizadas.
+            Converse com nosso assistente de IA para tirar dúvidas e receber recomendações personalizadas.
           </p>
-          <Link href="/chat">
-            <Button className="nuvary-gradient text-white w-full" size="lg">
+          {onGoToChat ? (
+            <Button onClick={onGoToChat} className="nuvary-gradient text-white w-full" size="lg">
               <MessageSquare className="w-4 h-4 mr-2" />
               Conversar com Assistente
             </Button>
-          </Link>
+          ) : (
+            <Link href="/chat">
+              <Button className="nuvary-gradient text-white w-full" size="lg">
+                <MessageSquare className="w-4 h-4 mr-2" />
+                Conversar com Assistente
+              </Button>
+            </Link>
+          )}
         </CardContent>
       </Card>
 

@@ -11,6 +11,9 @@ import { Badge } from '@/components/ui/badge';
 import { ChatMessage } from './ChatMessage';
 import { QuickActions } from './QuickActions';
 import { ChatMessage as ChatMessageType, InvestorProfileContext } from '@/types/chat';
+import { buscarPerfilInvestidor } from '@/services/perfilService';
+import { salvarMensagem, buscarHistorico } from '@/services/chatService';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Send,
   Bot,
@@ -34,22 +37,80 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState<InvestorProfileContext | null>(initialProfile);
   const [showQuickActions, setShowQuickActions] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { user } = useAuth();
 
-  // Carrega o perfil do localStorage se existir
+  // Carrega o perfil do Supabase
   useEffect(() => {
-    if (!profile) {
-      const savedProfile = localStorage.getItem('investorProfile');
-      if (savedProfile) {
+    const loadProfile = async () => {
+      if (!profile && user) {
         try {
-          setProfile(JSON.parse(savedProfile));
+          const perfilData = await buscarPerfilInvestidor();
+          if (perfilData) {
+            // Converte o perfil do Supabase para o formato do chat
+            const profileContext: InvestorProfileContext = {
+              type: perfilData.perfil_risco || 'moderado',
+              name: perfilData.perfil_risco ?
+                perfilData.perfil_risco.charAt(0).toUpperCase() + perfilData.perfil_risco.slice(1) :
+                'Moderado',
+              score: perfilData.nivel_conhecimento || 0,
+              recommendedAllocation: perfilData.respostas_completas?.recommendedAllocation || {
+                rendaFixa: 40,
+                rendaVariavel: 30,
+                fundosImobiliarios: 20,
+                internacional: 10,
+              },
+            };
+            setProfile(profileContext);
+            // Também salva no localStorage para backup
+            localStorage.setItem('investorProfile', JSON.stringify(profileContext));
+          }
         } catch (e) {
-          console.error('Erro ao carregar perfil:', e);
+          console.error('Erro ao carregar perfil do Supabase:', e);
+          // Fallback para localStorage
+          const savedProfile = localStorage.getItem('investorProfile');
+          if (savedProfile) {
+            try {
+              setProfile(JSON.parse(savedProfile));
+            } catch (err) {
+              console.error('Erro ao carregar perfil do localStorage:', err);
+            }
+          }
         }
       }
-    }
-  }, [profile]);
+    };
+    loadProfile();
+  }, [profile, user]);
+
+  // Carrega o histórico do Supabase
+  useEffect(() => {
+    const loadHistory = async () => {
+      if (user && !isInitialized) {
+        try {
+          const historico = await buscarHistorico();
+          if (historico && historico.length > 0) {
+            const mensagensCarregadas: ChatMessageType[] = historico.map((msg) => ({
+              id: msg.id,
+              role: msg.role as 'user' | 'assistant',
+              content: msg.content,
+              timestamp: new Date(msg.created_at),
+            }));
+            setMessages(mensagensCarregadas);
+            setShowQuickActions(false);
+          }
+          setIsInitialized(true);
+        } catch (e) {
+          console.error('Erro ao carregar histórico:', e);
+          setIsInitialized(true);
+        }
+      } else if (!user) {
+        setIsInitialized(true);
+      }
+    };
+    loadHistory();
+  }, [user, isInitialized]);
 
   // Scroll para o final quando novas mensagens são adicionadas
   useEffect(() => {
@@ -60,7 +121,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
 
   // Mensagem inicial do assistente
   useEffect(() => {
-    if (messages.length === 0) {
+    if (isInitialized && messages.length === 0) {
       const welcomeMessage: ChatMessageType = {
         id: 'welcome',
         role: 'assistant',
@@ -71,7 +132,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       };
       setMessages([welcomeMessage]);
     }
-  }, [profile, messages.length]);
+  }, [profile, messages.length, isInitialized]);
 
   const generateId = () => Math.random().toString(36).substring(2, 9);
 
@@ -89,6 +150,15 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMessage]);
+
+    // Salva mensagem do usuário no Supabase
+    if (user) {
+      try {
+        await salvarMensagem('user', content.trim());
+      } catch (e) {
+        console.error('Erro ao salvar mensagem do usuário:', e);
+      }
+    }
 
     // Adiciona mensagem de loading do assistente
     const loadingId = generateId();
@@ -133,6 +203,16 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       }
 
       const data = await response.json();
+      const assistantContent = data.content || 'Desculpe, não consegui processar sua mensagem.';
+
+      // Salva resposta do assistente no Supabase
+      if (user) {
+        try {
+          await salvarMensagem('assistant', assistantContent);
+        } catch (e) {
+          console.error('Erro ao salvar resposta do assistente:', e);
+        }
+      }
 
       // Substitui a mensagem de loading pela resposta
       setMessages((prev) =>
@@ -140,7 +220,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
           m.id === loadingId
             ? {
                 ...m,
-                content: data.content || 'Desculpe, não consegui processar sua mensagem.',
+                content: assistantContent,
                 isLoading: false,
               }
             : m
@@ -164,7 +244,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       setIsLoading(false);
       inputRef.current?.focus();
     }
-  }, [isLoading, messages, profile]);
+  }, [isLoading, messages, profile, user]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -249,7 +329,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
               className="mt-4"
             >
               <Badge
-                className={`${profileColors[profile.type]} text-white px-3 py-1`}
+                className={`${profileColors[profile.type as keyof typeof profileColors] || 'bg-gray-500'} text-white px-3 py-1`}
               >
                 <User className="w-3 h-3 mr-1.5" />
                 Perfil: {profile.name}
