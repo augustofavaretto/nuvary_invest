@@ -10,17 +10,24 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { ChatMessage } from './ChatMessage';
 import { QuickActions } from './QuickActions';
+import { ChatSidebar } from './ChatSidebar';
 import { ChatMessage as ChatMessageType, InvestorProfileContext } from '@/types/chat';
 import { buscarPerfilInvestidor } from '@/services/perfilService';
-import { salvarMensagem, buscarHistorico } from '@/services/chatService';
+import {
+  salvarMensagem,
+  buscarMensagensPorConversa,
+  gerarConversaId,
+  contarMensagens,
+} from '@/services/chatService';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Send,
   Bot,
-  RefreshCw,
   User,
   Sparkles,
-  ArrowLeft,
+  Menu,
+  ChevronUp,
+  RefreshCw,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -42,6 +49,14 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
 
+  // Estados para conversa atual
+  const [conversaAtual, setConversaAtual] = useState<string | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarKey, setSidebarKey] = useState(0); // Para forçar re-render
+
+  // Estados para paginação de mensagens antigas
+  const [carregandoMais, setCarregandoMais] = useState(false);
+
   // Carrega o perfil do Supabase
   useEffect(() => {
     const loadProfile = async () => {
@@ -49,7 +64,6 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
         try {
           const perfilData = await buscarPerfilInvestidor();
           if (perfilData) {
-            // Converte o perfil do Supabase para o formato do chat
             const profileContext: InvestorProfileContext = {
               type: perfilData.perfil_risco || 'moderado',
               name: perfilData.perfil_risco ?
@@ -64,12 +78,10 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
               },
             };
             setProfile(profileContext);
-            // Também salva no localStorage para backup
             localStorage.setItem('investorProfile', JSON.stringify(profileContext));
           }
         } catch (e) {
           console.error('Erro ao carregar perfil do Supabase:', e);
-          // Fallback para localStorage
           const savedProfile = localStorage.getItem('investorProfile');
           if (savedProfile) {
             try {
@@ -84,32 +96,15 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     loadProfile();
   }, [profile, user]);
 
-  // Carrega o histórico do Supabase
+  // Inicializa com mensagem de boas-vindas
   useEffect(() => {
-    const loadHistory = async () => {
-      if (user && !isInitialized) {
-        try {
-          const historico = await buscarHistorico();
-          if (historico && historico.length > 0) {
-            const mensagensCarregadas: ChatMessageType[] = historico.map((msg) => ({
-              id: msg.id,
-              role: msg.role as 'user' | 'assistant',
-              content: msg.content,
-              timestamp: new Date(msg.created_at),
-            }));
-            setMessages(mensagensCarregadas);
-            setShowQuickActions(false);
-          }
-          setIsInitialized(true);
-        } catch (e) {
-          console.error('Erro ao carregar histórico:', e);
-          setIsInitialized(true);
-        }
-      } else if (!user) {
-        setIsInitialized(true);
-      }
-    };
-    loadHistory();
+    if (!isInitialized && user) {
+      setIsInitialized(true);
+      iniciarNovaConversa();
+    } else if (!user) {
+      setIsInitialized(true);
+      iniciarNovaConversa();
+    }
   }, [user, isInitialized]);
 
   // Scroll para o final quando novas mensagens são adicionadas
@@ -119,20 +114,61 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     }
   }, [messages]);
 
-  // Mensagem inicial do assistente
-  useEffect(() => {
-    if (isInitialized && messages.length === 0) {
-      const welcomeMessage: ChatMessageType = {
-        id: 'welcome',
-        role: 'assistant',
-        content: profile
-          ? `Olá! Sou o assistente virtual da Nuvary Invest. Vi que seu perfil é **${profile.name}**. Como posso ajudá-lo hoje com seus investimentos?`
-          : `Olá! Sou o assistente virtual da Nuvary Invest. Estou aqui para ajudá-lo com dúvidas sobre investimentos, análises de mercado e educação financeira. Como posso ajudá-lo hoje?`,
-        timestamp: new Date(),
-      };
-      setMessages([welcomeMessage]);
+  // Inicia nova conversa
+  const iniciarNovaConversa = () => {
+    const novoId = gerarConversaId();
+    setConversaAtual(novoId);
+    setMessages([]);
+    setShowQuickActions(true);
+
+    // Adiciona mensagem de boas-vindas
+    const welcomeMessage: ChatMessageType = {
+      id: 'welcome',
+      role: 'assistant',
+      content: profile
+        ? `Ola! Sou o assistente virtual da Nuvary Invest. Vi que seu perfil e **${profile.name}**. Como posso ajuda-lo hoje com seus investimentos?`
+        : `Ola! Sou o assistente virtual da Nuvary Invest. Estou aqui para ajuda-lo com duvidas sobre investimentos, analises de mercado e educacao financeira. Como posso ajuda-lo hoje?`,
+      timestamp: new Date(),
+    };
+    setMessages([welcomeMessage]);
+  };
+
+  // Carrega conversa existente
+  const carregarConversa = async (conversaId: string) => {
+    if (conversaId === 'sem_conversa') {
+      // Conversas antigas sem ID - carregar todas mensagens sem conversa_id
+      setConversaAtual(null);
+      setMessages([]);
+      setShowQuickActions(false);
+      return;
     }
-  }, [profile, messages.length, isInitialized]);
+
+    setConversaAtual(conversaId);
+    setShowQuickActions(false);
+
+    try {
+      const mensagens = await buscarMensagensPorConversa(conversaId);
+      if (mensagens && mensagens.length > 0) {
+        const mensagensCarregadas: ChatMessageType[] = mensagens.map((msg) => ({
+          id: msg.id,
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+          timestamp: new Date(msg.created_at),
+        }));
+        setMessages(mensagensCarregadas);
+      } else {
+        setMessages([]);
+      }
+    } catch (e) {
+      console.error('Erro ao carregar conversa:', e);
+    }
+  };
+
+  // Handler para limpar histórico
+  const handleHistoricoLimpo = () => {
+    iniciarNovaConversa();
+    setSidebarKey(prev => prev + 1); // Força re-render da sidebar
+  };
 
   const generateId = () => Math.random().toString(36).substring(2, 9);
 
@@ -141,6 +177,13 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
 
     setShowQuickActions(false);
     setInputValue('');
+
+    // Se não tem conversa atual, cria uma nova
+    let currentConversaId = conversaAtual;
+    if (!currentConversaId) {
+      currentConversaId = gerarConversaId();
+      setConversaAtual(currentConversaId);
+    }
 
     // Adiciona mensagem do usuário
     const userMessage: ChatMessageType = {
@@ -154,9 +197,9 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     // Salva mensagem do usuário no Supabase
     if (user) {
       try {
-        await salvarMensagem('user', content.trim());
+        await salvarMensagem('user', content.trim(), currentConversaId);
       } catch (e) {
-        console.error('Erro ao salvar mensagem do usuário:', e);
+        console.error('Erro ao salvar mensagem do usuario:', e);
       }
     }
 
@@ -184,7 +227,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
 
       // Prepara o contexto do perfil
       const profileContext = profile
-        ? `\n\n[Contexto: O usuário tem perfil ${profile.name} (${profile.type}), com pontuação ${profile.score}. Alocação recomendada: Renda Fixa ${profile.recommendedAllocation.rendaFixa}%, Renda Variável ${profile.recommendedAllocation.rendaVariavel}%, FIIs ${profile.recommendedAllocation.fundosImobiliarios}%, Internacional ${profile.recommendedAllocation.internacional}%.]`
+        ? `\n\n[Contexto: O usuario tem perfil ${profile.name} (${profile.type}), com pontuacao ${profile.score}. Alocacao recomendada: Renda Fixa ${profile.recommendedAllocation.rendaFixa}%, Renda Variavel ${profile.recommendedAllocation.rendaVariavel}%, FIIs ${profile.recommendedAllocation.fundosImobiliarios}%, Internacional ${profile.recommendedAllocation.internacional}%.]`
         : '';
 
       const response = await fetch(`${API_URL}/ai/chat`, {
@@ -199,16 +242,18 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Erro na comunicação com o servidor');
+        throw new Error('Erro na comunicacao com o servidor');
       }
 
       const data = await response.json();
-      const assistantContent = data.content || 'Desculpe, não consegui processar sua mensagem.';
+      const assistantContent = data.content || 'Desculpe, nao consegui processar sua mensagem.';
 
       // Salva resposta do assistente no Supabase
       if (user) {
         try {
-          await salvarMensagem('assistant', assistantContent);
+          await salvarMensagem('assistant', assistantContent, currentConversaId);
+          // Atualiza sidebar para mostrar nova conversa
+          setSidebarKey(prev => prev + 1);
         } catch (e) {
           console.error('Erro ao salvar resposta do assistente:', e);
         }
@@ -228,7 +273,6 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       );
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
-      // Substitui a mensagem de loading por erro
       setMessages((prev) =>
         prev.map((m) =>
           m.id === loadingId
@@ -244,7 +288,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       setIsLoading(false);
       inputRef.current?.focus();
     }
-  }, [isLoading, messages, profile, user]);
+  }, [isLoading, messages, profile, user, conversaAtual]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,11 +299,6 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     sendMessage(prompt);
   };
 
-  const handleReset = () => {
-    setMessages([]);
-    setShowQuickActions(true);
-  };
-
   const profileColors = {
     conservador: 'bg-blue-500',
     moderado: 'bg-green-500',
@@ -268,90 +307,99 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] py-8 px-4">
-      <div className="max-w-3xl mx-auto">
+    <div className="flex h-screen bg-[#F3F4F6]">
+      {/* Sidebar */}
+      {user && (
+        <ChatSidebar
+          key={sidebarKey}
+          conversaAtual={conversaAtual}
+          onNovaConversa={iniciarNovaConversa}
+          onSelecionarConversa={carregarConversa}
+          onLimparHistorico={handleHistoricoLimpo}
+          isCollapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
+      )}
+
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-[#6B7280] hover:text-[#00B8D9] transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm">Voltar</span>
-            </Link>
+        <div className="bg-white border-b border-[#E5E7EB] px-4 py-3">
+          <div className="flex items-center justify-between max-w-4xl mx-auto">
+            <div className="flex items-center gap-3">
+              {/* Mobile menu toggle */}
+              {user && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  className="lg:hidden text-[#6B7280]"
+                >
+                  <Menu className="w-5 h-5" />
+                </Button>
+              )}
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleReset}
-              className="text-[#6B7280] hover:text-[#00B8D9]"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Nova conversa
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="w-14 h-14 rounded-full nuvary-gradient flex items-center justify-center">
-                <Image
-                  src="/logo-icon.png"
-                  alt="Nuvary"
-                  width={36}
-                  height={36}
-                  className="object-contain"
-                />
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-full nuvary-gradient flex items-center justify-center">
+                    <Image
+                      src="/logo-icon.png"
+                      alt="Nuvary"
+                      width={24}
+                      height={24}
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                    <Sparkles className="w-2 h-2 text-white" />
+                  </div>
+                </div>
+                <div>
+                  <h1 className="text-base font-semibold text-[#0B1F33]">
+                    Assistente Nuvary
+                  </h1>
+                  <p className="text-xs text-[#6B7280]">
+                    Seu consultor de investimentos com IA
+                  </p>
+                </div>
               </div>
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                <Sparkles className="w-3 h-3 text-white" />
-              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-[#0B1F33]">
-                Assistente Nuvary
-              </h1>
-              <p className="text-sm text-[#6B7280]">
-                Seu consultor de investimentos com IA
-              </p>
+
+            {/* Profile Badge */}
+            <div className="flex items-center gap-3">
+              {profile && (
+                <Badge
+                  className={`${profileColors[profile.type as keyof typeof profileColors] || 'bg-gray-500'} text-white px-2 py-0.5 text-xs`}
+                >
+                  <User className="w-3 h-3 mr-1" />
+                  {profile.name}
+                </Badge>
+              )}
+
+              {!user && (
+                <Link href="/login">
+                  <Button size="sm" variant="outline" className="text-xs">
+                    Entrar
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Profile Badge */}
-          {profile && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="mt-4"
-            >
-              <Badge
-                className={`${profileColors[profile.type as keyof typeof profileColors] || 'bg-gray-500'} text-white px-3 py-1`}
-              >
-                <User className="w-3 h-3 mr-1.5" />
-                Perfil: {profile.name}
-              </Badge>
-            </motion.div>
-          )}
-        </motion.div>
+        {/* Messages Area */}
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full" ref={scrollRef}>
+            <div className="max-w-4xl mx-auto px-4 py-6">
+              {/* Status indicator */}
+              <div className="flex items-center justify-center gap-2 text-xs text-[#6B7280] mb-6">
+                <Bot className="w-4 h-4 text-[#00B8D9]" />
+                <span>Chat ativo</span>
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              </div>
 
-        {/* Chat Card */}
-        <Card className="border-[#E5E7EB] shadow-lg">
-          <CardHeader className="pb-3 pt-4 px-4 border-b border-[#E5E7EB]">
-            <div className="flex items-center gap-2 text-sm text-[#6B7280]">
-              <Bot className="w-4 h-4 text-[#00B8D9]" />
-              <span>Chat ativo</span>
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            </div>
-          </CardHeader>
-
-          <CardContent className="p-0">
-            {/* Messages Area */}
-            <ScrollArea className="h-[400px] p-4" ref={scrollRef}>
-              <div className="space-y-4">
+              {/* Messages */}
+              <div className="space-y-6">
                 <AnimatePresence mode="popLayout">
                   {messages.map((message) => (
                     <ChatMessage key={message.id} message={message} />
@@ -365,75 +413,75 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
-                  className="mt-6"
+                  className="mt-8"
                 >
-                  <p className="text-sm text-[#6B7280] mb-3 text-center">
-                    Escolha uma opção ou digite sua pergunta:
+                  <p className="text-sm text-[#6B7280] mb-4 text-center">
+                    Escolha uma opcao ou digite sua pergunta:
                   </p>
                   <QuickActions onAction={handleQuickAction} disabled={isLoading} />
                 </motion.div>
               )}
-            </ScrollArea>
 
-            <Separator />
-
-            {/* Input Area */}
-            <form onSubmit={handleSubmit} className="p-4">
-              <div className="flex gap-2">
-                <Input
-                  ref={inputRef}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Digite sua mensagem..."
-                  disabled={isLoading}
-                  className="
-                    flex-1 border-[#E5E7EB]
-                    focus:border-[#00B8D9] focus:ring-[#00B8D9]/20
-                    placeholder:text-[#6B7280]
-                  "
-                />
-                <Button
-                  type="submit"
-                  disabled={!inputValue.trim() || isLoading}
-                  className="nuvary-gradient text-white hover:opacity-90 px-4"
+              {/* Questionnaire CTA */}
+              {!profile && messages.length <= 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  className="mt-8"
                 >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-              <p className="text-xs text-[#6B7280] mt-2 text-center">
-                Powered by OpenAI • As respostas são geradas por IA e não constituem recomendação de investimento
-              </p>
-            </form>
-          </CardContent>
-        </Card>
+                  <Card className="border-[#00B8D9]/30 bg-[#00B8D9]/5">
+                    <CardContent className="p-4 flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-[#0B1F33]">
+                          Quer respostas personalizadas?
+                        </p>
+                        <p className="text-sm text-[#6B7280]">
+                          Descubra seu perfil de investidor
+                        </p>
+                      </div>
+                      <Link href="/questionario">
+                        <Button className="nuvary-gradient text-white">
+                          Fazer questionario
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+            </div>
+          </ScrollArea>
+        </div>
 
-        {/* Questionnaire CTA */}
-        {!profile && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mt-6"
-          >
-            <Card className="border-[#00B8D9]/30 bg-[#00B8D9]/5">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="font-medium text-[#0B1F33]">
-                    Quer respostas personalizadas?
-                  </p>
-                  <p className="text-sm text-[#6B7280]">
-                    Descubra seu perfil de investidor
-                  </p>
-                </div>
-                <Link href="/questionario">
-                  <Button className="nuvary-gradient text-white">
-                    Fazer questionário
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
+        {/* Input Area */}
+        <div className="bg-white border-t border-[#E5E7EB] p-4">
+          <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
+            <div className="flex gap-3">
+              <Input
+                ref={inputRef}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Digite sua mensagem..."
+                disabled={isLoading}
+                className="
+                  flex-1 border-[#E5E7EB] bg-[#F9FAFB]
+                  focus:border-[#00B8D9] focus:ring-[#00B8D9]/20
+                  placeholder:text-[#6B7280] h-12
+                "
+              />
+              <Button
+                type="submit"
+                disabled={!inputValue.trim() || isLoading}
+                className="nuvary-gradient text-white hover:opacity-90 px-6 h-12"
+              >
+                <Send className="w-5 h-5" />
+              </Button>
+            </div>
+            <p className="text-xs text-[#6B7280] mt-2 text-center">
+              Powered by OpenAI • As respostas sao geradas por IA e nao constituem recomendacao de investimento
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );
