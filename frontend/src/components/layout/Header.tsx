@@ -110,12 +110,19 @@ export function Header() {
                       <p className="text-xs text-[#6B7280] truncate">{profile?.email}</p>
                     </div>
                     <Link
-                      href="/questionario"
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-[#6B7280] hover:bg-gray-50 sm:hidden"
+                      href="/perfil"
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-[#6B7280] hover:bg-gray-50"
                       onClick={() => setShowDropdown(false)}
                     >
                       <User className="w-4 h-4" />
                       Meu Perfil
+                    </Link>
+                    <Link
+                      href="/questionario"
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-[#6B7280] hover:bg-gray-50 sm:hidden"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      Questionario
                     </Link>
                     <button
                       onClick={() => {

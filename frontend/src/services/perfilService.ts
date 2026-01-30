@@ -57,3 +57,17 @@ export async function verificarSeTemPerfil(): Promise<boolean> {
   const perfil = await buscarPerfilInvestidor();
   return !!perfil;
 }
+
+export async function deletarPerfilInvestidor() {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Usuario nao autenticado');
+
+  const { error } = await supabase
+    .from('perfil_investidor')
+    .delete()
+    .eq('user_id', user.id);
+
+  if (error) throw error;
+  return { success: true };
+}

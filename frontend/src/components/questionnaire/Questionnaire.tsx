@@ -37,6 +37,7 @@ export function Questionnaire() {
   const [answers, setAnswers] = useState<Answers>({});
   const [result, setResult] = useState<QuestionnaireResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(true);
   const router = useRouter();
   const { user } = useAuth();
 
@@ -45,15 +46,20 @@ export function Questionnaire() {
   }, []);
 
   const fetchQuestionnaire = async () => {
+    setIsLoadingQuestions(true);
     try {
       const response = await fetch(`${API_URL}/profile/questionnaire`);
       const data = await response.json();
-      if (data.success) {
+      if (data.success && data.data?.questions) {
         setQuestions(data.data.questions);
+      } else {
+        setError('Erro ao carregar questionario. Tente novamente.');
       }
     } catch (err) {
-      setError('Erro ao carregar questionário. Verifique se o servidor está rodando.');
-      console.error('Erro ao carregar questionário:', err);
+      setError('Erro ao carregar questionario. Verifique se o servidor esta rodando.');
+      console.error('Erro ao carregar questionario:', err);
+    } finally {
+      setIsLoadingQuestions(false);
     }
   };
 
@@ -69,9 +75,15 @@ export function Questionnaire() {
   };
 
   const handleNext = async () => {
+    // Validacao: nao permite avancar se nao tiver perguntas ou respostas
+    if (questions.length === 0) return;
+
+    const answeredCount = Object.keys(answers).length;
+
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
-    } else {
+    } else if (answeredCount === questions.length) {
+      // So submete se todas as perguntas foram respondidas
       await submitAnswers();
     }
   };
@@ -240,15 +252,17 @@ export function Questionnaire() {
                     onClick={handleStart}
                     size="lg"
                     className="w-full nuvary-gradient border-0 font-semibold"
-                    disabled={questions.length === 0}
+                    disabled={isLoadingQuestions || questions.length === 0}
                   >
-                    {questions.length === 0 ? (
+                    {isLoadingQuestions ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Carregando...
+                        Carregando perguntas...
                       </>
+                    ) : questions.length === 0 ? (
+                      'Erro ao carregar'
                     ) : (
-                      'Começar Questionário'
+                      'Comecar Questionario'
                     )}
                   </Button>
                 </CardContent>
