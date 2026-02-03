@@ -2,40 +2,36 @@ import supabase from '@/lib/supabase';
 
 interface CadastroData {
   nome: string;
+  cpf: string;
+  dataNascimento: string;
+  telefone: string;
   email: string;
   senha: string;
   aceiteTermos: boolean;
 }
 
-export async function cadastrar({ nome, email, senha, aceiteTermos }: CadastroData) {
-  // 1. Criar usuário no Supabase Auth
+export async function cadastrar({ nome, cpf, dataNascimento, telefone, email, senha, aceiteTermos }: CadastroData) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password: senha,
     options: {
       data: {
-        nome: nome
+        nome,
+        cpf,
+        data_nascimento: dataNascimento,
+        telefone,
+        aceite_termos: aceiteTermos,
+        data_aceite_termos: new Date().toISOString()
       }
     }
   });
 
   if (error) throw error;
-
-  // 2. Atualizar aceite dos termos
-  if (data.user) {
-    await supabase
-      .from('profiles')
-      .update({
-        aceite_termos: aceiteTermos,
-        data_aceite_termos: new Date().toISOString()
-      })
-      .eq('id', data.user.id);
-  }
-
   return data;
 }
 
 export async function login(email: string, senha: string) {
+  // TODO: Implementar login com Supabase
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password: senha
@@ -48,6 +44,22 @@ export async function login(email: string, senha: string) {
 export async function logout() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
+}
+
+export async function loginWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/questionario`,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      }
+    }
+  });
+
+  if (error) throw error;
+  return data;
 }
 
 export async function recuperarSenha(email: string) {
@@ -79,6 +91,51 @@ export async function getProfile(userId: string) {
     .select('*')
     .eq('id', userId)
     .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function atualizarNome(novoNome: string) {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Usuário não autenticado');
+
+  const { error: authError } = await supabase.auth.updateUser({
+    data: { nome: novoNome }
+  });
+
+  if (authError) throw authError;
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      nome: novoNome,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', user.id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function atualizarSenha(senhaAtual: string, novaSenha: string) {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user?.email) throw new Error('Usuário não autenticado');
+
+  const { error: loginError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: senhaAtual
+  });
+
+  if (loginError) throw new Error('Senha atual incorreta');
+
+  const { data, error } = await supabase.auth.updateUser({
+    password: novaSenha
+  });
 
   if (error) throw error;
   return data;

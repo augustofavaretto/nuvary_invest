@@ -48,7 +48,6 @@ export async function buscarPerfilInvestidor() {
     .eq('user_id', user.id)
     .single();
 
-  // PGRST116 = registro não encontrado (não é erro)
   if (error && error.code !== 'PGRST116') throw error;
   return data;
 }
