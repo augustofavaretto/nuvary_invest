@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 08 - Sistema de Autenticacao | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --secondary: #0B1F33;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(180deg, #0B1F33 0%, #1a365d 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        h3 {
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            margin: 20px 0 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7fa 100%);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .feature-card h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .security-card {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--warning);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .security-card h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .security-card p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .file-structure {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        .file-structure .folder {
+            color: #fbbf24;
+        }
+
+        .file-structure .file {
+            color: #67e8f9;
+        }
+
+        .file-structure .comment {
+            color: #6b7280;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .endpoint {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-left: 4px solid var(--success);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+
+        .method-post {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .method-get {
+            background: #10b981;
+            color: white;
+        }
+
+        .method-put {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .method-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .endpoint-path {
+            font-family: 'Consolas', monospace;
+            color: var(--dark);
+        }
+
+        .endpoint-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .db-table {
+            margin: 15px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .db-table-header {
+            background: var(--secondary);
+            color: white;
+            padding: 10px 15px;
+            font-weight: 600;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        .flow-diagram {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: white;
+            border: 2px solid var(--primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            font-size: 0.9rem;
+        }
+
+        .flow-arrow {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0 10px;
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .flow-step {
+                display: block;
+                margin: 10px auto;
+            }
+
+            .flow-arrow {
+                display: block;
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Versao 1.7.0</span>
+            <h1>Sistema de Autenticacao</h1>
+            <p>Cadastro, login, JWT e recuperacao de senha com seguranca</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#visao-geral">Visao Geral</a></li>
+            <li><a href="#banco-dados">Banco de Dados</a></li>
+            <li><a href="#endpoints">Endpoints</a></li>
+            <li><a href="#frontend">Frontend</a></li>
+            <li><a href="#seguranca">Seguranca</a></li>
+            <li><a href="#fluxos">Fluxos</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section id="visao-geral">
+            <h2>Visao Geral</h2>
+            <p>
+                O Sistema de Autenticacao da Nuvary Invest implementa um fluxo completo de registro,
+                login e recuperacao de senha utilizando JWT (JSON Web Tokens) para gerenciamento de sessoes.
+                O sistema foi projetado seguindo as melhores praticas de seguranca e conformidade com a LGPD.
+            </p>
+
+            <h3>Funcionalidades</h3>
+            <ul>
+                <li><strong>Cadastro</strong> - Registro com validacao de campos e aceite de termos</li>
+                <li><strong>Login</strong> - Autenticacao com JWT (access + refresh tokens)</li>
+                <li><strong>Logout</strong> - Revogacao de tokens</li>
+                <li><strong>Recuperacao de Senha</strong> - Fluxo completo com token temporario</li>
+                <li><strong>Perfil de Investidor</strong> - Vinculacao do questionario ao usuario</li>
+                <li><strong>Historico de Chat</strong> - Persistencia das conversas</li>
+            </ul>
+
+            <h3>Stack Tecnologica</h3>
+            <table>
+                <tr>
+                    <th>Tecnologia</th>
+                    <th>Uso</th>
+                </tr>
+                <tr>
+                    <td>SQLite (better-sqlite3)</td>
+                    <td>Banco de dados local</td>
+                </tr>
+                <tr>
+                    <td>bcryptjs</td>
+                    <td>Hash de senhas</td>
+                </tr>
+                <tr>
+                    <td>jsonwebtoken</td>
+                    <td>Geracao e validacao de JWT</td>
+                </tr>
+                <tr>
+                    <td>express-rate-limit</td>
+                    <td>Protecao contra brute force</td>
+                </tr>
+                <tr>
+                    <td>helmet</td>
+                    <td>Headers de seguranca HTTP</td>
+                </tr>
+                <tr>
+                    <td>React Hook Form + Zod</td>
+                    <td>Validacao de formularios</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="banco-dados">
+            <h2>Banco de Dados</h2>
+            <p>O sistema utiliza SQLite com as seguintes tabelas:</p>
+
+            <div class="db-table">
+                <div class="db-table-header">users</div>
+                <table>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Tipo</th>
+                        <th>Descricao</th>
+                    </tr>
+                    <tr>
+                        <td>id</td>
+                        <td>TEXT (UUID)</td>
+                        <td>Chave primaria</td>
+                    </tr>
+                    <tr>
+                        <td>nome</td>
+                        <td>TEXT</td>
+                        <td>Nome completo</td>
+                    </tr>
+                    <tr>
+                        <td>email</td>
+                        <td>TEXT (UNIQUE)</td>
+                        <td>Email do usuario</td>
+                    </tr>
+                    <tr>
+                        <td>senha</td>
+                        <td>TEXT</td>
+                        <td>Hash bcrypt</td>
+                    </tr>
+                    <tr>
+                        <td>aceite_termos</td>
+                        <td>INTEGER</td>
+                        <td>Aceite LGPD (0/1)</td>
+                    </tr>
+                    <tr>
+                        <td>data_aceite_termos</td>
+                        <td>TEXT</td>
+                        <td>Timestamp do aceite</td>
+                    </tr>
+                    <tr>
+                        <td>email_verificado</td>
+                        <td>INTEGER</td>
+                        <td>Email confirmado (0/1)</td>
+                    </tr>
+                    <tr>
+                        <td>created_at</td>
+                        <td>TEXT</td>
+                        <td>Data de criacao</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="db-table">
+                <div class="db-table-header">refresh_tokens</div>
+                <table>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Tipo</th>
+                        <th>Descricao</th>
+                    </tr>
+                    <tr>
+                        <td>id</td>
+                        <td>TEXT (UUID)</td>
+                        <td>Chave primaria</td>
+                    </tr>
+                    <tr>
+                        <td>user_id</td>
+                        <td>TEXT (FK)</td>
+                        <td>Referencia ao usuario</td>
+                    </tr>
+                    <tr>
+                        <td>token</td>
+                        <td>TEXT (UNIQUE)</td>
+                        <td>Token de refresh</td>
+                    </tr>
+                    <tr>
+                        <td>expires_at</td>
+                        <td>TEXT</td>
+                        <td>Expiracao (7 dias)</td>
+                    </tr>
+                    <tr>
+                        <td>revoked</td>
+                        <td>INTEGER</td>
+                        <td>Token revogado (0/1)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="db-table">
+                <div class="db-table-header">password_reset_tokens</div>
+                <table>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Tipo</th>
+                        <th>Descricao</th>
+                    </tr>
+                    <tr>
+                        <td>id</td>
+                        <td>TEXT (UUID)</td>
+                        <td>Chave primaria</td>
+                    </tr>
+                    <tr>
+                        <td>user_id</td>
+                        <td>TEXT (FK)</td>
+                        <td>Referencia ao usuario</td>
+                    </tr>
+                    <tr>
+                        <td>token</td>
+                        <td>TEXT</td>
+                        <td>Token de recuperacao</td>
+                    </tr>
+                    <tr>
+                        <td>expires_at</td>
+                        <td>TEXT</td>
+                        <td>Expiracao (1 hora)</td>
+                    </tr>
+                    <tr>
+                        <td>used</td>
+                        <td>INTEGER</td>
+                        <td>Token usado (0/1)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="db-table">
+                <div class="db-table-header">user_profiles</div>
+                <table>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Tipo</th>
+                        <th>Descricao</th>
+                    </tr>
+                    <tr>
+                        <td>id</td>
+                        <td>TEXT (UUID)</td>
+                        <td>Chave primaria</td>
+                    </tr>
+                    <tr>
+                        <td>user_id</td>
+                        <td>TEXT (FK, UNIQUE)</td>
+                        <td>Referencia ao usuario</td>
+                    </tr>
+                    <tr>
+                        <td>profile_type</td>
+                        <td>TEXT</td>
+                        <td>conservador/moderado/arrojado/agressivo</td>
+                    </tr>
+                    <tr>
+                        <td>score</td>
+                        <td>INTEGER</td>
+                        <td>Pontuacao 10-40</td>
+                    </tr>
+                    <tr>
+                        <td>renda_fixa, renda_variavel, ...</td>
+                        <td>INTEGER</td>
+                        <td>Alocacoes recomendadas (%)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>Estrutura de Arquivos</h3>
+            <div class="file-structure">
+<span class="folder">backend/src/</span><br>
+├── <span class="folder">database/</span><br>
+│   └── <span class="file">index.js</span> <span class="comment"># Configuracao SQLite + tabelas</span><br>
+├── <span class="folder">services/</span><br>
+│   └── <span class="file">auth.js</span> <span class="comment"># Logica de autenticacao</span><br>
+├── <span class="folder">controllers/</span><br>
+│   └── <span class="file">authController.js</span> <span class="comment"># Handlers das rotas</span><br>
+├── <span class="folder">routes/</span><br>
+│   └── <span class="file">auth.js</span> <span class="comment"># Definicao de rotas</span><br>
+├── <span class="folder">middleware/</span><br>
+│   └── <span class="file">auth.js</span> <span class="comment"># Middleware JWT</span><br>
+└── <span class="folder">data/</span><br>
+    └── <span class="file">nuvary.db</span> <span class="comment"># Arquivo do banco</span>
+            </div>
+        </section>
+
+        <section id="endpoints">
+            <h2>Endpoints da API</h2>
+
+            <h3>Rotas Publicas</h3>
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/auth/register</span>
+                <p class="endpoint-desc">Criar nova conta de usuario</p>
+            </div>
+            <div class="code-block">
+<code>// Request
+{
+  "nome": "Joao Silva",
+  "email": "joao@email.com",
+  "senha": "Senha123",
+  "confirmarSenha": "Senha123",
+  "aceiteTermos": true
+}
+
+// Response (201)
+{
+  "success": true,
+  "message": "Conta criada com sucesso",
+  "user": { "id": "uuid", "nome": "Joao Silva", "email": "joao@email.com" }
+}</code>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/auth/login</span>
+                <p class="endpoint-desc">Autenticar usuario</p>
+            </div>
+            <div class="code-block">
+<code>// Request
+{ "email": "joao@email.com", "senha": "Senha123" }
+
+// Response
+{
+  "success": true,
+  "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+  "refreshToken": "a1b2c3d4e5f6...",
+  "user": { "id": "uuid", "nome": "Joao Silva", "email": "joao@email.com" }
+}</code>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/auth/refresh-token</span>
+                <p class="endpoint-desc">Renovar access token</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/auth/forgot-password</span>
+                <p class="endpoint-desc">Solicitar recuperacao de senha</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/auth/reset-password</span>
+                <p class="endpoint-desc">Redefinir senha com token</p>
+            </div>
+
+            <h3>Rotas Protegidas (JWT)</h3>
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/auth/logout</span>
+                <p class="endpoint-desc">Encerrar sessao e revogar tokens</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-get">GET</span>
+                <span class="endpoint-path">/api/auth/profile</span>
+                <p class="endpoint-desc">Obter dados do usuario logado</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-put">PUT</span>
+                <span class="endpoint-path">/api/auth/profile</span>
+                <p class="endpoint-desc">Atualizar nome do usuario</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-delete">DELETE</span>
+                <span class="endpoint-path">/api/auth/account</span>
+                <p class="endpoint-desc">Excluir conta (direito ao esquecimento)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/auth/investor-profile</span>
+                <p class="endpoint-desc">Salvar perfil de investidor</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-get">GET</span>
+                <span class="endpoint-path">/api/auth/investor-profile</span>
+                <p class="endpoint-desc">Obter perfil de investidor</p>
+            </div>
+        </section>
+
+        <section id="frontend">
+            <h2>Frontend React</h2>
+
+            <h3>Estrutura de Arquivos</h3>
+            <div class="file-structure">
+<span class="folder">frontend/src/</span><br>
+├── <span class="folder">contexts/</span><br>
+│   └── <span class="file">AuthContext.tsx</span> <span class="comment"># Estado global de auth</span><br>
+├── <span class="folder">components/auth/</span><br>
+│   ├── <span class="file">LoginForm.tsx</span> <span class="comment"># Formulario de login</span><br>
+│   ├── <span class="file">RegisterForm.tsx</span> <span class="comment"># Formulario de cadastro</span><br>
+│   ├── <span class="file">ForgotPasswordForm.tsx</span> <span class="comment"># Recuperacao de senha</span><br>
+│   ├── <span class="file">PasswordInput.tsx</span> <span class="comment"># Input com toggle</span><br>
+│   └── <span class="file">index.ts</span><br>
+├── <span class="folder">components/layout/</span><br>
+│   └── <span class="file">Header.tsx</span> <span class="comment"># Header com auth</span><br>
+├── <span class="folder">types/</span><br>
+│   └── <span class="file">auth.ts</span> <span class="comment"># Tipos TypeScript</span><br>
+└── <span class="folder">app/</span><br>
+    ├── <span class="folder">login/</span><br>
+    ├── <span class="folder">cadastro/</span><br>
+    └── <span class="folder">recuperar-senha/</span>
+            </div>
+
+            <h3>AuthContext</h3>
+            <p>Contexto React que gerencia o estado global de autenticacao:</p>
+            <div class="code-block">
+<code>interface AuthContextType {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (credentials) => Promise&lt;AuthResponse&gt;;
+  register: (data) => Promise&lt;AuthResponse&gt;;
+  logout: () => Promise&lt;void&gt;;
+  refreshAccessToken: () => Promise&lt;boolean&gt;;
+  getInvestorProfile: () => Promise&lt;InvestorProfile&gt;;
+  saveInvestorProfile: (profile) => Promise&lt;void&gt;;
+}</code>
+            </div>
+
+            <h3>Validacao com Zod</h3>
+            <div class="code-block">
+<code>// Schema de cadastro
+const registerSchema = z.object({
+  nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
+  email: z.string().email('Email invalido'),
+  senha: z.string()
+    .min(8, 'Minimo 8 caracteres')
+    .regex(/[a-z]/, 'Deve conter minuscula')
+    .regex(/[A-Z]/, 'Deve conter maiuscula')
+    .regex(/[0-9]/, 'Deve conter numero'),
+  confirmarSenha: z.string(),
+  aceiteTermos: z.boolean().refine(val => val === true),
+}).refine(data => data.senha === data.confirmarSenha, {
+  message: 'Senhas nao conferem',
+  path: ['confirmarSenha'],
+});</code>
+            </div>
+
+            <h3>Paginas</h3>
+            <table>
+                <tr>
+                    <th>URL</th>
+                    <th>Componente</th>
+                    <th>Descricao</th>
+                </tr>
+                <tr>
+                    <td><code>/login</code></td>
+                    <td>LoginForm</td>
+                    <td>Tela de login</td>
+                </tr>
+                <tr>
+                    <td><code>/cadastro</code></td>
+                    <td>RegisterForm</td>
+                    <td>Tela de registro</td>
+                </tr>
+                <tr>
+                    <td><code>/recuperar-senha</code></td>
+                    <td>ForgotPasswordForm</td>
+                    <td>Recuperacao de senha</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="seguranca">
+            <h2>Seguranca</h2>
+
+            <div class="security-card">
+                <h4>Hash de Senhas</h4>
+                <p>Senhas sao hasheadas com bcrypt (10 salt rounds) antes de armazenar. Nunca sao salvas em texto plano.</p>
+            </div>
+
+            <div class="security-card">
+                <h4>JWT com Refresh Token</h4>
+                <p>Access token expira em 1 hora. Refresh token expira em 7 dias e pode ser revogado no logout.</p>
+            </div>
+
+            <div class="security-card">
+                <h4>Rate Limiting</h4>
+                <p>Maximo 5 tentativas por minuto nas rotas de auth para prevenir brute force.</p>
+            </div>
+
+            <div class="security-card">
+                <h4>Headers de Seguranca</h4>
+                <p>Helmet configura headers HTTP como X-Content-Type-Options, X-Frame-Options, etc.</p>
+            </div>
+
+            <h3>Configuracao JWT</h3>
+            <table>
+                <tr>
+                    <th>Parametro</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Algoritmo</td>
+                    <td>HS256</td>
+                </tr>
+                <tr>
+                    <td>Access Token Expiracao</td>
+                    <td>1 hora</td>
+                </tr>
+                <tr>
+                    <td>Refresh Token Expiracao</td>
+                    <td>7 dias</td>
+                </tr>
+                <tr>
+                    <td>Payload</td>
+                    <td>userId, email, nome</td>
+                </tr>
+            </table>
+
+            <h3>Validacao de Senha</h3>
+            <ul>
+                <li>Minimo 8 caracteres</li>
+                <li>Pelo menos 1 letra maiuscula</li>
+                <li>Pelo menos 1 letra minuscula</li>
+                <li>Pelo menos 1 numero</li>
+            </ul>
+
+            <h3>Conformidade LGPD</h3>
+            <ul>
+                <li>Consentimento explicito obrigatorio (checkbox de termos)</li>
+                <li>Data/hora do aceite armazenada</li>
+                <li>Direito ao esquecimento (DELETE /api/auth/account)</li>
+                <li>Dados sensiveis nunca expostos em logs ou respostas</li>
+            </ul>
+        </section>
+
+        <section id="fluxos">
+            <h2>Fluxos de Autenticacao</h2>
+
+            <h3>Fluxo de Cadastro</h3>
+            <div class="flow-diagram">
+                <span class="flow-step">Formulario</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Validacao Zod</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">POST /register</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Hash bcrypt</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Salvar DB</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Redireciona Login</span>
+            </div>
+
+            <h3>Fluxo de Login</h3>
+            <div class="flow-diagram">
+                <span class="flow-step">Credenciais</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">POST /login</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Verifica bcrypt</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Gera JWT</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Salva localStorage</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Redireciona App</span>
+            </div>
+
+            <h3>Fluxo de Refresh Token</h3>
+            <div class="flow-diagram">
+                <span class="flow-step">Token Expirado</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">POST /refresh</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Valida Refresh</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Novo Access Token</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Continua Request</span>
+            </div>
+
+            <h3>Fluxo de Recuperacao de Senha</h3>
+            <div class="flow-diagram">
+                <span class="flow-step">Email</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Gera Token</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Envia Email*</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Token + Nova Senha</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Atualiza DB</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--gray);">* Envio de email nao implementado - token exibido no console para testes.</p>
+        </section>
+
+        <a href="index.html" class="back-link">← Voltar para o indice</a>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest &copy; 2024 - Documentacao v1.7.0</p>
+    </footer>
+</body>
+</html>

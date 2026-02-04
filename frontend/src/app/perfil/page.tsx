@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 
 interface PerfilInvestidorData {
-  perfil_risco: string;
+  perfil_risco?: string;
   objetivo_principal?: string;
   horizonte_investimento?: string;
   nivel_conhecimento?: number;
@@ -454,7 +454,7 @@ export default function PerfilPage() {
                   </div>
                 </div>
                 <p className="text-[#6B7280]">
-                  {perfilDescricoes[perfilInvestidor.perfil_risco?.toLowerCase()] || ''}
+                  {perfilInvestidor.perfil_risco ? perfilDescricoes[perfilInvestidor.perfil_risco.toLowerCase()] || '' : ''}
                 </p>
               </div>
 

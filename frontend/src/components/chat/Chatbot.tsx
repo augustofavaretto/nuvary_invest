@@ -34,6 +34,38 @@ import Image from 'next/image';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
+type ProfileType = 'conservador' | 'moderado' | 'arrojado' | 'agressivo';
+
+// Valida e converte string para ProfileType
+function toProfileType(value: string | undefined): ProfileType {
+  const validTypes: ProfileType[] = ['conservador', 'moderado', 'arrojado', 'agressivo'];
+  const lowercased = value?.toLowerCase() as ProfileType;
+  return validTypes.includes(lowercased) ? lowercased : 'moderado';
+}
+
+// Extrai recommendedAllocation de respostas_completas de forma type-safe
+interface RecommendedAllocation {
+  rendaFixa: number;
+  rendaVariavel: number;
+  fundosImobiliarios: number;
+  internacional: number;
+}
+
+const defaultAllocation: RecommendedAllocation = {
+  rendaFixa: 40,
+  rendaVariavel: 30,
+  fundosImobiliarios: 20,
+  internacional: 10,
+};
+
+function getRecommendedAllocation(respostas: unknown): RecommendedAllocation {
+  if (respostas && typeof respostas === 'object' && 'recommendedAllocation' in respostas) {
+    const allocation = (respostas as { recommendedAllocation?: RecommendedAllocation }).recommendedAllocation;
+    if (allocation) return allocation;
+  }
+  return defaultAllocation;
+}
+
 interface ChatbotProps {
   initialProfile?: InvestorProfileContext | null;
 }
@@ -64,18 +96,12 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
         try {
           const perfilData = await buscarPerfilInvestidor();
           if (perfilData) {
+            const profileType = toProfileType(perfilData.perfil_risco);
             const profileContext: InvestorProfileContext = {
-              type: perfilData.perfil_risco || 'moderado',
-              name: perfilData.perfil_risco ?
-                perfilData.perfil_risco.charAt(0).toUpperCase() + perfilData.perfil_risco.slice(1) :
-                'Moderado',
+              type: profileType,
+              name: profileType.charAt(0).toUpperCase() + profileType.slice(1),
               score: perfilData.nivel_conhecimento || 0,
-              recommendedAllocation: perfilData.respostas_completas?.recommendedAllocation || {
-                rendaFixa: 40,
-                rendaVariavel: 30,
-                fundosImobiliarios: 20,
-                internacional: 10,
-              },
+              recommendedAllocation: getRecommendedAllocation(perfilData.respostas_completas),
             };
             setProfile(profileContext);
             localStorage.setItem('investorProfile', JSON.stringify(profileContext));
