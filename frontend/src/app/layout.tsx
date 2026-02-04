@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ErrorSuppressor } from "@/components/ErrorSuppressor";
 import "./globals.css";
 
 // Fonte oficial da marca: Inter
@@ -32,9 +33,11 @@ export default function RootLayout({
         className={`${inter.variable} ${geistMono.variable} antialiased`}
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <ErrorSuppressor>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ErrorSuppressor>
       </body>
     </html>
   );

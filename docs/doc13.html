@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 13 - Proximos Passos | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #1e1b4b;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --fire: #EF4444;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 .icon {
+            font-size: 1.3rem;
+        }
+
+        h3 {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin: 20px 0 15px;
+            font-weight: 600;
+        }
+
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+        }
+
+        .task-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .task-text {
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 25px 0 15px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-icon {
+            font-size: 1.2rem;
+        }
+
+        .legend-text {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .section-completed {
+            border-left: 4px solid var(--success);
+        }
+
+        .section-fire {
+            border-left: 4px solid var(--fire);
+        }
+
+        .section-pending {
+            border-left: 4px solid var(--warning);
+        }
+
+        .section-future {
+            border-left: 4px solid var(--primary);
+        }
+
+        .section-tech {
+            border-left: 4px solid #64748b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Fevereiro 2026</span>
+            <h1>Proximos Passos</h1>
+            <p>Roadmap completo do projeto Nuvary Invest</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">← Indice</a></li>
+            <li><a href="#resumo">Resumo</a></li>
+            <li><a href="#concluido">Concluido</a></li>
+            <li><a href="#prioridade">Alta Prioridade</a></li>
+            <li><a href="#pendente">Pendente</a></li>
+            <li><a href="#futuro">Futuro</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o indice</a>
+
+        <section id="resumo">
+            <h2><span class="icon">📊</span> Resumo do Projeto</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-number">34</div>
+                    <div class="stat-label">Concluidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Alta Prioridade</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-number">13</div>
+                    <div class="stat-label">Pendentes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number">27</div>
+                    <div class="stat-label">Melhorias Futuras</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛠️</div>
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Debito Tecnico</div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="legend-icon">✅</span>
+                    <span class="legend-text">Concluido</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">🔥</span>
+                    <span class="legend-text">Alta Prioridade</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">⏳</span>
+                    <span class="legend-text">Pendente</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">⭐</span>
+                    <span class="legend-text">Melhorias Futuras</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">🛠️</span>
+                    <span class="legend-text">Debito Tecnico</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="concluido" class="section-completed">
+            <h2><span class="icon">✅</span> Concluido</h2>
+
+            <div class="category-header">🔐 Autenticacao e Usuarios</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cadastro com email/senha e validacao completa</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Login/Logout com JWT e refresh token</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Recuperacao e redefinicao de senha</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Autenticacao social com Google OAuth</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Campos CPF, data nascimento e telefone no cadastro</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Validacao de CPF com algoritmo oficial (modulo 11)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Mascaras de input para CPF, telefone e data</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Funcao refreshProfile no AuthContext</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Exclusao de conta do usuario</span></li>
+            </ul>
+
+            <div class="category-header">📊 Perfil de Investidor</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Questionario de 10 perguntas em 3 categorias</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Classificacao em 4 perfis (Conservador, Moderado, Arrojado, Agressivo)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Alocacao recomendada por perfil</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Persistencia no Supabase PostgreSQL</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Opcao de refazer questionario</span></li>
+            </ul>
+
+            <div class="category-header">🤖 Chat com IA</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integracao com OpenAI (gpt-4o-mini)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sistema de multiplas conversas (conversa_id)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Listagem e busca de conversas</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Historico persistente no banco de dados</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Acoes rapidas pre-definidas</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Contexto do perfil de investidor nas respostas</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Analise de acoes e noticias</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Explicacao de termos financeiros</span></li>
+            </ul>
+
+            <div class="category-header">⚡ Backend e APIs</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integracao Alpha Vantage (acoes, forex, cripto)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integracao Finnhub (dados real-time, indicadores)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integracao News API (noticias financeiras)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sistema de cache inteligente (node-cache)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Rotacao de API keys para maximizar limites</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Rate limiting nos endpoints de autenticacao</span></li>
+            </ul>
+
+            <div class="category-header">🎨 Interface e UX</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Landing page com hero, features e CTA</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Design system com cores e tipografia padronizadas</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Componentes shadcn/ui</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Animacoes com Framer Motion</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Layout responsivo basico</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pagina de documentacao tecnica</span></li>
+            </ul>
+        </section>
+
+        <section id="prioridade" class="section-fire">
+            <h2><span class="icon">🔥</span> Alta Prioridade</h2>
+
+            <div class="category-header">📈 Dashboard Principal</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Criar pagina /dashboard apos login</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Exibir resumo do perfil de investidor</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Mostrar estatisticas de uso do chat</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Integrar graficos de mercado (Recharts/Chart.js)</span></li>
+            </ul>
+
+            <div class="category-header">📊 Visualizacao de Dados de Mercado</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Graficos de acoes com candlestick</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Feed de noticias financeiras</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Indicadores tecnicos visuais</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Watchlist de ativos favoritos</span></li>
+            </ul>
+
+            <div class="category-header">🔒 Seguranca</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Migrar tokens de localStorage para httpOnly cookies</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Implementar protecao CSRF</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Validacao de entrada em todas as rotas da API</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Error boundaries nos componentes React</span></li>
+            </ul>
+        </section>
+
+        <section id="pendente" class="section-pending">
+            <h2><span class="icon">⏳</span> Pendente</h2>
+
+            <div class="category-header">⚙️ Configuracoes e Preferencias</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Pagina de configuracoes do usuario</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Preferencias de notificacao</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Selecao de tema (claro/escuro)</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Configuracoes de privacidade</span></li>
+            </ul>
+
+            <div class="category-header">💬 Melhorias no Chat</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Paginacao no historico de conversas</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Exportar conversas em PDF/TXT</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Renomear conversas</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Fixar conversas importantes</span></li>
+            </ul>
+
+            <div class="category-header">👤 Perfil do Usuario</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Edicao do perfil de investidor (sem refazer questionario)</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Upload de foto de perfil</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Historico de alteracoes do perfil</span></li>
+            </ul>
+
+            <div class="category-header">📧 Email e Comunicacao</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Configurar templates de email no Supabase</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Email de boas-vindas personalizado</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Notificacoes por email de atividades</span></li>
+            </ul>
+        </section>
+
+        <section id="futuro" class="section-future">
+            <h2><span class="icon">⭐</span> Melhorias Futuras</h2>
+
+            <div class="category-header">🚀 Funcionalidades Avancadas</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Portfolio de investimentos com tracking</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Alertas de preco em tempo real</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Backtesting de estrategias</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Analise de correlacao de ativos</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Metricas de risco (Sharpe, volatilidade)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Sugestoes de rebalanceamento</span></li>
+            </ul>
+
+            <div class="category-header">🔐 Autenticacao e Seguranca</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Autenticacao social com GitHub</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Two-factor authentication (2FA)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Biometria (mobile)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Logs de auditoria de acesso</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Sessoes ativas e gerenciamento</span></li>
+            </ul>
+
+            <div class="category-header">📚 Conteudo Educacional</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Modulo de cursos sobre investimentos</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Trilhas de aprendizado personalizadas</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Videos e tutoriais interativos</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Glossario financeiro completo</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Simulador de investimentos</span></li>
+            </ul>
+
+            <div class="category-header">🔗 Integracao e Expansao</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Conexao com corretoras (APIs)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Importacao de extratos</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Sincronizacao automatica de portfolio</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Webhooks para integracao externa</span></li>
+            </ul>
+
+            <div class="category-header">📱 Mobile e PWA</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Progressive Web App (PWA)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">App mobile nativo (React Native)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Push notifications</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Modo offline</span></li>
+            </ul>
+
+            <div class="category-header">👥 Social e Comunidade</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Perfis publicos de investidores</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Forum de discussao</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Compartilhamento de ideias de investimento</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Ranking e gamificacao</span></li>
+            </ul>
+
+            <div class="category-header">🏗️ Infraestrutura</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Testes unitarios (Jest)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Testes E2E (Playwright/Cypress)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Monitoramento (Sentry)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">CI/CD pipeline</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Documentacao da API (Swagger)</span></li>
+            </ul>
+        </section>
+
+        <section class="section-tech">
+            <h2><span class="icon">🛠️</span> Debito Tecnico</h2>
+
+            <div class="category-header">💻 Codigo</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Remover tipos `any` do TypeScript</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Centralizar constantes (cores, URLs)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Criar cliente HTTP centralizado com interceptors</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Melhorar tratamento de erros especificos</span></li>
+            </ul>
+
+            <div class="category-header">🗄️ Banco de Dados</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Remover better-sqlite3 (usar apenas Supabase)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Adicionar indices de performance</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Implementar soft delete</span></li>
+            </ul>
+
+            <div class="category-header">⚡ Performance</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Otimizar bundle size (code splitting)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Lazy loading de rotas</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Otimizacao de imagens Next.js</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Service workers para cache</span></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentacao Tecnica | Fevereiro 2026</p>
+        <p><a href="index.html">← Voltar para o indice</a></p>
+    </footer>
+</body>
+</html>

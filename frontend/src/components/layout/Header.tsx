@@ -9,6 +9,7 @@ import {
   LogOut,
   User,
   ChevronDown,
+  LayoutDashboard,
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
@@ -68,6 +69,13 @@ export function Header() {
             <>
               {/* Links de navegacao */}
               <Link
+                href="/dashboard"
+                className="text-sm text-[#00B8D9] font-medium hover:text-[#007EA7] transition-colors hidden sm:flex items-center gap-1"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                Dashboard
+              </Link>
+              <Link
                 href="/questionario"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
               >
@@ -109,6 +117,14 @@ export function Header() {
                       <p className="text-sm font-medium text-[#0B1F33] truncate">{profile?.nome}</p>
                       <p className="text-xs text-[#6B7280] truncate">{profile?.email}</p>
                     </div>
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-[#00B8D9] hover:bg-gray-50 sm:hidden"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      <LayoutDashboard className="w-4 h-4" />
+                      Dashboard
+                    </Link>
                     <Link
                       href="/perfil"
                       className="flex items-center gap-2 px-4 py-2 text-sm text-[#6B7280] hover:bg-gray-50"

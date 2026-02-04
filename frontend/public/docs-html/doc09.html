@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 09 - Integracao Supabase | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3ECF8E;
+            --primary-dark: #24B47E;
+            --secondary: #1C1C1C;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1C1C1C 0%, #3ECF8E 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        h3 {
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            margin: 20px 0 10px;
+        }
+
+        h4 {
+            color: var(--dark);
+            font-size: 1.05rem;
+            margin: 15px 0 8px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            margin: 15px 0;
+        }
+
+        .code-block code {
+            color: #e2e8f0;
+        }
+
+        .code-inline {
+            background: #e2e8f0;
+            color: var(--primary-dark);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        .tech-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tech-card h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .tech-card p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .warning-card {
+            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+            border-left: 4px solid var(--warning);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .security-card {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left: 4px solid var(--error);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .file-structure {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        .file-structure .folder {
+            color: #fbbf24;
+        }
+
+        .file-structure .file {
+            color: #67e8f9;
+        }
+
+        .file-structure .comment {
+            color: #6b7280;
+        }
+
+        .file-structure .new {
+            color: #3ECF8E;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .component-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .component-card h4 {
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .component-card .path {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+            background: var(--light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .flow-diagram {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: var(--white);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 5px;
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        .supabase-logo {
+            background: linear-gradient(135deg, #1C1C1C 0%, #3ECF8E 100%);
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .flow-diagram {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Versao 2.0.0</span>
+            <h1>Integracao Supabase</h1>
+            <p>Autenticacao, Banco de Dados e Persistencia de Dados</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#visao-geral">Visao Geral</a></li>
+            <li><a href="#configuracao">Configuracao</a></li>
+            <li><a href="#autenticacao">Autenticacao</a></li>
+            <li><a href="#banco-dados">Banco de Dados</a></li>
+            <li><a href="#servicos">Servicos</a></li>
+            <li><a href="#componentes">Componentes</a></li>
+            <li><a href="#fluxos">Fluxos</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section id="visao-geral">
+            <h2>Visao Geral</h2>
+            <p>
+                O Supabase foi integrado ao projeto Nuvary Invest para fornecer autenticacao robusta,
+                armazenamento de perfil de investidor e historico de conversas do chatbot.
+                Esta integracao substitui o sistema de autenticacao anterior baseado em JWT local.
+            </p>
+
+            <div class="supabase-logo">
+                Supabase - Backend as a Service
+            </div>
+
+            <h3>Funcionalidades Implementadas</h3>
+            <ul>
+                <li><strong>Autenticacao Completa</strong> - Cadastro, login, logout, recuperacao e redefinicao de senha</li>
+                <li><strong>Confirmacao de Email</strong> - Verificacao obrigatoria antes do primeiro acesso</li>
+                <li><strong>Perfil de Investidor</strong> - Persistencia do resultado do questionario</li>
+                <li><strong>Historico do Chat</strong> - Salvamento automatico das conversas com o chatbot</li>
+                <li><strong>Row Level Security (RLS)</strong> - Cada usuario acessa apenas seus proprios dados</li>
+                <li><strong>Sessao Persistente</strong> - Usuario permanece logado entre sessoes</li>
+            </ul>
+
+            <h3>Tecnologias Utilizadas</h3>
+            <div class="tech-card">
+                <h4>@supabase/supabase-js</h4>
+                <p>SDK oficial do Supabase para JavaScript/TypeScript</p>
+            </div>
+
+            <div class="tech-card">
+                <h4>Supabase Auth</h4>
+                <p>Sistema de autenticacao com suporte a email/senha, OAuth e magic links</p>
+            </div>
+
+            <div class="tech-card">
+                <h4>Supabase Database (PostgreSQL)</h4>
+                <p>Banco de dados relacional com RLS e triggers automaticos</p>
+            </div>
+        </section>
+
+        <section id="configuracao">
+            <h2>Configuracao</h2>
+
+            <h3>1. Instalacao do SDK</h3>
+            <div class="code-block">
+<code>npm install @supabase/supabase-js</code>
+            </div>
+
+            <h3>2. Variaveis de Ambiente</h3>
+            <div class="code-block">
+<code># frontend/.env.local
+
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-chave-anon-publica</code>
+            </div>
+
+            <div class="warning-card">
+                <h4>Importante</h4>
+                <p>A <code>ANON_KEY</code> e segura para uso no frontend pois o RLS protege os dados.
+                Nunca exponha a <code>SERVICE_ROLE_KEY</code> no cliente.</p>
+            </div>
+
+            <h3>3. Cliente Supabase</h3>
+            <div class="component-card">
+                <h4>Inicializacao do Cliente</h4>
+                <span class="path">src/lib/supabase.ts</span>
+                <div class="code-block">
+<code>import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+export default supabase</code>
+                </div>
+            </div>
+        </section>
+
+        <section id="autenticacao">
+            <h2>Sistema de Autenticacao</h2>
+
+            <h3>Metodos Disponiveis</h3>
+            <table>
+                <tr>
+                    <th>Metodo</th>
+                    <th>Descricao</th>
+                    <th>Retorno</th>
+                </tr>
+                <tr>
+                    <td><code>cadastrar()</code></td>
+                    <td>Cria novo usuario com email e senha</td>
+                    <td>User ou erro</td>
+                </tr>
+                <tr>
+                    <td><code>login()</code></td>
+                    <td>Autentica usuario existente</td>
+                    <td>Session ou erro</td>
+                </tr>
+                <tr>
+                    <td><code>logout()</code></td>
+                    <td>Encerra sessao do usuario</td>
+                    <td>void</td>
+                </tr>
+                <tr>
+                    <td><code>recuperarSenha()</code></td>
+                    <td>Envia email para redefinicao</td>
+                    <td>void ou erro</td>
+                </tr>
+                <tr>
+                    <td><code>redefinirSenha()</code></td>
+                    <td>Atualiza senha do usuario</td>
+                    <td>User ou erro</td>
+                </tr>
+            </table>
+
+            <h3>Servico de Autenticacao</h3>
+            <div class="component-card">
+                <span class="path">src/services/authService.ts</span>
+                <div class="code-block">
+<code>import supabase from '@/lib/supabase'
+import { validarEmail, validarSenha, validarNome } from '@/lib/validators'
+
+export interface CadastroData {
+  nome: string
+  email: string
+  senha: string
+}
+
+export interface LoginData {
+  email: string
+  senha: string
+}
+
+// Cadastrar novo usuario
+export async function cadastrar(data: CadastroData) {
+  // Validacoes
+  const erroNome = validarNome(data.nome)
+  if (erroNome) throw new Error(erroNome)
+
+  const erroEmail = validarEmail(data.email)
+  if (erroEmail) throw new Error(erroEmail)
+
+  const erroSenha = validarSenha(data.senha)
+  if (erroSenha) throw new Error(erroSenha)
+
+  const { data: authData, error } = await supabase.auth.signUp({
+    email: data.email,
+    password: data.senha,
+    options: {
+      data: { nome: data.nome }
+    }
+  })
+
+  if (error) throw new Error(error.message)
+  return authData
+}
+
+// Login
+export async function login(data: LoginData) {
+  const { data: authData, error } = await supabase.auth.signInWithPassword({
+    email: data.email,
+    password: data.senha
+  })
+
+  if (error) {
+    if (error.message.includes('Email not confirmed')) {
+      throw new Error('Por favor, confirme seu email antes de fazer login.')
+    }
+    throw new Error('Email ou senha incorretos.')
+  }
+
+  return authData
+}
+
+// Logout
+export async function logout() {
+  const { error } = await supabase.auth.signOut()
+  if (error) throw new Error(error.message)
+}
+
+// Recuperar senha
+export async function recuperarSenha(email: string) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/redefinir-senha`
+  })
+
+  if (error) throw new Error(error.message)
+}
+
+// Redefinir senha
+export async function redefinirSenha(novaSenha: string) {
+  const erroSenha = validarSenha(novaSenha)
+  if (erroSenha) throw new Error(erroSenha)
+
+  const { error } = await supabase.auth.updateUser({
+    password: novaSenha
+  })
+
+  if (error) throw new Error(error.message)
+}</code>
+                </div>
+            </div>
+
+            <h3>Validadores</h3>
+            <div class="component-card">
+                <span class="path">src/lib/validators.ts</span>
+                <div class="code-block">
+<code>// Validar email
+export function validarEmail(email: string): string | null {
+  if (!email) return 'Email e obrigatorio'
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!regex.test(email)) return 'Email invalido'
+  return null
+}
+
+// Validar senha (min 8 chars, 1 maiuscula, 1 minuscula, 1 numero)
+export function validarSenha(senha: string): string | null {
+  if (!senha) return 'Senha e obrigatoria'
+  if (senha.length < 8) return 'Senha deve ter no minimo 8 caracteres'
+  if (!/[A-Z]/.test(senha)) return 'Senha deve ter ao menos uma letra maiuscula'
+  if (!/[a-z]/.test(senha)) return 'Senha deve ter ao menos uma letra minuscula'
+  if (!/[0-9]/.test(senha)) return 'Senha deve ter ao menos um numero'
+  return null
+}
+
+// Validar nome (min 3 chars)
+export function validarNome(nome: string): string | null {
+  if (!nome) return 'Nome e obrigatorio'
+  if (nome.trim().length < 3) return 'Nome deve ter no minimo 3 caracteres'
+  return null
+}</code>
+                </div>
+            </div>
+        </section>
+
+        <section id="banco-dados">
+            <h2>Banco de Dados</h2>
+
+            <h3>Tabelas Criadas</h3>
+
+            <h4>1. profiles</h4>
+            <p>Armazena informacoes basicas do usuario (criada automaticamente pelo Supabase Auth).</p>
+            <div class="code-block">
+<code>CREATE TABLE profiles (
+  id UUID REFERENCES auth.users(id) PRIMARY KEY,
+  nome TEXT,
+  email TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Trigger para criar profile automaticamente
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, nome, email)
+  VALUES (
+    NEW.id,
+    NEW.raw_user_meta_data->>'nome',
+    NEW.email
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();</code>
+            </div>
+
+            <h4>2. perfil_investidor</h4>
+            <p>Armazena o resultado do questionario de perfil de investidor.</p>
+            <div class="code-block">
+<code>CREATE TABLE perfil_investidor (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  tipo TEXT NOT NULL, -- conservador, moderado, arrojado, agressivo
+  nome TEXT NOT NULL,
+  descricao TEXT,
+  caracteristicas JSONB,
+  alocacao_recomendada JSONB,
+  investimentos_sugeridos JSONB,
+  pontuacao JSONB,
+  respostas JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id)
+);</code>
+            </div>
+
+            <h4>3. chat_historico</h4>
+            <p>Armazena o historico de conversas do chatbot.</p>
+            <div class="code-block">
+<code>CREATE TABLE chat_historico (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  role TEXT NOT NULL, -- 'user' ou 'assistant'
+  content TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX idx_chat_historico_user_id ON chat_historico(user_id);
+CREATE INDEX idx_chat_historico_created_at ON chat_historico(created_at);</code>
+            </div>
+
+            <h3>Row Level Security (RLS)</h3>
+            <div class="security-card">
+                <h4>Politicas de Seguranca</h4>
+                <p>Cada usuario so pode acessar, inserir, atualizar e deletar seus proprios dados.</p>
+            </div>
+
+            <div class="code-block">
+<code>-- Habilitar RLS
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE perfil_investidor ENABLE ROW LEVEL SECURITY;
+ALTER TABLE chat_historico ENABLE ROW LEVEL SECURITY;
+
+-- Politicas para profiles
+CREATE POLICY "Usuarios podem ver proprio perfil"
+  ON profiles FOR SELECT
+  USING (auth.uid() = id);
+
+CREATE POLICY "Usuarios podem atualizar proprio perfil"
+  ON profiles FOR UPDATE
+  USING (auth.uid() = id);
+
+-- Politicas para perfil_investidor
+CREATE POLICY "Usuarios podem ver proprio perfil investidor"
+  ON perfil_investidor FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios podem inserir proprio perfil investidor"
+  ON perfil_investidor FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios podem atualizar proprio perfil investidor"
+  ON perfil_investidor FOR UPDATE
+  USING (auth.uid() = user_id);
+
+-- Politicas para chat_historico
+CREATE POLICY "Usuarios podem ver proprio historico"
+  ON chat_historico FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios podem inserir no proprio historico"
+  ON chat_historico FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios podem deletar proprio historico"
+  ON chat_historico FOR DELETE
+  USING (auth.uid() = user_id);</code>
+            </div>
+        </section>
+
+        <section id="servicos">
+            <h2>Servicos de Dados</h2>
+
+            <h3>Servico de Perfil de Investidor</h3>
+            <div class="component-card">
+                <span class="path">src/services/perfilService.ts</span>
+                <div class="code-block">
+<code>import supabase from '@/lib/supabase'
+
+export interface PerfilInvestidor {
+  tipo: string
+  nome: string
+  descricao?: string
+  caracteristicas?: string[]
+  alocacao_recomendada?: {
+    rendaFixa: number
+    rendaVariavel: number
+    fundosImobiliarios: number
+    internacional: number
+  }
+  investimentos_sugeridos?: string[]
+  pontuacao?: {
+    total: number
+    porcentagem: number
+  }
+  respostas?: Record&lt;string, string&gt;
+}
+
+// Salvar perfil de investidor
+export async function salvarPerfilInvestidor(perfil: PerfilInvestidor) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Usuario nao autenticado')
+
+  const { data, error } = await supabase
+    .from('perfil_investidor')
+    .upsert({
+      user_id: user.id,
+      tipo: perfil.tipo,
+      nome: perfil.nome,
+      descricao: perfil.descricao,
+      caracteristicas: perfil.caracteristicas,
+      alocacao_recomendada: perfil.alocacao_recomendada,
+      investimentos_sugeridos: perfil.investimentos_sugeridos,
+      pontuacao: perfil.pontuacao,
+      respostas: perfil.respostas,
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'user_id'
+    })
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+  return data
+}
+
+// Buscar perfil de investidor
+export async function buscarPerfilInvestidor() {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+
+  const { data, error } = await supabase
+    .from('perfil_investidor')
+    .select('*')
+    .eq('user_id', user.id)
+    .single()
+
+  if (error && error.code !== 'PGRST116') {
+    throw new Error(error.message)
+  }
+
+  return data
+}
+
+// Verificar se usuario tem perfil
+export async function verificarSeTemPerfil(): Promise&lt;boolean&gt; {
+  const perfil = await buscarPerfilInvestidor()
+  return perfil !== null
+}</code>
+                </div>
+            </div>
+
+            <h3>Servico de Chat</h3>
+            <div class="component-card">
+                <span class="path">src/services/chatService.ts</span>
+                <div class="code-block">
+<code>import supabase from '@/lib/supabase'
+
+export interface ChatMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+// Salvar mensagem no historico
+export async function salvarMensagem(message: ChatMessage) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+
+  const { data, error } = await supabase
+    .from('chat_historico')
+    .insert({
+      user_id: user.id,
+      role: message.role,
+      content: message.content
+    })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Erro ao salvar mensagem:', error)
+    return null
+  }
+
+  return data
+}
+
+// Buscar historico de mensagens
+export async function buscarHistorico(): Promise&lt;ChatMessage[]&gt; {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+
+  const { data, error } = await supabase
+    .from('chat_historico')
+    .select('role, content')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: true })
+
+  if (error) {
+    console.error('Erro ao buscar historico:', error)
+    return []
+  }
+
+  return data as ChatMessage[]
+}
+
+// Limpar historico
+export async function limparHistorico() {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+
+  const { error } = await supabase
+    .from('chat_historico')
+    .delete()
+    .eq('user_id', user.id)
+
+  if (error) {
+    console.error('Erro ao limpar historico:', error)
+  }
+}</code>
+                </div>
+            </div>
+        </section>
+
+        <section id="componentes">
+            <h2>Componentes Atualizados</h2>
+
+            <h3>AuthContext</h3>
+            <div class="component-card">
+                <span class="path">src/contexts/AuthContext.tsx</span>
+                <p>Contexto React que gerencia o estado de autenticacao global.</p>
+                <ul>
+                    <li>Escuta mudancas de sessao com <code>onAuthStateChange</code></li>
+                    <li>Fornece <code>user</code>, <code>profile</code>, <code>loading</code></li>
+                    <li>Carrega perfil do usuario automaticamente</li>
+                </ul>
+                <div class="code-block">
+<code>interface AuthContextType {
+  user: User | null
+  profile: { nome: string } | null
+  loading: boolean
+  signOut: () => Promise&lt;void&gt;
+}</code>
+                </div>
+            </div>
+
+            <h3>ProtectedRoute</h3>
+            <div class="component-card">
+                <span class="path">src/components/ProtectedRoute.tsx</span>
+                <p>Componente para proteger rotas que requerem autenticacao.</p>
+                <div class="code-block">
+<code>&lt;ProtectedRoute&gt;
+  &lt;MinhaRotaProtegida /&gt;
+&lt;/ProtectedRoute&gt;</code>
+                </div>
+            </div>
+
+            <h3>Formularios de Autenticacao</h3>
+            <table>
+                <tr>
+                    <th>Componente</th>
+                    <th>Arquivo</th>
+                    <th>Funcionalidade</th>
+                </tr>
+                <tr>
+                    <td>LoginForm</td>
+                    <td><code>src/components/auth/LoginForm.tsx</code></td>
+                    <td>Login com verificacao de perfil para redirecionamento</td>
+                </tr>
+                <tr>
+                    <td>RegisterForm</td>
+                    <td><code>src/components/auth/RegisterForm.tsx</code></td>
+                    <td>Cadastro com tela de confirmacao de email</td>
+                </tr>
+                <tr>
+                    <td>ForgotPasswordForm</td>
+                    <td><code>src/components/auth/ForgotPasswordForm.tsx</code></td>
+                    <td>Solicitacao de recuperacao de senha</td>
+                </tr>
+                <tr>
+                    <td>ResetPasswordForm</td>
+                    <td><code>src/components/auth/ResetPasswordForm.tsx</code></td>
+                    <td>Redefinicao de senha (nova pagina)</td>
+                </tr>
+            </table>
+
+            <h3>Questionnaire</h3>
+            <div class="component-card">
+                <span class="path">src/components/questionnaire/Questionnaire.tsx</span>
+                <p>Atualizado para salvar o perfil no Supabase apos conclusao.</p>
+                <div class="code-block">
+<code>// Ao finalizar questionario
+const handleResult = async (result: QuestionnaireResult) =&gt; {
+  await salvarPerfilInvestidor({
+    tipo: result.profile.type,
+    nome: result.profile.name,
+    descricao: result.profile.description,
+    caracteristicas: result.profile.characteristics,
+    alocacao_recomendada: result.profile.recommendedAllocation,
+    investimentos_sugeridos: result.profile.suggestedInvestments,
+    pontuacao: {
+      total: result.score.total,
+      porcentagem: result.score.percentage
+    },
+    respostas: answersObject
+  })
+}</code>
+                </div>
+            </div>
+
+            <h3>Chatbot</h3>
+            <div class="component-card">
+                <span class="path">src/components/chat/Chatbot.tsx</span>
+                <p>Atualizado para carregar e salvar mensagens no Supabase.</p>
+                <ul>
+                    <li>Carrega perfil do investidor no mount</li>
+                    <li>Carrega historico de mensagens do Supabase</li>
+                    <li>Salva cada nova mensagem automaticamente</li>
+                    <li>Inclui contexto do perfil nas requisicoes a IA</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="fluxos">
+            <h2>Fluxos da Aplicacao</h2>
+
+            <h3>Fluxo de Cadastro</h3>
+            <div class="flow-diagram">
+                <span class="flow-step">Preenche formulario</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Supabase cria usuario</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Email de confirmacao</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Tela de sucesso</span>
+            </div>
+
+            <h3>Fluxo de Login</h3>
+            <div class="flow-diagram">
+                <span class="flow-step">Preenche credenciais</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Supabase autentica</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Verifica perfil</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">/chat ou /questionario</span>
+            </div>
+
+            <h3>Fluxo do Questionario</h3>
+            <div class="flow-diagram">
+                <span class="flow-step">Responde perguntas</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">API classifica perfil</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Salva no Supabase</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Exibe resultado</span>
+            </div>
+
+            <h3>Fluxo do Chat</h3>
+            <div class="flow-diagram">
+                <span class="flow-step">Carrega perfil</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Carrega historico</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Usuario envia msg</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Salva no Supabase</span>
+            </div>
+
+            <h3>Estrutura de Arquivos Atualizada</h3>
+            <div class="file-structure">
+<span class="folder">frontend/src/</span><br>
+├── <span class="folder">lib/</span><br>
+│   ├── <span class="file new">supabase.ts</span> <span class="comment"># Cliente Supabase (NOVO)</span><br>
+│   ├── <span class="file new">validators.ts</span> <span class="comment"># Validadores (NOVO)</span><br>
+│   └── <span class="file">utils.ts</span><br>
+├── <span class="folder">services/</span><br>
+│   ├── <span class="file new">authService.ts</span> <span class="comment"># Autenticacao (NOVO)</span><br>
+│   ├── <span class="file new">perfilService.ts</span> <span class="comment"># Perfil investidor (NOVO)</span><br>
+│   └── <span class="file new">chatService.ts</span> <span class="comment"># Historico chat (NOVO)</span><br>
+├── <span class="folder">contexts/</span><br>
+│   └── <span class="file">AuthContext.tsx</span> <span class="comment"># Atualizado para Supabase</span><br>
+├── <span class="folder">components/</span><br>
+│   ├── <span class="file new">ProtectedRoute.tsx</span> <span class="comment"># Rotas protegidas (NOVO)</span><br>
+│   ├── <span class="folder">auth/</span><br>
+│   │   ├── <span class="file">LoginForm.tsx</span> <span class="comment"># Atualizado</span><br>
+│   │   ├── <span class="file">RegisterForm.tsx</span> <span class="comment"># Atualizado</span><br>
+│   │   ├── <span class="file">ForgotPasswordForm.tsx</span> <span class="comment"># Atualizado</span><br>
+│   │   └── <span class="file new">ResetPasswordForm.tsx</span> <span class="comment"># (NOVO)</span><br>
+│   ├── <span class="folder">questionnaire/</span><br>
+│   │   └── <span class="file">Questionnaire.tsx</span> <span class="comment"># Atualizado</span><br>
+│   └── <span class="folder">chat/</span><br>
+│       └── <span class="file">Chatbot.tsx</span> <span class="comment"># Atualizado</span><br>
+└── <span class="folder">app/</span><br>
+    └── <span class="folder">redefinir-senha/</span><br>
+        └── <span class="file new">page.tsx</span> <span class="comment"># Pagina nova</span>
+            </div>
+        </section>
+
+        <section>
+            <h2>Configuracao no Supabase Dashboard</h2>
+
+            <h3>1. Authentication Settings</h3>
+            <ul>
+                <li><strong>Email confirmations:</strong> Habilitado (recomendado) ou desabilitado para testes</li>
+                <li><strong>Site URL:</strong> <code>http://localhost:3000</code> (dev) ou dominio de producao</li>
+                <li><strong>Redirect URLs:</strong> <code>http://localhost:3000/redefinir-senha</code></li>
+            </ul>
+
+            <h3>2. Email Templates</h3>
+            <p>Configure os templates em Authentication &gt; Email Templates:</p>
+            <ul>
+                <li><strong>Confirm signup:</strong> Email de confirmacao de cadastro</li>
+                <li><strong>Reset password:</strong> Email de recuperacao de senha</li>
+            </ul>
+
+            <h3>3. Database</h3>
+            <p>Execute os scripts SQL na ordem:</p>
+            <ol>
+                <li>Criar tabela <code>profiles</code> com trigger</li>
+                <li>Criar tabela <code>perfil_investidor</code></li>
+                <li>Criar tabela <code>chat_historico</code></li>
+                <li>Habilitar RLS em todas as tabelas</li>
+                <li>Criar politicas de seguranca</li>
+            </ol>
+        </section>
+
+        <a href="index.html" class="back-link">← Voltar para o indice</a>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest &copy; 2024 - Documentacao v2.0.0</p>
+    </footer>
+</body>
+</html>

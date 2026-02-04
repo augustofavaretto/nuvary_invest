@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 12 - Google OAuth e Campos de Cadastro | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #EA4335;
+            --primary-dark: #C5221F;
+            --secondary: #FBBC05;
+            --google-blue: #4285F4;
+            --google-green: #34A853;
+            --dark: #1e1b4b;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #EA4335 0%, #FBBC05 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        h3 {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin: 20px 0 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #475569;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+            color: var(--primary-dark);
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--google-blue);
+        }
+
+        .feature-card.google {
+            border-left-color: var(--primary);
+        }
+
+        .feature-card.cpf {
+            border-left-color: var(--secondary);
+        }
+
+        .feature-card.phone {
+            border-left-color: var(--google-green);
+        }
+
+        .feature-card.date {
+            border-left-color: var(--google-blue);
+        }
+
+        .feature-card h4 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .file-structure {
+            background: var(--code-bg);
+            color: #94a3b8;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+
+        .file-structure .folder {
+            color: #60a5fa;
+        }
+
+        .file-structure .file {
+            color: #34d399;
+        }
+
+        .file-structure .modified {
+            color: #fbbf24;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .google-btn-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: white;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #3c4043;
+            cursor: pointer;
+            margin: 20px auto;
+            max-width: 300px;
+            transition: box-shadow 0.2s;
+        }
+
+        .google-btn-preview:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .google-logo {
+            width: 20px;
+            height: 20px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+            border-left: 4px solid var(--google-blue);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--warning);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 4px solid var(--success);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+
+        .google-box {
+            background: linear-gradient(135deg, #fee2e2 0%, #fef3c7 100%);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--google-blue) 0%, #1a73e8 100%);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            margin: 0 0 5px 0;
+            color: var(--dark);
+        }
+
+        .step-content p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .input-preview {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            color: #333;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        .input-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Versao 2.3.0</span>
+            <h1>Google OAuth e Campos de Cadastro</h1>
+            <p>Autenticacao social com Google, campos CPF, data de nascimento e telefone com validacao</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#visao-geral">Visao Geral</a></li>
+            <li><a href="#google-oauth">Google OAuth</a></li>
+            <li><a href="#novos-campos">Novos Campos</a></li>
+            <li><a href="#validacoes">Validacoes</a></li>
+            <li><a href="#configuracao">Configuracao</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o indice</a>
+
+        <section id="visao-geral">
+            <h2>Visao Geral</h2>
+            <p>Esta atualizacao implementa autenticacao social com Google OAuth e adiciona novos campos obrigatorios no formulario de cadastro: CPF, data de nascimento e telefone, todos com mascaras e validacoes brasileiras.</p>
+
+            <div class="feature-grid">
+                <div class="feature-card google">
+                    <h4>Google OAuth</h4>
+                    <p>Login e cadastro com conta Google em um clique, integracao com Supabase Auth</p>
+                </div>
+                <div class="feature-card cpf">
+                    <h4>Validacao de CPF</h4>
+                    <p>Algoritmo oficial brasileiro (modulo 11) para validar digitos verificadores</p>
+                </div>
+                <div class="feature-card phone">
+                    <h4>Telefone Brasileiro</h4>
+                    <p>Mascara automatica para celular (11 digitos) e fixo (10 digitos)</p>
+                </div>
+                <div class="feature-card date">
+                    <h4>Data de Nascimento</h4>
+                    <p>Formato DD/MM/AAAA com validacao de idade minima 18 anos</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="google-oauth">
+            <h2>Google OAuth</h2>
+
+            <h3>Botao de Login com Google</h3>
+            <button class="google-btn-preview">
+                <svg class="google-logo" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continuar com Google
+            </button>
+
+            <h3>Fluxo de Autenticacao</h3>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Usuario clica no botao</h4>
+                        <p>Botao disponivel nas paginas de Login e Cadastro</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Redirecionamento para Google</h4>
+                        <p>Supabase redireciona para tela de autorizacao do Google</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Usuario autoriza acesso</h4>
+                        <p>Google retorna token OAuth para o Supabase</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Callback e Sessao</h4>
+                        <p>Usuario e redirecionado para /questionario no primeiro acesso</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Codigo - authService.ts</h3>
+            <pre><code>export async function loginWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/questionario`,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      }
+    }
+  });
+
+  if (error) throw error;
+  return data;
+}</code></pre>
+
+            <div class="google-box">
+                <strong>Configuracao no Supabase:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>Dashboard > Authentication > Providers > Google</li>
+                    <li>Habilitar toggle "Enable Sign in with Google"</li>
+                    <li>Inserir Client ID e Client Secret do Google Cloud Console</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="novos-campos">
+            <h2>Novos Campos de Cadastro</h2>
+
+            <h3>1. CPF</h3>
+            <div class="input-label">CPF *</div>
+            <div class="input-preview">123.456.789-09</div>
+            <ul>
+                <li><strong>Mascara:</strong> 000.000.000-00</li>
+                <li><strong>Validacao:</strong> Algoritmo modulo 11 oficial</li>
+                <li><strong>Armazenamento:</strong> Somente numeros no banco</li>
+            </ul>
+
+            <h3>2. Data de Nascimento</h3>
+            <div class="input-label">Data de Nascimento *</div>
+            <div class="input-preview">15/03/1990</div>
+            <ul>
+                <li><strong>Mascara:</strong> DD/MM/AAAA</li>
+                <li><strong>Validacao:</strong> Data valida + idade minima 18 anos</li>
+                <li><strong>Formato no banco:</strong> YYYY-MM-DD (ISO)</li>
+            </ul>
+
+            <h3>3. Telefone</h3>
+            <div class="input-label">Telefone *</div>
+            <div class="input-preview">(11) 99999-9999</div>
+            <ul>
+                <li><strong>Mascara celular:</strong> (00) 00000-0000</li>
+                <li><strong>Mascara fixo:</strong> (00) 0000-0000</li>
+                <li><strong>Validacao:</strong> 10 ou 11 digitos</li>
+            </ul>
+
+            <h3>Schema do Banco de Dados</h3>
+            <pre><code>ALTER TABLE profiles ADD COLUMN cpf VARCHAR(11);
+ALTER TABLE profiles ADD COLUMN data_nascimento DATE;
+ALTER TABLE profiles ADD COLUMN telefone VARCHAR(11);</code></pre>
+        </section>
+
+        <section id="validacoes">
+            <h2>Validacoes com Zod</h2>
+
+            <h3>Schema de Validacao</h3>
+            <pre><code>const cadastroSchema = z.object({
+  nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
+  email: z.string().email('Email invalido'),
+  cpf: z.string()
+    .min(14, 'CPF invalido')
+    .refine(validarCPF, 'CPF invalido'),
+  dataNascimento: z.string()
+    .min(10, 'Data invalida')
+    .refine(validarIdade, 'Voce deve ter pelo menos 18 anos'),
+  telefone: z.string()
+    .min(14, 'Telefone invalido'),
+  senha: z.string()
+    .min(8, 'Senha deve ter pelo menos 8 caracteres')
+    .regex(/[A-Z]/, 'Deve conter letra maiuscula')
+    .regex(/[a-z]/, 'Deve conter letra minuscula')
+    .regex(/[0-9]/, 'Deve conter numero'),
+  confirmarSenha: z.string(),
+  aceitaTermos: z.boolean()
+    .refine(val => val === true, 'Aceite os termos')
+}).refine(data => data.senha === data.confirmarSenha, {
+  message: 'Senhas nao conferem',
+  path: ['confirmarSenha']
+});</code></pre>
+
+            <h3>Funcao de Validacao de CPF</h3>
+            <pre><code>function validarCPF(cpf: string): boolean {
+  const numeros = cpf.replace(/\D/g, '');
+
+  if (numeros.length !== 11) return false;
+  if (/^(\d)\1+$/.test(numeros)) return false;
+
+  // Calculo do primeiro digito verificador
+  let soma = 0;
+  for (let i = 0; i < 9; i++) {
+    soma += parseInt(numeros[i]) * (10 - i);
+  }
+  let resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(numeros[9])) return false;
+
+  // Calculo do segundo digito verificador
+  soma = 0;
+  for (let i = 0; i < 10; i++) {
+    soma += parseInt(numeros[i]) * (11 - i);
+  }
+  resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(numeros[10])) return false;
+
+  return true;
+}</code></pre>
+
+            <div class="info-box">
+                <strong>Algoritmo Modulo 11:</strong> O CPF brasileiro usa dois digitos verificadores calculados atraves do algoritmo modulo 11. Cada digito e calculado multiplicando os digitos anteriores por pesos decrescentes e aplicando o resto da divisao por 11.
+            </div>
+        </section>
+
+        <section id="configuracao">
+            <h2>Configuracao do Google OAuth</h2>
+
+            <h3>1. Google Cloud Console</h3>
+            <ol>
+                <li>Acessar <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a></li>
+                <li>Criar novo projeto ou selecionar existente</li>
+                <li>APIs e Servicos > Credenciais</li>
+                <li>Criar credenciais > ID do cliente OAuth</li>
+                <li>Tipo: Aplicativo da Web</li>
+                <li>Adicionar URIs de redirecionamento autorizados:
+                    <pre><code>https://[PROJECT_ID].supabase.co/auth/v1/callback</code></pre>
+                </li>
+            </ol>
+
+            <h3>2. Supabase Dashboard</h3>
+            <ol>
+                <li>Authentication > Providers</li>
+                <li>Encontrar Google na lista</li>
+                <li>Habilitar o toggle</li>
+                <li>Colar Client ID e Client Secret</li>
+                <li>Salvar alteracoes</li>
+            </ol>
+
+            <div class="warning-box">
+                <strong>Importante:</strong> O erro "Unsupported provider: provider is not enabled" indica que o toggle do Google nao foi habilitado no Supabase Dashboard.
+            </div>
+
+            <h3>Arquivos Modificados</h3>
+            <div class="file-structure">
+                <span class="folder">frontend/src/</span><br>
+                ├── <span class="folder">app/</span><br>
+                │   ├── <span class="folder">cadastro/</span><br>
+                │   │   └── <span class="modified">page.tsx</span> (botao Google + novos campos)<br>
+                │   └── <span class="folder">login/</span><br>
+                │       └── <span class="modified">page.tsx</span> (botao Google)<br>
+                ├── <span class="folder">services/</span><br>
+                │   └── <span class="modified">authService.ts</span> (loginWithGoogle)<br>
+                └── <span class="folder">contexts/</span><br>
+                    └── <span class="modified">AuthContext.tsx</span> (refreshProfile)
+            </div>
+
+            <div class="success-box">
+                <strong>Resultado:</strong> Sistema de autenticacao completo com login social via Google e formulario de cadastro robusto com campos brasileiros validados (CPF, telefone, data de nascimento).
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentacao Tecnica | Fevereiro 2026</p>
+        <p><a href="index.html">← Voltar para o indice</a></p>
+    </footer>
+</body>
+</html>

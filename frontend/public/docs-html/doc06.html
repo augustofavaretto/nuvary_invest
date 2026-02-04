@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 06 - Frontend Next.js | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --secondary: #0B1F33;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        h3 {
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            margin: 20px 0 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+        }
+
+        .code-block code {
+            color: #e2e8f0;
+        }
+
+        .code-inline {
+            background: #e2e8f0;
+            color: var(--primary-dark);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        .tech-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7fa 100%);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tech-card h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .tech-card p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .color-item {
+            text-align: center;
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .color-name {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .color-hex {
+            color: var(--gray);
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        .file-structure {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        .file-structure .folder {
+            color: #fbbf24;
+        }
+
+        .file-structure .file {
+            color: #67e8f9;
+        }
+
+        .file-structure .comment {
+            color: #6b7280;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .component-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .component-card h4 {
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .component-card .path {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+            background: var(--light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        .gradient-demo {
+            background: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .color-palette {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Versao 1.5.1</span>
+            <h1>Frontend Next.js</h1>
+            <p>Interface moderna com React 19, Tailwind CSS v4 e shadcn/ui</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#visao-geral">Visao Geral</a></li>
+            <li><a href="#tecnologias">Tecnologias</a></li>
+            <li><a href="#marca">Identidade Visual</a></li>
+            <li><a href="#componentes">Componentes</a></li>
+            <li><a href="#estrutura">Estrutura</a></li>
+            <li><a href="#execucao">Execucao</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section id="visao-geral">
+            <h2>Visao Geral</h2>
+            <p>
+                O frontend da Nuvary Invest foi desenvolvido utilizando as tecnologias mais modernas do ecossistema React,
+                seguindo as diretrizes do manual de marca e priorizando performance, acessibilidade e experiencia do usuario.
+            </p>
+
+            <h3>Funcionalidades Implementadas</h3>
+            <ul>
+                <li><strong>Landing Page</strong> - Pagina inicial com apresentacao da plataforma</li>
+                <li><strong>Questionario de Perfil</strong> - Interface interativa para o questionario de 10 perguntas</li>
+                <li><strong>Tela de Resultado</strong> - Exibicao detalhada do perfil de investidor</li>
+                <li><strong>Animacoes Fluidas</strong> - Transicoes suaves com Framer Motion</li>
+                <li><strong>Design Responsivo</strong> - Layout adaptavel para mobile e desktop</li>
+                <li><strong>Identidade Visual</strong> - Cores, tipografia e logos conforme manual da marca</li>
+            </ul>
+
+            <h3>URLs da Aplicacao</h3>
+            <table>
+                <tr>
+                    <th>Rota</th>
+                    <th>Descricao</th>
+                </tr>
+                <tr>
+                    <td><code>/</code></td>
+                    <td>Landing page com apresentacao da Nuvary Invest</td>
+                </tr>
+                <tr>
+                    <td><code>/questionario</code></td>
+                    <td>Questionario de perfil de investidor</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="tecnologias">
+            <h2>Stack Tecnologico</h2>
+            <p>
+                O projeto utiliza as versoes mais recentes das bibliotecas, garantindo performance e compatibilidade.
+            </p>
+
+            <div class="tech-card">
+                <h4>Next.js 16 + React 19</h4>
+                <p>Framework React com App Router, Server Components e otimizacoes automaticas</p>
+            </div>
+
+            <div class="tech-card">
+                <h4>TypeScript</h4>
+                <p>Tipagem estatica para maior seguranca e produtividade no desenvolvimento</p>
+            </div>
+
+            <div class="tech-card">
+                <h4>Tailwind CSS v4</h4>
+                <p>Framework CSS utility-first com variaveis CSS nativas e tema customizado</p>
+            </div>
+
+            <div class="tech-card">
+                <h4>shadcn/ui + Radix UI</h4>
+                <p>Componentes acessiveis e customizaveis: Button, Card, Badge, RadioGroup, Label, Progress</p>
+            </div>
+
+            <div class="tech-card">
+                <h4>Framer Motion</h4>
+                <p>Animacoes declarativas para transicoes de pagina, opcoes e resultados</p>
+            </div>
+
+            <div class="tech-card">
+                <h4>Lucide React</h4>
+                <p>Biblioteca de icones SVG consistentes e leves</p>
+            </div>
+
+            <h3>Dependencias Instaladas</h3>
+            <div class="code-block">
+<code>{
+  "dependencies": {
+    "next": "^16.1.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "framer-motion": "^11.x",
+    "lucide-react": "^0.x",
+    "tailwindcss": "^4.x",
+    "@radix-ui/react-radio-group": "^1.x",
+    "@radix-ui/react-label": "^2.x",
+    "@radix-ui/react-slot": "^1.x",
+    "class-variance-authority": "^0.x",
+    "clsx": "^2.x",
+    "tailwind-merge": "^2.x"
+  }
+}</code>
+            </div>
+        </section>
+
+        <section id="marca">
+            <h2>Identidade Visual</h2>
+            <p>
+                Todas as cores, tipografia e elementos visuais seguem o manual de marca da Nuvary Invest.
+            </p>
+
+            <h3>Paleta de Cores Principal</h3>
+            <div class="color-palette">
+                <div class="color-item">
+                    <div class="color-swatch" style="background: #0B1F33;"></div>
+                    <div class="color-name">Azul Marinho</div>
+                    <div class="color-hex">#0B1F33</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-swatch" style="background: #00B8D9;"></div>
+                    <div class="color-name">Ciano Tecnologico</div>
+                    <div class="color-hex">#00B8D9</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-swatch" style="background: #007EA7;"></div>
+                    <div class="color-name">Ciano Escuro</div>
+                    <div class="color-hex">#007EA7</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-swatch" style="background: #6B7280;"></div>
+                    <div class="color-name">Texto Secundario</div>
+                    <div class="color-hex">#6B7280</div>
+                </div>
+            </div>
+
+            <h3>Gradiente da Marca</h3>
+            <div class="gradient-demo">
+                linear-gradient(180deg, #00B8D9 0%, #007EA7 100%)
+            </div>
+            <div class="code-block">
+<code>.nuvary-gradient {
+  background: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+}</code>
+            </div>
+
+            <h3>Cores dos Perfis de Investidor</h3>
+            <div class="color-palette">
+                <div class="color-item">
+                    <div class="color-swatch" style="background: #3B82F6;"></div>
+                    <div class="color-name">Conservador</div>
+                    <div class="color-hex">#3B82F6</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-swatch" style="background: #10B981;"></div>
+                    <div class="color-name">Moderado</div>
+                    <div class="color-hex">#10B981</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-swatch" style="background: #F59E0B;"></div>
+                    <div class="color-name">Arrojado</div>
+                    <div class="color-hex">#F59E0B</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-swatch" style="background: #EF4444;"></div>
+                    <div class="color-name">Agressivo</div>
+                    <div class="color-hex">#EF4444</div>
+                </div>
+            </div>
+
+            <h3>Cores para Graficos</h3>
+            <table>
+                <tr>
+                    <th>Cor</th>
+                    <th>Hex</th>
+                    <th>Uso</th>
+                </tr>
+                <tr>
+                    <td style="color: #00B8D9; font-weight: bold;">Ciano</td>
+                    <td><code>#00B8D9</code></td>
+                    <td>Positivo / Renda Fixa</td>
+                </tr>
+                <tr>
+                    <td style="color: #007EA7; font-weight: bold;">Ciano Escuro</td>
+                    <td><code>#007EA7</code></td>
+                    <td>Renda Variavel</td>
+                </tr>
+                <tr>
+                    <td style="color: #F59E0B; font-weight: bold;">Amarelo</td>
+                    <td><code>#F59E0B</code></td>
+                    <td>Atencao / FIIs</td>
+                </tr>
+                <tr>
+                    <td style="color: #6B7280; font-weight: bold;">Cinza</td>
+                    <td><code>#6B7280</code></td>
+                    <td>Neutro / Internacional</td>
+                </tr>
+            </table>
+
+            <h3>Tipografia</h3>
+            <p>
+                A fonte oficial da marca e a <strong>Inter</strong>, configurada via Google Fonts com os pesos:
+                400 (regular), 500 (medium), 600 (semibold) e 700 (bold).
+            </p>
+            <div class="code-block">
+<code>// layout.tsx
+import { Inter } from "next/font/google";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});</code>
+            </div>
+
+            <h3>Logos</h3>
+            <table>
+                <tr>
+                    <th>Arquivo</th>
+                    <th>Tipo</th>
+                    <th>Uso</th>
+                </tr>
+                <tr>
+                    <td><code>logo-nuvary.png</code></td>
+                    <td>Logo horizontal completa</td>
+                    <td>Header principal (56px altura)</td>
+                </tr>
+                <tr>
+                    <td><code>logo-icon.png</code></td>
+                    <td>Icone (nuvem + barras)</td>
+                    <td>Favicon, espacos reduzidos</td>
+                </tr>
+                <tr>
+                    <td><code>logo-vertical.png</code></td>
+                    <td>Logo vertical</td>
+                    <td>Hero section, areas de destaque</td>
+                </tr>
+                <tr>
+                    <td><code>logo-horizontal.png</code></td>
+                    <td>Logo horizontal</td>
+                    <td>Footer, cabecalhos amplos</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="componentes">
+            <h2>Componentes</h2>
+
+            <h3>Layout</h3>
+
+            <div class="component-card">
+                <h4>Header</h4>
+                <span class="path">src/components/layout/Header.tsx</span>
+                <p>Cabecalho principal da aplicacao com navegacao e autenticacao.</p>
+                <ul>
+                    <li>Logo horizontal PNG (56px altura) com link para home</li>
+                    <li>Navegacao condicional baseada em autenticacao</li>
+                    <li>Links: Questionario, Assistente IA, Chat</li>
+                    <li>Menu dropdown do usuario com avatar e opcoes</li>
+                    <li>Botoes de login/cadastro para usuarios nao autenticados</li>
+                    <li>Design sticky com backdrop blur</li>
+                </ul>
+                <div class="code-block">
+<code>// Configuracao da logo no Header
+&lt;Image
+  src="/logo-nuvary.png"
+  alt="Nuvary Invest"
+  width={220}
+  height={56}
+  className="h-14 w-auto"
+  priority
+/&gt;</code>
+                </div>
+            </div>
+
+            <h3>Questionario</h3>
+
+            <div class="component-card">
+                <h4>Questionnaire</h4>
+                <span class="path">src/components/questionnaire/Questionnaire.tsx</span>
+                <p>Componente principal que gerencia o fluxo do questionario: introducao, perguntas, loading e resultado.</p>
+                <ul>
+                    <li>Gerencia estado das telas (intro, questions, loading, result)</li>
+                    <li>Busca perguntas da API no mount</li>
+                    <li>Envia respostas e recebe perfil classificado</li>
+                    <li>Barra de progresso animada</li>
+                </ul>
+            </div>
+
+            <div class="component-card">
+                <h4>QuestionCard</h4>
+                <span class="path">src/components/questionnaire/QuestionCard.tsx</span>
+                <p>Exibe uma pergunta individual com suas opcoes de resposta.</p>
+                <ul>
+                    <li>Badge de categoria com icone (Objetivos, Horizonte, Tolerancia)</li>
+                    <li>RadioGroup acessivel para selecao</li>
+                    <li>Animacoes de entrada/saida com Framer Motion</li>
+                    <li>Feedback visual na opcao selecionada</li>
+                </ul>
+            </div>
+
+            <div class="component-card">
+                <h4>ResultCard</h4>
+                <span class="path">src/components/questionnaire/ResultCard.tsx</span>
+                <p>Exibe o resultado completo do questionario com perfil e recomendacoes.</p>
+                <ul>
+                    <li>Header com gradiente do perfil e icone</li>
+                    <li>Analise por categoria com barras animadas</li>
+                    <li>Grafico de alocacao recomendada</li>
+                    <li>Lista de investimentos sugeridos</li>
+                    <li>Caracteristicas do perfil</li>
+                    <li>Botao para refazer questionario</li>
+                </ul>
+            </div>
+
+            <h3>Componentes shadcn/ui Utilizados</h3>
+            <div class="file-structure">
+<span class="folder">src/components/ui/</span><br>
+├── <span class="file">button.tsx</span> <span class="comment"># Botoes com variantes e tamanhos</span><br>
+├── <span class="file">card.tsx</span> <span class="comment"># Cards para containers</span><br>
+├── <span class="file">badge.tsx</span> <span class="comment"># Badges para categorias</span><br>
+├── <span class="file">radio-group.tsx</span> <span class="comment"># Selecao de opcoes</span><br>
+├── <span class="file">label.tsx</span> <span class="comment"># Labels acessiveis</span><br>
+└── <span class="file">progress.tsx</span> <span class="comment"># Barra de progresso</span>
+            </div>
+        </section>
+
+        <section id="estrutura">
+            <h2>Estrutura de Arquivos</h2>
+            <div class="file-structure">
+<span class="folder">frontend/</span><br>
+├── <span class="folder">public/</span><br>
+│   ├── <span class="file">logo-nuvary.png</span> <span class="comment"># Logo horizontal para header</span><br>
+│   ├── <span class="file">logo-icon.png</span><br>
+│   ├── <span class="file">logo-vertical.png</span><br>
+│   └── <span class="file">logo-horizontal.png</span><br>
+├── <span class="folder">src/</span><br>
+│   ├── <span class="folder">app/</span><br>
+│   │   ├── <span class="file">globals.css</span> <span class="comment"># Variaveis CSS da marca</span><br>
+│   │   ├── <span class="file">layout.tsx</span> <span class="comment"># Layout com fonte Inter</span><br>
+│   │   ├── <span class="file">page.tsx</span> <span class="comment"># Landing page</span><br>
+│   │   └── <span class="folder">questionario/</span><br>
+│   │       └── <span class="file">page.tsx</span> <span class="comment"># Pagina do questionario</span><br>
+│   ├── <span class="folder">components/</span><br>
+│   │   ├── <span class="folder">layout/</span><br>
+│   │   │   └── <span class="file">Header.tsx</span> <span class="comment"># Cabecalho com logo e navegacao</span><br>
+│   │   ├── <span class="folder">ui/</span> <span class="comment"># Componentes shadcn/ui</span><br>
+│   │   └── <span class="folder">questionnaire/</span><br>
+│   │       ├── <span class="file">Questionnaire.tsx</span><br>
+│   │       ├── <span class="file">QuestionCard.tsx</span><br>
+│   │       └── <span class="file">ResultCard.tsx</span><br>
+│   ├── <span class="folder">types/</span><br>
+│   │   └── <span class="file">questionnaire.ts</span> <span class="comment"># Tipos TypeScript</span><br>
+│   └── <span class="folder">lib/</span><br>
+│       └── <span class="file">utils.ts</span> <span class="comment"># Funcao cn() para classes</span><br>
+├── <span class="file">tailwind.config.ts</span><br>
+├── <span class="file">tsconfig.json</span><br>
+└── <span class="file">package.json</span>
+            </div>
+
+            <h3>Tipos TypeScript</h3>
+            <div class="code-block">
+<code>// src/types/questionnaire.ts
+
+export interface QuestionOption {
+  value: string;  // "A", "B", "C", "D"
+  text: string;   // Texto da opcao
+}
+
+export interface Question {
+  id: number;
+  question: string;
+  category: 'objetivos' | 'horizonte' | 'tolerancia_risco';
+  options: QuestionOption[];
+}
+
+export interface InvestorProfile {
+  type: 'conservador' | 'moderado' | 'arrojado' | 'agressivo';
+  name: string;
+  color: string;
+  description: string;
+  characteristics: string[];
+  recommendedAllocation: {
+    rendaFixa: number;
+    rendaVariavel: number;
+    fundosImobiliarios: number;
+    internacional: number;
+  };
+  suggestedInvestments: string[];
+}
+
+export interface QuestionnaireResult {
+  success: boolean;
+  userId: string;
+  score: {
+    total: number;
+    min: number;
+    max: number;
+    percentage: number;
+  };
+  profile: InvestorProfile;
+  categoryAnalysis: {
+    [key: string]: {
+      score: number;
+      percentage: number;
+      level: string;
+    };
+  };
+}</code>
+            </div>
+        </section>
+
+        <section id="execucao">
+            <h2>Executando o Projeto</h2>
+
+            <h3>Pre-requisitos</h3>
+            <ul>
+                <li>Node.js 18+ instalado</li>
+                <li>Backend rodando na porta 3001</li>
+            </ul>
+
+            <h3>Instalacao</h3>
+            <div class="code-block">
+<code># Navegar para o diretorio
+cd frontend-next
+
+# Instalar dependencias
+npm install
+
+# Iniciar em desenvolvimento
+npm run dev</code>
+            </div>
+
+            <h3>URLs</h3>
+            <table>
+                <tr>
+                    <th>Servico</th>
+                    <th>URL</th>
+                </tr>
+                <tr>
+                    <td>Frontend</td>
+                    <td><code>http://localhost:3000</code></td>
+                </tr>
+                <tr>
+                    <td>Questionario</td>
+                    <td><code>http://localhost:3000/questionario</code></td>
+                </tr>
+                <tr>
+                    <td>Backend API</td>
+                    <td><code>http://localhost:3001/api</code></td>
+                </tr>
+            </table>
+
+            <h3>Variavel de Ambiente</h3>
+            <div class="code-block">
+<code># .env.local
+NEXT_PUBLIC_API_URL=http://localhost:3001/api</code>
+            </div>
+
+            <h3>Scripts Disponiveis</h3>
+            <table>
+                <tr>
+                    <th>Comando</th>
+                    <th>Descricao</th>
+                </tr>
+                <tr>
+                    <td><code>npm run dev</code></td>
+                    <td>Inicia servidor de desenvolvimento</td>
+                </tr>
+                <tr>
+                    <td><code>npm run build</code></td>
+                    <td>Gera build de producao</td>
+                </tr>
+                <tr>
+                    <td><code>npm run start</code></td>
+                    <td>Inicia servidor de producao</td>
+                </tr>
+                <tr>
+                    <td><code>npm run lint</code></td>
+                    <td>Executa verificacao de codigo</td>
+                </tr>
+            </table>
+        </section>
+
+        <a href="index.html" class="back-link">← Voltar para o indice</a>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest &copy; 2024 - Documentacao v1.5.1</p>
+    </footer>
+</body>
+</html>

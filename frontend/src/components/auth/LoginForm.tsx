@@ -79,7 +79,7 @@ export function LoginForm() {
     const checkAndRedirect = async () => {
       if (isAuthenticated) {
         const temPerfil = await verificarSeTemPerfil();
-        router.push(temPerfil ? '/chat' : '/questionario');
+        router.push(temPerfil ? '/dashboard' : '/questionario');
       }
     };
     checkAndRedirect();
@@ -96,7 +96,7 @@ export function LoginForm() {
 
       // Redireciona baseado no perfil
       if (temPerfil) {
-        router.push('/chat');
+        router.push('/dashboard');
       } else {
         router.push('/questionario');
       }

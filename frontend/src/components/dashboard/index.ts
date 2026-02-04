@@ -1,0 +1,8 @@
+export { DashboardHeader } from './DashboardHeader';
+export { InvestorProfileCard } from './InvestorProfileCard';
+export { MarketOverview } from './MarketOverview';
+export { StockList } from './StockList';
+export { NewsWidget } from './NewsWidget';
+export { QuickActionsPanel } from './QuickActionsPanel';
+export { AISuggestionsCard } from './AISuggestionsCard';
+export { DashboardErrorBoundary } from './DashboardErrorBoundary';
