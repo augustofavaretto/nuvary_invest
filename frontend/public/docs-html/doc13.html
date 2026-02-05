@@ -160,6 +160,17 @@
             font-size: 0.95rem;
         }
 
+        .task-new {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
         .category-header {
             background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
             padding: 10px 15px;
@@ -263,6 +274,21 @@
             border-left: 4px solid #64748b;
         }
 
+        .update-notice {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .update-notice strong {
+            font-size: 1.1rem;
+        }
+
         footer {
             text-align: center;
             padding: 30px 0;
@@ -282,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Fevereiro 2026</span>
+            <span class="version-badge">Fevereiro 2026 - Atualizado</span>
             <h1>Proximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -290,7 +316,7 @@
 
     <nav>
         <ul>
-            <li><a href="index.html" style="color: #10b981; font-weight: 600;">← Indice</a></li>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
             <li><a href="#resumo">Resumo</a></li>
             <li><a href="#concluido">Concluido</a></li>
             <li><a href="#prioridade">Alta Prioridade</a></li>
@@ -300,7 +326,15 @@
     </nav>
 
     <main class="container">
-        <a href="index.html" class="back-link">← Voltar para o indice</a>
+        <a href="index.html" class="back-link">Voltar para o indice</a>
+
+        <div class="update-notice">
+            <span style="font-size: 1.5rem;">🎉</span>
+            <div>
+                <strong>Dashboard Principal Concluido!</strong>
+                <p style="margin: 0; opacity: 0.9;">+6 funcionalidades implementadas na versao 2.5.0</p>
+            </div>
+        </div>
 
         <section id="resumo">
             <h2><span class="icon">📊</span> Resumo do Projeto</h2>
@@ -308,17 +342,17 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">34</div>
+                    <div class="stat-number">43</div>
                     <div class="stat-label">Concluidos</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🔥</div>
-                    <div class="stat-number">8</div>
+                    <div class="stat-number">3</div>
                     <div class="stat-label">Alta Prioridade</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">⏳</div>
-                    <div class="stat-number">13</div>
+                    <div class="stat-number">12</div>
                     <div class="stat-label">Pendentes</div>
                 </div>
                 <div class="stat-card">
@@ -328,7 +362,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🛠️</div>
-                    <div class="stat-number">10</div>
+                    <div class="stat-number">9</div>
                     <div class="stat-label">Debito Tecnico</div>
                 </div>
             </div>
@@ -413,38 +447,44 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Layout responsivo basico</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pagina de documentacao tecnica</span></li>
             </ul>
+
+            <div class="category-header">📈 Dashboard Principal <span class="task-new">NOVO v2.5.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pagina /dashboard apos login<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Resumo do perfil de investidor com alocacao<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Market Overview com 5 acoes principais (AAPL, MSFT, GOOGL, AMZN, TSLA)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Watchlist com 6 acoes populares (META, NVDA, NFLX, JPM, V, DIS)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Feed de noticias financeiras com tempo relativo<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sugestoes de investimento geradas por IA<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Painel de acoes rapidas (Chat, Perfil, Questionario)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Auto-refresh de dados a cada 60 segundos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Error boundaries nos componentes React<span class="task-new">NOVO</span></span></li>
+            </ul>
         </section>
 
         <section id="prioridade" class="section-fire">
             <h2><span class="icon">🔥</span> Alta Prioridade</h2>
 
-            <div class="category-header">📈 Dashboard Principal</div>
+            <div class="category-header">📊 Visualizacao de Dados</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Criar pagina /dashboard apos login</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Exibir resumo do perfil de investidor</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Mostrar estatisticas de uso do chat</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Integrar graficos de mercado (Recharts/Chart.js)</span></li>
-            </ul>
-
-            <div class="category-header">📊 Visualizacao de Dados de Mercado</div>
-            <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Graficos de acoes com candlestick</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Feed de noticias financeiras</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Indicadores tecnicos visuais</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Watchlist de ativos favoritos</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Graficos de acoes com candlestick (Recharts/Chart.js)</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Indicadores tecnicos visuais (SMA, RSI, MACD)</span></li>
             </ul>
 
             <div class="category-header">🔒 Seguranca</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Migrar tokens de localStorage para httpOnly cookies</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Implementar protecao CSRF</span></li>
                 <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Validacao de entrada em todas as rotas da API</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Error boundaries nos componentes React</span></li>
             </ul>
         </section>
 
         <section id="pendente" class="section-pending">
             <h2><span class="icon">⏳</span> Pendente</h2>
+
+            <div class="category-header">📈 Dashboard - Melhorias</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Mostrar estatisticas de uso do chat</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Grafico de evolucao patrimonial</span></li>
+            </ul>
 
             <div class="category-header">⚙️ Configuracoes e Preferencias</div>
             <ul class="task-list">
@@ -456,7 +496,6 @@
 
             <div class="category-header">💬 Melhorias no Chat</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Paginacao no historico de conversas</span></li>
                 <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Exportar conversas em PDF/TXT</span></li>
                 <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Renomear conversas</span></li>
                 <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Fixar conversas importantes</span></li>
@@ -464,16 +503,12 @@
 
             <div class="category-header">👤 Perfil do Usuario</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Edicao do perfil de investidor (sem refazer questionario)</span></li>
                 <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Upload de foto de perfil</span></li>
-                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Historico de alteracoes do perfil</span></li>
             </ul>
 
             <div class="category-header">📧 Email e Comunicacao</div>
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Configurar templates de email no Supabase</span></li>
-                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Email de boas-vindas personalizado</span></li>
-                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Notificacoes por email de atividades</span></li>
             </ul>
         </section>
 
@@ -557,14 +592,12 @@
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Remover better-sqlite3 (usar apenas Supabase)</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Adicionar indices de performance</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Implementar soft delete</span></li>
             </ul>
 
             <div class="category-header">⚡ Performance</div>
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Otimizar bundle size (code splitting)</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Lazy loading de rotas</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Otimizacao de imagens Next.js</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Service workers para cache</span></li>
             </ul>
         </section>
@@ -572,7 +605,7 @@
 
     <footer>
         <p>Nuvary Invest - Documentacao Tecnica | Fevereiro 2026</p>
-        <p><a href="index.html">← Voltar para o indice</a></p>
+        <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>
 </html>
