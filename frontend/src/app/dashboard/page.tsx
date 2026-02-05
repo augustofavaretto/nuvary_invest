@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDashboardData } from '@/hooks/useDashboardData';
-import { Header } from '@/components/layout/Header';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import {
   DashboardHeader,
   InvestorProfileCard,
@@ -78,10 +78,8 @@ function DashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6]">
-      <Header />
-
-      <main className="container mx-auto px-4 py-6 max-w-7xl">
+    <DashboardLayout>
+      <div className="px-6 py-6 max-w-7xl mx-auto">
         {/* Dashboard Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -121,7 +119,6 @@ function DashboardContent() {
               className="space-y-6"
             >
               <InvestorProfileCard profile={investorProfile} />
-              <QuickActionsPanel />
               <AISuggestionsCard
                 suggestion={aiSuggestion}
                 onRefresh={handleRefreshAI}
@@ -153,13 +150,8 @@ function DashboardContent() {
             </motion.div>
           </div>
         )}
-      </main>
-
-      {/* Footer */}
-      <footer className="text-center py-6 text-[#6B7280] text-sm">
-        <p>Nuvary Invest - Dashboard do Investidor</p>
-      </footer>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }
 
