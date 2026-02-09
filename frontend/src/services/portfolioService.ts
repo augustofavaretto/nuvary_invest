@@ -1,7 +1,12 @@
-// Portfolio Service - Mock data for demonstration
+// Portfolio Service - With localStorage persistence
 // In production, this would connect to real brokerage APIs
 
-export interface AssetClass {
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+
+export type AssetClass = 'renda_fixa' | 'renda_variavel' | 'fiis' | 'internacional';
+export type CategoryId = 'renda_fixa' | 'tesouro' | 'renda_variavel' | 'fiis' | 'internacional' | 'cripto';
+
+export interface AssetClassData {
   name: string;
   value: number;
   percentage: number;
@@ -12,7 +17,7 @@ export interface Asset {
   id: string;
   name: string;
   ticker: string;
-  type: 'renda_fixa' | 'renda_variavel' | 'fii' | 'internacional' | 'cripto';
+  type: AssetClass;
   quantity: number;
   averagePrice: number;
   currentPrice: number;
@@ -39,7 +44,7 @@ export interface PortfolioSummary {
 
 export interface PortfolioData {
   summary: PortfolioSummary;
-  byClass: AssetClass[];
+  byClass: AssetClassData[];
   byProduct: {
     rendaFixa: Asset[];
     rendaVariavel: Asset[];
@@ -49,272 +54,401 @@ export interface PortfolioData {
   byBroker: Broker[];
 }
 
-// Colors for charts
-const COLORS = {
-  rendaFixa: '#1e3a5f',
-  rendaVariavel: '#00B8D9',
-  fiis: '#10b981',
-  internacional: '#6366f1',
-  cripto: '#f59e0b',
+// Storage key
+const STORAGE_KEY = 'nuvary_portfolio_assets';
+
+// Mapeamento de BDRs para simbolos americanos
+const BDR_TO_US_SYMBOL: Record<string, string> = {
+  'AAPL34': 'AAPL',
+  'MSFT34': 'MSFT',
+  'AMZO34': 'AMZN',
+  'GOGL34': 'GOOGL',
+  'FBOK34': 'META',
+  'TSLA34': 'TSLA',
+  'NVDC34': 'NVDA',
+  'NFLX34': 'NFLX',
+  'DISB34': 'DIS',
+  'COCA34': 'KO',
+  'JPMC34': 'JPM',
+  'BOAC34': 'BAC',
+  'IVVB11': 'SPY', // ETF S&P 500
+  'SPXI11': 'SPY',
 };
 
-// Mock portfolio data
-const mockPortfolioData: PortfolioData = {
-  summary: {
-    totalValue: 45892.47,
-    totalInvested: 42500.00,
-    totalProfit: 3392.47,
-    profitPercentage: 7.98,
-    lastUpdate: new Date().toISOString(),
-  },
-  byClass: [
-    {
-      name: 'Renda Fixa',
-      value: 25430.28,
-      percentage: 55.4,
-      color: COLORS.rendaFixa,
-    },
-    {
-      name: 'Renda Variavel',
-      value: 12580.50,
-      percentage: 27.4,
-      color: COLORS.rendaVariavel,
-    },
-    {
-      name: 'Fundos Imobiliarios',
-      value: 5265.81,
-      percentage: 11.5,
-      color: COLORS.fiis,
-    },
-    {
-      name: 'Internacional',
-      value: 2615.88,
-      percentage: 5.7,
-      color: COLORS.internacional,
-    },
-  ],
-  byProduct: {
-    rendaFixa: [
-      {
-        id: '1',
-        name: 'Tesouro Selic 2029',
-        ticker: 'SELIC29',
-        type: 'renda_fixa',
-        quantity: 1,
-        averagePrice: 12500.00,
-        currentPrice: 13215.45,
-        totalValue: 13215.45,
-        percentageOfPortfolio: 28.8,
-        percentageOfProduct: 52.0,
-        variation: 5.72,
-        broker: 'Nu Invest',
-      },
-      {
-        id: '2',
-        name: 'CDB Banco Inter 120% CDI',
-        ticker: 'CDB-INTER',
-        type: 'renda_fixa',
-        quantity: 1,
-        averagePrice: 8000.00,
-        currentPrice: 8430.28,
-        totalValue: 8430.28,
-        percentageOfPortfolio: 18.4,
-        percentageOfProduct: 33.2,
-        variation: 5.38,
-        broker: 'Inter',
-      },
-      {
-        id: '3',
-        name: 'LCI Banco do Brasil',
-        ticker: 'LCI-BB',
-        type: 'renda_fixa',
-        quantity: 1,
-        averagePrice: 3500.00,
-        currentPrice: 3784.55,
-        totalValue: 3784.55,
-        percentageOfPortfolio: 8.2,
-        percentageOfProduct: 14.8,
-        variation: 8.13,
-        broker: 'BB Investimentos',
-      },
-    ],
-    rendaVariavel: [
-      {
-        id: '4',
-        name: 'Petrobras PN',
-        ticker: 'PETR4',
-        type: 'renda_variavel',
-        quantity: 100,
-        averagePrice: 32.50,
-        currentPrice: 38.45,
-        totalValue: 3845.00,
-        percentageOfPortfolio: 8.4,
-        percentageOfProduct: 30.6,
-        variation: 18.31,
-        broker: 'Clear',
-      },
-      {
-        id: '5',
-        name: 'Vale ON',
-        ticker: 'VALE3',
-        type: 'renda_variavel',
-        quantity: 50,
-        averagePrice: 68.00,
-        currentPrice: 62.30,
-        totalValue: 3115.00,
-        percentageOfPortfolio: 6.8,
-        percentageOfProduct: 24.8,
-        variation: -8.38,
-        broker: 'Clear',
-      },
-      {
-        id: '6',
-        name: 'Itau Unibanco PN',
-        ticker: 'ITUB4',
-        type: 'renda_variavel',
-        quantity: 80,
-        averagePrice: 28.50,
-        currentPrice: 31.25,
-        totalValue: 2500.00,
-        percentageOfPortfolio: 5.4,
-        percentageOfProduct: 19.9,
-        variation: 9.65,
-        broker: 'Nu Invest',
-      },
-      {
-        id: '7',
-        name: 'Banco do Brasil ON',
-        ticker: 'BBAS3',
-        type: 'renda_variavel',
-        quantity: 60,
-        averagePrice: 48.00,
-        currentPrice: 52.01,
-        totalValue: 3120.50,
-        percentageOfPortfolio: 6.8,
-        percentageOfProduct: 24.8,
-        variation: 8.35,
-        broker: 'BB Investimentos',
-      },
-    ],
-    fiis: [
-      {
-        id: '8',
-        name: 'CSHG Logistica',
-        ticker: 'HGLG11',
-        type: 'fii',
-        quantity: 15,
-        averagePrice: 160.00,
-        currentPrice: 168.45,
-        totalValue: 2526.75,
-        percentageOfPortfolio: 5.5,
-        percentageOfProduct: 48.0,
-        variation: 5.28,
-        broker: 'Clear',
-      },
-      {
-        id: '9',
-        name: 'XP Malls',
-        ticker: 'XPML11',
-        type: 'fii',
-        quantity: 25,
-        averagePrice: 98.00,
-        currentPrice: 109.56,
-        totalValue: 2739.06,
-        percentageOfPortfolio: 6.0,
-        percentageOfProduct: 52.0,
-        variation: 11.80,
-        broker: 'Nu Invest',
-      },
-    ],
-    internacional: [
-      {
-        id: '10',
-        name: 'Apple Inc BDR',
-        ticker: 'AAPL34',
-        type: 'internacional',
-        quantity: 20,
-        averagePrice: 52.00,
-        currentPrice: 58.42,
-        totalValue: 1168.40,
-        percentageOfPortfolio: 2.5,
-        percentageOfProduct: 44.7,
-        variation: 12.35,
-        broker: 'Nu Invest',
-      },
-      {
-        id: '11',
-        name: 'Microsoft BDR',
-        ticker: 'MSFT34',
-        type: 'internacional',
-        quantity: 15,
-        averagePrice: 78.00,
-        currentPrice: 82.45,
-        totalValue: 1236.75,
-        percentageOfPortfolio: 2.7,
-        percentageOfProduct: 47.3,
-        variation: 5.71,
-        broker: 'Inter',
-      },
-      {
-        id: '12',
-        name: 'Amazon BDR',
-        ticker: 'AMZO34',
-        type: 'internacional',
-        quantity: 5,
-        averagePrice: 38.00,
-        currentPrice: 42.15,
-        totalValue: 210.73,
-        percentageOfPortfolio: 0.5,
-        percentageOfProduct: 8.0,
-        variation: 10.92,
-        broker: 'Inter',
-      },
-    ],
-  },
-  byBroker: [
-    {
-      name: 'Nu Invest',
-      value: 20670.35,
-      percentage: 45.0,
-    },
-    {
-      name: 'Clear Corretora',
-      value: 12006.75,
-      percentage: 26.2,
-    },
-    {
-      name: 'Inter',
-      value: 9877.76,
-      percentage: 21.5,
-    },
-    {
-      name: 'BB Investimentos',
-      value: 3337.61,
-      percentage: 7.3,
-    },
-  ],
+// Cotacao do dolar (aproximada, em producao buscar de API forex)
+const USD_TO_BRL = 5.0;
+
+export interface PriceResult {
+  price: number | null;
+  currency: 'BRL' | 'USD';
+  source: string;
+  error?: string;
+}
+
+// Buscar preco de acao americana via Finnhub
+async function fetchUSStockPrice(symbol: string): Promise<number | null> {
+  try {
+    const res = await fetch(`${API_URL}/finnhub/stocks/${symbol}/quote`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.currentPrice || data.c || null;
+    }
+  } catch (error) {
+    console.error(`Erro ao buscar preco de ${symbol}:`, error);
+  }
+  return null;
+}
+
+// Buscar preco de criptomoeda via Alpha Vantage
+async function fetchCryptoPrice(symbol: string): Promise<number | null> {
+  try {
+    const res = await fetch(`${API_URL}/crypto/${symbol}/rate?currency=USD`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.price || null;
+    }
+  } catch (error) {
+    console.error(`Erro ao buscar preco de ${symbol}:`, error);
+  }
+  return null;
+}
+
+// Funcao principal para buscar preco de qualquer ativo
+export async function fetchAssetPrice(
+  ticker: string,
+  category: CategoryId
+): Promise<PriceResult> {
+  // Categoria cripto - buscar preco em USD e converter para BRL
+  if (category === 'cripto') {
+    const price = await fetchCryptoPrice(ticker);
+    if (price) {
+      return {
+        price: price * USD_TO_BRL, // Converter USD para BRL
+        currency: 'BRL',
+        source: 'Alpha Vantage (Crypto)',
+      };
+    }
+    return {
+      price: null,
+      currency: 'BRL',
+      source: 'API',
+      error: 'Preco nao disponivel para esta criptomoeda',
+    };
+  }
+
+  // Categoria internacional (BDRs) - buscar preco do ativo americano correspondente
+  if (category === 'internacional') {
+    const usSymbol = BDR_TO_US_SYMBOL[ticker] || ticker;
+    const price = await fetchUSStockPrice(usSymbol);
+    if (price) {
+      // BDRs tem proporcao diferente, mas para simplificar usamos conversao direta
+      // Em producao, verificar a proporcao especifica de cada BDR
+      return {
+        price: price * USD_TO_BRL,
+        currency: 'BRL',
+        source: `Finnhub (${usSymbol})`,
+      };
+    }
+    return {
+      price: null,
+      currency: 'BRL',
+      source: 'API',
+      error: 'Preco nao disponivel. As APIs gratuitas suportam apenas acoes americanas.',
+    };
+  }
+
+  // Para renda variavel, tentar buscar se for ETF internacional
+  if (category === 'renda_variavel') {
+    // ETFs internacionais listados na B3
+    if (['IVVB11', 'SPXI11', 'BOVA11', 'SMAL11', 'HASH11'].includes(ticker)) {
+      const usSymbol = BDR_TO_US_SYMBOL[ticker];
+      if (usSymbol) {
+        const price = await fetchUSStockPrice(usSymbol);
+        if (price) {
+          return {
+            price: price * USD_TO_BRL,
+            currency: 'BRL',
+            source: `Finnhub (${usSymbol})`,
+          };
+        }
+      }
+    }
+    // Acoes brasileiras nao sao suportadas pelas APIs gratuitas
+    return {
+      price: null,
+      currency: 'BRL',
+      source: 'API',
+      error: 'Acoes da B3 nao suportadas. Informe o preco manualmente.',
+    };
+  }
+
+  // Renda fixa, tesouro e FIIs - nao tem cotacao em APIs de mercado
+  return {
+    price: null,
+    currency: 'BRL',
+    source: 'Manual',
+    error: category === 'fiis'
+      ? 'FIIs da B3 nao suportados. Informe o preco manualmente.'
+      : 'Informe o preco manualmente.',
+  };
+}
+
+// Colors for charts
+const COLORS = {
+  renda_fixa: '#1e3a5f',
+  renda_variavel: '#00B8D9',
+  fiis: '#10b981',
+  internacional: '#6366f1',
 };
+
+const CLASS_NAMES: Record<AssetClass, string> = {
+  renda_fixa: 'Renda Fixa',
+  renda_variavel: 'Renda Variavel',
+  fiis: 'Fundos Imobiliarios',
+  internacional: 'Internacional',
+};
+
+// Generate unique ID
+function generateId(): string {
+  return `asset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
+
+// Load assets from localStorage
+export function loadSavedAssets(): Asset[] {
+  if (typeof window === 'undefined') return [];
+
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (error) {
+    console.error('Erro ao carregar ativos:', error);
+  }
+  return [];
+}
+
+// Save assets to localStorage
+export function saveAssets(assets: Asset[]): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(assets));
+  } catch (error) {
+    console.error('Erro ao salvar ativos:', error);
+  }
+}
+
+// Add new asset
+export function addAsset(assetData: {
+  ticker: string;
+  name: string;
+  quantity: number;
+  averagePrice: number;
+  class: AssetClass;
+  broker: string;
+}): Asset {
+  const assets = loadSavedAssets();
+
+  // Simulate current price (in production, fetch from API)
+  const variationPercent = (Math.random() * 20) - 5; // -5% to +15%
+  const currentPrice = assetData.averagePrice * (1 + variationPercent / 100);
+
+  const newAsset: Asset = {
+    id: generateId(),
+    ticker: assetData.ticker,
+    name: assetData.name,
+    type: assetData.class,
+    quantity: assetData.quantity,
+    averagePrice: assetData.averagePrice,
+    currentPrice: currentPrice,
+    totalValue: assetData.quantity * currentPrice,
+    percentageOfPortfolio: 0, // Will be calculated
+    percentageOfProduct: 0, // Will be calculated
+    variation: variationPercent,
+    broker: assetData.broker,
+  };
+
+  assets.push(newAsset);
+  saveAssets(assets);
+
+  return newAsset;
+}
+
+// Remove asset
+export function removeAsset(assetId: string): void {
+  const assets = loadSavedAssets();
+  const filtered = assets.filter(a => a.id !== assetId);
+  saveAssets(filtered);
+}
+
+// Update asset
+export function updateAsset(assetId: string, updates: Partial<Asset>): void {
+  const assets = loadSavedAssets();
+  const index = assets.findIndex(a => a.id === assetId);
+
+  if (index !== -1) {
+    assets[index] = { ...assets[index], ...updates };
+    // Recalculate total value if quantity or price changed
+    if (updates.quantity !== undefined || updates.currentPrice !== undefined) {
+      assets[index].totalValue = assets[index].quantity * assets[index].currentPrice;
+    }
+    saveAssets(assets);
+  }
+}
+
+// Calculate portfolio data from saved assets
+export function calculatePortfolioData(assets: Asset[]): PortfolioData {
+  if (assets.length === 0) {
+    return {
+      summary: {
+        totalValue: 0,
+        totalInvested: 0,
+        totalProfit: 0,
+        profitPercentage: 0,
+        lastUpdate: new Date().toISOString(),
+      },
+      byClass: [],
+      byProduct: {
+        rendaFixa: [],
+        rendaVariavel: [],
+        fiis: [],
+        internacional: [],
+      },
+      byBroker: [],
+    };
+  }
+
+  // Calculate totals
+  const totalValue = assets.reduce((sum, a) => sum + a.totalValue, 0);
+  const totalInvested = assets.reduce((sum, a) => sum + (a.quantity * a.averagePrice), 0);
+  const totalProfit = totalValue - totalInvested;
+  const profitPercentage = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
+
+  // Group by class
+  const byClassMap: Record<AssetClass, number> = {
+    renda_fixa: 0,
+    renda_variavel: 0,
+    fiis: 0,
+    internacional: 0,
+  };
+
+  // Group by broker
+  const byBrokerMap: Record<string, number> = {};
+
+  // Organize by product
+  const byProduct: PortfolioData['byProduct'] = {
+    rendaFixa: [],
+    rendaVariavel: [],
+    fiis: [],
+    internacional: [],
+  };
+
+  assets.forEach(asset => {
+    // Update class totals
+    byClassMap[asset.type] += asset.totalValue;
+
+    // Update broker totals
+    byBrokerMap[asset.broker] = (byBrokerMap[asset.broker] || 0) + asset.totalValue;
+
+    // Update percentages
+    asset.percentageOfPortfolio = totalValue > 0 ? (asset.totalValue / totalValue) * 100 : 0;
+
+    // Add to product category
+    switch (asset.type) {
+      case 'renda_fixa':
+        byProduct.rendaFixa.push(asset);
+        break;
+      case 'renda_variavel':
+        byProduct.rendaVariavel.push(asset);
+        break;
+      case 'fiis':
+        byProduct.fiis.push(asset);
+        break;
+      case 'internacional':
+        byProduct.internacional.push(asset);
+        break;
+    }
+  });
+
+  // Calculate product percentages
+  Object.values(byProduct).forEach(productAssets => {
+    const productTotal = productAssets.reduce((sum, a) => sum + a.totalValue, 0);
+    productAssets.forEach(asset => {
+      asset.percentageOfProduct = productTotal > 0 ? (asset.totalValue / productTotal) * 100 : 0;
+    });
+  });
+
+  // Convert class map to array
+  const byClass: AssetClassData[] = (Object.keys(byClassMap) as AssetClass[])
+    .filter(key => byClassMap[key] > 0)
+    .map(key => ({
+      name: CLASS_NAMES[key],
+      value: byClassMap[key],
+      percentage: totalValue > 0 ? (byClassMap[key] / totalValue) * 100 : 0,
+      color: COLORS[key],
+    }));
+
+  // Convert broker map to array
+  const byBroker: Broker[] = Object.entries(byBrokerMap)
+    .map(([name, value]) => ({
+      name,
+      value,
+      percentage: totalValue > 0 ? (value / totalValue) * 100 : 0,
+    }))
+    .sort((a, b) => b.value - a.value);
+
+  return {
+    summary: {
+      totalValue,
+      totalInvested,
+      totalProfit,
+      profitPercentage,
+      lastUpdate: new Date().toISOString(),
+    },
+    byClass,
+    byProduct,
+    byBroker,
+  };
+}
 
 // Service functions
 export async function getPortfolioData(): Promise<PortfolioData> {
   // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return mockPortfolioData;
+  await new Promise(resolve => setTimeout(resolve, 300));
+
+  const savedAssets = loadSavedAssets();
+  return calculatePortfolioData(savedAssets);
 }
 
 export async function getPortfolioSummary(): Promise<PortfolioSummary> {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  return mockPortfolioData.summary;
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const savedAssets = loadSavedAssets();
+  const data = calculatePortfolioData(savedAssets);
+  return data.summary;
 }
 
-export async function getPortfolioByClass(): Promise<AssetClass[]> {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  return mockPortfolioData.byClass;
+export async function getPortfolioByClass(): Promise<AssetClassData[]> {
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const savedAssets = loadSavedAssets();
+  const data = calculatePortfolioData(savedAssets);
+  return data.byClass;
 }
 
 export async function getPortfolioByBroker(): Promise<Broker[]> {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  return mockPortfolioData.byBroker;
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const savedAssets = loadSavedAssets();
+  const data = calculatePortfolioData(savedAssets);
+  return data.byBroker;
+}
+
+// Get all saved assets
+export async function getAllAssets(): Promise<Asset[]> {
+  await new Promise(resolve => setTimeout(resolve, 100));
+  return loadSavedAssets();
 }
 
 // Format currency
@@ -328,4 +462,10 @@ export function formatCurrency(value: number): string {
 // Format percentage
 export function formatPercentage(value: number): string {
   return `${value.toFixed(1)}%`;
+}
+
+// Clear all portfolio data
+export function clearPortfolio(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(STORAGE_KEY);
 }

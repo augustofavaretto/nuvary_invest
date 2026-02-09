@@ -362,9 +362,9 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Versao 2.6.0</span>
+            <span class="version-badge">Versao 2.8.0</span>
             <h1>Layout Sidebar e Minha Carteira</h1>
-            <p>Navegacao lateral estilo B3 e pagina completa de portfolio</p>
+            <p>Navegacao lateral estilo B3, portfolio completo com busca automatica de precos via API</p>
         </div>
     </header>
 
@@ -423,13 +423,7 @@
                         <td><strong>Minha Carteira</strong></td>
                         <td>Wallet</td>
                         <td><code>/carteira</code></td>
-                        <td><span class="new-badge">NOVO</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Extratos</strong></td>
-                        <td>FileText</td>
-                        <td><code>/extratos</code></td>
-                        <td>Em breve</td>
+                        <td><span class="new-badge">Completo</span></td>
                     </tr>
                     <tr>
                         <td><strong>Relatorios</strong></td>
@@ -479,6 +473,11 @@
                 <p>O patrimonio total tambem e exibido no header do dashboard, ao lado do nome do usuario, com botao para ocultar/mostrar o valor. A preferencia e salva no localStorage.</p>
             </div>
 
+            <div class="highlight-box" style="background: linear-gradient(135deg, #10b981 0%, #047857 100%);">
+                <h4>Modal de Adicionar Ativos por Categoria <span class="new-badge">v2.8.0</span></h4>
+                <p>Sistema de adicao de ativos em 3 etapas com busca automatica de precos. Selecione a categoria, escolha o ativo (100+ pre-cadastrados), e o preco e preenchido automaticamente via APIs Finnhub/Alpha Vantage quando disponivel.</p>
+            </div>
+
             <div class="feature-grid">
                 <div class="feature-card">
                     <h4>Resumo Patrimonial</h4>
@@ -495,6 +494,56 @@
                 <div class="feature-card">
                     <h4>Distribuicao por Corretora</h4>
                     <p>Grafico donut mostrando quanto esta alocado em cada corretora (XP, Clear, Rico, etc).</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Adicionar Ativo <span class="new-badge">NOVO</span></h4>
+                    <p>Modal multi-step para adicionar ativos por categoria com busca e selecao de ativos pre-definidos.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Remover Ativo <span class="new-badge">NOVO</span></h4>
+                    <p>Botao de remocao que aparece ao passar o mouse sobre cada ativo na lista.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Persistencia Local <span class="new-badge">NOVO</span></h4>
+                    <p>Dados do portfolio salvos em localStorage para persistir entre sessoes.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Preco Automatico <span class="new-badge">NOVO v2.8</span></h4>
+                    <p>Busca automatica de precos via Finnhub (acoes US) e Alpha Vantage (cripto). BDRs convertidos com cotacao USD/BRL.</p>
+                </div>
+            </div>
+
+            <h3>Categorias de Investimento</h3>
+            <div class="chart-preview">
+                <div class="chart-card">
+                    <div class="icon">🏦</div>
+                    <h5>Renda Fixa</h5>
+                    <p>CDBs, LCIs, LCAs, Debentures</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🏛️</div>
+                    <h5>Tesouro Direto</h5>
+                    <p>Selic, IPCA+, Prefixado</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">📈</div>
+                    <h5>Renda Variavel</h5>
+                    <p>Acoes, ETFs, BDRs</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🏢</div>
+                    <h5>FIIs</h5>
+                    <p>Fundos Imobiliarios</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🌍</div>
+                    <h5>Internacional</h5>
+                    <p>BDRs, ETFs globais</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🪙</div>
+                    <h5>Criptomoedas</h5>
+                    <p>Bitcoin, Ethereum, Altcoins</p>
                 </div>
             </div>
         </section>
@@ -586,13 +635,17 @@ const sizes = {
                     <h4>PortfolioByBrokerCard.tsx <span class="new-badge">NOVO</span></h4>
                     <p>Distribuicao por corretora com grafico donut e listagem de valores.</p>
                 </li>
+                <li class="component-item">
+                    <h4>AddAssetModal.tsx <span class="new-badge">NOVO v2.7.0</span></h4>
+                    <p>Modal multi-step para adicionar ativos. Step 1: selecao de categoria (6 tipos). Step 2: busca e selecao de ativo (100+ pre-cadastrados). Step 3: formulario de quantidade, preco e corretora.</p>
+                </li>
             </ul>
 
             <h3>Services</h3>
             <ul class="component-list">
                 <li class="component-item">
-                    <h4>portfolioService.ts <span class="new-badge">NOVO</span></h4>
-                    <p>Service com dados mock do portfolio. Inclui tipos TypeScript, funcoes de busca e formatadores de moeda.</p>
+                    <h4>portfolioService.ts <span class="new-badge">Atualizado v2.7.0</span></h4>
+                    <p>Service de portfolio com persistencia em localStorage. Funcoes: loadSavedAssets, saveAssets, addAsset, removeAsset, updateAsset, calculatePortfolioData. Tipos TypeScript completos.</p>
                 </li>
             </ul>
         </section>
@@ -604,8 +657,6 @@ frontend/src/
 ├── app/
 │   ├── carteira/
 │   │   └── page.tsx          # Pagina Minha Carteira
-│   ├── extratos/
-│   │   └── page.tsx          # Placeholder Extratos
 │   ├── relatorios/
 │   │   └── page.tsx          # Placeholder Relatorios
 │   └── trilhas/
@@ -621,11 +672,12 @@ frontend/src/
 │   │   ├── PortfolioSummaryCard.tsx
 │   │   ├── PortfolioByClassCard.tsx
 │   │   ├── PortfolioByProductCard.tsx
-│   │   └── PortfolioByBrokerCard.tsx
+│   │   ├── PortfolioByBrokerCard.tsx
+│   │   └── AddAssetModal.tsx  # Modal 3-step para adicionar ativos
 │   └── dashboard/
 │       └── DashboardHeader.tsx  # Atualizado com saldo
 └── services/
-    └── portfolioService.ts   # Mock data + tipos</pre>
+    └── portfolioService.ts   # localStorage + CRUD de ativos</pre>
 
             <h3>Interface PortfolioData</h3>
             <pre>
@@ -682,6 +734,68 @@ const toggleBalance = () =&gt; {
 {showBalance
   ? formatCurrency(portfolioSummary?.totalValue || 0)
   : 'R$ ------'
+}</pre>
+
+            <h3>Modal de Adicionar Ativo - 3 Steps</h3>
+            <pre>
+// Step 1: Selecao de Categoria
+const CATEGORIES = [
+  { id: 'renda_fixa', name: 'Renda Fixa', icon: PiggyBank, color: '#1e3a5f' },
+  { id: 'tesouro', name: 'Tesouro Direto', icon: Landmark, color: '#047857' },
+  { id: 'renda_variavel', name: 'Renda Variavel', icon: TrendingUp, color: '#6366f1' },
+  { id: 'fiis', name: 'Fundos Imobiliarios', icon: Building, color: '#10b981' },
+  { id: 'internacional', name: 'Internacional', icon: Globe, color: '#00B8D9' },
+  { id: 'cripto', name: 'Criptomoedas', icon: Coins, color: '#f59e0b' },
+];
+
+// Step 2: Ativos pre-definidos com busca
+const ASSETS_BY_CATEGORY = {
+  renda_variavel: [
+    { ticker: 'PETR4', name: 'Petrobras PN' },
+    { ticker: 'VALE3', name: 'Vale ON' },
+    // ... 100+ ativos
+  ],
+  // ... outras categorias
+};
+
+// Step 3: Formulario de detalhes
+interface NewAssetData {
+  ticker: string;
+  name: string;
+  quantity: number;
+  averagePrice: number;
+  class: AssetClass;
+  broker: string;
+}</pre>
+
+            <h3>Persistencia em localStorage</h3>
+            <pre>
+const STORAGE_KEY = 'nuvary_portfolio_assets';
+
+// Salvar ativos
+export function saveAssets(assets: Asset[]): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(assets));
+}
+
+// Carregar ativos
+export function loadSavedAssets(): Asset[] {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  return saved ? JSON.parse(saved) : [];
+}
+
+// Adicionar novo ativo
+export function addAsset(assetData: {...}): Asset {
+  const assets = loadSavedAssets();
+  const newAsset = { id: generateId(), ...assetData };
+  assets.push(newAsset);
+  saveAssets(assets);
+  return newAsset;
+}
+
+// Remover ativo
+export function removeAsset(assetId: string): void {
+  const assets = loadSavedAssets().filter(a => a.id !== assetId);
+  saveAssets(assets);
 }</pre>
         </section>
 
