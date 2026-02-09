@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, TrendingUp, TrendingDown } from 'lucide-react';
+import { ChevronRight, TrendingUp, TrendingDown, Trash2 } from 'lucide-react';
 import { DonutChart } from './DonutChart';
 import { Asset, formatCurrency, formatPercentage } from '@/services/portfolioService';
 
@@ -11,6 +11,7 @@ interface PortfolioByProductCardProps {
   rendaVariavel: Asset[];
   fiis: Asset[];
   internacional: Asset[];
+  onRemoveAsset?: (assetId: string) => void;
 }
 
 const TABS = [
@@ -25,6 +26,7 @@ export function PortfolioByProductCard({
   rendaVariavel,
   fiis,
   internacional,
+  onRemoveAsset,
 }: PortfolioByProductCardProps) {
   const [activeTab, setActiveTab] = useState('rendaFixa');
 
@@ -143,6 +145,18 @@ export function PortfolioByProductCard({
                       {formatPercentage(asset.percentageOfPortfolio)} da carteira
                     </p>
                   </div>
+                  {onRemoveAsset && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemoveAsset(asset.id);
+                      }}
+                      className="p-2 text-[#D1D5DB] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                      title="Remover ativo"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                   <ChevronRight className="w-5 h-5 text-[#D1D5DB] group-hover:text-[#00B8D9] transition-colors" />
                 </div>
               </motion.div>

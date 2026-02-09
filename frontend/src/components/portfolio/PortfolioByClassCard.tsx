@@ -3,10 +3,10 @@
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { DonutChart } from './DonutChart';
-import { AssetClass, formatCurrency, formatPercentage } from '@/services/portfolioService';
+import { AssetClassData, formatCurrency, formatPercentage } from '@/services/portfolioService';
 
 interface PortfolioByClassCardProps {
-  data: AssetClass[];
+  data: AssetClassData[];
   onClassClick?: (className: string) => void;
 }
 

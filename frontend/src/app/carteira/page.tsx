@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Loader2, Wallet, Calendar, RefreshCw } from 'lucide-react';
+import { Loader2, Wallet, Calendar, RefreshCw, Plus, Trash2 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -12,9 +12,13 @@ import {
   PortfolioByClassCard,
   PortfolioByProductCard,
   PortfolioByBrokerCard,
+  AddAssetModal,
 } from '@/components/portfolio';
+import type { NewAssetData } from '@/components/portfolio';
 import {
   getPortfolioData,
+  addAsset,
+  removeAsset,
   PortfolioData,
 } from '@/services/portfolioService';
 
@@ -24,6 +28,7 @@ export default function CarteiraPage() {
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -31,18 +36,18 @@ export default function CarteiraPage() {
     }
   }, [authLoading, isAuthenticated, router]);
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const data = await getPortfolioData();
-        setPortfolioData(data);
-      } catch (error) {
-        console.error('Erro ao carregar portfolio:', error);
-      } finally {
-        setLoading(false);
-      }
+  const loadData = async () => {
+    try {
+      const data = await getPortfolioData();
+      setPortfolioData(data);
+    } catch (error) {
+      console.error('Erro ao carregar portfolio:', error);
+    } finally {
+      setLoading(false);
     }
+  };
 
+  useEffect(() => {
     if (isAuthenticated) {
       loadData();
     }
@@ -50,13 +55,19 @@ export default function CarteiraPage() {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    try {
-      const data = await getPortfolioData();
-      setPortfolioData(data);
-    } catch (error) {
-      console.error('Erro ao atualizar portfolio:', error);
-    } finally {
-      setRefreshing(false);
+    await loadData();
+    setRefreshing(false);
+  };
+
+  const handleAddAsset = (assetData: NewAssetData) => {
+    addAsset(assetData);
+    handleRefresh();
+  };
+
+  const handleRemoveAsset = (assetId: string) => {
+    if (confirm('Tem certeza que deseja remover este ativo?')) {
+      removeAsset(assetId);
+      handleRefresh();
     }
   };
 
@@ -70,6 +81,8 @@ export default function CarteiraPage() {
       </div>
     );
   }
+
+  const hasAssets = portfolioData && portfolioData.summary.totalValue > 0;
 
   return (
     <DashboardLayout>
@@ -105,6 +118,14 @@ export default function CarteiraPage() {
               <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
               Atualizar
             </Button>
+            <Button
+              onClick={() => setIsAddModalOpen(true)}
+              size="sm"
+              className="bg-[#00B8D9] hover:bg-[#007EA7]"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Adicionar Ativo
+            </Button>
           </div>
         </motion.div>
 
@@ -127,7 +148,7 @@ export default function CarteiraPage() {
               </div>
             ))}
           </div>
-        ) : portfolioData ? (
+        ) : hasAssets && portfolioData ? (
           <div className="space-y-6">
             {/* Portfolio Summary */}
             <PortfolioSummaryCard summary={portfolioData.summary} />
@@ -141,6 +162,7 @@ export default function CarteiraPage() {
               rendaVariavel={portfolioData.byProduct.rendaVariavel}
               fiis={portfolioData.byProduct.fiis}
               internacional={portfolioData.byProduct.internacional}
+              onRemoveAsset={handleRemoveAsset}
             />
 
             {/* Portfolio by Broker */}
@@ -154,27 +176,65 @@ export default function CarteiraPage() {
               className="text-center text-sm text-[#6B7280] py-4"
             >
               <p>
-                Os valores exibidos sao ilustrativos para demonstracao do sistema.
+                Os precos atuais sao simulados para demonstracao.
                 <br />
-                Em producao, os dados serao sincronizados com suas corretoras.
+                Em producao, os dados serao sincronizados com APIs de mercado.
               </p>
             </motion.div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-[#E5E7EB] p-8 text-center">
-            <Wallet className="w-16 h-16 text-[#D1D5DB] mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-[#0B1F33] mb-2">
-              Nenhum dado disponivel
+          // Empty state
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-xl border border-[#E5E7EB] p-12 text-center"
+          >
+            <div className="w-20 h-20 bg-[#00B8D9]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Wallet className="w-10 h-10 text-[#00B8D9]" />
+            </div>
+            <h2 className="text-2xl font-semibold text-[#0B1F33] mb-3">
+              Sua carteira esta vazia
             </h2>
-            <p className="text-[#6B7280] mb-6">
-              Nao foi possivel carregar os dados da carteira.
+            <p className="text-[#6B7280] mb-8 max-w-md mx-auto">
+              Comece adicionando seus primeiros ativos para acompanhar seu portfolio de investimentos.
             </p>
-            <Button onClick={handleRefresh} className="bg-[#00B8D9] hover:bg-[#007EA7]">
-              Tentar novamente
+            <Button
+              onClick={() => setIsAddModalOpen(true)}
+              size="lg"
+              className="bg-[#00B8D9] hover:bg-[#007EA7]"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Adicionar Primeiro Ativo
             </Button>
-          </div>
+
+            {/* Quick tips */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+              <div className="bg-[#F3F4F6] rounded-lg p-4 text-left">
+                <div className="text-2xl mb-2">📈</div>
+                <h3 className="font-semibold text-[#0B1F33] mb-1">Renda Variavel</h3>
+                <p className="text-sm text-[#6B7280]">Acoes, ETFs e BDRs</p>
+              </div>
+              <div className="bg-[#F3F4F6] rounded-lg p-4 text-left">
+                <div className="text-2xl mb-2">🏦</div>
+                <h3 className="font-semibold text-[#0B1F33] mb-1">Renda Fixa</h3>
+                <p className="text-sm text-[#6B7280]">CDB, LCI, LCA, Tesouro</p>
+              </div>
+              <div className="bg-[#F3F4F6] rounded-lg p-4 text-left">
+                <div className="text-2xl mb-2">🏢</div>
+                <h3 className="font-semibold text-[#0B1F33] mb-1">FIIs</h3>
+                <p className="text-sm text-[#6B7280]">Fundos Imobiliarios</p>
+              </div>
+            </div>
+          </motion.div>
         )}
       </div>
+
+      {/* Add Asset Modal */}
+      <AddAssetModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAdd={handleAddAsset}
+      />
     </DashboardLayout>
   );
 }

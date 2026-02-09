@@ -2,14 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
   MessageSquare,
   Wallet,
-  FileText,
   BarChart3,
   GraduationCap,
   ChevronLeft,
@@ -44,12 +42,6 @@ const menuItems: MenuItem[] = [
     label: 'Minha Carteira',
     icon: <Wallet className="w-5 h-5" />,
     href: '/carteira',
-  },
-  {
-    id: 'extratos',
-    label: 'Extratos',
-    icon: <FileText className="w-5 h-5" />,
-    href: '/extratos',
   },
   {
     id: 'relatorios',
