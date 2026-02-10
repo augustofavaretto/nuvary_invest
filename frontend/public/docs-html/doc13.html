@@ -357,12 +357,12 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">⭐</div>
-                    <div class="stat-number">24</div>
+                    <div class="stat-number">20</div>
                     <div class="stat-label">Melhorias Futuras</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🛠️</div>
-                    <div class="stat-number">9</div>
+                    <div class="stat-number">40</div>
                     <div class="stat-label">Debito Tecnico</div>
                 </div>
             </div>
@@ -585,14 +585,6 @@
                 <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Glossario financeiro completo</span></li>
             </ul>
 
-            <div class="category-header">📱 Mobile e PWA</div>
-            <ul class="task-list">
-                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Progressive Web App (PWA)</span></li>
-                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">App mobile nativo (React Native)</span></li>
-                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Push notifications</span></li>
-                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Modo offline</span></li>
-            </ul>
-
             <div class="category-header">🏗️ Infraestrutura</div>
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Testes unitarios (Jest)</span></li>
@@ -605,25 +597,68 @@
         <section class="section-tech">
             <h2><span class="icon">🛠️</span> Debito Tecnico</h2>
 
-            <div class="category-header">💻 Codigo</div>
+            <div class="category-header" style="background: linear-gradient(135deg, #EF4444 0%, #991B1B 100%); color: white;">🔒 Seguranca - CRITICO</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Remover tipos `any` do TypeScript</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Centralizar constantes (cores, URLs)</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Criar cliente HTTP centralizado com interceptors</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Melhorar tratamento de erros especificos</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">CORS aberto no backend — <code>cors()</code> aceita qualquer origem (server.js:24)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">JWT secrets com fallback fraco hardcoded (config/index.js:40-41)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Token de reset de senha retornado na resposta da API (auth.js:143)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Rotas publicas sem autenticacao: stocks, crypto, news, finnhub, forex, search</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Perfil de risco acessivel/deletavel sem auth (riskProfile.js:19-26)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem limite de tamanho no body — <code>express.json()</code> sem <code>limit</code> (server.js:25)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem HTTPS enforcement (falta Helmet HSTS)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">localStorage usado para dados sensiveis do perfil investidor (Chatbot.tsx:107)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Input de ticker/nome sem sanitizacao contra XSS (AddAssetModal.tsx:304)</span></li>
             </ul>
 
-            <div class="category-header">🗄️ Banco de Dados</div>
+            <div class="category-header" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: white;">⚠️ Validacao e Tratamento de Erros</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Remover better-sqlite3 (usar apenas Supabase)</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Adicionar indices de performance</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Respostas de API aceitas sem validacao de schema (dashboardService.ts:76-122)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Erros silenciados com array vazio — usuario nao sabe que falhou (dashboardService.ts:199)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Tratamento de erros inconsistente — console.error em uns, silencio em outros</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Validacao de input fraca no backend — searchController, cryptoController, forex</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Formato de resposta de erro inconsistente entre controllers do backend</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Validacao de env vars ausente — app inicia com config invalida sem aviso</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Chat input sem limite de caracteres (Chatbot.tsx)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Rate limiter fraco — 30 req/min em memoria, sem store persistente</span></li>
+            </ul>
+
+            <div class="category-header">💻 Qualidade de Codigo</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">25+ console.log/error em codigo de producao (chat, dashboard, portfolio, perfil)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Duplicacao de logica — listarConversas e buscarConversas 80% iguais (chatService.ts)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Validacoes de CPF/telefone/data dentro do componente — mover para lib/validators.ts</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Constantes de cores duplicadas em 3+ arquivos — criar arquivo centralizado</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Auth check duplicado em dashboard e carteira — criar ProtectedPageLayout</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Componentes grandes: AddAssetModal (711 linhas), Chatbot (515), RegisterForm (611)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Tipos <code>unknown</code> sem narrowing adequado (dashboardService, perfilService)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">TODO no codigo: "Implementar login com Supabase" ja implementado (authService.ts:34)</span></li>
+            </ul>
+
+            <div class="category-header">🗄️ Dados e Persistencia</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Portfolio salvo apenas em localStorage — sem sync com Supabase</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Perfil investidor em 3 locais (localStorage, Supabase, Context) sem sincronizacao</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Cotacao USD/BRL hardcoded em R$5.00 — buscar de API forex (portfolioService.ts:76)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Precos simulados com Math.random() no addAsset (portfolioService.ts:253-254)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Delays artificiais simulando API (setTimeout 100-300ms nos services)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Chat historico armazenado em texto plano sem criptografia</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Memory leak: Map() de profiles no backend crece sem limpeza (riskProfile.js:4)</span></li>
             </ul>
 
             <div class="category-header">⚡ Performance</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Otimizar bundle size (code splitting)</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Lazy loading de rotas</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Service workers para cache</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Falta React.memo em itens de lista (ChatMessage, PortfolioByProductCard)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">symbolNames recriado a cada render — mover para fora do componente (MarketOverview)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem deduplicacao de requests — re-mount causa chamadas duplicadas</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem code splitting / dynamic imports para rotas</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem paginacao no historico do chat — carrega 50 mensagens de uma vez</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Backend sem graceful shutdown — requests perdidos no SIGTERM (server.js)</span></li>
+            </ul>
+
+            <div class="category-header">♿ Acessibilidade</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Inputs de formulario sem aria-label e aria-describedby</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Modal sem aria-modal e role="dialog" adequados</span></li>
             </ul>
         </section>
     </main>
