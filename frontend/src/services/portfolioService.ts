@@ -57,6 +57,37 @@ export interface PortfolioData {
 // Storage key
 const STORAGE_KEY = 'nuvary_portfolio_assets';
 
+// Mapeamento de tickers internos → nome oficial no Tesouro Direto
+// Nomes exatos conforme o CSV do Tesouro Transparente e o portal JSON
+const TESOURO_TICKER_TO_NOME: Record<string, string> = {
+  // Tesouro Selic
+  'SELIC-2025': 'Tesouro Selic 2025',
+  'SELIC-2026': 'Tesouro Selic 2026',
+  'SELIC-2027': 'Tesouro Selic 2027',
+  'SELIC-2028': 'Tesouro Selic 2028',
+  'SELIC-2029': 'Tesouro Selic 2029',
+  'SELIC-2031': 'Tesouro Selic 2031',
+  // Tesouro IPCA+
+  'IPCA-2026': 'Tesouro IPCA+ 2026',
+  'IPCA-2029': 'Tesouro IPCA+ 2029',
+  'IPCA-2035': 'Tesouro IPCA+ 2035',
+  'IPCA-2045': 'Tesouro IPCA+ 2045',
+  // Tesouro Prefixado
+  'PREFIXADO-2025': 'Tesouro Prefixado 2025',
+  'PREFIXADO-2026': 'Tesouro Prefixado 2026',
+  'PREFIXADO-2027': 'Tesouro Prefixado 2027',
+  'PREFIXADO-2028': 'Tesouro Prefixado 2028',
+  'PREFIXADO-2029': 'Tesouro Prefixado 2029',
+  'PREFIXADO-2031': 'Tesouro Prefixado 2031',
+  // Tesouro Educa+ e RendA+
+  'EDUCA-2030': 'Tesouro Educa+ 2030',
+  'EDUCA-2031': 'Tesouro Educa+ 2031',
+  'EDUCA-2033': 'Tesouro Educa+ 2033',
+  'EDUCA-2035': 'Tesouro Educa+ 2035',
+  'EDUCA-2045': 'Tesouro Educa+ 2045',
+  'RENDA-2030': 'Tesouro RendA+ 2030',
+};
+
 // Mapeamento de BDRs para símbolos americanos
 const BDR_TO_US_SYMBOL: Record<string, string> = {
   'AAPL34': 'AAPL',
@@ -83,6 +114,73 @@ export interface PriceResult {
   currency: 'BRL' | 'USD';
   source: string;
   error?: string;
+}
+
+// Indicadores BCB em cache local (evita múltiplas chamadas na mesma sessão)
+let bcbRatesCache: { selic: number | null; cdi: number | null; ipca: number | null; ts: number } | null = null;
+const BCB_CACHE_TTL = 15 * 60 * 1000; // 15 minutos
+
+// Busca todos os indicadores BCB de uma vez (/api/bcb/rates)
+async function fetchBCBRates(): Promise<{ selic: number | null; cdi: number | null; ipca: number | null }> {
+  if (bcbRatesCache && Date.now() - bcbRatesCache.ts < BCB_CACHE_TTL) {
+    return { selic: bcbRatesCache.selic, cdi: bcbRatesCache.cdi, ipca: bcbRatesCache.ipca };
+  }
+  try {
+    const res = await fetch(`${API_URL}/bcb/rates`);
+    if (res.ok) {
+      const data = await res.json();
+      const rates = {
+        selic: data.selic?.taxa ?? null,
+        cdi:   data.cdi?.taxa   ?? null,
+        ipca:  data.ipca?.taxa  ?? null,
+        ts:    Date.now(),
+      };
+      bcbRatesCache = rates;
+      return rates;
+    }
+  } catch {
+    // silencioso — fallback Brapi
+  }
+
+  // Fallback: Brapi prime-rate para Selic
+  try {
+    const res = await fetch(`${API_URL}/brapi/selic`);
+    if (res.ok) {
+      const data = await res.json();
+      const selic = data.prime_rate?.[0]?.value ? parseFloat(data.prime_rate[0].value) : null;
+      return { selic, cdi: selic, ipca: null };
+    }
+  } catch {
+    // silencioso
+  }
+  return { selic: null, cdi: null, ipca: null };
+}
+
+// Buscar taxa de um título do Tesouro Direto via backend proxy
+async function fetchTesouroDiretoRate(ticker: string): Promise<{ taxa: number | null; fonte: string }> {
+  try {
+    const res = await fetch(`${API_URL}/tesouro/rates`);
+    if (res.ok) {
+      const data = await res.json();
+      const nomeOficial = TESOURO_TICKER_TO_NOME[ticker];
+      if (nomeOficial && data.rates && data.rates[nomeOficial]) {
+        return { taxa: data.rates[nomeOficial].taxaCompra || null, fonte: data.fonte || 'Tesouro Direto' };
+      }
+
+      // Busca parcial: tenta encontrar um título que contenha o nome mapeado
+      if (nomeOficial) {
+        const chaveEncontrada = Object.keys(data.rates || {}).find(k =>
+          k.toLowerCase().includes(nomeOficial.toLowerCase().split(' ').slice(1, 3).join(' ').toLowerCase())
+        );
+        if (chaveEncontrada) {
+          return { taxa: data.rates[chaveEncontrada].taxaCompra || null, fonte: data.fonte || 'Tesouro Direto' };
+        }
+      }
+    }
+  } catch {
+    // silencioso — fallback para entrada manual
+  }
+  return { taxa: null, fonte: 'Manual' };
 }
 
 // Buscar preço de ação/FII da B3 via Brapi
@@ -131,9 +229,11 @@ async function fetchCryptoPrice(symbol: string): Promise<number | null> {
 
 
 // Função principal para buscar preço de qualquer ativo
+// name: nome do ativo (opcional) — usado para calcular taxa CDI de renda fixa
 export async function fetchAssetPrice(
   ticker: string,
-  category: CategoryId
+  category: CategoryId,
+  name?: string
 ): Promise<PriceResult> {
   // Categoria cripto - buscar via Alpha Vantage (USD) e converter para BRL
   if (category === 'cripto') {
@@ -223,12 +323,60 @@ export async function fetchAssetPrice(
     };
   }
 
-  // Renda fixa e tesouro - não têm cotação em APIs de mercado
+  // Tesouro Direto — busca taxa anual no portal oficial com fallback CSV
+  if (category === 'tesouro') {
+    const { taxa, fonte } = await fetchTesouroDiretoRate(ticker);
+    if (taxa !== null) {
+      return {
+        price: taxa,
+        currency: 'BRL',
+        source: fonte,
+      };
+    }
+
+    // Fallback: Selic do BCB como referência para Tesouro Selic
+    const { selic } = await fetchBCBRates();
+    const isTesouroSelic = ticker.startsWith('SELIC');
+    if (isTesouroSelic && selic !== null) {
+      return {
+        price: selic,
+        currency: 'BRL',
+        source: `BCB SGS (Selic ${selic.toFixed(2)}% a.a.)`,
+      };
+    }
+
+    return {
+      price: null,
+      currency: 'BRL',
+      source: 'Manual',
+      error: 'Taxa não encontrada. Informe manualmente.',
+    };
+  }
+
+  // Renda Fixa (CDB, LCI, LCA, Debêntures)
+  // Se o nome contiver "XXX% CDI" (ex: "120% CDI"), calcula CDI × multiplicador automaticamente
+  const { cdi, selic } = await fetchBCBRates();
+  const taxaBase = cdi ?? selic;
+
+  // Regex: captura "120% CDI", "100 % do CDI", "110%CDI", etc.
+  const cdiMatch = name?.match(/(\d+(?:[.,]\d+)?)\s*%\s*(?:do\s+)?CDI/i);
+  if (cdiMatch && taxaBase !== null) {
+    const percentualCDI = parseFloat(cdiMatch[1].replace(',', '.'));
+    const taxaCalculada = parseFloat((taxaBase * percentualCDI / 100).toFixed(2));
+    return {
+      price: taxaCalculada,
+      currency: 'BRL',
+      source: `BCB SGS (CDI ${taxaBase.toFixed(2)}% × ${percentualCDI.toFixed(0)}%)`,
+    };
+  }
+
   return {
     price: null,
     currency: 'BRL',
     source: 'Manual',
-    error: 'Informe o preço manualmente.',
+    error: taxaBase !== null
+      ? `Informe a taxa contratada. CDI atual (BCB): ${taxaBase.toFixed(2)}% a.a.`
+      : 'Informe a taxa contratada manualmente.',
   };
 }
 
@@ -289,9 +437,23 @@ export function addAsset(assetData: {
 }): Asset {
   const assets = loadSavedAssets();
 
-  // Simular preço atual (em produção, buscar via API)
-  const variationPercent = (Math.random() * 20) - 5; // -5% to +15%
-  const currentPrice = assetData.averagePrice * (1 + variationPercent / 100);
+  // Renda Fixa e Tesouro: quantity = R$ investido, averagePrice = taxa (%)
+  // O valor total é o próprio montante investido (sem variação de mercado)
+  const isFixedIncome = assetData.class === 'renda_fixa';
+
+  let currentPrice: number;
+  let totalValue: number;
+  let variationPercent: number;
+
+  if (isFixedIncome) {
+    currentPrice = assetData.averagePrice; // armazena a taxa (%)
+    totalValue = assetData.quantity;       // quantity = R$ aplicado
+    variationPercent = 0;
+  } else {
+    variationPercent = (Math.random() * 20) - 5; // -5% a +15%
+    currentPrice = assetData.averagePrice * (1 + variationPercent / 100);
+    totalValue = assetData.quantity * currentPrice;
+  }
 
   const newAsset: Asset = {
     id: generateId(),
@@ -300,8 +462,8 @@ export function addAsset(assetData: {
     type: assetData.class,
     quantity: assetData.quantity,
     averagePrice: assetData.averagePrice,
-    currentPrice: currentPrice,
-    totalValue: assetData.quantity * currentPrice,
+    currentPrice,
+    totalValue,
     percentageOfPortfolio: 0, // Will be calculated
     percentageOfProduct: 0, // Will be calculated
     variation: variationPercent,

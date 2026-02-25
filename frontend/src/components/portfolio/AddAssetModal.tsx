@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, Plus, DollarSign, Hash, Building2, ChevronLeft,
   Landmark, TrendingUp, Building, Globe, Coins, PiggyBank,
-  Search, Loader2, AlertCircle, CheckCircle
+  Search, Loader2, AlertCircle, CheckCircle, Percent
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AssetClass, CategoryId, fetchAssetPrice, PriceResult } from '@/services/portfolioService';
@@ -88,15 +88,24 @@ const ASSETS_BY_CATEGORY: Record<string, { ticker: string; name: string }[]> = {
     { ticker: 'CRA-RAIZEN', name: 'CRA Raizen' },
   ],
   tesouro: [
+    // Tesouro Selic
+    { ticker: 'SELIC-2026', name: 'Tesouro Selic 2026' },
     { ticker: 'SELIC-2027', name: 'Tesouro Selic 2027' },
     { ticker: 'SELIC-2029', name: 'Tesouro Selic 2029' },
+    { ticker: 'SELIC-2031', name: 'Tesouro Selic 2031' },
+    // Tesouro IPCA+
     { ticker: 'IPCA-2029', name: 'Tesouro IPCA+ 2029' },
     { ticker: 'IPCA-2035', name: 'Tesouro IPCA+ 2035' },
     { ticker: 'IPCA-2045', name: 'Tesouro IPCA+ 2045' },
+    // Tesouro Prefixado
+    { ticker: 'PREFIXADO-2026', name: 'Tesouro Prefixado 2026' },
     { ticker: 'PREFIXADO-2027', name: 'Tesouro Prefixado 2027' },
+    { ticker: 'PREFIXADO-2029', name: 'Tesouro Prefixado 2029' },
     { ticker: 'PREFIXADO-2031', name: 'Tesouro Prefixado 2031' },
-    { ticker: 'RENDA-2030', name: 'Tesouro Renda+ 2030' },
+    // Tesouro Educa+ e RendA+
     { ticker: 'EDUCA-2031', name: 'Tesouro Educa+ 2031' },
+    { ticker: 'EDUCA-2035', name: 'Tesouro Educa+ 2035' },
+    { ticker: 'RENDA-2030', name: 'Tesouro RendA+ 2030' },
   ],
   renda_variavel: [
     { ticker: 'PETR4', name: 'Petrobras PN' },
@@ -263,7 +272,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
       setPriceLoading(true);
       setPriceInfo(null);
       try {
-        const result = await fetchAssetPrice(asset.ticker, selectedCategory as CategoryId);
+        const result = await fetchAssetPrice(asset.ticker, selectedCategory as CategoryId, asset.name);
         setPriceInfo(result);
         if (result.price) {
           setFormData(prev => ({
@@ -320,7 +329,9 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
       newErrors.quantity = 'Quantidade deve ser maior que zero';
     }
     if (formData.averagePrice <= 0) {
-      newErrors.averagePrice = STRINGS.carteira.precoDeveSerMaior;
+      newErrors.averagePrice = isFixedIncome
+        ? STRINGS.carteira.taxaDeveSerMaior
+        : STRINGS.carteira.precoDeveSerMaior;
     }
 
     setErrors(newErrors);
@@ -343,6 +354,10 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
       handleClose();
     }
   };
+
+  // Renda Fixa e Tesouro usam % (taxa) no lugar de R$ (preço médio)
+  const isFixedIncome =
+    selectedCategory === 'renda_fixa' || selectedCategory === 'tesouro';
 
   // Filtrar ativos pela busca
   const filteredAssets = selectedCategory
@@ -582,19 +597,23 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                           </div>
                         )}
 
-                        {/* Quantidade e Preço */}
+                        {/* Quantidade / Valor Investido e Preço / Taxa */}
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-[#0B1F33] mb-1">
-                              Quantidade
+                              {isFixedIncome ? STRINGS.carteira.valorInvestido : 'Quantidade'}
                             </label>
                             <div className="relative">
-                              <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                              {isFixedIncome ? (
+                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                              ) : (
+                                <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                              )}
                               <input
                                 type="number"
                                 value={formData.quantity || ''}
                                 onChange={(e) => setFormData(prev => ({ ...prev, quantity: parseFloat(e.target.value) || 0 }))}
-                                placeholder="0"
+                                placeholder={isFixedIncome ? '0.00' : '0'}
                                 min="0"
                                 step="0.01"
                                 className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] ${
@@ -609,11 +628,13 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
 
                           <div>
                             <label className="block text-sm font-medium text-[#0B1F33] mb-1">
-                              {STRINGS.carteira.precoMedio}
+                              {isFixedIncome ? STRINGS.carteira.taxaContratada : STRINGS.carteira.precoMedio}
                             </label>
                             <div className="relative">
                               {priceLoading ? (
                                 <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00B8D9] animate-spin" />
+                              ) : isFixedIncome ? (
+                                <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
                               ) : (
                                 <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
                               )}
@@ -621,7 +642,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                                 type="number"
                                 value={formData.averagePrice || ''}
                                 onChange={(e) => setFormData(prev => ({ ...prev, averagePrice: parseFloat(e.target.value) || 0 }))}
-                                placeholder={priceLoading ? 'Buscando...' : '0.00'}
+                                placeholder={priceLoading ? 'Buscando...' : isFixedIncome ? 'Ex: 120' : '0.00'}
                                 min="0"
                                 step="0.01"
                                 disabled={priceLoading}
@@ -636,22 +657,26 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                           </div>
                         </div>
 
-                        {/* Status de busca do preço */}
+                        {/* Status de busca do preço / taxa */}
                         {!isCustom && priceInfo && (
-                          <div className={`flex items-center gap-2 text-sm p-3 rounded-lg ${
+                          <div className={`flex items-start gap-2 text-sm p-3 rounded-lg ${
                             priceInfo.price
                               ? 'bg-green-50 text-green-700'
                               : 'bg-amber-50 text-amber-700'
                           }`}>
                             {priceInfo.price ? (
-                              <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                              <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                             ) : (
-                              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                             )}
                             <span>
                               {priceInfo.price
-                                ? `Preço obtido via ${priceInfo.source}`
-                                : priceInfo.error || STRINGS.carteira.precoNaoDisponivel}
+                                ? isFixedIncome
+                                  ? `Taxa obtida via ${priceInfo.source}: ${priceInfo.price.toFixed(2)}% a.a. — você pode ajustar conforme contrato.`
+                                  : `${STRINGS.carteira.precoObtidoVia} ${priceInfo.source}`
+                                : priceInfo.error || (isFixedIncome
+                                    ? STRINGS.carteira.taxaNaoDisponivel
+                                    : STRINGS.carteira.precoNaoDisponivel)}
                             </span>
                           </div>
                         )}
@@ -680,10 +705,24 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                         {/* Valor Total Preview */}
                         {formData.quantity > 0 && formData.averagePrice > 0 && (
                           <div className="bg-gradient-to-r from-[#0B1F33] to-[#1e3a5f] rounded-lg p-4 text-white">
-                            <p className="text-sm text-white/70">Valor Total Investido</p>
-                            <p className="text-2xl font-bold">
-                              R$ {(formData.quantity * formData.averagePrice).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                            </p>
+                            {isFixedIncome ? (
+                              <>
+                                <p className="text-sm text-white/70">{STRINGS.carteira.valorTotalAplicado}</p>
+                                <p className="text-2xl font-bold">
+                                  R$ {formData.quantity.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                </p>
+                                <p className="text-sm text-white/60 mt-1">
+                                  Taxa contratada: {formData.averagePrice.toFixed(2)}% a.a.
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <p className="text-sm text-white/70">Valor Total Investido</p>
+                                <p className="text-2xl font-bold">
+                                  R$ {(formData.quantity * formData.averagePrice).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                </p>
+                              </>
+                            )}
                           </div>
                         )}
 

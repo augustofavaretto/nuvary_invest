@@ -174,6 +174,14 @@ export const STRINGS = {
     tickerObrigatorio: 'Ticker é obrigatório',
     nomeObrigatorio: 'Nome é obrigatório',
     precoDeveSerMaior: 'Preço deve ser maior que zero',
+    // Renda Fixa / Tesouro Direto
+    taxaContratada: 'Taxa Contratada (%)',
+    taxaDeveSerMaior: 'Taxa deve ser maior que zero',
+    valorInvestido: 'Valor Investido (R$)',
+    valorTotalAplicado: 'Valor Total Aplicado',
+    taxaObtidaVia: 'Taxa obtida via',
+    taxaNaoDisponivel: 'Informe a taxa contratada manualmente.',
+    selicReferencia: (taxa: number) => `Referência: Selic/CDI atual ${taxa.toFixed(2)}% a.a. (Brapi)`,
   },
 
   // ─── Trilhas educacionais ──────────────────────────────────────────────────
