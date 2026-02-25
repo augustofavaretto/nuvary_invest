@@ -20,6 +20,7 @@ import {
   CheckCircle2,
   MessageSquare,
 } from 'lucide-react';
+import { STRINGS } from '@/constants/strings';
 
 interface ResultCardProps {
   result: QuestionnaireResult;
@@ -67,13 +68,13 @@ const allocationIcons = {
 };
 
 const allocationLabels = {
-  rendaFixa: 'Renda Fixa',
-  rendaVariavel: 'Renda Variavel',
-  fundosImobiliarios: 'FIIs',
-  internacional: 'Internacional',
+  rendaFixa: STRINGS.perfil.rendaFixa,
+  rendaVariavel: STRINGS.perfil.rendaVariavel,
+  fundosImobiliarios: STRINGS.perfil.fiis,
+  internacional: STRINGS.perfil.internacional,
 };
 
-// Cores dos graficos conforme manual
+// Cores dos gráficos conforme manual
 const allocationColors = {
   rendaFixa: 'bg-[#00B8D9]',
   rendaVariavel: 'bg-[#007EA7]',
@@ -115,7 +116,7 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
           >
             <ProfileIcon className="w-10 h-10" />
           </motion.div>
-          <p className="text-white/80 text-sm mb-2">Seu perfil e</p>
+          <p className="text-white/80 text-sm mb-2">{STRINGS.perfil.sePerfilE}</p>
           <h2 className="text-3xl font-bold mb-2">{profile.name}</h2>
           <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
             <span className="text-2xl font-bold">{result.score.total}</span>
@@ -133,13 +134,13 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
       {/* Category Analysis */}
       <Card className="border border-[#E5E7EB] shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">Analise por Categoria</h3>
+          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">{STRINGS.perfil.analiseCategoria}</h3>
           <div className="space-y-4">
             {Object.entries(result.categoryAnalysis).map(([key, analysis]) => (
               <div key={key}>
                 <div className="flex justify-between text-sm mb-1">
                   <span className="capitalize text-[#0B1F33]">
-                    {key === 'tolerancia_risco' ? 'Tolerancia a Risco' : key === 'objetivos' ? 'Objetivos' : 'Horizonte'}
+                    {key === 'tolerancia_risco' ? STRINGS.perfil.toleranciaRisco : key === 'objetivos' ? 'Objetivos' : 'Horizonte'}
                   </span>
                   <span className="text-[#6B7280]">{analysis.percentage}%</span>
                 </div>
@@ -160,7 +161,7 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
       {/* Recommended Allocation */}
       <Card className="border border-[#E5E7EB] shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">Alocacao Recomendada</h3>
+          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">{STRINGS.perfil.alocacaoRecomendada}</h3>
 
           {/* Allocation Bar */}
           <div className="flex h-10 rounded-lg overflow-hidden mb-4">
@@ -224,7 +225,7 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
       {/* Characteristics */}
       <Card className="border border-[#E5E7EB] shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">Suas Caracteristicas</h3>
+          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">{STRINGS.perfil.suasCaracteristicas}</h3>
           <ul className="space-y-3">
             {profile.characteristics.map((characteristic, index) => (
               <motion.li
@@ -276,7 +277,7 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
         size="lg"
       >
         <RefreshCw className="w-4 h-4 mr-2" />
-        Refazer Questionario
+        {STRINGS.perfil.refazerQuestionario}
       </Button>
     </motion.div>
   );

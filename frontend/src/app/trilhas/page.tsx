@@ -43,7 +43,7 @@ export default function TrilhasPage() {
             Trilhas Educativas
           </h1>
           <p className="text-[#6B7280] mt-1">
-            Aprenda sobre investimentos de forma pratica e personalizada
+            Aprenda sobre investimentos de forma prática e personalizada
           </p>
         </motion.div>
 
@@ -58,22 +58,22 @@ export default function TrilhasPage() {
             <GraduationCap className="w-10 h-10 text-[#00B8D9]" />
           </div>
           <h2 className="text-xl font-semibold text-[#0B1F33] mb-2">
-            Em breve disponivel
+            Em breve disponível
           </h2>
           <p className="text-[#6B7280] max-w-md mx-auto mb-6">
-            Trilhas de aprendizado personalizadas para seu nivel de conhecimento e perfil de investidor.
+            Trilhas de aprendizado personalizadas para seu nível de conhecimento e perfil de investidor.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
             <div className="bg-[#F3F4F6] rounded-lg p-4">
               <BookOpen className="w-6 h-6 text-[#00B8D9] mx-auto mb-2" />
               <p className="text-sm font-medium text-[#0B1F33]">Cursos</p>
-              <p className="text-xs text-[#6B7280]">Do basico ao avancado</p>
+              <p className="text-xs text-[#6B7280]">Do básico ao avançado</p>
             </div>
             <div className="bg-[#F3F4F6] rounded-lg p-4">
               <Video className="w-6 h-6 text-[#00B8D9] mx-auto mb-2" />
-              <p className="text-sm font-medium text-[#0B1F33]">Videos</p>
-              <p className="text-xs text-[#6B7280]">Aulas em video</p>
+              <p className="text-sm font-medium text-[#0B1F33]">Vídeos</p>
+              <p className="text-xs text-[#6B7280]">Aulas em vídeo</p>
             </div>
             <div className="bg-[#F3F4F6] rounded-lg p-4">
               <Award className="w-6 h-6 text-[#00B8D9] mx-auto mb-2" />
@@ -89,21 +89,21 @@ export default function TrilhasPage() {
                 <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">Iniciante</span>
               </div>
               <h3 className="font-semibold text-[#0B1F33]">Primeiros Passos</h3>
-              <p className="text-sm text-[#6B7280] mt-1">Conceitos basicos de investimentos</p>
+              <p className="text-sm text-[#6B7280] mt-1">Conceitos básicos de investimentos</p>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-5 text-left border border-green-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">Intermediario</span>
+                <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">Intermediário</span>
               </div>
-              <h3 className="font-semibold text-[#0B1F33]">Renda Variavel</h3>
-              <p className="text-sm text-[#6B7280] mt-1">Acoes, FIIs e ETFs</p>
+              <h3 className="font-semibold text-[#0B1F33]">Renda Variável</h3>
+              <p className="text-sm text-[#6B7280] mt-1">Ações, FIIs e ETFs</p>
             </div>
             <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-5 text-left border border-amber-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full">Avancado</span>
+                <span className="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full">Avançado</span>
               </div>
-              <h3 className="font-semibold text-[#0B1F33]">Analise Tecnica</h3>
-              <p className="text-sm text-[#6B7280] mt-1">Graficos e indicadores</p>
+              <h3 className="font-semibold text-[#0B1F33]">Análise Técnica</h3>
+              <p className="text-sm text-[#6B7280] mt-1">Gráficos e indicadores</p>
             </div>
             <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-5 text-left border border-purple-200">
               <div className="flex items-center gap-2 mb-2">

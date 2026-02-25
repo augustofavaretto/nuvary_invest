@@ -1,5 +1,5 @@
-// Portfolio Service - With localStorage persistence
-// In production, this would connect to real brokerage APIs
+// Portfolio Service - Persistência via localStorage
+// Em produção, conectaria a APIs de corretoras reais
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
@@ -57,7 +57,7 @@ export interface PortfolioData {
 // Storage key
 const STORAGE_KEY = 'nuvary_portfolio_assets';
 
-// Mapeamento de BDRs para simbolos americanos
+// Mapeamento de BDRs para símbolos americanos
 const BDR_TO_US_SYMBOL: Record<string, string> = {
   'AAPL34': 'AAPL',
   'MSFT34': 'MSFT',
@@ -75,7 +75,7 @@ const BDR_TO_US_SYMBOL: Record<string, string> = {
   'SPXI11': 'SPY',
 };
 
-// Cotacao do dolar (aproximada, em producao buscar de API forex)
+// Cotação do dólar (aproximada, em produção buscar de API forex)
 const USD_TO_BRL = 5.0;
 
 export interface PriceResult {
@@ -85,7 +85,23 @@ export interface PriceResult {
   error?: string;
 }
 
-// Buscar preco de acao americana via Finnhub
+// Buscar preço de ação/FII da B3 via Brapi
+async function fetchB3StockPrice(ticker: string): Promise<number | null> {
+  try {
+    const res = await fetch(`${API_URL}/brapi/quote/${ticker}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.results && data.results.length > 0) {
+        return data.results[0].currentPrice || null;
+      }
+    }
+  } catch (error) {
+    console.error(`Erro ao buscar preço de ${ticker} via Brapi:`, error);
+  }
+  return null;
+}
+
+// Buscar preço de ação americana via Finnhub
 async function fetchUSStockPrice(symbol: string): Promise<number | null> {
   try {
     const res = await fetch(`${API_URL}/finnhub/stocks/${symbol}/quote`);
@@ -94,12 +110,12 @@ async function fetchUSStockPrice(symbol: string): Promise<number | null> {
       return data.currentPrice || data.c || null;
     }
   } catch (error) {
-    console.error(`Erro ao buscar preco de ${symbol}:`, error);
+    console.error(`Erro ao buscar preço de ${symbol}:`, error);
   }
   return null;
 }
 
-// Buscar preco de criptomoeda via Alpha Vantage
+// Buscar preço de criptomoeda via Alpha Vantage
 async function fetchCryptoPrice(symbol: string): Promise<number | null> {
   try {
     const res = await fetch(`${API_URL}/crypto/${symbol}/rate?currency=USD`);
@@ -108,92 +124,115 @@ async function fetchCryptoPrice(symbol: string): Promise<number | null> {
       return data.price || null;
     }
   } catch (error) {
-    console.error(`Erro ao buscar preco de ${symbol}:`, error);
+    console.error(`Erro ao buscar preço de ${symbol}:`, error);
   }
   return null;
 }
 
-// Funcao principal para buscar preco de qualquer ativo
+
+// Função principal para buscar preço de qualquer ativo
 export async function fetchAssetPrice(
   ticker: string,
   category: CategoryId
 ): Promise<PriceResult> {
-  // Categoria cripto - buscar preco em USD e converter para BRL
+  // Categoria cripto - buscar via Alpha Vantage (USD) e converter para BRL
   if (category === 'cripto') {
-    const price = await fetchCryptoPrice(ticker);
-    if (price) {
+    const usdPrice = await fetchCryptoPrice(ticker);
+    if (usdPrice) {
       return {
-        price: price * USD_TO_BRL, // Converter USD para BRL
+        price: usdPrice * USD_TO_BRL,
         currency: 'BRL',
         source: 'Alpha Vantage (Crypto)',
       };
     }
+
     return {
       price: null,
       currency: 'BRL',
       source: 'API',
-      error: 'Preco nao disponivel para esta criptomoeda',
+      error: 'Preço não disponível para esta criptomoeda',
     };
   }
 
-  // Categoria internacional (BDRs) - buscar preco do ativo americano correspondente
+  // Categoria internacional (BDRs) - buscar via Brapi (são listados na B3), fallback Finnhub
   if (category === 'internacional') {
-    const usSymbol = BDR_TO_US_SYMBOL[ticker] || ticker;
-    const price = await fetchUSStockPrice(usSymbol);
-    if (price) {
-      // BDRs tem proporcao diferente, mas para simplificar usamos conversao direta
-      // Em producao, verificar a proporcao especifica de cada BDR
+    // Tentar via Brapi (BDRs são negociados na B3)
+    const brapiPrice = await fetchB3StockPrice(ticker);
+    if (brapiPrice) {
       return {
-        price: price * USD_TO_BRL,
+        price: brapiPrice,
+        currency: 'BRL',
+        source: `Brapi (${ticker})`,
+      };
+    }
+
+    // Fallback: buscar ação americana correspondente via Finnhub
+    const usSymbol = BDR_TO_US_SYMBOL[ticker] || ticker;
+    const usPrice = await fetchUSStockPrice(usSymbol);
+    if (usPrice) {
+      return {
+        price: usPrice * USD_TO_BRL,
         currency: 'BRL',
         source: `Finnhub (${usSymbol})`,
       };
     }
+
     return {
       price: null,
       currency: 'BRL',
       source: 'API',
-      error: 'Preco nao disponivel. As APIs gratuitas suportam apenas acoes americanas.',
+      error: 'Preço não disponível para este BDR.',
     };
   }
 
-  // Para renda variavel, tentar buscar se for ETF internacional
+  // Renda variável - ações e ETFs da B3 via Brapi
   if (category === 'renda_variavel') {
-    // ETFs internacionais listados na B3
-    if (['IVVB11', 'SPXI11', 'BOVA11', 'SMAL11', 'HASH11'].includes(ticker)) {
-      const usSymbol = BDR_TO_US_SYMBOL[ticker];
-      if (usSymbol) {
-        const price = await fetchUSStockPrice(usSymbol);
-        if (price) {
-          return {
-            price: price * USD_TO_BRL,
-            currency: 'BRL',
-            source: `Finnhub (${usSymbol})`,
-          };
-        }
-      }
+    const brapiPrice = await fetchB3StockPrice(ticker);
+    if (brapiPrice) {
+      return {
+        price: brapiPrice,
+        currency: 'BRL',
+        source: `Brapi (${ticker})`,
+      };
     }
-    // Acoes brasileiras nao sao suportadas pelas APIs gratuitas
+
     return {
       price: null,
       currency: 'BRL',
       source: 'API',
-      error: 'Acoes da B3 nao suportadas. Informe o preco manualmente.',
+      error: 'Preço não disponível. Verifique o código do ativo.',
     };
   }
 
-  // Renda fixa, tesouro e FIIs - nao tem cotacao em APIs de mercado
+  // FIIs - Fundos Imobiliários via Brapi
+  if (category === 'fiis') {
+    const brapiPrice = await fetchB3StockPrice(ticker);
+    if (brapiPrice) {
+      return {
+        price: brapiPrice,
+        currency: 'BRL',
+        source: `Brapi (${ticker})`,
+      };
+    }
+
+    return {
+      price: null,
+      currency: 'BRL',
+      source: 'API',
+      error: 'Preço não disponível para este FII.',
+    };
+  }
+
+  // Renda fixa e tesouro - não têm cotação em APIs de mercado
   return {
     price: null,
     currency: 'BRL',
     source: 'Manual',
-    error: category === 'fiis'
-      ? 'FIIs da B3 nao suportados. Informe o preco manualmente.'
-      : 'Informe o preco manualmente.',
+    error: 'Informe o preço manualmente.',
   };
 }
 
-// Colors for charts
+// Cores para gráficos
 const COLORS = {
   renda_fixa: '#1e3a5f',
   renda_variavel: '#00B8D9',
@@ -203,17 +242,17 @@ const COLORS = {
 
 const CLASS_NAMES: Record<AssetClass, string> = {
   renda_fixa: 'Renda Fixa',
-  renda_variavel: 'Renda Variavel',
-  fiis: 'Fundos Imobiliarios',
+  renda_variavel: 'Renda Variável',
+  fiis: 'Fundos Imobiliários',
   internacional: 'Internacional',
 };
 
-// Generate unique ID
+// Gerar ID único
 function generateId(): string {
   return `asset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
-// Load assets from localStorage
+// Carregar ativos do localStorage
 export function loadSavedAssets(): Asset[] {
   if (typeof window === 'undefined') return [];
 
@@ -228,7 +267,7 @@ export function loadSavedAssets(): Asset[] {
   return [];
 }
 
-// Save assets to localStorage
+// Salvar ativos no localStorage
 export function saveAssets(assets: Asset[]): void {
   if (typeof window === 'undefined') return;
 
@@ -239,7 +278,7 @@ export function saveAssets(assets: Asset[]): void {
   }
 }
 
-// Add new asset
+// Adicionar novo ativo
 export function addAsset(assetData: {
   ticker: string;
   name: string;
@@ -250,7 +289,7 @@ export function addAsset(assetData: {
 }): Asset {
   const assets = loadSavedAssets();
 
-  // Simulate current price (in production, fetch from API)
+  // Simular preço atual (em produção, buscar via API)
   const variationPercent = (Math.random() * 20) - 5; // -5% to +15%
   const currentPrice = assetData.averagePrice * (1 + variationPercent / 100);
 

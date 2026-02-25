@@ -1,5 +1,6 @@
 import supabase from '@/lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
+import { STRINGS } from '@/constants/strings';
 
 interface Mensagem {
   id: string;
@@ -28,7 +29,7 @@ export async function salvarMensagem(
 ) {
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error('Usuario nao autenticado');
+  if (!user) throw new Error(STRINGS.errors.usuarioNaoAutenticado);
 
   const { data, error } = await supabase
     .from('chat_historico')
@@ -189,7 +190,7 @@ export async function buscarConversas(termo: string): Promise<Conversa[]> {
 export async function limparHistorico() {
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error('Usuario nao autenticado');
+  if (!user) throw new Error(STRINGS.errors.usuarioNaoAutenticado);
 
   const { error } = await supabase
     .from('chat_historico')
@@ -202,7 +203,7 @@ export async function limparHistorico() {
 export async function deletarConversa(conversaId: string) {
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error('Usuario nao autenticado');
+  if (!user) throw new Error(STRINGS.errors.usuarioNaoAutenticado);
 
   const { error } = await supabase
     .from('chat_historico')

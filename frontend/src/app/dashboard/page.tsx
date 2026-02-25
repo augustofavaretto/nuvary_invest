@@ -16,9 +16,10 @@ import {
   QuickActionsPanel,
   AISuggestionsCard,
   DashboardErrorBoundary,
+  TradingViewTicker,
 } from '@/components/dashboard';
 
-// Nota: AbortError e suprimido globalmente pelo ErrorSuppressor no layout.tsx
+// Nota: AbortError é suprimido globalmente pelo ErrorSuppressor no layout.tsx
 
 function DashboardContent() {
   const router = useRouter();
@@ -39,7 +40,7 @@ function DashboardContent() {
   const [refreshingNews, setRefreshingNews] = useState(false);
   const [refreshingAI, setRefreshingAI] = useState(false);
 
-  // Verificar autenticacao
+  // Verificar autenticação
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push('/login');
@@ -92,6 +93,16 @@ function DashboardContent() {
           />
         </motion.div>
 
+        {/* TradingView Ticker Tape */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mb-6"
+        >
+          <TradingViewTicker />
+        </motion.div>
+
         {/* Loading skeleton para dados */}
         {dataLoading ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -111,7 +122,7 @@ function DashboardContent() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Coluna Esquerda - Perfil e Acoes Rapidas */}
+            {/* Coluna Esquerda - Perfil e Ações Rápidas */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -126,7 +137,7 @@ function DashboardContent() {
               />
             </motion.div>
 
-            {/* Coluna Central e Direita - Mercado e Noticias */}
+            {/* Coluna Central e Direita - Mercado e Notícias */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}

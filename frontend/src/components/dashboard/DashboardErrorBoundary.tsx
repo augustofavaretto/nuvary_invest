@@ -21,7 +21,7 @@ export class DashboardErrorBoundary extends React.Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    // Ignorar AbortError - nao e um erro real, e do React Strict Mode
+    // Ignorar AbortError - não é um erro real, é do React Strict Mode
     if (error.name === 'AbortError') {
       return { hasError: false, error: null };
     }

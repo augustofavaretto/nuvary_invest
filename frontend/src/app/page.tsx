@@ -32,23 +32,23 @@ export default function Home() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-[#0B1F33]">
             Invista com{' '}
-            <span className="text-[#00B8D9]">inteligencia</span>
+            <span className="text-[#00B8D9]">inteligência</span>
             <br />e alcance seus objetivos
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Plataforma de consultoria de investimentos orientada por Inteligencia
-            Artificial, com foco em automacao de carteiras e educacao financeira.
+            Plataforma de consultoria de investimentos orientada por Inteligência
+            Artificial, com foco em automação de carteiras e educação financeira.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/cadastro">
               <Button size="lg" className="w-full sm:w-auto nuvary-gradient border-0">
-                Comecar gratis
+                Começar grátis
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
             <Link href="/login">
               <Button variant="outline" size="lg" className="w-full sm:w-auto border-[#00B8D9] text-[#00B8D9] hover:bg-[#00B8D9]/10">
-                Ja tenho conta
+                Já tenho conta
               </Button>
             </Link>
           </div>
@@ -66,9 +66,9 @@ export default function Home() {
               <div className="w-12 h-12 nuvary-gradient rounded-xl flex items-center justify-center mb-4">
                 <Brain className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Inteligencia Artificial</h3>
+              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Inteligência Artificial</h3>
               <p className="text-muted-foreground text-sm">
-                Recomendacoes personalizadas baseadas em IA para otimizar sua
+                Recomendações personalizadas baseadas em IA para otimizar sua
                 carteira de investimentos.
               </p>
             </CardContent>
@@ -79,10 +79,10 @@ export default function Home() {
               <div className="w-12 h-12 nuvary-gradient rounded-xl flex items-center justify-center mb-4">
                 <PieChart className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Analise de Perfil</h3>
+              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Análise de Perfil</h3>
               <p className="text-muted-foreground text-sm">
-                Questionario completo para identificar seu perfil de investidor
-                e tolerancia a risco.
+                Questionário completo para identificar seu perfil de investidor
+                e tolerância a risco.
               </p>
             </CardContent>
           </Card>
@@ -92,9 +92,9 @@ export default function Home() {
               <div className="w-12 h-12 nuvary-gradient rounded-xl flex items-center justify-center mb-4">
                 <GraduationCap className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Educacao Financeira</h3>
+              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Educação Financeira</h3>
               <p className="text-muted-foreground text-sm">
-                Trilhas de aprendizado para desenvolver sua inteligencia
+                Trilhas de aprendizado para desenvolver sua inteligência
                 financeira.
               </p>
             </CardContent>
@@ -107,8 +107,8 @@ export default function Home() {
               </div>
               <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Chatbot Inteligente</h3>
               <p className="text-muted-foreground text-sm">
-                Assistente virtual para tirar duvidas sobre investimentos
-                e analises de mercado em tempo real.
+                Assistente virtual para tirar dúvidas sobre investimentos
+                e análises de mercado em tempo real.
               </p>
             </CardContent>
           </Card>
@@ -129,7 +129,7 @@ export default function Home() {
             </div>
             <div>
               <div className="text-3xl md:text-4xl font-bold text-[#00B8D9] mb-2">2min</div>
-              <div className="text-white/80 text-sm">Tempo Medio</div>
+              <div className="text-white/80 text-sm">Tempo Médio</div>
             </div>
             <div>
               <div className="text-3xl md:text-4xl font-bold text-[#00B8D9] mb-2">100%</div>
@@ -145,11 +145,11 @@ export default function Home() {
           <CardContent className="p-8 md:p-12 relative">
             <div className="max-w-2xl relative z-10">
               <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                Pronto para comecar sua jornada?
+                Pronto para começar sua jornada?
               </h3>
               <p className="text-white/80 mb-6">
                 Descubra seu perfil de investidor em apenas 2 minutos e receba
-                recomendacoes personalizadas para sua carteira.
+                recomendações personalizadas para sua carteira.
               </p>
               <ul className="space-y-2 mb-8">
                 <li className="flex items-center gap-2">
@@ -158,11 +158,11 @@ export default function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5" />
-                  <span>Resultado instantaneo</span>
+                  <span>Resultado instantâneo</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5" />
-                  <span>Alocacao recomendada</span>
+                  <span>Alocação recomendada</span>
                 </li>
               </ul>
               <Link href="/cadastro">
@@ -170,7 +170,7 @@ export default function Home() {
                   size="lg"
                   className="bg-white text-[#00B8D9] hover:bg-white/90 font-semibold"
                 >
-                  Criar conta gratis
+                  Criar conta grátis
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
@@ -203,7 +203,7 @@ export default function Home() {
                 href="/questionario"
                 className="text-sm text-muted-foreground hover:text-[#00B8D9] transition-colors"
               >
-                Questionario
+                Questionário
               </Link>
               <Link
                 href="/chat"

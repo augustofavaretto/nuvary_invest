@@ -3,7 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Loader2, Wallet, Calendar, RefreshCw, Plus, Trash2 } from 'lucide-react';
+import {
+  Loader2, Wallet, Calendar, RefreshCw, Plus, Trash2,
+  PiggyBank, Landmark, TrendingUp, Building, Globe, Coins, ChevronRight,
+} from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -29,6 +32,7 @@ export default function CarteiraPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedModalCategory, setSelectedModalCategory] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -99,14 +103,14 @@ export default function CarteiraPage() {
               Minha Carteira
             </h1>
             <p className="text-[#6B7280] mt-1">
-              Visao geral dos seus investimentos
+              Visão geral dos seus investimentos
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 text-sm text-[#6B7280]">
               <Calendar className="w-4 h-4" />
-              <span>Valores ate {new Date().toLocaleDateString('pt-BR')}</span>
+              <span>Valores até {new Date().toLocaleDateString('pt-BR')}</span>
             </div>
             <Button
               onClick={handleRefresh}
@@ -119,7 +123,10 @@ export default function CarteiraPage() {
               Atualizar
             </Button>
             <Button
-              onClick={() => setIsAddModalOpen(true)}
+              onClick={() => {
+                setSelectedModalCategory(null);
+                setIsAddModalOpen(true);
+              }}
               size="sm"
               className="bg-[#00B8D9] hover:bg-[#007EA7]"
             >
@@ -176,64 +183,89 @@ export default function CarteiraPage() {
               className="text-center text-sm text-[#6B7280] py-4"
             >
               <p>
-                Os precos atuais sao simulados para demonstracao.
+                Os preços atuais são simulados para demonstração.
                 <br />
-                Em producao, os dados serao sincronizados com APIs de mercado.
+                Em produção, os dados serão sincronizados com APIs de mercado.
               </p>
             </motion.div>
           </div>
         ) : (
-          // Empty state
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl border border-[#E5E7EB] p-12 text-center"
-          >
-            <div className="w-20 h-20 bg-[#00B8D9]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Wallet className="w-10 h-10 text-[#00B8D9]" />
-            </div>
-            <h2 className="text-2xl font-semibold text-[#0B1F33] mb-3">
-              Sua carteira esta vazia
-            </h2>
-            <p className="text-[#6B7280] mb-8 max-w-md mx-auto">
-              Comece adicionando seus primeiros ativos para acompanhar seu portfolio de investimentos.
-            </p>
-            <Button
-              onClick={() => setIsAddModalOpen(true)}
-              size="lg"
-              className="bg-[#00B8D9] hover:bg-[#007EA7]"
+          // Empty state - lista de categorias
+          <div className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-xl border border-[#E5E7EB] p-6"
             >
-              <Plus className="w-5 h-5 mr-2" />
-              Adicionar Primeiro Ativo
-            </Button>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-[#00B8D9]/10 rounded-full flex items-center justify-center">
+                  <Wallet className="w-5 h-5 text-[#00B8D9]" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-[#0B1F33]">
+                    Sua carteira está vazia
+                  </h2>
+                  <p className="text-sm text-[#6B7280]">
+                    Selecione uma categoria para adicionar seu primeiro ativo
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
-            {/* Quick tips */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-              <div className="bg-[#F3F4F6] rounded-lg p-4 text-left">
-                <div className="text-2xl mb-2">📈</div>
-                <h3 className="font-semibold text-[#0B1F33] mb-1">Renda Variavel</h3>
-                <p className="text-sm text-[#6B7280]">Acoes, ETFs e BDRs</p>
-              </div>
-              <div className="bg-[#F3F4F6] rounded-lg p-4 text-left">
-                <div className="text-2xl mb-2">🏦</div>
-                <h3 className="font-semibold text-[#0B1F33] mb-1">Renda Fixa</h3>
-                <p className="text-sm text-[#6B7280]">CDB, LCI, LCA, Tesouro</p>
-              </div>
-              <div className="bg-[#F3F4F6] rounded-lg p-4 text-left">
-                <div className="text-2xl mb-2">🏢</div>
-                <h3 className="font-semibold text-[#0B1F33] mb-1">FIIs</h3>
-                <p className="text-sm text-[#6B7280]">Fundos Imobiliarios</p>
-              </div>
-            </div>
-          </motion.div>
+            {[
+              { id: 'renda_fixa', name: 'Renda Fixa', description: 'CDBs, LCIs, LCAs e Debêntures', icon: PiggyBank, color: '#1e3a5f' },
+              { id: 'tesouro', name: 'Tesouro Direto', description: 'Títulos públicos federais', icon: Landmark, color: '#047857' },
+              { id: 'renda_variavel', name: 'Renda Variável', description: 'Ações, ETFs e BDRs', icon: TrendingUp, color: '#6366f1' },
+              { id: 'fiis', name: 'Fundos Imobiliários', description: 'FIIs listados na B3', icon: Building, color: '#10b981' },
+              { id: 'internacional', name: 'Internacional', description: 'BDRs e ETFs globais', icon: Globe, color: '#00B8D9' },
+              { id: 'cripto', name: 'Criptomoedas', description: 'Bitcoin, Ethereum e altcoins', icon: Coins, color: '#f59e0b' },
+            ].map((category, index) => {
+              const Icon = category.icon;
+              return (
+                <motion.button
+                  key={category.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.05 * (index + 1) }}
+                  onClick={() => {
+                    setSelectedModalCategory(category.id);
+                    setIsAddModalOpen(true);
+                  }}
+                  className="w-full bg-white rounded-xl border border-[#E5E7EB] p-5 flex items-center gap-4 hover:shadow-md hover:border-[#00B8D9]/30 transition-all group text-left"
+                >
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${category.color}15` }}
+                  >
+                    <Icon className="w-6 h-6" style={{ color: category.color }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-[#0B1F33] text-base">
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-[#6B7280]">
+                      {category.description}
+                    </p>
+                  </div>
+                  <div className="w-8 h-8 rounded-full border border-[#E5E7EB] flex items-center justify-center group-hover:bg-[#00B8D9] group-hover:border-[#00B8D9] transition-colors flex-shrink-0">
+                    <ChevronRight className="w-4 h-4 text-[#6B7280] group-hover:text-white transition-colors" />
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
         )}
       </div>
 
       {/* Add Asset Modal */}
       <AddAssetModal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          setSelectedModalCategory(null);
+        }}
         onAdd={handleAddAsset}
+        initialCategory={selectedModalCategory}
       />
     </DashboardLayout>
   );

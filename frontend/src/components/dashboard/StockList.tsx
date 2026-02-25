@@ -3,6 +3,7 @@
 import { BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { WatchlistStock } from '@/services/dashboardService';
+import { STRINGS } from '@/constants/strings';
 
 interface StockListProps {
   stocks: WatchlistStock[];
@@ -14,7 +15,7 @@ export function StockList({ stocks }: StockListProps) {
       <CardHeader>
         <CardTitle className="text-[#0B1F33] flex items-center gap-2">
           <BarChart3 className="w-5 h-5 text-[#00B8D9]" />
-          Acoes Populares
+          {STRINGS.dashboard.acoesPopulares}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -61,7 +62,7 @@ export function StockList({ stocks }: StockListProps) {
         </div>
         {stocks.length === 0 && (
           <p className="text-center text-[#6B7280] py-4">
-            Nao foi possivel carregar lista de acoes.
+            {STRINGS.dashboard.naoFoiPossivelCarregarAcoes}
           </p>
         )}
       </CardContent>

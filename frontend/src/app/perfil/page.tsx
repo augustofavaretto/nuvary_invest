@@ -43,24 +43,24 @@ const perfilColors: Record<string, { bg: string; text: string; border: string }>
 };
 
 const perfilDescricoes: Record<string, string> = {
-  conservador: 'Voce prioriza a seguranca do seu patrimonio e prefere investimentos de baixo risco.',
-  moderado: 'Voce busca equilibrio entre seguranca e rentabilidade, aceitando riscos moderados.',
-  arrojado: 'Voce esta disposto a assumir riscos maiores em busca de retornos mais elevados.',
-  agressivo: 'Voce busca maximizar retornos e tem alta tolerancia a volatilidade.',
+  conservador: 'Você prioriza a segurança do seu patrimônio e prefere investimentos de baixo risco.',
+  moderado: 'Você busca equilíbrio entre segurança e rentabilidade, aceitando riscos moderados.',
+  arrojado: 'Você está disposto a assumir riscos maiores em busca de retornos mais elevados.',
+  agressivo: 'Você busca maximizar retornos e tem alta tolerância à volatilidade.',
 };
 
 export default function PerfilPage() {
   const router = useRouter();
   const { user, profile, isAuthenticated, loading: authLoading, refreshProfile } = useAuth();
 
-  // Estados para edicao de nome
+  // Estados para edição de nome
   const [editandoNome, setEditandoNome] = useState(false);
   const [novoNome, setNovoNome] = useState('');
   const [salvandoNome, setSalvandoNome] = useState(false);
   const [erroNome, setErroNome] = useState('');
   const [sucessoNome, setSucessoNome] = useState(false);
 
-  // Estados para edicao de senha
+  // Estados para edição de senha
   const [editandoSenha, setEditandoSenha] = useState(false);
   const [senhaAtual, setSenhaAtual] = useState('');
   const [novaSenha, setNovaSenha] = useState('');
@@ -96,7 +96,7 @@ export default function PerfilPage() {
     }
   }, [isAuthenticated]);
 
-  // Redirecionar se nao autenticado
+  // Redirecionar se não autenticado
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push('/login');
@@ -113,7 +113,7 @@ export default function PerfilPage() {
 
   const handleSalvarNome = async () => {
     if (novoNome.trim().length < 3) {
-      setErroNome('Nome deve ter no minimo 3 caracteres');
+      setErroNome('Nome deve ter no mínimo 3 caracteres');
       return;
     }
 
@@ -140,27 +140,27 @@ export default function PerfilPage() {
     setErroSenha('');
 
     if (novaSenha.length < 8) {
-      setErroSenha('A nova senha deve ter no minimo 8 caracteres');
+      setErroSenha('A nova senha deve ter no mínimo 8 caracteres');
       return;
     }
 
     if (!/[A-Z]/.test(novaSenha)) {
-      setErroSenha('A nova senha deve ter ao menos uma letra maiuscula');
+      setErroSenha('A nova senha deve ter ao menos uma letra maiúscula');
       return;
     }
 
     if (!/[a-z]/.test(novaSenha)) {
-      setErroSenha('A nova senha deve ter ao menos uma letra minuscula');
+      setErroSenha('A nova senha deve ter ao menos uma letra minúscula');
       return;
     }
 
     if (!/[0-9]/.test(novaSenha)) {
-      setErroSenha('A nova senha deve ter ao menos um numero');
+      setErroSenha('A nova senha deve ter ao menos um número');
       return;
     }
 
     if (novaSenha !== confirmarSenha) {
-      setErroSenha('As senhas nao coincidem');
+      setErroSenha('As senhas não coincidem');
       return;
     }
 
@@ -181,7 +181,7 @@ export default function PerfilPage() {
     }
   };
 
-  // Handler para refazer questionario
+  // Handler para refazer questionário
   const handleRefazerQuestionario = async () => {
     setDeletandoPerfil(true);
     try {
@@ -294,7 +294,7 @@ export default function PerfilPage() {
             <div className="flex items-center justify-between">
               <span className="text-[#0B1F33]">{user?.email}</span>
               <span className="text-xs text-[#6B7280] bg-gray-100 px-2 py-1 rounded">
-                Nao editavel
+                Não editável
               </span>
             </div>
           </div>
@@ -357,16 +357,16 @@ export default function PerfilPage() {
                   <p>A senha deve conter:</p>
                   <ul className="list-disc list-inside">
                     <li className={novaSenha.length >= 8 ? 'text-green-500' : ''}>
-                      Minimo 8 caracteres
+                      Mínimo 8 caracteres
                     </li>
                     <li className={/[A-Z]/.test(novaSenha) ? 'text-green-500' : ''}>
-                      Uma letra maiuscula
+                      Uma letra maiúscula
                     </li>
                     <li className={/[a-z]/.test(novaSenha) ? 'text-green-500' : ''}>
-                      Uma letra minuscula
+                      Uma letra minúscula
                     </li>
                     <li className={/[0-9]/.test(novaSenha) ? 'text-green-500' : ''}>
-                      Um numero
+                      Um número
                     </li>
                   </ul>
                 </div>
@@ -494,11 +494,11 @@ export default function PerfilPage() {
                   <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
                     <TrendingUp className="w-5 h-5 text-[#00B8D9] mt-0.5" />
                     <div>
-                      <p className="text-sm text-[#6B7280]">Nivel de Conhecimento</p>
+                      <p className="text-sm text-[#6B7280]">Nível de Conhecimento</p>
                       <p className="text-[#0B1F33] font-medium">
                         {perfilInvestidor.nivel_conhecimento <= 2 && 'Iniciante'}
-                        {perfilInvestidor.nivel_conhecimento === 3 && 'Intermediario'}
-                        {perfilInvestidor.nivel_conhecimento >= 4 && 'Avancado'}
+                        {perfilInvestidor.nivel_conhecimento === 3 && 'Intermediário'}
+                        {perfilInvestidor.nivel_conhecimento >= 4 && 'Avançado'}
                       </p>
                     </div>
                   </div>
@@ -507,11 +507,11 @@ export default function PerfilPage() {
 
               {perfilInvestidor.updated_at && (
                 <p className="text-xs text-[#6B7280] mb-4">
-                  Ultima atualizacao: {new Date(perfilInvestidor.updated_at).toLocaleDateString('pt-BR')}
+                  Última atualização: {new Date(perfilInvestidor.updated_at).toLocaleDateString('pt-BR')}
                 </p>
               )}
 
-              {/* Botao refazer questionario */}
+              {/* Botão refazer questionário */}
               {!mostrarConfirmacao ? (
                 <Button
                   variant="outline"
@@ -519,16 +519,16 @@ export default function PerfilPage() {
                   className="border-amber-500 text-amber-600 hover:bg-amber-50"
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  Refazer Questionario
+                  Refazer Questionário
                 </Button>
               ) : (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5" />
                     <div className="flex-1">
-                      <h4 className="font-medium text-amber-800">Confirmar acao</h4>
+                      <h4 className="font-medium text-amber-800">Confirmar ação</h4>
                       <p className="text-sm text-amber-700 mb-3">
-                        Ao refazer o questionario, seu perfil atual sera substituido pelo novo resultado.
+                        Ao refazer o questionário, seu perfil atual será substituído pelo novo resultado.
                         Deseja continuar?
                       </p>
                       <div className="flex gap-2">
@@ -569,13 +569,13 @@ export default function PerfilPage() {
                 Nenhum perfil encontrado
               </h3>
               <p className="text-[#6B7280] mb-4">
-                Responda ao questionario para descobrir seu perfil de investidor.
+                Responda ao questionário para descobrir seu perfil de investidor.
               </p>
               <Button
                 onClick={() => router.push('/questionario')}
                 className="bg-[#00B8D9] hover:bg-[#007EA7]"
               >
-                Fazer Questionario
+                Fazer Questionário
               </Button>
             </div>
           )}

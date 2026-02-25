@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 16 - Integração Brapi API (B3) | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --secondary: #10b981;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin: 25px 0 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #475569;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .feature-card h4 {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .component-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .component-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .component-item h4 {
+            color: var(--dark);
+            font-size: 1rem;
+            margin-bottom: 8px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .component-item p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .menu-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .menu-table th,
+        .menu-table td {
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .menu-table th {
+            background: var(--dark);
+            color: white;
+            font-weight: 600;
+        }
+
+        .menu-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e3a5f 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .architecture-diagram {
+            background: linear-gradient(135deg, #0B1F33 0%, #1e3a5f 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .architecture-diagram h4 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .arch-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .arch-box {
+            background: rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .arch-arrow {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #00B8D9 0%, #007EA7 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            margin-bottom: 10px;
+        }
+
+        .new-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .chart-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .chart-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .chart-card .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .chart-card h5 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .chart-card p {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Versao 3.0.0</span>
+            <h1>Doc 16 - Integracao Brapi API (B3)</h1>
+            <p>Integracao com a API Brapi para cotacoes de acoes, FIIs e BDRs da B3</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
+            <li><a href="#visao-geral">Visao Geral</a></li>
+            <li><a href="#configuracao">Configuracao</a></li>
+            <li><a href="#arquitetura">Arquitetura</a></li>
+            <li><a href="#endpoints">Endpoints</a></li>
+            <li><a href="#resposta">Resposta</a></li>
+            <li><a href="#fluxo-precos">Fluxo de Precos</a></li>
+            <li><a href="#cache">Cache</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">Voltar para o indice</a>
+
+        <!-- 1. Visao Geral -->
+        <section id="visao-geral">
+            <h2>Visao Geral</h2>
+            <p>
+                A Brapi (Brazilian Finance API) fornece dados em tempo real do mercado financeiro brasileiro (B3).
+                A integracao permite consultar cotacoes de acoes (PETR4, VALE3, ITUB4), Fundos Imobiliarios - FIIs
+                (HGLG11, MXRF11), BDRs (AAPL34, MSFT34) e outros ativos negociados na bolsa brasileira.
+            </p>
+            <p>
+                O sistema utiliza um cache em memoria com TTL de 5 minutos para otimizar as requisicoes,
+                mapeamento limpo de respostas e fallback para outras APIs quando necessario.
+            </p>
+
+            <div class="tech-stack">
+                <span class="tech-badge">Brapi API</span>
+                <span class="tech-badge">B3 - Bolsa Brasileira</span>
+                <span class="tech-badge">Cache In-Memory</span>
+                <span class="tech-badge">Express.js</span>
+                <span class="tech-badge">Axios</span>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Acoes B3</h4>
+                    <p>Cotacoes em tempo real de acoes brasileiras como PETR4, VALE3, ITUB4, BBDC4, ABEV3, WEGE3 e mais.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Fundos Imobiliarios (FIIs)</h4>
+                    <p>Precos atualizados de FIIs como HGLG11, MXRF11, XPML11, KNRI11 negociados na B3.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>BDRs</h4>
+                    <p>Cotacoes de BDRs como AAPL34, MSFT34, AMZO34, GOGL34 com precos em reais (BRL).</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Cache Inteligente</h4>
+                    <p>Cache em memoria baseado em Map com TTL de 5 minutos e invalidacao automatica para performance otimizada.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Configuracao -->
+        <section id="configuracao">
+            <h2>Configuracao</h2>
+            <p>
+                A integracao requer um token de autenticacao da Brapi e a URL base da API.
+                As variaveis de ambiente sao configuradas no arquivo <code>.env</code> do backend.
+            </p>
+
+            <h3>Variaveis de Ambiente (.env)</h3>
+            <pre>
+# Brapi API - Cotacoes B3
+BRAPI_API_TOKEN=92dFcQsFX5BpNSZa6SYnjX
+BRAPI_BASE_URL=https://brapi.dev/api</pre>
+
+            <h3>Arquivo config/index.js</h3>
+            <pre>
+// backend/src/config/index.js
+module.exports = {
+  // ... outras configuracoes
+
+  brapi: {
+    token: process.env.BRAPI_API_TOKEN,
+    baseUrl: process.env.BRAPI_BASE_URL || 'https://brapi.dev/api',
+  },
+};</pre>
+
+            <div class="highlight-box" style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+                <h4>Plano Gratuito da Brapi</h4>
+                <p>O plano gratuito da Brapi permite consultar cotacoes de acoes, FIIs e BDRs da B3. Endpoints de criptomoedas, cambio, inflacao e Selic requerem plano pago.</p>
+            </div>
+        </section>
+
+        <!-- 3. Arquitetura -->
+        <section id="arquitetura">
+            <h2>Arquitetura</h2>
+            <p>
+                A integracao segue o padrao MVC com controller dedicado, rotas separadas, cache em memoria
+                e integracao com o frontend via service de portfolio.
+            </p>
+
+            <div class="architecture-diagram">
+                <h4>Fluxo de Requisicao</h4>
+                <div class="arch-flow">
+                    <div class="arch-box">
+                        <strong>Frontend</strong><br>
+                        <small>portfolioService.ts</small>
+                    </div>
+                    <span class="arch-arrow">&rarr;</span>
+                    <div class="arch-box">
+                        <strong>Backend API</strong><br>
+                        <small>/api/brapi/*</small>
+                    </div>
+                    <span class="arch-arrow">&rarr;</span>
+                    <div class="arch-box">
+                        <strong>Brapi API</strong><br>
+                        <small>brapi.dev/api</small>
+                    </div>
+                    <span class="arch-arrow">&rarr;</span>
+                    <div class="arch-box">
+                        <strong>Cache</strong><br>
+                        <small>Map (5 min TTL)</small>
+                    </div>
+                    <span class="arch-arrow">&rarr;</span>
+                    <div class="arch-box">
+                        <strong>Response</strong><br>
+                        <small>JSON mapeado</small>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Arquivos Criados/Modificados</h3>
+            <ul class="component-list">
+                <li class="component-item">
+                    <h4>backend/src/controllers/brapiController.js <span class="new-badge">NOVO</span></h4>
+                    <p>Controller com funcoes para consultar cotacoes, listar acoes, criptomoedas, cambio, inflacao e Selic via Brapi API. Inclui sistema de cache em memoria.</p>
+                </li>
+                <li class="component-item">
+                    <h4>backend/src/routes/brapi.js <span class="new-badge">NOVO</span></h4>
+                    <p>Definicao das rotas Express para os endpoints da Brapi. Mapeia GET requests para os metodos do controller.</p>
+                </li>
+                <li class="component-item">
+                    <h4>backend/src/server.js <span class="new-badge">Atualizado</span></h4>
+                    <p>Registro das rotas da Brapi no servidor Express com o prefixo <code>/api/brapi</code>.</p>
+                </li>
+                <li class="component-item">
+                    <h4>frontend/src/services/portfolioService.ts <span class="new-badge">Atualizado</span></h4>
+                    <p>Integracao com o backend para buscar precos de acoes B3, FIIs e BDRs via Brapi. Fallback para Finnhub em caso de BDRs sem resposta.</p>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 4. Endpoints Disponiveis -->
+        <section id="endpoints">
+            <h2>Endpoints Disponiveis</h2>
+            <p>
+                A API expoe 6 endpoints, sendo 2 ativos no plano gratuito e 4 disponiveis apenas no plano pago da Brapi.
+            </p>
+
+            <table class="menu-table">
+                <thead>
+                    <tr>
+                        <th>Metodo</th>
+                        <th>Endpoint</th>
+                        <th>Descricao</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/brapi/quote/:tickers</code></td>
+                        <td>Cotacao de acoes/FIIs da B3</td>
+                        <td><span class="new-badge" style="background: var(--secondary);">Ativo</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/brapi/quote/list</code></td>
+                        <td>Lista acoes disponiveis</td>
+                        <td><span class="new-badge" style="background: var(--secondary);">Ativo</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/brapi/crypto</code></td>
+                        <td>Criptomoedas</td>
+                        <td><span class="new-badge" style="background: #ef4444;">Plano pago</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/brapi/currency</code></td>
+                        <td>Cambio (USD-BRL)</td>
+                        <td><span class="new-badge" style="background: #ef4444;">Plano pago</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/brapi/inflation</code></td>
+                        <td>Inflacao (IPCA)</td>
+                        <td><span class="new-badge" style="background: #ef4444;">Plano pago</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/brapi/selic</code></td>
+                        <td>Taxa Selic</td>
+                        <td><span class="new-badge" style="background: #ef4444;">Plano pago</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 5. Exemplo de Resposta -->
+        <section id="resposta">
+            <h2>Exemplo de Resposta</h2>
+            <p>
+                Exemplo de retorno ao consultar a cotacao de PETR4 via <code>GET /api/brapi/quote/PETR4</code>.
+            </p>
+
+            <h3>Request</h3>
+            <pre>
+GET /api/brapi/quote/PETR4
+Host: localhost:5000
+Content-Type: application/json</pre>
+
+            <h3>Response (200 OK)</h3>
+            <pre>
+{
+  "results": [
+    {
+      "symbol": "PETR4",
+      "shortName": "PETROBRAS PN",
+      "currentPrice": 36.42,
+      "change": 0.53,
+      "changePercent": 1.48,
+      "volume": 42519800,
+      "marketCap": 478000000000
+    }
+  ]
+}</pre>
+
+            <h3>Campos da Resposta</h3>
+            <table class="menu-table">
+                <thead>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Tipo</th>
+                        <th>Descricao</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>symbol</code></td>
+                        <td>string</td>
+                        <td>Ticker do ativo na B3</td>
+                    </tr>
+                    <tr>
+                        <td><code>shortName</code></td>
+                        <td>string</td>
+                        <td>Nome resumido do ativo</td>
+                    </tr>
+                    <tr>
+                        <td><code>currentPrice</code></td>
+                        <td>number</td>
+                        <td>Preco atual em BRL (reais)</td>
+                    </tr>
+                    <tr>
+                        <td><code>change</code></td>
+                        <td>number</td>
+                        <td>Variacao absoluta do dia</td>
+                    </tr>
+                    <tr>
+                        <td><code>changePercent</code></td>
+                        <td>number</td>
+                        <td>Variacao percentual do dia (%)</td>
+                    </tr>
+                    <tr>
+                        <td><code>volume</code></td>
+                        <td>number</td>
+                        <td>Volume de negociacao do dia</td>
+                    </tr>
+                    <tr>
+                        <td><code>marketCap</code></td>
+                        <td>number</td>
+                        <td>Valor de mercado da empresa (BRL)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 6. Fluxo de Precos por Categoria -->
+        <section id="fluxo-precos">
+            <h2>Fluxo de Precos por Categoria</h2>
+            <p>
+                O sistema utiliza diferentes APIs e metodos para obter precos dependendo da categoria do ativo.
+                A Brapi e a fonte primaria para ativos negociados na B3.
+            </p>
+
+            <table class="menu-table">
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Fonte de Preco</th>
+                        <th>Moeda</th>
+                        <th>Observacao</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Acoes B3</strong></td>
+                        <td>Brapi</td>
+                        <td>BRL</td>
+                        <td>PETR4, VALE3, ITUB4, BBDC4, etc.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FIIs</strong></td>
+                        <td>Brapi</td>
+                        <td>BRL</td>
+                        <td>HGLG11, MXRF11, XPML11, etc.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BDRs</strong></td>
+                        <td>Brapi &rarr; Finnhub fallback</td>
+                        <td>BRL</td>
+                        <td>Tenta Brapi primeiro, fallback para Finnhub se necessario</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cripto</strong></td>
+                        <td>Alpha Vantage</td>
+                        <td>USD &rarr; BRL</td>
+                        <td>Conversao automatica USD para BRL</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Renda Fixa</strong></td>
+                        <td>Manual</td>
+                        <td>BRL</td>
+                        <td>Preco informado pelo usuario</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tesouro Direto</strong></td>
+                        <td>Manual</td>
+                        <td>BRL</td>
+                        <td>ANBIMA pendente de integracao</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="architecture-diagram">
+                <h4>Hierarquia de Busca de Precos</h4>
+                <div class="arch-flow">
+                    <div class="arch-box">
+                        <strong>Ativo B3?</strong><br>
+                        <small>Acoes / FIIs / BDRs</small>
+                    </div>
+                    <span class="arch-arrow">&rarr;</span>
+                    <div class="arch-box" style="border-color: #34d399;">
+                        <strong>Brapi API</strong><br>
+                        <small>Preco em BRL</small>
+                    </div>
+                    <span class="arch-arrow">&rarr;</span>
+                    <div class="arch-box">
+                        <strong>Falhou?</strong><br>
+                        <small>BDR sem retorno</small>
+                    </div>
+                    <span class="arch-arrow">&rarr;</span>
+                    <div class="arch-box" style="border-color: #f59e0b;">
+                        <strong>Finnhub</strong><br>
+                        <small>Fallback</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Cache -->
+        <section id="cache">
+            <h2>Cache</h2>
+            <p>
+                O sistema de cache em memoria evita requisicoes excessivas a API da Brapi,
+                respeitando os limites do plano gratuito e melhorando a performance das consultas.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>TTL de 5 Minutos</h4>
+                    <p>Cada entrada no cache expira automaticamente apos 5 minutos (300.000ms), garantindo dados relativamente atualizados.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Baseado em Map</h4>
+                    <p>Utiliza a estrutura nativa Map do JavaScript para armazenar pares chave-valor de forma eficiente.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Invalidacao Automatica</h4>
+                    <p>Antes de retornar dados do cache, verifica se o TTL expirou. Se expirado, busca dados frescos da API.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Chave por Ticker</h4>
+                    <p>Cada ticker consultado tem sua propria entrada no cache, permitindo invalidacao granular por ativo.</p>
+                </div>
+            </div>
+
+            <h3>Implementacao do Cache</h3>
+            <pre>
+// backend/src/controllers/brapiController.js
+
+// Cache em memoria - Map com TTL de 5 minutos
+const cache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos em milissegundos
+
+function getCachedData(key) {
+  const cached = cache.get(key);
+  if (cached &amp;&amp; Date.now() - cached.timestamp &lt; CACHE_TTL) {
+    return cached.data;
+  }
+  // Cache expirado ou inexistente
+  cache.delete(key);
+  return null;
+}
+
+function setCacheData(key, data) {
+  cache.set(key, {
+    data,
+    timestamp: Date.now(),
+  });
+}</pre>
+
+            <h3>Uso no Controller</h3>
+            <pre>
+async function getQuote(req, res) {
+  const { tickers } = req.params;
+  const cacheKey = `quote_${tickers}`;
+
+  // Verifica cache primeiro
+  const cachedData = getCachedData(cacheKey);
+  if (cachedData) {
+    return res.json(cachedData);
+  }
+
+  try {
+    // Busca na Brapi API
+    const response = await axios.get(
+      `${config.brapi.baseUrl}/quote/${tickers}`,
+      { params: { token: config.brapi.token } }
+    );
+
+    // Salva no cache
+    setCacheData(cacheKey, response.data);
+
+    return res.json(response.data);
+  } catch (error) {
+    console.error('Erro ao buscar cotacao Brapi:', error.message);
+    return res.status(500).json({ error: 'Erro ao buscar cotacao' });
+  }
+}</pre>
+
+            <div class="highlight-box">
+                <h4>Limite do Plano Gratuito</h4>
+                <p>O cache de 5 minutos ajuda a respeitar os limites de requisicoes do plano gratuito da Brapi. Multiplas consultas ao mesmo ticker dentro da janela de 5 minutos sao servidas diretamente do cache, sem consumir chamadas da API.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentacao Tecnica v3.0.0 - Fevereiro 2026</p>
+        <p><a href="index.html">Voltar para o indice</a></p>
+    </footer>
+</body>
+</html>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, Plus, DollarSign, Hash, Building2, ChevronLeft,
@@ -9,11 +9,13 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AssetClass, CategoryId, fetchAssetPrice, PriceResult } from '@/services/portfolioService';
+import { STRINGS } from '@/constants/strings';
 
 interface AddAssetModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (asset: NewAssetData) => void;
+  initialCategory?: string | null;
 }
 
 export interface NewAssetData {
@@ -30,27 +32,27 @@ const CATEGORIES = [
   {
     id: 'renda_fixa',
     name: 'Renda Fixa',
-    description: 'CDBs, LCIs, LCAs e Debentures',
+    description: 'CDBs, LCIs, LCAs e Debêntures',
     icon: PiggyBank,
     color: '#1e3a5f',
   },
   {
     id: 'tesouro',
     name: 'Tesouro Direto',
-    description: 'Titulos publicos federais',
+    description: 'Títulos públicos federais',
     icon: Landmark,
     color: '#047857',
   },
   {
     id: 'renda_variavel',
-    name: 'Renda Variavel',
-    description: 'Acoes, ETFs e BDRs',
+    name: 'Renda Variável',
+    description: 'Ações, ETFs e BDRs',
     icon: TrendingUp,
     color: '#6366f1',
   },
   {
     id: 'fiis',
-    name: 'Fundos Imobiliarios',
+    name: 'Fundos Imobiliários',
     description: 'FIIs listados na B3',
     icon: Building,
     color: '#10b981',
@@ -71,7 +73,7 @@ const CATEGORIES = [
   },
 ];
 
-// Ativos pre-definidos por categoria
+// Ativos pré-definidos por categoria
 const ASSETS_BY_CATEGORY: Record<string, { ticker: string; name: string }[]> = {
   renda_fixa: [
     { ticker: 'CDB-INTER', name: 'CDB Banco Inter 120% CDI' },
@@ -121,20 +123,20 @@ const ASSETS_BY_CATEGORY: Record<string, { ticker: string; name: string }[]> = {
     { ticker: 'HASH11', name: 'Hashdex Crypto ETF' },
   ],
   fiis: [
-    { ticker: 'HGLG11', name: 'CSHG Logistica' },
+    { ticker: 'HGLG11', name: 'CSHG Logística' },
     { ticker: 'XPML11', name: 'XP Malls' },
-    { ticker: 'KNRI11', name: 'Kinea Renda Imobiliaria' },
+    { ticker: 'KNRI11', name: 'Kinea Renda Imobiliária' },
     { ticker: 'MXRF11', name: 'Maxi Renda' },
     { ticker: 'VISC11', name: 'Vinci Shopping Centers' },
-    { ticker: 'BTLG11', name: 'BTG Pactual Logistica' },
+    { ticker: 'BTLG11', name: 'BTG Pactual Logística' },
     { ticker: 'HGBS11', name: 'Hedge Brasil Shopping' },
     { ticker: 'HSML11', name: 'HSI Malls' },
-    { ticker: 'VILG11', name: 'Vinci Logistica' },
+    { ticker: 'VILG11', name: 'Vinci Logística' },
     { ticker: 'PVBI11', name: 'VBI Prime Properties' },
-    { ticker: 'RECT11', name: 'REC Recebiveis' },
+    { ticker: 'RECT11', name: 'REC Recebíveis' },
     { ticker: 'KNCR11', name: 'Kinea Rendimentos' },
-    { ticker: 'HGCR11', name: 'CSHG Recebiveis' },
-    { ticker: 'IRDM11', name: 'Iridium Recebiveis' },
+    { ticker: 'HGCR11', name: 'CSHG Recebíveis' },
+    { ticker: 'IRDM11', name: 'Iridium Recebíveis' },
   ],
   internacional: [
     { ticker: 'AAPL34', name: 'Apple Inc BDR' },
@@ -192,9 +194,9 @@ const brokers = [
 
 type Step = 'category' | 'asset' | 'details';
 
-export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
-  const [step, setStep] = useState<Step>('category');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }: AddAssetModalProps) {
+  const [step, setStep] = useState<Step>(initialCategory ? 'asset' : 'category');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory);
   const [selectedAsset, setSelectedAsset] = useState<{ ticker: string; name: string } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isCustom, setIsCustom] = useState(false);
@@ -208,9 +210,16 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Estados para busca de preco automatica
+  // Estados para busca de preço automática
   const [priceLoading, setPriceLoading] = useState(false);
   const [priceInfo, setPriceInfo] = useState<PriceResult | null>(null);
+
+  useEffect(() => {
+    if (isOpen && initialCategory) {
+      setSelectedCategory(initialCategory);
+      setStep('asset');
+    }
+  }, [isOpen, initialCategory]);
 
   const resetModal = () => {
     setStep('category');
@@ -249,7 +258,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
     }));
     setStep('details');
 
-    // Buscar preco automaticamente
+    // Buscar preço automaticamente
     if (selectedCategory) {
       setPriceLoading(true);
       setPriceInfo(null);
@@ -263,12 +272,12 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
           }));
         }
       } catch (error) {
-        console.error('Erro ao buscar preco:', error);
+        console.error('Erro ao buscar preço:', error);
         setPriceInfo({
           price: null,
           currency: 'BRL',
           source: 'API',
-          error: 'Erro ao buscar preco. Informe manualmente.',
+          error: 'Erro ao buscar preço. Informe manualmente.',
         });
       } finally {
         setPriceLoading(false);
@@ -302,16 +311,16 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
     const newErrors: Record<string, string> = {};
 
     if (!formData.ticker.trim()) {
-      newErrors.ticker = 'Ticker e obrigatorio';
+      newErrors.ticker = STRINGS.carteira.tickerObrigatorio;
     }
     if (!formData.name.trim()) {
-      newErrors.name = 'Nome e obrigatorio';
+      newErrors.name = STRINGS.carteira.nomeObrigatorio;
     }
     if (formData.quantity <= 0) {
       newErrors.quantity = 'Quantidade deve ser maior que zero';
     }
     if (formData.averagePrice <= 0) {
-      newErrors.averagePrice = 'Preco deve ser maior que zero';
+      newErrors.averagePrice = STRINGS.carteira.precoDeveSerMaior;
     }
 
     setErrors(newErrors);
@@ -521,7 +530,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
                           <>
                             <div>
                               <label className="block text-sm font-medium text-[#0B1F33] mb-1">
-                                Ticker / Codigo
+                                {STRINGS.carteira.tickerCodigo}
                               </label>
                               <input
                                 type="text"
@@ -573,7 +582,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
                           </div>
                         )}
 
-                        {/* Quantidade e Preco */}
+                        {/* Quantidade e Preço */}
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-[#0B1F33] mb-1">
@@ -600,7 +609,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
 
                           <div>
                             <label className="block text-sm font-medium text-[#0B1F33] mb-1">
-                              Preco Medio (R$)
+                              {STRINGS.carteira.precoMedio}
                             </label>
                             <div className="relative">
                               {priceLoading ? (
@@ -627,7 +636,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
                           </div>
                         </div>
 
-                        {/* Status de busca do preco */}
+                        {/* Status de busca do preço */}
                         {!isCustom && priceInfo && (
                           <div className={`flex items-center gap-2 text-sm p-3 rounded-lg ${
                             priceInfo.price
@@ -641,8 +650,8 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
                             )}
                             <span>
                               {priceInfo.price
-                                ? `Preco obtido via ${priceInfo.source}`
-                                : priceInfo.error || 'Preco nao disponivel via API'}
+                                ? `Preço obtido via ${priceInfo.source}`
+                                : priceInfo.error || STRINGS.carteira.precoNaoDisponivel}
                             </span>
                           </div>
                         )}

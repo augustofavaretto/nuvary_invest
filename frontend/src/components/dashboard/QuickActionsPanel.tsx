@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { MessageSquare, User, ClipboardList, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { STRINGS } from '@/constants/strings';
 
 const actions = [
   {
     href: '/chat',
     icon: MessageSquare,
     label: 'Chat com IA',
-    description: 'Tire duvidas',
+    description: 'Tire dúvidas',
     gradient: 'from-[#00B8D9] to-[#007EA7]',
   },
   {
@@ -22,7 +23,7 @@ const actions = [
   {
     href: '/questionario',
     icon: ClipboardList,
-    label: 'Questionario',
+    label: STRINGS.nav.questionario,
     description: 'Refazer perfil',
     gradient: 'from-[#10B981] to-[#059669]',
   },
@@ -34,7 +35,7 @@ export function QuickActionsPanel() {
       <CardHeader>
         <CardTitle className="text-[#0B1F33] flex items-center gap-2">
           <Zap className="w-5 h-5 text-[#00B8D9]" />
-          Acoes Rapidas
+          {STRINGS.dashboard.acoesRapidas}
         </CardTitle>
       </CardHeader>
       <CardContent>

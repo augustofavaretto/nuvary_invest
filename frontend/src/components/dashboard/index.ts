@@ -6,3 +6,4 @@ export { NewsWidget } from './NewsWidget';
 export { QuickActionsPanel } from './QuickActionsPanel';
 export { AISuggestionsCard } from './AISuggestionsCard';
 export { DashboardErrorBoundary } from './DashboardErrorBoundary';
+export { TradingViewTicker } from './TradingViewTicker';
