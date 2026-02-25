@@ -44,10 +44,10 @@ export interface WatchlistStock {
   logo?: string;
 }
 
-// Simbolos de mercado - indices e big techs americanas (suportadas pelas APIs)
+// Símbolos de mercado - índices e big techs americanas (suportadas pelas APIs)
 const MARKET_SYMBOLS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA'];
 
-// Acoes populares americanas para watchlist (APIs gratuitas nao suportam B3)
+// Ações populares americanas para watchlist (APIs gratuitas não suportam B3)
 const WATCHLIST_SYMBOLS = ['META', 'NVDA', 'NFLX', 'JPM', 'V', 'DIS'];
 
 // Nomes das empresas
@@ -69,7 +69,7 @@ const STOCK_NAMES: Record<string, string> = {
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const dashboardService = {
-  // Buscar cotacoes de mercado (indices principais)
+  // Buscar cotações de mercado (índices principais)
   async getMarketOverview(): Promise<MarketQuote[]> {
     const quotes: MarketQuote[] = [];
 
@@ -125,7 +125,7 @@ export const dashboardService = {
     return quotes;
   },
 
-  // Buscar lista de acoes populares com cotacoes
+  // Buscar lista de ações populares com cotações
   async getWatchlist(): Promise<WatchlistStock[]> {
     const stocks: WatchlistStock[] = [];
 
@@ -166,7 +166,7 @@ export const dashboardService = {
     return stocks;
   },
 
-  // Buscar noticias financeiras
+  // Buscar notícias financeiras
   async getFinancialNews(limit = 6): Promise<NewsItem[]> {
     try {
       // Tentar News API primeiro
@@ -201,7 +201,7 @@ export const dashboardService = {
     }
   },
 
-  // Buscar sugestoes da IA baseado no perfil
+  // Buscar sugestões da IA baseado no perfil
   async getAISuggestions(perfilRisco: string): Promise<string> {
     try {
       const res = await fetch(`${API_URL}/ai/suggestion`, {
@@ -209,22 +209,22 @@ export const dashboardService = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           profileType: perfilRisco,
-          message: `Voce e um consultor financeiro. Forneca 3 dicas curtas e praticas de investimento para um investidor com perfil ${perfilRisco}. Seja direto e objetivo. Responda em portugues brasileiro.`,
+          message: `Você é um consultor financeiro. Forneça 3 dicas curtas e práticas de investimento para um investidor com perfil ${perfilRisco}. Seja direto e objetivo. Responda em português brasileiro.`,
         }),
       });
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
-      return data.content || data.response || 'Nao foi possivel gerar sugestoes no momento.';
+      return data.content || data.response || 'Não foi possível gerar sugestões no momento.';
     } catch {
-      return 'Nao foi possivel gerar sugestoes no momento. Tente novamente mais tarde.';
+      return 'Não foi possível gerar sugestões no momento. Tente novamente mais tarde.';
     }
   },
 
-  // Buscar dados de candles para graficos
+  // Buscar dados de candles para gráficos
   async getStockCandles(symbol: string, resolution = 'D'): Promise<unknown> {
     try {
       const to = Math.floor(Date.now() / 1000);
-      const from = to - 30 * 24 * 60 * 60; // 30 dias atras
+      const from = to - 30 * 24 * 60 * 60; // 30 dias atrás
       const res = await fetch(
         `${API_URL}/finnhub/stocks/${symbol}/candles?resolution=${resolution}&from=${from}&to=${to}`
       );

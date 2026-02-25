@@ -25,6 +25,7 @@ import {
   Loader2,
   ArrowLeft,
 } from 'lucide-react';
+import { STRINGS } from '@/constants/strings';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
@@ -53,11 +54,11 @@ export function Questionnaire() {
       if (data.success && data.data?.questions) {
         setQuestions(data.data.questions);
       } else {
-        setError('Erro ao carregar questionario. Tente novamente.');
+        setError(STRINGS.errors.erroCarregarQuestionario);
       }
     } catch (err) {
-      setError('Erro ao carregar questionario. Verifique se o servidor esta rodando.');
-      console.error('Erro ao carregar questionario:', err);
+      setError(STRINGS.errors.servidorOffline);
+      console.error('Erro ao carregar questionário:', err);
     } finally {
       setIsLoadingQuestions(false);
     }
@@ -75,7 +76,7 @@ export function Questionnaire() {
   };
 
   const handleNext = async () => {
-    // Validacao: nao permite avancar se nao tiver perguntas ou respostas
+    // Validação: não permite avançar se não tiver perguntas ou respostas
     if (questions.length === 0) return;
 
     const answeredCount = Object.keys(answers).length;
@@ -83,7 +84,7 @@ export function Questionnaire() {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else if (answeredCount === questions.length) {
-      // So submete se todas as perguntas foram respondidas
+      // Só submete se todas as perguntas foram respondidas
       await submitAnswers();
     }
   };
@@ -213,7 +214,7 @@ export function Questionnaire() {
                   </div>
 
                   <h2 className="text-2xl font-bold mb-3 text-[#0B1F33]">
-                    Questionário de Perfil de Investidor
+                    {STRINGS.perfil.questionarioDePerfil}
                   </h2>
                   <p className="text-[#6B7280] mb-8 leading-relaxed">
                     Responda 10 perguntas rápidas e descubra qual é o seu perfil
@@ -262,7 +263,7 @@ export function Questionnaire() {
                     ) : questions.length === 0 ? (
                       'Erro ao carregar'
                     ) : (
-                      'Comecar Questionario'
+                      STRINGS.perfil.comecarQuestionario
                     )}
                   </Button>
                 </CardContent>

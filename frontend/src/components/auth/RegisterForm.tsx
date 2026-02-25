@@ -107,7 +107,7 @@ function validarTelefone(telefone: string): boolean {
   return telLimpo.length >= 10 && telLimpo.length <= 11;
 }
 
-// Schema de validacao com Zod
+// Schema de validação com Zod
 const registerSchema = z
   .object({
     nome: z
@@ -269,12 +269,12 @@ export function RegisterForm() {
       >
         <Card className="border-[#E5E7EB] shadow-lg">
           <CardContent className="p-8 text-center">
-            {/* Icone de email */}
+            {/* Ícone de email */}
             <div className="w-20 h-20 bg-[#0066CC]/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <MailCheck className="w-10 h-10 text-[#0066CC]" />
             </div>
 
-            {/* Titulo */}
+            {/* Título */}
             <h2 className="text-2xl font-bold text-[#0B1F33] mb-3">
               Verifique seu email
             </h2>
@@ -287,7 +287,7 @@ export function RegisterForm() {
               {registeredEmail}
             </p>
 
-            {/* Instrucoes */}
+            {/* Instruções */}
             <div className="bg-[#F9FAFB] rounded-lg p-4 mb-6 text-left">
               <p className="text-sm text-[#6B7280] mb-2">
                 <strong className="text-[#0B1F33]">Próximos passos:</strong>
@@ -300,7 +300,7 @@ export function RegisterForm() {
               </ol>
             </div>
 
-            {/* Botao abrir email */}
+            {/* Botão abrir email */}
             {emailProviderUrl && (
               <a
                 href={emailProviderUrl}
@@ -369,7 +369,7 @@ export function RegisterForm() {
             </motion.div>
           )}
 
-          {/* Botao Google */}
+          {/* Botão Google */}
           <Button
             type="button"
             variant="outline"
@@ -579,7 +579,7 @@ export function RegisterForm() {
               )}
             </div>
 
-            {/* Botao Submit */}
+            {/* Botão Submit */}
             <Button
               type="submit"
               className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"

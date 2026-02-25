@@ -1,4 +1,5 @@
 import supabase from '@/lib/supabase';
+import { STRINGS } from '@/constants/strings';
 
 export interface PerfilInvestidor {
   id?: string;
@@ -22,7 +23,7 @@ export interface PerfilInvestidor {
   [key: string]: unknown;
 }
 
-// Helper para verificar se e AbortError
+// Helper para verificar se é AbortError
 function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === 'AbortError';
 }
@@ -31,7 +32,7 @@ export async function salvarPerfilInvestidor(respostas: PerfilInvestidor) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) throw new Error('Usuario nao autenticado');
+    if (!user) throw new Error(STRINGS.errors.usuarioNaoAutenticado);
 
     const { data, error } = await supabase
       .from('perfil_investidor')
@@ -95,7 +96,7 @@ export async function deletarPerfilInvestidor() {
   try {
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) throw new Error('Usuario nao autenticado');
+    if (!user) throw new Error(STRINGS.errors.usuarioNaoAutenticado);
 
     const { error } = await supabase
       .from('perfil_investidor')

@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { STRINGS } from '@/constants/strings';
 
 export function Header() {
   const { profile, isAuthenticated, logout, loading } = useAuth();
@@ -67,7 +68,7 @@ export function Header() {
         <nav className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              {/* Links de navegacao */}
+              {/* Links de navegação */}
               <Link
                 href="/dashboard"
                 className="text-sm text-[#00B8D9] font-medium hover:text-[#007EA7] transition-colors hidden sm:flex items-center gap-1"
@@ -79,7 +80,7 @@ export function Header() {
                 href="/questionario"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
               >
-                Questionario
+                {STRINGS.nav.questionario}
               </Link>
               <Link
                 href="/chat"
@@ -88,7 +89,7 @@ export function Header() {
                 Assistente IA
               </Link>
 
-              {/* Botao Chat */}
+              {/* Botão Chat */}
               <Link href="/chat" className="hidden sm:block">
                 <Button size="sm" variant="outline" className="border-[#00B8D9] text-[#00B8D9]">
                   <MessageSquare className="w-4 h-4 mr-2" />
@@ -96,7 +97,7 @@ export function Header() {
                 </Button>
               </Link>
 
-              {/* Menu do usuario */}
+              {/* Menu do usuário */}
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
@@ -106,7 +107,7 @@ export function Header() {
                     {profile?.nome?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <span className="text-sm font-medium text-[#0B1F33] hidden sm:block max-w-[100px] truncate">
-                    {profile?.nome?.split(' ')[0] || 'Usuario'}
+                    {profile?.nome?.split(' ')[0] || 'Usuário'}
                   </span>
                   <ChevronDown className="w-4 h-4 text-[#6B7280]" />
                 </button>
@@ -138,7 +139,7 @@ export function Header() {
                       className="flex items-center gap-2 px-4 py-2 text-sm text-[#6B7280] hover:bg-gray-50 sm:hidden"
                       onClick={() => setShowDropdown(false)}
                     >
-                      Questionario
+                      {STRINGS.nav.questionario}
                     </Link>
                     <button
                       onClick={() => {
@@ -156,7 +157,7 @@ export function Header() {
             </>
           ) : (
             <>
-              {/* Links para nao autenticados */}
+              {/* Links para não autenticados */}
               <Link
                 href="/login"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block"

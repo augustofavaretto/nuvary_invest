@@ -13,6 +13,7 @@ import {
   ChevronDown,
   Bell,
 } from 'lucide-react';
+import { STRINGS } from '@/constants/strings';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -77,7 +78,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   </div>
                   <div className="hidden sm:block text-left">
                     <p className="text-sm font-medium text-[#0B1F33]">
-                      {profile?.nome || user?.email?.split('@')[0] || 'Usuario'}
+                      {profile?.nome || user?.email?.split('@')[0] || STRINGS.nav.usuario}
                     </p>
                     <p className="text-xs text-[#6B7280]">{user?.email}</p>
                   </div>
@@ -111,7 +112,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                         className="flex items-center gap-3 px-4 py-2 text-sm text-[#0B1F33] hover:bg-[#F3F4F6] transition-colors"
                       >
                         <Settings className="w-4 h-4" />
-                        Configuracoes
+                        {STRINGS.nav.configuracoes}
                       </Link>
                       <div className="border-t border-[#E5E7EB] my-2" />
                       <button

@@ -31,7 +31,7 @@ export function useDashboardData(): DashboardData {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Ref para controlar se o componente esta montado
+  // Ref para controlar se o componente está montado
   const isMountedRef = useRef(true);
   const profileRef = useRef<PerfilInvestidor | null>(null);
 
@@ -53,7 +53,7 @@ export function useDashboardData(): DashboardData {
     }
   }, []);
 
-  // Buscar noticias
+  // Buscar notícias
   const refreshNews = useCallback(async () => {
     try {
       const newsData = await dashboardService.getFinancialNews(6);
@@ -62,11 +62,11 @@ export function useDashboardData(): DashboardData {
       }
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') return;
-      console.error('Erro ao atualizar noticias:', err);
+      console.error('Erro ao atualizar notícias:', err);
     }
   }, []);
 
-  // Buscar sugestoes da IA
+  // Buscar sugestões da IA
   const refreshAI = useCallback(async () => {
     const profile = profileRef.current;
     if (!profile?.perfil_risco) return;
@@ -77,7 +77,7 @@ export function useDashboardData(): DashboardData {
       }
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') return;
-      console.error('Erro ao atualizar sugestoes IA:', err);
+      console.error('Erro ao atualizar sugestões IA:', err);
     }
   }, []);
 
@@ -113,7 +113,7 @@ export function useDashboardData(): DashboardData {
         setWatchlist(stocks);
         setNews(newsData);
 
-        // Buscar sugestoes da IA se tiver perfil
+        // Buscar sugestões da IA se tiver perfil
         if (profile?.perfil_risco) {
           const suggestion = await dashboardService.getAISuggestions(profile.perfil_risco);
           if (isMountedRef.current) {

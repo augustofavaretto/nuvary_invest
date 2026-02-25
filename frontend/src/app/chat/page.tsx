@@ -11,7 +11,7 @@ export default function ChatPage() {
   const router = useRouter();
   const { loading: authLoading, isAuthenticated } = useAuth();
 
-  // Verificar autenticacao
+  // Verificar autenticação
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push('/login');

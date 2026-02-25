@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 19 - Centralização de Strings pt-BR | Nuvary Invest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #6D28D9;
+            --secondary: #10b981;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        header {
+            background: linear-gradient(135deg, #4C1D95 0%, #6D28D9 50%, #8B5CF6 100%);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        header p { font-size: 1.1rem; opacity: 0.9; }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover { color: var(--primary); }
+
+        main { padding: 40px 0; }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin: 20px 0 12px;
+            font-weight: 600;
+        }
+
+        p { color: #475569; margin-bottom: 12px; line-height: 1.7; }
+
+        code {
+            background: #F1F5F9;
+            color: #4F46E5;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.88rem;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        pre .comment { color: #64748b; }
+        pre .keyword { color: #93c5fd; }
+        pre .string { color: #86efac; }
+        pre .type { color: #fbbf24; }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+
+        .highlight-box strong { color: var(--primary-dark); }
+
+        .success-box {
+            background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+            border-left: 4px solid #10B981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .file-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .file-card .file-name {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 6px;
+            word-break: break-all;
+        }
+
+        .file-card .file-desc {
+            font-size: 0.88rem;
+            color: var(--gray);
+        }
+
+        .domain-tag {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: var(--light);
+            padding: 10px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border);
+            color: #475569;
+        }
+
+        td code { font-size: 0.82rem; }
+
+        tr:hover td { background: #FAFAFA; }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        footer a { color: var(--primary); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Fevereiro 2026 — v3.3.0</span>
+            <h1>Centralização de Strings pt-BR</h1>
+            <p>Padrão global UTF-8 com fonte única de verdade para todo o texto de UI</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Índice</a></li>
+            <li><a href="#contexto">Contexto</a></li>
+            <li><a href="#arquivos">Arquivos Criados</a></li>
+            <li><a href="#strings">strings.ts</a></li>
+            <li><a href="#uso">Uso</a></li>
+            <li><a href="#refatorados">Refatorados</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o índice</a>
+
+        <!-- Contexto -->
+        <section id="contexto">
+            <h2>🎯 Contexto e Motivação</h2>
+
+            <p>O projeto possuía texto de UI em português brasileiro distribuído diretamente em cada componente como strings literais. Isso causou dois problemas recorrentes:</p>
+
+            <div class="highlight-box">
+                <strong>Problema 1 — Acentos ausentes:</strong> sem um local centralizado e com revisão, palavras como <code>questionario</code>, <code>nao</code>, <code>usuario</code> foram escritas sem acento em dezenas de arquivos, exigindo correção manual em cada um.
+            </div>
+
+            <div class="highlight-box">
+                <strong>Problema 2 — Consistência frágil:</strong> a mesma string como <code>"Não foi possível"</code> podia aparecer com variações sutis em componentes diferentes, sem garantia de padronização futura.
+            </div>
+
+            <p>A solução implementada na v3.3.0 é uma <strong>fonte única de verdade</strong>: o arquivo <code>src/constants/strings.ts</code>, que centraliza todo o texto visível ao usuário. Junto a isso, foram criados <code>.editorconfig</code> e <code>.vscode/settings.json</code> para garantir UTF-8 em nível de editor, cobrindo a raiz do problema.</p>
+        </section>
+
+        <!-- Arquivos criados -->
+        <section id="arquivos">
+            <h2>📁 Arquivos Criados</h2>
+
+            <div class="files-grid">
+                <div class="file-card">
+                    <div class="file-name">.editorconfig</div>
+                    <div class="file-desc">Raiz do projeto. Força <code>charset = utf-8</code> e <code>end_of_line = lf</code> em qualquer editor ou IDE (VS Code, IntelliJ, Vim, etc.).</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">.vscode/settings.json</div>
+                    <div class="file-desc">UTF-8 como padrão no VS Code, <code>formatOnSave</code> ativado, ESLint integrado ao salvar.</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">frontend/src/constants/strings.ts</div>
+                    <div class="file-desc">Arquivo central com todos os textos de UI em pt-BR correto, exportados como objeto <code>STRINGS</code> tipado com <code>as const</code>.</div>
+                </div>
+            </div>
+
+            <h3>.editorconfig</h3>
+            <pre><span class="comment">root = true</span>
+
+<span class="keyword">[*]</span>
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+<span class="keyword">[*.md]</span>
+trim_trailing_whitespace = false</pre>
+
+            <h3>.vscode/settings.json</h3>
+            <pre>{
+  <span class="string">"files.encoding"</span>: <span class="string">"utf8"</span>,
+  <span class="string">"files.autoGuessEncoding"</span>: <span class="keyword">false</span>,
+  <span class="string">"files.eol"</span>: <span class="string">"\n"</span>,
+  <span class="string">"editor.formatOnSave"</span>: <span class="keyword">true</span>,
+  <span class="string">"editor.codeActionsOnSave"</span>: {
+    <span class="string">"source.fixAll.eslint"</span>: <span class="string">"explicit"</span>
+  }
+}</pre>
+        </section>
+
+        <!-- strings.ts -->
+        <section id="strings">
+            <h2>📝 Estrutura do strings.ts</h2>
+
+            <p>O objeto <code>STRINGS</code> é organizado em domínios que espelham as áreas funcionais do projeto. Todos os valores são <strong>TypeScript strict</strong> (<code>as const</code>), garantindo autocomplete e detecção de erros em tempo de compilação.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Domínio</th>
+                        <th>Conteúdo</th>
+                        <th>Exemplos de chaves</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>STRINGS.errors</code></td>
+                        <td>Erros genéricos reutilizados em múltiplos serviços</td>
+                        <td><code>usuarioNaoAutenticado</code>, <code>erroServidor</code>, <code>naoConseguiProcessar</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>STRINGS.auth</code></td>
+                        <td>Autenticação — login, cadastro, Google OAuth</td>
+                        <td><code>entrar</code>, <code>criarConta</code>, <code>entrarComGoogle</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>STRINGS.nav</code></td>
+                        <td>Rótulos de navegação e sidebar</td>
+                        <td><code>dashboard</code>, <code>questionario</code>, <code>configuracoes</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>STRINGS.dashboard</code></td>
+                        <td>Títulos e mensagens de erro dos widgets</td>
+                        <td><code>acoesRapidas</code>, <code>noticiasFinanceiras</code>, <code>naoFoiPossivelCarregarDados</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>STRINGS.chat</code></td>
+                        <td>Interface do chat — modais, seções, mensagens de boas-vindas</td>
+                        <td><code>diasAtras(n)</code>, <code>boasVindasComPerfil(nome)</code>, <code>limparTudoConfirm</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>STRINGS.perfil</code></td>
+                        <td>Questionário e perfil de investidor</td>
+                        <td><code>analiseCategoria</code>, <code>alocacaoRecomendada</code>, <code>toleranciaRisco</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>STRINGS.carteira</code></td>
+                        <td>Portfólio e modal de ativos</td>
+                        <td><code>precoMedio</code>, <code>tickerObrigatorio</code>, <code>logistica</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>STRINGS.ui</code></td>
+                        <td>Elementos genéricos de interface</td>
+                        <td><code>cancelar</code>, <code>salvar</code>, <code>carregando</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Funções dinâmicas</h3>
+            <p>Strings que contêm valores variáveis são definidas como funções tipadas:</p>
+            <pre><span class="comment">// Em strings.ts</span>
+<span class="keyword">chat</span>: {
+  diasAtras: (n: <span class="type">number</span>) =&gt; <span class="string">`${n} dias atrás`</span>,
+  semanasAtras: (n: <span class="type">number</span>) =&gt; <span class="string">`${n} semana${n > 1 ? 's' : ''} atrás`</span>,
+  boasVindasComPerfil: (nome: <span class="type">string</span>) =&gt;
+    <span class="string">`Olá! Sou o assistente virtual da Nuvary Invest. Vi que seu perfil é **${nome}**...`</span>,
+  contextoUsuario: (nome, tipo, pontuacao, rf, rv, fii, intl) =&gt;
+    <span class="string">`[Contexto: O usuário tem perfil ${nome} (${tipo}), com pontuação ${pontuacao}...]`</span>,
+}</pre>
+        </section>
+
+        <!-- Como usar -->
+        <section id="uso">
+            <h2>🚀 Como Usar</h2>
+
+            <p>Para qualquer novo texto de UI, em vez de escrever a string diretamente no componente:</p>
+
+            <h3>❌ Antes (não usar)</h3>
+            <pre><span class="comment">// Diretamente no componente — propenso a erros de acento</span>
+&lt;h3&gt;Analise por Categoria&lt;/h3&gt;
+&lt;p&gt;Nao foi possivel carregar dados.&lt;/p&gt;
+<span class="keyword">throw new</span> Error(<span class="string">'Usuario nao autenticado'</span>)</pre>
+
+            <h3>✅ Depois (padrão v3.3.0)</h3>
+            <pre><span class="comment">// 1. Adicione a string em strings.ts (uma única vez, com acento correto)</span>
+<span class="keyword">export const</span> STRINGS = {
+  perfil: {
+    analiseCategoria: <span class="string">'Análise por Categoria'</span>,
+  },
+  errors: {
+    naoFoiPossivelCarregar: <span class="string">'Não foi possível carregar dados.'</span>,
+    usuarioNaoAutenticado: <span class="string">'Usuário não autenticado'</span>,
+  }
+} <span class="keyword">as const</span>;
+
+<span class="comment">// 2. Importe e use no componente</span>
+<span class="keyword">import</span> { STRINGS } <span class="keyword">from</span> <span class="string">'@/constants/strings'</span>;
+
+&lt;h3&gt;{STRINGS.perfil.analiseCategoria}&lt;/h3&gt;
+&lt;p&gt;{STRINGS.errors.naoFoiPossivelCarregar}&lt;/p&gt;
+<span class="keyword">throw new</span> Error(STRINGS.errors.usuarioNaoAutenticado)</pre>
+
+            <div class="success-box">
+                <strong>Vantagem principal:</strong> se precisar alterar um texto (ex: "Análise" → "Análise Detalhada"), muda em um único lugar em <code>strings.ts</code> e todos os componentes são atualizados automaticamente. Nenhuma busca manual nos arquivos necessária.
+            </div>
+        </section>
+
+        <!-- Arquivos refatorados -->
+        <section id="refatorados">
+            <h2>🔧 Componentes Refatorados (14 arquivos)</h2>
+
+            <p>Na v3.3.0, todos os componentes principais foram migrados para usar <code>STRINGS</code>:</p>
+
+            <div class="files-grid">
+                <div class="file-card">
+                    <div class="file-name">components/chat/Chatbot.tsx <span class="domain-tag">chat</span></div>
+                    <div class="file-desc">Boas-vindas, contexto do perfil, disclaimer de IA, opções rápidas</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/chat/ChatSidebar.tsx <span class="domain-tag">chat</span></div>
+                    <div class="file-desc">Seções de histórico, formatação de datas relativas, modais de exclusão</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/dashboard/StockList.tsx <span class="domain-tag">dashboard</span></div>
+                    <div class="file-desc">Título "Ações Populares" e mensagem de erro</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/dashboard/NewsWidget.tsx <span class="domain-tag">dashboard</span></div>
+                    <div class="file-desc">Título "Notícias Financeiras" e mensagem de erro</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/dashboard/MarketOverview.tsx <span class="domain-tag">dashboard</span></div>
+                    <div class="file-desc">Mensagem de erro do mercado</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/dashboard/QuickActionsPanel.tsx <span class="domain-tag">dashboard</span></div>
+                    <div class="file-desc">Título "Ações Rápidas" e rótulo do questionário</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/dashboard/AISuggestionsCard.tsx <span class="domain-tag">dashboard</span></div>
+                    <div class="file-desc">"Sugestões da IA" e disclaimer de recomendação</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/dashboard/InvestorProfileCard.tsx <span class="domain-tag">perfil</span></div>
+                    <div class="file-desc">Labels de alocação, "Alocação Recomendada", CTA do questionário</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/questionnaire/ResultCard.tsx <span class="domain-tag">perfil</span></div>
+                    <div class="file-desc">Rótulos da alocação, análise por categoria, botão refazer</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/questionnaire/Questionnaire.tsx <span class="domain-tag">perfil</span></div>
+                    <div class="file-desc">Mensagens de erro, título e botão de início</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/portfolio/AddAssetModal.tsx <span class="domain-tag">carteira</span></div>
+                    <div class="file-desc">Labels de formulário e mensagens de validação</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/layout/Header.tsx <span class="domain-tag">nav</span></div>
+                    <div class="file-desc">Rótulo "Questionário" na navegação</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">components/layout/DashboardLayout.tsx <span class="domain-tag">nav</span></div>
+                    <div class="file-desc">"Usuário" e "Configurações" na sidebar</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">services/chatService.ts <span class="domain-tag">errors</span></div>
+                    <div class="file-desc"><code>throw new Error(STRINGS.errors.usuarioNaoAutenticado)</code> em 3 funções</div>
+                </div>
+                <div class="file-card">
+                    <div class="file-name">services/perfilService.ts <span class="domain-tag">errors</span></div>
+                    <div class="file-desc"><code>throw new Error(STRINGS.errors.usuarioNaoAutenticado)</code> em 2 funções</div>
+                </div>
+            </div>
+
+            <h3>Verificação TypeScript</h3>
+            <p>Após a refatoração, o compilador TypeScript confirma zero erros de tipo:</p>
+            <pre><span class="comment">$ npx tsc --noEmit</span>
+<span class="comment"># (sem saída = zero erros)</span></pre>
+        </section>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest — Documentação Técnica v3.3.0 | Fevereiro 2026</p>
+        <p><a href="index.html">Voltar para o índice</a></p>
+    </footer>
+</body>
+</html>

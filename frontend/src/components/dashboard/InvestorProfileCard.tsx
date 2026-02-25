@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { PieChart, TrendingUp, Shield, Target, Flame } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PerfilInvestidor } from '@/services/perfilService';
+import { STRINGS } from '@/constants/strings';
 
 interface InvestorProfileCardProps {
   profile: PerfilInvestidor | null;
@@ -23,10 +24,10 @@ const profileConfig: Record<
     icon: Shield,
     color: 'text-blue-600',
     bgColor: 'bg-blue-50',
-    description: 'Priorizando seguranca e estabilidade',
+    description: 'Priorizando segurança e estabilidade',
     allocation: [
       { label: 'Renda Fixa', percent: 70, color: '#3B82F6' },
-      { label: 'Acoes', percent: 15, color: '#10B981' },
+      { label: STRINGS.perfil.acoes, percent: 15, color: '#10B981' },
       { label: 'FIIs', percent: 10, color: '#F59E0B' },
       { label: 'Internacional', percent: 5, color: '#8B5CF6' },
     ],
@@ -35,10 +36,10 @@ const profileConfig: Record<
     icon: Target,
     color: 'text-green-600',
     bgColor: 'bg-green-50',
-    description: 'Equilibrio entre seguranca e crescimento',
+    description: 'Equilíbrio entre segurança e crescimento',
     allocation: [
       { label: 'Renda Fixa', percent: 50, color: '#3B82F6' },
-      { label: 'Acoes', percent: 25, color: '#10B981' },
+      { label: STRINGS.perfil.acoes, percent: 25, color: '#10B981' },
       { label: 'FIIs', percent: 15, color: '#F59E0B' },
       { label: 'Internacional', percent: 10, color: '#8B5CF6' },
     ],
@@ -50,7 +51,7 @@ const profileConfig: Record<
     description: 'Focando em crescimento de longo prazo',
     allocation: [
       { label: 'Renda Fixa', percent: 30, color: '#3B82F6' },
-      { label: 'Acoes', percent: 40, color: '#10B981' },
+      { label: STRINGS.perfil.acoes, percent: 40, color: '#10B981' },
       { label: 'FIIs', percent: 15, color: '#F59E0B' },
       { label: 'Internacional', percent: 15, color: '#8B5CF6' },
     ],
@@ -62,7 +63,7 @@ const profileConfig: Record<
     description: 'Maximizando retorno com maior risco',
     allocation: [
       { label: 'Renda Fixa', percent: 15, color: '#3B82F6' },
-      { label: 'Acoes', percent: 50, color: '#10B981' },
+      { label: STRINGS.perfil.acoes, percent: 50, color: '#10B981' },
       { label: 'FIIs', percent: 15, color: '#F59E0B' },
       { label: 'Internacional', percent: 20, color: '#8B5CF6' },
     ],
@@ -81,7 +82,7 @@ export function InvestorProfileCard({ profile }: InvestorProfileCardProps) {
         </CardHeader>
         <CardContent>
           <p className="text-[#6B7280] text-center py-4">
-            Faca o questionario para descobrir seu perfil de investidor.
+            {STRINGS.perfil.fazerQuestionario}
           </p>
         </CardContent>
       </Card>
@@ -112,7 +113,7 @@ export function InvestorProfileCard({ profile }: InvestorProfileCardProps) {
 
         {/* Allocation Bars */}
         <div className="space-y-3">
-          <p className="text-sm font-medium text-[#0B1F33]">Alocacao Recomendada:</p>
+          <p className="text-sm font-medium text-[#0B1F33]">{STRINGS.perfil.alocacaoRecomendada}:</p>
           {config.allocation.map((item, index) => (
             <div key={item.label} className="space-y-1">
               <div className="flex justify-between text-sm">

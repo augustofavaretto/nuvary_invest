@@ -4,6 +4,7 @@ import { Newspaper, ExternalLink, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { NewsItem } from '@/services/dashboardService';
+import { STRINGS } from '@/constants/strings';
 
 interface NewsWidgetProps {
   news: NewsItem[];
@@ -19,9 +20,9 @@ function formatTimeAgo(dateString: string): string {
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffMins < 60) return `${diffMins}min atras`;
-  if (diffHours < 24) return `${diffHours}h atras`;
-  return `${diffDays}d atras`;
+  if (diffMins < 60) return `${diffMins}min atrás`;
+  if (diffHours < 24) return `${diffHours}h atrás`;
+  return `${diffDays}d atrás`;
 }
 
 export function NewsWidget({ news, onRefresh, loading }: NewsWidgetProps) {
@@ -30,7 +31,7 @@ export function NewsWidget({ news, onRefresh, loading }: NewsWidgetProps) {
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-[#0B1F33] flex items-center gap-2">
           <Newspaper className="w-5 h-5 text-[#00B8D9]" />
-          Noticias Financeiras
+          {STRINGS.dashboard.noticiasFinanceiras}
         </CardTitle>
         <Button
           variant="ghost"
@@ -84,7 +85,7 @@ export function NewsWidget({ news, onRefresh, loading }: NewsWidgetProps) {
         </div>
         {news.length === 0 && (
           <p className="text-center text-[#6B7280] py-4">
-            Nao foi possivel carregar noticias.
+            {STRINGS.dashboard.naoFoiPossivelCarregarNoticias}
           </p>
         )}
       </CardContent>

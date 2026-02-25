@@ -43,7 +43,7 @@ export default function ExtratosPage() {
             Extratos
           </h1>
           <p className="text-[#6B7280] mt-1">
-            Visualize e exporte seus extratos de movimentacoes
+            Visualize e exporte seus extratos de movimentações
           </p>
         </motion.div>
 
@@ -58,16 +58,16 @@ export default function ExtratosPage() {
             <FileText className="w-10 h-10 text-[#00B8D9]" />
           </div>
           <h2 className="text-xl font-semibold text-[#0B1F33] mb-2">
-            Em breve disponivel
+            Em breve disponível
           </h2>
           <p className="text-[#6B7280] max-w-md mx-auto mb-6">
-            Acompanhe todas as suas movimentacoes financeiras em um so lugar.
+            Acompanhe todas as suas movimentações financeiras em um só lugar.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
             <div className="bg-[#F3F4F6] rounded-lg p-4">
               <Calendar className="w-6 h-6 text-[#00B8D9] mx-auto mb-2" />
-              <p className="text-sm font-medium text-[#0B1F33]">Por Periodo</p>
+              <p className="text-sm font-medium text-[#0B1F33]">Por Período</p>
               <p className="text-xs text-[#6B7280]">Filtre por datas</p>
             </div>
             <div className="bg-[#F3F4F6] rounded-lg p-4">

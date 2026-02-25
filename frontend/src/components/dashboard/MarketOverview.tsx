@@ -4,6 +4,7 @@ import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MarketQuote } from '@/services/dashboardService';
+import { STRINGS } from '@/constants/strings';
 
 interface MarketOverviewProps {
   data: MarketQuote[];
@@ -76,7 +77,7 @@ export function MarketOverview({ data, onRefresh, loading }: MarketOverviewProps
         </div>
         {data.length === 0 && (
           <p className="text-center text-[#6B7280] py-4">
-            Nao foi possivel carregar dados do mercado.
+            {STRINGS.dashboard.naoFoiPossivelCarregarDados}
           </p>
         )}
       </CardContent>

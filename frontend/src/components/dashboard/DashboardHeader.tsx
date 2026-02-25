@@ -68,7 +68,7 @@ export function DashboardHeader({ userName, investorProfile }: DashboardHeaderPr
         {/* Left side - Greeting and Date */}
         <div className="flex-1">
           <h1 className="text-2xl md:text-3xl font-bold text-[#0B1F33]">
-            Ola, {userName || 'Investidor'}!
+            Olá, {userName || 'Investidor'}!
           </h1>
           <p className="text-[#6B7280] flex items-center gap-2 mt-1">
             <Calendar className="w-4 h-4" />
@@ -82,7 +82,7 @@ export function DashboardHeader({ userName, investorProfile }: DashboardHeaderPr
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <Wallet className="w-4 h-4 text-[#00B8D9]" />
-                <span className="text-sm text-white/70">Patrimonio Total</span>
+                <span className="text-sm text-white/70">Patrimônio Total</span>
               </div>
               <button
                 onClick={toggleBalance}

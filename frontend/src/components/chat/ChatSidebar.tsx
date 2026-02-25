@@ -20,6 +20,7 @@ import {
 import { listarConversas, buscarConversas, deletarConversa, limparHistorico } from '@/services/chatService';
 import Image from 'next/image';
 import Link from 'next/link';
+import { STRINGS } from '@/constants/strings';
 
 interface Conversa {
   id: string;
@@ -131,14 +132,14 @@ export function ChatSidebar({
     const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
 
     if (dias === 0) {
-      return 'Hoje';
+      return STRINGS.chat.hoje;
     } else if (dias === 1) {
-      return 'Ontem';
+      return STRINGS.chat.ontem;
     } else if (dias < 7) {
-      return `${dias} dias atras`;
+      return STRINGS.chat.diasAtras(dias);
     } else if (dias < 30) {
       const semanas = Math.floor(dias / 7);
-      return `${semanas} semana${semanas > 1 ? 's' : ''} atras`;
+      return STRINGS.chat.semanasAtras(semanas);
     } else {
       return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
     }
@@ -290,10 +291,10 @@ export function ChatSidebar({
             <div className="text-center py-8 px-4">
               <MessageSquare className="w-10 h-10 text-[#3D3D3D] mx-auto mb-3" />
               <p className="text-[#6B7280] text-sm">
-                {termoBusca ? 'Nenhuma conversa encontrada' : 'Nenhuma conversa ainda'}
+                {termoBusca ? STRINGS.chat.nenhumaConversaEncontrada : STRINGS.chat.nenhumaConversaAinda}
               </p>
               <p className="text-[#4D4D4D] text-xs mt-1">
-                Inicie uma nova conversa
+                {STRINGS.chat.iniciaNova}
               </p>
             </div>
           ) : (
@@ -301,7 +302,7 @@ export function ChatSidebar({
               {/* Hoje */}
               {grupos.hoje.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">Hoje</p>
+                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">{STRINGS.chat.hoje}</p>
                   {grupos.hoje.map((conversa) => (
                     <ConversaItem
                       key={conversa.id}
@@ -317,7 +318,7 @@ export function ChatSidebar({
               {/* Ontem */}
               {grupos.ontem.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">Ontem</p>
+                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">{STRINGS.chat.ontem}</p>
                   {grupos.ontem.map((conversa) => (
                     <ConversaItem
                       key={conversa.id}
@@ -333,7 +334,7 @@ export function ChatSidebar({
               {/* Últimos 7 dias */}
               {grupos.semana.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">Ultimos 7 dias</p>
+                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">{STRINGS.chat.ultimosDias(7)}</p>
                   {grupos.semana.map((conversa) => (
                     <ConversaItem
                       key={conversa.id}
@@ -349,7 +350,7 @@ export function ChatSidebar({
               {/* Últimos 30 dias */}
               {grupos.mes.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">Ultimos 30 dias</p>
+                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">{STRINGS.chat.ultimosDias(30)}</p>
                   {grupos.mes.map((conversa) => (
                     <ConversaItem
                       key={conversa.id}
@@ -365,7 +366,7 @@ export function ChatSidebar({
               {/* Mais antigas */}
               {grupos.antigas.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">Mais antigas</p>
+                  <p className="text-xs text-[#6B7280] px-3 py-2 font-medium">{STRINGS.chat.maisAntigas}</p>
                   {grupos.antigas.map((conversa) => (
                     <ConversaItem
                       key={conversa.id}
@@ -390,7 +391,7 @@ export function ChatSidebar({
               className="w-full justify-start gap-2 text-[#6B7280] hover:text-red-400 hover:bg-red-500/10"
             >
               <Trash2 className="w-4 h-4" />
-              Limpar todo historico
+              {STRINGS.chat.limparHistorico}
             </Button>
           </div>
         )}
@@ -419,10 +420,10 @@ export function ChatSidebar({
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-[#0B1F33] mb-2">
-                    Limpar todo o historico?
+                    {STRINGS.chat.limparTudoConfirm}
                   </h3>
                   <p className="text-[#6B7280] text-sm mb-4">
-                    Esta acao ira excluir permanentemente todas as suas conversas. Esta acao nao pode ser desfeita.
+                    {STRINGS.chat.acaoIraExcluirTudo}
                   </p>
                   <div className="flex gap-3 justify-end">
                     <Button
@@ -489,7 +490,7 @@ export function ChatSidebar({
                     Deletar conversa?
                   </h3>
                   <p className="text-[#6B7280] text-sm mb-4">
-                    Esta conversa sera excluida permanentemente.
+                    {STRINGS.chat.seraExcluida}
                   </p>
                   <div className="flex gap-3 justify-end">
                     <Button

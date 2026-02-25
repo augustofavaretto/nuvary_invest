@@ -308,8 +308,8 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Fevereiro 2026 - v2.8.0</span>
-            <h1>Proximos Passos</h1>
+            <span class="version-badge">Fevereiro 2026 - v3.3.0</span>
+            <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
     </header>
@@ -331,8 +331,8 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🎉</span>
             <div>
-                <strong>Busca Automatica de Precos via API!</strong>
-                <p style="margin: 0; opacity: 0.9;">Preco de ativos preenchido automaticamente via Finnhub/Alpha Vantage na v2.8.0</p>
+                <strong>Centralização de Strings pt-BR na v3.3.0!</strong>
+                <p style="margin: 0; opacity: 0.9;">Arquivo central strings.ts, EditorConfig UTF-8 global e 15 componentes refatorados</p>
             </div>
         </div>
 
@@ -342,8 +342,8 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">64</div>
-                    <div class="stat-label">Concluidos</div>
+                    <div class="stat-number">84</div>
+                    <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🔥</div>
@@ -363,7 +363,7 @@
                 <div class="stat-card">
                     <div class="stat-icon">🛠️</div>
                     <div class="stat-number">40</div>
-                    <div class="stat-label">Debito Tecnico</div>
+                    <div class="stat-label">Débito Técnico</div>
                 </div>
             </div>
 
@@ -430,12 +430,16 @@
 
             <div class="category-header">⚡ Backend e APIs</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integracao Alpha Vantage (acoes, forex, cripto)</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integracao Finnhub (dados real-time, indicadores)</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integracao News API (noticias financeiras)</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sistema de cache inteligente (node-cache)</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Rotacao de API keys para maximizar limites</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Rate limiting nos endpoints de autenticacao</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração Alpha Vantage (ações, forex, cripto)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração Finnhub (dados real-time, indicadores)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração News API (notícias financeiras)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração Brapi API (B3 - ações, FIIs, BDRs)<span class="task-new">NOVO v3.0</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração ANBIMA API (títulos públicos, CRI/CRA, letras financeiras)<span class="task-new">NOVO v3.1</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">TradingView Widget (cotações tempo real no dashboard)<span class="task-new">NOVO v3.2</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sistema de cache inteligente (node-cache + Map)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Rotação de API keys para maximizar limites</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Rate limiting nos endpoints de autenticação</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Health check com status de todas as 6 APIs<span class="task-new">NOVO</span></span></li>
             </ul>
 
             <div class="category-header">🎨 Interface e UX</div>
@@ -504,7 +508,52 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Funcao de remover ativo com confirmacao<span class="task-new">NOVO</span></span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Calculo automatico de percentuais do portfolio<span class="task-new">NOVO</span></span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Remocao do menu Extratos da sidebar<span class="task-new">NOVO</span></span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Busca automatica de preco via Finnhub (acoes US) e Alpha Vantage (cripto)<span class="task-new">NOVO v2.8</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Busca automática de preço via Finnhub (ações US) e Alpha Vantage (cripto)<span class="task-new">NOVO v2.8</span></span></li>
+            </ul>
+
+            <div class="category-header">🇧🇷 Integração Brapi API (B3) <span class="task-new">NOVO v3.0.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Controller com 6 endpoints: quote, listStocks, crypto, currency, inflation, selic<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cotações em tempo real de ações da B3 (PETR4, VALE3, ITUB4, etc.)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cotações de FIIs (HGLG11, XPLG11, MXRF11, etc.)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cotações de BDRs (AAPL34, MSFT34, etc.)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cache em memória com TTL configurável<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Frontend portfolioService atualizado para usar Brapi como fonte primária<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Fallback para Finnhub em BDRs internacionais<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🏦 Integração ANBIMA API (Renda Fixa) <span class="task-new">NOVO v3.1.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Autenticação OAuth2 com client_credentials<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Controller com 7 endpoints: títulos públicos, VNA, curvas juros, CRI/CRA, letras financeiras, projeções, estimativa Selic<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Renovação automática de token OAuth2<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Registro no portal ANBIMA Developers<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Aguardando aprovação do ambiente de produção (email para anbimafeed@anbima.com.br)</span></li>
+            </ul>
+
+            <div class="category-header">📺 TradingView Ticker Tape <span class="task-new">NOVO v3.2.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Componente TradingViewTicker.tsx com useRef + useEffect<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Widget tv-ticker-tape com 14 símbolos (10 ações B3 + BTC, ETH, SPX, GOLD)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">CSS para ocultar atribuição TradingView (estilo B3)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Animação Framer Motion no mount<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🔤 Padronização UTF-8 <span class="task-new">NOVO v3.2.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Correção de acentos em 24+ arquivos do frontend<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Landing page, dashboard, carteira, perfil, relatórios, trilhas, extratos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Componentes: AddAssetModal, Chatbot, Sidebar, DashboardHeader<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Services: portfolioService, dashboardService, chatService, perfilService<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🌐 Centralização de Strings pt-BR <span class="task-new">NOVO v3.3.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">.editorconfig e .vscode/settings.json com UTF-8 global para todos os editores<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Arquivo central strings.ts com 7 domínios: errors, auth, nav, dashboard, chat, perfil, carteira<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Strings dinâmicas tipadas com funções TypeScript (diasAtras, boasVindas, contextoUsuario)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">15 componentes e services refatorados para usar STRINGS (Chatbot, ChatSidebar, StockList, AISuggestionsCard, etc.)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">TypeScript as const para autocomplete e validação em tempo de compilação (tsc --noEmit zero erros)<span class="task-new">NOVO</span></span></li>
             </ul>
         </section>
 
@@ -664,7 +713,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentacao Tecnica | Fevereiro 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v3.2.0 | Fevereiro 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>

@@ -3,6 +3,7 @@
 import { Sparkles, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { STRINGS } from '@/constants/strings';
 
 interface AISuggestionsCardProps {
   suggestion: string;
@@ -16,7 +17,7 @@ export function AISuggestionsCard({ suggestion, onRefresh, loading }: AISuggesti
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-[#0B1F33] flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-[#00B8D9]" />
-          Sugestoes da IA
+          {STRINGS.dashboard.sugestoesIA}
         </CardTitle>
         <Button
           variant="ghost"
@@ -37,11 +38,11 @@ export function AISuggestionsCard({ suggestion, onRefresh, loading }: AISuggesti
           </div>
         ) : (
           <div className="text-sm text-[#6B7280] whitespace-pre-wrap leading-relaxed">
-            {suggestion || 'Complete o questionario de perfil para receber sugestoes personalizadas.'}
+            {suggestion || STRINGS.perfil.fazerQuestionario}
           </div>
         )}
         <p className="text-xs text-[#9CA3AF] mt-4 italic">
-          * Sugestoes geradas por IA baseadas no seu perfil de investidor. Nao constitui recomendacao de investimento.
+          * Sugestões geradas por IA baseadas no seu perfil de investidor. {STRINGS.dashboard.naoConstituiRecomendacao}.
         </p>
       </CardContent>
     </Card>

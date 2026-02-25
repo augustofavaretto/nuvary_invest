@@ -40,10 +40,10 @@ export default function RelatoriosPage() {
         >
           <h1 className="text-2xl font-bold text-[#0B1F33] flex items-center gap-3">
             <BarChart3 className="w-7 h-7 text-[#00B8D9]" />
-            Relatorios
+            Relatórios
           </h1>
           <p className="text-[#6B7280] mt-1">
-            Analises detalhadas e relatorios de performance
+            Análises detalhadas e relatórios de performance
           </p>
         </motion.div>
 
@@ -58,10 +58,10 @@ export default function RelatoriosPage() {
             <BarChart3 className="w-10 h-10 text-[#00B8D9]" />
           </div>
           <h2 className="text-xl font-semibold text-[#0B1F33] mb-2">
-            Em breve disponivel
+            Em breve disponível
           </h2>
           <p className="text-[#6B7280] max-w-md mx-auto mb-6">
-            Relatorios completos para acompanhar a performance dos seus investimentos.
+            Relatórios completos para acompanhar a performance dos seus investimentos.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
@@ -78,7 +78,7 @@ export default function RelatoriosPage() {
             <div className="bg-[#F3F4F6] rounded-lg p-4">
               <FileBarChart className="w-6 h-6 text-[#00B8D9] mx-auto mb-2" />
               <p className="text-sm font-medium text-[#0B1F33]">Impostos</p>
-              <p className="text-xs text-[#6B7280]">Relatorio para IR</p>
+              <p className="text-xs text-[#6B7280]">Relatório para IR</p>
             </div>
           </div>
 

@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { STRINGS } from '@/constants/strings';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
@@ -152,8 +153,8 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       id: 'welcome',
       role: 'assistant',
       content: profile
-        ? `Ola! Sou o assistente virtual da Nuvary Invest. Vi que seu perfil e **${profile.name}**. Como posso ajuda-lo hoje com seus investimentos?`
-        : `Ola! Sou o assistente virtual da Nuvary Invest. Estou aqui para ajuda-lo com duvidas sobre investimentos, analises de mercado e educacao financeira. Como posso ajuda-lo hoje?`,
+        ? STRINGS.chat.boasVindasComPerfil(profile.name)
+        : STRINGS.chat.boasVindasSemPerfil,
       timestamp: new Date(),
     };
     setMessages([welcomeMessage]);
@@ -225,7 +226,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       try {
         await salvarMensagem('user', content.trim(), currentConversaId);
       } catch (e) {
-        console.error('Erro ao salvar mensagem do usuario:', e);
+        console.error(STRINGS.chat.erroSalvarMensagem, e);
       }
     }
 
@@ -253,7 +254,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
 
       // Prepara o contexto do perfil
       const profileContext = profile
-        ? `\n\n[Contexto: O usuario tem perfil ${profile.name} (${profile.type}), com pontuacao ${profile.score}. Alocacao recomendada: Renda Fixa ${profile.recommendedAllocation.rendaFixa}%, Renda Variavel ${profile.recommendedAllocation.rendaVariavel}%, FIIs ${profile.recommendedAllocation.fundosImobiliarios}%, Internacional ${profile.recommendedAllocation.internacional}%.]`
+        ? '\n\n' + STRINGS.chat.contextoUsuario(profile.name, profile.type, profile.score, profile.recommendedAllocation.rendaFixa, profile.recommendedAllocation.rendaVariavel, profile.recommendedAllocation.fundosImobiliarios, profile.recommendedAllocation.internacional)
         : '';
 
       const response = await fetch(`${API_URL}/ai/chat`, {
@@ -268,11 +269,11 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Erro na comunicacao com o servidor');
+        throw new Error(STRINGS.errors.erroServidor);
       }
 
       const data = await response.json();
-      const assistantContent = data.content || 'Desculpe, nao consegui processar sua mensagem.';
+      const assistantContent = data.content || STRINGS.errors.naoConseguiProcessar;
 
       // Salva resposta do assistente no Supabase
       if (user) {
@@ -442,7 +443,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                   className="mt-8"
                 >
                   <p className="text-sm text-[#6B7280] mb-4 text-center">
-                    Escolha uma opcao ou digite sua pergunta:
+                    {STRINGS.chat.escolhaOpcao}
                   </p>
                   <QuickActions onAction={handleQuickAction} disabled={isLoading} />
                 </motion.div>
@@ -468,7 +469,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                       </div>
                       <Link href="/questionario">
                         <Button className="nuvary-gradient text-white">
-                          Fazer questionario
+                          {STRINGS.chat.fazerQuestionario}
                         </Button>
                       </Link>
                     </CardContent>
@@ -504,7 +505,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
               </Button>
             </div>
             <p className="text-xs text-[#6B7280] mt-2 text-center">
-              Powered by OpenAI • As respostas sao geradas por IA e nao constituem recomendacao de investimento
+              Powered by OpenAI • {STRINGS.chat.respostasIADisclaimer}
             </p>
           </form>
         </div>

@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 
-// Schema de validacao
+// Schema de validação
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
   senha: z.string().min(1, 'Senha é obrigatória'),
@@ -74,7 +74,7 @@ export function LoginForm() {
     }
   }, [searchParams]);
 
-  // Redireciona se ja autenticado
+  // Redireciona se já autenticado
   useEffect(() => {
     const checkAndRedirect = async () => {
       if (isAuthenticated) {
@@ -91,7 +91,7 @@ export function LoginForm() {
     try {
       await login(data.email, data.senha);
 
-      // Verifica se usuario tem perfil de investidor
+      // Verifica se usuário tem perfil de investidor
       const temPerfil = await verificarSeTemPerfil();
 
       // Redireciona baseado no perfil
@@ -158,7 +158,7 @@ export function LoginForm() {
             </motion.div>
           )}
 
-          {/* Botao Google */}
+          {/* Botão Google */}
           <Button
             type="button"
             variant="outline"
@@ -251,7 +251,7 @@ export function LoginForm() {
               )}
             </div>
 
-            {/* Botao Submit */}
+            {/* Botão Submit */}
             <Button
               type="submit"
               className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"

@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 18 - TradingView Widget e Correções UTF-8 | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --secondary: #10b981;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2962FF 0%, #1976D2 50%, #0D47A1 100%);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin: 25px 0 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #475569;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .feature-card h4 {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .component-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .component-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .component-item h4 {
+            color: var(--dark);
+            font-size: 1rem;
+            margin-bottom: 8px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .component-item p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .menu-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .menu-table th,
+        .menu-table td {
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .menu-table th {
+            background: var(--dark);
+            color: white;
+            font-weight: 600;
+        }
+
+        .menu-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e3a5f 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .architecture-diagram {
+            background: linear-gradient(135deg, #0B1F33 0%, #1e3a5f 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .architecture-diagram h4 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .arch-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .arch-box {
+            background: rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .arch-arrow {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #00B8D9 0%, #007EA7 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            margin-bottom: 10px;
+        }
+
+        .new-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .chart-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .chart-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .chart-card .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .chart-card h5 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .chart-card p {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Versão 3.2.0</span>
+            <h1>TradingView Widget e Correções UTF-8</h1>
+            <p>Widget de cotações em tempo real da TradingView e padronização UTF-8 para português brasileiro</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Índice</a></li>
+            <li><a href="#visao-geral">Visão Geral</a></li>
+            <li><a href="#ticker-tape">Ticker Tape</a></li>
+            <li><a href="#arquitetura">Arquitetura</a></li>
+            <li><a href="#utf8">Correções UTF-8</a></li>
+            <li><a href="#simbolos">Símbolos B3</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">Voltar para o índice</a>
+
+        <section id="visao-geral">
+            <h2>Visão Geral</h2>
+            <p>
+                Esta versão (3.2.0) traz duas melhorias significativas para a plataforma Nuvary Invest:
+                a integração do widget TradingView Ticker Tape para exibição de cotações em tempo real
+                e a padronização completa de codificação UTF-8 em todo o projeto para suporte adequado
+                ao português brasileiro.
+            </p>
+
+            <div class="tech-stack">
+                <span class="tech-badge">TradingView Widget</span>
+                <span class="tech-badge">React useRef + useEffect</span>
+                <span class="tech-badge">Framer Motion</span>
+                <span class="tech-badge">UTF-8 Encoding</span>
+                <span class="tech-badge">Next.js Client Components</span>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>TradingView Ticker Tape <span class="new-badge">NOVO</span></h4>
+                    <p>Widget de faixa de cotações em tempo real da TradingView, exibindo preços de ações da B3,
+                        criptomoedas, índices e commodities. Inspirado no site da B3, posicionado abaixo do
+                        header "Olá, Nuvary..." no dashboard.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Padronização UTF-8 <span class="new-badge">NOVO</span></h4>
+                    <p>Correção completa de codificação UTF-8 em mais de 24 arquivos do projeto para exibição
+                        correta de caracteres acentuados do português brasileiro (á, é, í, ó, ú, ã, õ, ç, â, ê, ô, à).</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ticker-tape">
+            <h2>TradingView Ticker Tape</h2>
+            <p>
+                O componente TradingView Ticker Tape exibe uma faixa horizontal com cotações em tempo real,
+                similar à experiência encontrada no site oficial da B3. O widget é carregado diretamente
+                da TradingView e mostra preços atualizados de 14 símbolos entre ações brasileiras,
+                criptomoedas, índices internacionais e commodities.
+            </p>
+
+            <div class="highlight-box">
+                <h4>Localização no Dashboard</h4>
+                <p>O ticker tape é exibido logo abaixo da saudação "Olá, Nuvary..." no header do dashboard,
+                    proporcionando acesso imediato às cotações mais relevantes do mercado sem necessidade de navegação adicional.</p>
+            </div>
+
+            <h3>Detalhes do Componente</h3>
+            <ul class="component-list">
+                <li class="component-item">
+                    <h4>TradingViewTicker.tsx <span class="new-badge">NOVO</span></h4>
+                    <p>Componente React client-side que utiliza useRef para referência ao container e useEffect para
+                        criar o elemento customizado tv-ticker-tape e injetar o script externo da TradingView.
+                        Inclui animação de entrada via Framer Motion.</p>
+                </li>
+                <li class="component-item">
+                    <h4>dashboard/index.ts <span class="new-badge">Atualizado</span></h4>
+                    <p>Barrel export atualizado para incluir o novo componente TradingViewTicker na lista de exports do módulo dashboard.</p>
+                </li>
+                <li class="component-item">
+                    <h4>dashboard/page.tsx <span class="new-badge">Atualizado</span></h4>
+                    <p>Página do dashboard atualizada para importar e renderizar o TradingViewTicker abaixo do DashboardHeader.</p>
+                </li>
+            </ul>
+
+            <h3>Símbolos Monitorados</h3>
+            <p>O widget exibe 14 símbolos divididos em 4 categorias:</p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Ações B3</h4>
+                    <p>PETR4, VALE3, ITUB4, BBDC4, BBAS3, WEGE3, ABEV3, B3SA3, RENT3, SUZB3 - As principais blue chips do mercado brasileiro.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Criptomoedas</h4>
+                    <p>BTC (Bitcoin), ETH (Ethereum) - As duas maiores criptomoedas por capitalização de mercado.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Índices</h4>
+                    <p>SPX (S&amp;P 500) - Principal índice do mercado americano, referência global para investidores.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Commodities</h4>
+                    <p>GOLD (Ouro) - Metal precioso utilizado como reserva de valor e proteção contra inflação.</p>
+                </div>
+            </div>
+
+            <h3>Estilização CSS</h3>
+            <p>
+                O componente utiliza estilos CSS globais para ocultar o texto de copyright e atribuição
+                da TradingView, garantindo uma apresentação visual limpa e integrada ao design do dashboard.
+            </p>
+            <pre>
+/* Estilos globais para ocultar atribuição TradingView */
+.tradingview-widget-copyright {
+  display: none !important;
+}</pre>
+        </section>
+
+        <section id="arquitetura">
+            <h2>Arquitetura do Componente</h2>
+            <p>
+                O componente TradingViewTicker segue uma arquitetura client-side com injeção dinâmica de script externo.
+                A diretiva <code>'use client'</code> é obrigatória pois o widget depende de APIs do navegador (DOM manipulation).
+            </p>
+
+            <div class="architecture-diagram">
+                <h4>Fluxo de Renderização</h4>
+                <div class="arch-flow">
+                    <div class="arch-box">
+                        <strong>'use client'</strong><br>
+                        <small>Diretiva Next.js</small>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box">
+                        <strong>useRef</strong><br>
+                        <small>Container ref</small>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box">
+                        <strong>useEffect</strong><br>
+                        <small>Mount hook</small>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box">
+                        <strong>tv-ticker-tape</strong><br>
+                        <small>Custom element</small>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box">
+                        <strong>Script TradingView</strong><br>
+                        <small>CDN externo</small>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Estrutura do Componente</h3>
+            <pre>
+'use client';
+
+import { useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
+
+export default function TradingViewTicker() {
+  const containerRef = useRef&lt;HTMLDivElement&gt;(null);
+
+  useEffect(() =&gt; {
+    if (!containerRef.current) return;
+
+    // Limpa o container
+    containerRef.current.innerHTML = '';
+
+    // Cria o elemento customizado do TradingView
+    const widgetContainer = document.createElement('div');
+    widgetContainer.className = 'tradingview-widget-container';
+
+    const widget = document.createElement('div');
+    widget.className = 'tradingview-widget-container__widget';
+    widgetContainer.appendChild(widget);
+
+    // Injeta o script externo da TradingView
+    const script = document.createElement('script');
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      symbols: [
+        { proName: "BMFBOVESPA:PETR4", title: "PETR4" },
+        { proName: "BMFBOVESPA:VALE3", title: "VALE3" },
+        { proName: "BMFBOVESPA:ITUB4", title: "ITUB4" },
+        // ... demais símbolos
+      ],
+      showSymbolLogo: true,
+      isTransparent: true,
+      displayMode: "adaptive",
+      colorTheme: "dark",
+      locale: "br"
+    });
+
+    widgetContainer.appendChild(script);
+    containerRef.current.appendChild(widgetContainer);
+  }, []);
+
+  return (
+    &lt;motion.div
+      ref={containerRef}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    /&gt;
+  );
+}</pre>
+
+            <h3>Pontos-Chave da Implementação</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>'use client'</h4>
+                    <p>Diretiva obrigatória do Next.js para componentes que utilizam hooks do React (useRef, useEffect) e manipulação direta do DOM.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>useRef para Container</h4>
+                    <p>Referência ao elemento DOM onde o widget será injetado. Permite manipulação direta sem re-renders desnecessários.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>useEffect para Injeção</h4>
+                    <p>O hook useEffect executa após o mount do componente, criando o elemento customizado tv-ticker-tape e carregando o script externo da TradingView.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Framer Motion</h4>
+                    <p>Animação de entrada suave com fade-in e slide-down (opacity 0→1, translateY -10→0) com duração de 0.5 segundos.</p>
+                </div>
+            </div>
+
+            <h3>Arquivos Envolvidos</h3>
+            <pre>
+frontend/src/
+├── components/
+│   └── dashboard/
+│       ├── TradingViewTicker.tsx   # Componente do widget (NOVO)
+│       ├── DashboardHeader.tsx     # Header com saudação
+│       └── index.ts               # Barrel export (atualizado)
+└── app/
+    └── dashboard/
+        └── page.tsx               # Página do dashboard (atualizado)</pre>
+        </section>
+
+        <section id="utf8">
+            <h2>Correções UTF-8</h2>
+            <p>
+                Foi realizada uma padronização completa de codificação UTF-8 em toda a aplicação.
+                O problema original era que caracteres acentuados do português brasileiro estavam
+                ausentes ou exibidos incorretamente em diversos arquivos do projeto, comprometendo
+                a experiência do usuário brasileiro.
+            </p>
+
+            <div class="highlight-box" style="background: linear-gradient(135deg, #2962FF 0%, #0D47A1 100%);">
+                <h4>Problema Identificado</h4>
+                <p>Caracteres acentuados do português (á, é, í, ó, ú, ã, õ, ç, â, ê, ô, à) estavam ausentes
+                    em strings de interface, mensagens de erro, labels de formulários e textos de páginas
+                    em mais de 24 arquivos da aplicação.</p>
+            </div>
+
+            <h3>Solução Aplicada</h3>
+            <p>
+                Busca sistemática e correção manual em todos os arquivos afetados. Cada string de texto
+                visível ao usuário foi revisada e corrigida para utilizar os caracteres acentuados
+                corretos do português brasileiro.
+            </p>
+
+            <h3>Arquivos Corrigidos</h3>
+            <table class="menu-table">
+                <thead>
+                    <tr>
+                        <th>Arquivo</th>
+                        <th>Tipo</th>
+                        <th>Correções</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>page.tsx</code> (landing)</td>
+                        <td>Página</td>
+                        <td>inteligência, automação, educação, Começar, grátis</td>
+                    </tr>
+                    <tr>
+                        <td><code>portfolioService.ts</code></td>
+                        <td>Serviço</td>
+                        <td>Preço, não disponível, Ações, cotação</td>
+                    </tr>
+                    <tr>
+                        <td><code>DashboardHeader.tsx</code></td>
+                        <td>Componente</td>
+                        <td>Olá, Patrimônio</td>
+                    </tr>
+                    <tr>
+                        <td><code>AddAssetModal.tsx</code></td>
+                        <td>Componente</td>
+                        <td>Preço Médio, Código, é obrigatório</td>
+                    </tr>
+                    <tr>
+                        <td><code>carteira/page.tsx</code></td>
+                        <td>Página</td>
+                        <td>Títulos, Renda Variável, Fundos Imobiliários</td>
+                    </tr>
+                    <tr>
+                        <td><code>relatorios/page.tsx</code></td>
+                        <td>Página</td>
+                        <td>Relatórios, Análises</td>
+                    </tr>
+                    <tr>
+                        <td><code>trilhas/page.tsx</code></td>
+                        <td>Página</td>
+                        <td>Educação, conteúdos</td>
+                    </tr>
+                    <tr>
+                        <td><code>extratos/page.tsx</code></td>
+                        <td>Página</td>
+                        <td>Movimentações</td>
+                    </tr>
+                    <tr>
+                        <td><code>perfil/page.tsx</code></td>
+                        <td>Página</td>
+                        <td>Configurações</td>
+                    </tr>
+                    <tr>
+                        <td>+ 15 arquivos adicionais</td>
+                        <td>Vários</td>
+                        <td>Múltiplas correções de acentuação</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Caracteres Corrigidos</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Acentos Agudos</h4>
+                    <p>á, é, í, ó, ú - Utilizados em palavras como "Relatórios", "Análises", "Patrimônio", "é obrigatório".</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Til e Cedilha</h4>
+                    <p>ã, õ, ç - Utilizados em palavras como "Ações", "cotação", "Configurações", "Movimentações", "educação".</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Acentos Circunflexos</h4>
+                    <p>â, ê, ô - Utilizados em palavras como "Patrimônio", "Começar", "Preço".</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Acento Grave</h4>
+                    <p>à - Utilizado em crase, como "à vista" e outras expressões da língua portuguesa.</p>
+                </div>
+            </div>
+
+            <h3>Exemplo de Correção</h3>
+            <pre>
+// ANTES (sem acentos - incorreto)
+&lt;h1&gt;Ola, Nuvary&lt;/h1&gt;
+&lt;p&gt;Patrimonio Total&lt;/p&gt;
+&lt;span&gt;Relatorios e Analises&lt;/span&gt;
+&lt;label&gt;Preco Medio&lt;/label&gt;
+&lt;p&gt;Educacao financeira com conteudos exclusivos&lt;/p&gt;
+
+// DEPOIS (com acentos UTF-8 - correto)
+&lt;h1&gt;Olá, Nuvary&lt;/h1&gt;
+&lt;p&gt;Patrimônio Total&lt;/p&gt;
+&lt;span&gt;Relatórios e Análises&lt;/span&gt;
+&lt;label&gt;Preço Médio&lt;/label&gt;
+&lt;p&gt;Educação financeira com conteúdos exclusivos&lt;/p&gt;</pre>
+        </section>
+
+        <section id="simbolos">
+            <h2>Símbolos da B3 no Widget</h2>
+            <p>
+                O widget TradingView Ticker Tape exibe 14 símbolos cuidadosamente selecionados para
+                oferecer uma visão abrangente do mercado financeiro, incluindo ações brasileiras,
+                criptomoedas, índices internacionais e commodities.
+            </p>
+
+            <table class="menu-table">
+                <thead>
+                    <tr>
+                        <th>Símbolo</th>
+                        <th>Nome</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>PETR4</code></td>
+                        <td>Petrobras</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>VALE3</code></td>
+                        <td>Vale</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>ITUB4</code></td>
+                        <td>Itaú Unibanco</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>BBDC4</code></td>
+                        <td>Bradesco</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>BBAS3</code></td>
+                        <td>Banco do Brasil</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>WEGE3</code></td>
+                        <td>WEG</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>ABEV3</code></td>
+                        <td>Ambev</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>B3SA3</code></td>
+                        <td>B3</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>RENT3</code></td>
+                        <td>Localiza</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>SUZB3</code></td>
+                        <td>Suzano</td>
+                        <td>Ação</td>
+                    </tr>
+                    <tr>
+                        <td><code>BTC</code></td>
+                        <td>Bitcoin</td>
+                        <td>Cripto</td>
+                    </tr>
+                    <tr>
+                        <td><code>ETH</code></td>
+                        <td>Ethereum</td>
+                        <td>Cripto</td>
+                    </tr>
+                    <tr>
+                        <td><code>SPX</code></td>
+                        <td>S&amp;P 500</td>
+                        <td>Índice</td>
+                    </tr>
+                    <tr>
+                        <td><code>GOLD</code></td>
+                        <td>Ouro</td>
+                        <td>Commodity</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Distribuição por Tipo</h3>
+            <div class="chart-preview">
+                <div class="chart-card">
+                    <div class="icon">📈</div>
+                    <h5>Ações B3</h5>
+                    <p>10 símbolos (71%)</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🪙</div>
+                    <h5>Criptomoedas</h5>
+                    <p>2 símbolos (14%)</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🌍</div>
+                    <h5>Índices</h5>
+                    <p>1 símbolo (7%)</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🥇</div>
+                    <h5>Commodities</h5>
+                    <p>1 símbolo (7%)</p>
+                </div>
+            </div>
+
+            <h3>Configuração dos Símbolos no Widget</h3>
+            <pre>
+const symbols = [
+  // Ações B3
+  { proName: "BMFBOVESPA:PETR4", title: "PETR4" },
+  { proName: "BMFBOVESPA:VALE3", title: "VALE3" },
+  { proName: "BMFBOVESPA:ITUB4", title: "ITUB4" },
+  { proName: "BMFBOVESPA:BBDC4", title: "BBDC4" },
+  { proName: "BMFBOVESPA:BBAS3", title: "BBAS3" },
+  { proName: "BMFBOVESPA:WEGE3", title: "WEGE3" },
+  { proName: "BMFBOVESPA:ABEV3", title: "ABEV3" },
+  { proName: "BMFBOVESPA:B3SA3", title: "B3SA3" },
+  { proName: "BMFBOVESPA:RENT3", title: "RENT3" },
+  { proName: "BMFBOVESPA:SUZB3", title: "SUZB3" },
+
+  // Criptomoedas
+  { proName: "BITSTAMP:BTCUSD", title: "BTC" },
+  { proName: "BITSTAMP:ETHUSD", title: "ETH" },
+
+  // Índices
+  { proName: "FOREXCOM:SPXUSD", title: "SPX" },
+
+  // Commodities
+  { proName: "TVC:GOLD", title: "GOLD" },
+];</pre>
+        </section>
+
+        <section>
+            <h2>Próximos Passos</h2>
+            <p>Funcionalidades planejadas para as próximas versões:</p>
+            <ul style="margin-left: 20px; color: var(--gray);">
+                <li>Personalização dos símbolos exibidos no ticker pelo usuário</li>
+                <li>Widget TradingView de gráfico avançado para análise técnica</li>
+                <li>Alertas de preço integrados ao ticker tape</li>
+                <li>Suporte a mais exchanges e símbolos internacionais</li>
+                <li>Internacionalização (i18n) completa do projeto</li>
+                <li>Testes automatizados de renderização UTF-8</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentação Técnica v3.2.0 - Fevereiro 2026</p>
+        <p><a href="index.html">Voltar para o índice</a></p>
+    </footer>
+</body>
+</html>
