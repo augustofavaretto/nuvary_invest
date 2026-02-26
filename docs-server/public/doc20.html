@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 20 - BCB SGS, Trilhas e Renda Fixa % | Nuvary Invest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #1e1b4b;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+        header {
+            background: linear-gradient(135deg, #0B1F33 0%, #1e3a5f 50%, #00B8D9 100%);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        header p { font-size: 1.05rem; opacity: 0.9; }
+
+        .update-notice {
+            background: linear-gradient(135deg, #0B1F33 0%, #00B8D9 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .update-notice .icon { font-size: 2rem; flex-shrink: 0; }
+        .update-notice strong { display: block; font-size: 1.1rem; margin-bottom: 4px; }
+        .update-notice p { font-size: 0.9rem; opacity: 0.9; margin-top: 4px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0B1F33, #00B8D9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label { font-size: 0.82rem; color: var(--gray); margin-top: 4px; }
+
+        main { padding: 40px 0; }
+
+        .section {
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, #0B1F33, #00B8D9);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .feature-list { list-style: none; }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .feature-item:last-child { border-bottom: none; }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .feature-text strong { display: block; color: #1e293b; font-size: 0.95rem; }
+        .feature-text span { font-size: 0.85rem; color: var(--gray); }
+
+        .endpoint-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            margin-top: 15px;
+        }
+
+        .endpoint-table th {
+            background: #F8FAFC;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .endpoint-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #F3F4F6;
+            vertical-align: top;
+        }
+
+        .endpoint-table tr:last-child td { border-bottom: none; }
+
+        .endpoint-table tr:hover td { background: #F9FAFB; }
+
+        code {
+            background: #F1F5F9;
+            color: #0B1F33;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            margin: 16px 0;
+        }
+
+        .code-block .comment { color: #64748b; }
+        .code-block .keyword { color: #93c5fd; }
+        .code-block .string { color: #86efac; }
+        .code-block .number { color: #fca5a5; }
+        .code-block .function { color: #fde68a; }
+
+        .tag-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .tag-bcb { background: #dbeafe; color: #1e40af; }
+        .tag-csv { background: #dcfce7; color: #166534; }
+        .tag-cdn { background: #fef3c7; color: #92400e; }
+        .tag-ts { background: #ede9fe; color: #5b21b6; }
+
+        .flow-diagram {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 0.88rem;
+            text-align: center;
+            margin: 16px 0;
+            color: #374151;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .flow-arrow { color: #00B8D9; font-weight: 700; margin: 0 4px; }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e0f2fe, #f0fdf4);
+            border-left: 4px solid #00B8D9;
+            padding: 15px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .highlight-box strong { color: #0B1F33; display: block; margin-bottom: 4px; }
+        .highlight-box span { font-size: 0.88rem; color: #374151; }
+
+        .api-values {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .api-value-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .api-value-card .icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .api-value-card .value { font-size: 1.4rem; font-weight: 800; color: #0B1F33; }
+        .api-value-card .label { font-size: 0.78rem; color: var(--gray); }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            opacity: 0.85;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .nav-back:hover { opacity: 1; }
+
+        footer { text-align: center; padding: 40px 0 30px; color: var(--gray); font-size: 0.9rem; }
+
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .api-values { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <a href="index.html" class="nav-back">&#8592; Voltar ao índice</a>
+        <div class="version-badge">Fevereiro 2026 — v3.4.0</div>
+        <h1>BCB SGS, Trilhas Educacionais e Renda Fixa %</h1>
+        <p>Integração completa com APIs públicas do Banco Central + página de trilhas + campo % para renda fixa</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- Aviso de atualização -->
+    <div class="update-notice">
+        <div class="icon">🚀</div>
+        <div>
+            <strong>Marco: 100 Tarefas Concluídas na v3.4.0!</strong>
+            <p>Nesta versão integramos todas as APIs públicas do Banco Central do Brasil (BCB SGS + OLINDA),
+               adicionamos suporte a taxas % para renda fixa com cálculo automático CDI,
+               construímos a página de Trilhas Educacionais e adicionamos fallback CSV do Tesouro Transparente.</p>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">100</div>
+            <div class="stat-label">Tarefas Concluídas</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">6</div>
+            <div class="stat-label">Endpoints BCB novos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Séries SGS integradas</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">16</div>
+            <div class="stat-label">Novos itens v3.4.0</div>
+        </div>
+    </div>
+
+    <!-- Seção 1: Indicadores BCB em tempo real -->
+    <div class="section">
+        <div class="section-title">
+            🏦 Indicadores BCB em Tempo Real
+            <span class="badge-new">NOVO v3.4.0</span>
+        </div>
+
+        <p style="color: var(--gray); margin-bottom: 16px;">
+            Integração completa com o <strong>BCB SGS (Sistema Gerenciador de Séries)</strong> e
+            <strong>BCB OLINDA (OData)</strong>. Todas as APIs são públicas e não requerem autenticação.
+        </p>
+
+        <!-- Valores atuais -->
+        <div class="api-values">
+            <div class="api-value-card">
+                <div class="icon-box" style="background: #dbeafe;">🎯</div>
+                <div>
+                    <div class="value">15,00%</div>
+                    <div class="label">Meta Selic COPOM (SGS s432)</div>
+                </div>
+            </div>
+            <div class="api-value-card">
+                <div class="icon-box" style="background: #dcfce7;">💰</div>
+                <div>
+                    <div class="value">14,90%</div>
+                    <div class="label">CDI Anualizado base 252 (SGS s4389)</div>
+                </div>
+            </div>
+            <div class="api-value-card">
+                <div class="icon-box" style="background: #fef3c7;">📈</div>
+                <div>
+                    <div class="value">4,44%</div>
+                    <div class="label">IPCA acumulado 12m (SGS s13522)</div>
+                </div>
+            </div>
+            <div class="api-value-card">
+                <div class="icon-box" style="background: #ede9fe;">📊</div>
+                <div>
+                    <div class="value">0,41%</div>
+                    <div class="label">IGP-M mensal (SGS s189)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Endpoints implementados -->
+        <table class="endpoint-table">
+            <thead>
+                <tr>
+                    <th>Endpoint</th>
+                    <th>Série(s) SGS</th>
+                    <th>Dados retornados</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>GET /api/bcb/rates</code></td>
+                    <td>s432, s4389, s13522, s189</td>
+                    <td>Todos os indicadores de uma vez (endpoint principal)</td>
+                </tr>
+                <tr>
+                    <td><code>GET /api/bcb/selic</code></td>
+                    <td>s11, s432, s1178</td>
+                    <td>Selic diária + meta COPOM + anualizada base 252</td>
+                </tr>
+                <tr>
+                    <td><code>GET /api/bcb/cdi</code></td>
+                    <td>s12, s4389</td>
+                    <td>CDI diária + CDI anualizado base 252</td>
+                </tr>
+                <tr>
+                    <td><code>GET /api/bcb/ipca</code></td>
+                    <td>s433, s13522</td>
+                    <td>IPCA mensal + IPCA acumulado 12 meses</td>
+                </tr>
+                <tr>
+                    <td><code>GET /api/bcb/igpm</code></td>
+                    <td>s189</td>
+                    <td>IGP-M mensal mais recente</td>
+                </tr>
+                <tr>
+                    <td><code>GET /api/bcb/focus</code></td>
+                    <td>OLINDA OData</td>
+                    <td>Expectativas Focus: IPCA, Selic, PIB, Câmbio por ano</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="highlight-box">
+            <strong>Cache de 30 minutos no backend</strong>
+            <span>As séries SGS são atualizadas diariamente pelo BCB. O cache de 30 min evita chamadas desnecessárias
+            e garante respostas rápidas mesmo durante picos de uso.</span>
+        </div>
+
+        <!-- Código de exemplo -->
+        <div class="code-block">
+<span class="comment">// Exemplo de resposta de GET /api/bcb/rates</span>
+{
+  <span class="string">"selic"</span>: { <span class="string">"taxa"</span>: <span class="number">15</span>,    <span class="string">"data"</span>: <span class="string">"18/03/2026"</span> },
+  <span class="string">"cdi"</span>:   { <span class="string">"taxa"</span>: <span class="number">14.9</span>,  <span class="string">"data"</span>: <span class="string">"13/02/2026"</span> },
+  <span class="string">"ipca"</span>:  { <span class="string">"taxa"</span>: <span class="number">4.44</span>,  <span class="string">"data"</span>: <span class="string">"01/01/2026"</span> },
+  <span class="string">"igpm"</span>:  { <span class="string">"taxa"</span>: <span class="number">0.41</span>,  <span class="string">"data"</span>: <span class="string">"01/01/2026"</span> },
+  <span class="string">"updatedAt"</span>: <span class="string">"2026-02-25T01:07:46.715Z"</span>
+}
+        </div>
+
+        <div style="margin-top: 12px;">
+            <span class="tag-pill tag-bcb">BCB SGS</span>
+            <span class="tag-pill tag-bcb">OLINDA OData</span>
+            <span class="tag-pill tag-csv">Sem autenticação</span>
+            <span class="tag-pill tag-ts">Cache 30 min</span>
+        </div>
+    </div>
+
+    <!-- Seção 2: Tesouro Direto com CSV Fallback -->
+    <div class="section">
+        <div class="section-title">
+            💰 Tesouro Direto com Fallback CSV
+            <span class="badge-new">ATUALIZADO v3.4.0</span>
+        </div>
+
+        <p style="color: var(--gray); margin-bottom: 16px;">
+            O controller do Tesouro Direto agora conta com dupla fonte de dados:
+            o portal JSON oficial como primário e o CSV do
+            <strong>Tesouro Transparente (STN)</strong> como fallback automático.
+        </p>
+
+        <div class="flow-diagram">
+            <span class="flow-step">Frontend</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">GET /api/tesouro/rates</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Portal JSON<br><small>tesourodireto.com.br</small></span>
+            <span class="flow-arrow" style="color: #ef4444;">✗ falha?</span>
+            <span class="flow-step">CSV Tesouro Transparente<br><small>tesourotransparente.gov.br</small></span>
+            <br><br>
+            <span style="font-size:0.85rem; color:#374151;">130 títulos disponíveis · cache de 5 min · taxas de compra e venda</span>
+        </div>
+
+        <ul class="feature-list">
+            <li class="feature-item">
+                <div class="feature-icon" style="background: #dcfce7;">✅</div>
+                <div class="feature-text">
+                    <strong>130 títulos no CSV do Tesouro Transparente</strong>
+                    <span>Selic, IPCA+, IPCA+ com Juros Semestrais, Prefixado, Educa+, RendA+ — dados históricos e atuais</span>
+                </div>
+            </li>
+            <li class="feature-item">
+                <div class="feature-icon" style="background: #dbeafe;">✅</div>
+                <div class="feature-text">
+                    <strong>Mapeamento TESOURO_TICKER_TO_NOME expandido para 25 títulos</strong>
+                    <span>Tickers internos (SELIC-2027, IPCA-2029, PREFIXADO-2031, EDUCA-2031) → nomes oficiais do CSV</span>
+                </div>
+            </li>
+            <li class="feature-item">
+                <div class="feature-icon" style="background: #fef3c7;">✅</div>
+                <div class="feature-text">
+                    <strong>Busca parcial por nome como segundo fallback</strong>
+                    <span>Se o nome exato não bater, busca por substrings (ex: "IPCA+" + "2029") antes de retornar null</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Seção 3: Renda Fixa com campo % -->
+    <div class="section">
+        <div class="section-title">
+            📊 Renda Fixa com Taxa % e Cálculo CDI Automático
+            <span class="badge-new">NOVO v3.4.0</span>
+        </div>
+
+        <p style="color: var(--gray); margin-bottom: 16px;">
+            Para as categorias <strong>Renda Fixa</strong> e <strong>Tesouro Direto</strong>,
+            o campo "Preço Médio" foi substituído por "Taxa Contratada (%)" com ícone Percent.
+            Quando o nome do ativo contém um percentual do CDI, a taxa é calculada e preenchida automaticamente.
+        </p>
+
+        <div class="flow-diagram">
+            <strong style="display:block; margin-bottom: 12px; color: #0B1F33;">Fluxo do cálculo automático</strong>
+            <span class="flow-step">Usuário seleciona<br>"CDB Inter 120% CDI"</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Regex extrai 120%</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Busca CDI BCB<br>14,90% a.a.</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">14,90 × 1,20<br>= <strong>17,88%</strong></span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Campo pré-preenchido ✓</span>
+        </div>
+
+        <table class="endpoint-table">
+            <thead>
+                <tr>
+                    <th>Ativo</th>
+                    <th>CDI (BCB)</th>
+                    <th>Multiplicador</th>
+                    <th>Taxa Efetiva</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>CDB Banco Inter 120% CDI</td>
+                    <td>14,90% a.a.</td>
+                    <td>× 1,20</td>
+                    <td><strong>17,88% a.a.</strong></td>
+                </tr>
+                <tr>
+                    <td>CDB Nubank 100% CDI</td>
+                    <td>14,90% a.a.</td>
+                    <td>× 1,00</td>
+                    <td><strong>14,90% a.a.</strong></td>
+                </tr>
+                <tr>
+                    <td>CDB XP 110% CDI</td>
+                    <td>14,90% a.a.</td>
+                    <td>× 1,10</td>
+                    <td><strong>16,39% a.a.</strong></td>
+                </tr>
+                <tr>
+                    <td>LCI Banco do Brasil</td>
+                    <td>14,90% a.a.</td>
+                    <td>— sem % CDI</td>
+                    <td>Campo manual (CDI como referência)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-block">
+<span class="comment">// Regex que captura "120% CDI", "100 % do CDI", "110%CDI", etc.</span>
+<span class="keyword">const</span> cdiMatch = name?.match(<span class="string">/(\d+(?:[.,]\d+)?)\s*%\s*(?:do\s+)?CDI/i</span>);
+<span class="keyword">if</span> (cdiMatch && taxaBase !== <span class="keyword">null</span>) {
+  <span class="keyword">const</span> percentualCDI = parseFloat(cdiMatch[<span class="number">1</span>].replace(<span class="string">','</span>, <span class="string">'.'</span>));
+  <span class="keyword">const</span> taxaCalculada = (taxaBase * percentualCDI / <span class="number">100</span>).toFixed(<span class="number">2</span>);
+  <span class="comment">// → retorna { price: 17.88, source: "BCB SGS (CDI 14.90% × 120%)" }</span>
+}
+        </div>
+
+        <ul class="feature-list" style="margin-top: 16px;">
+            <li class="feature-item">
+                <div class="feature-icon" style="background: #dcfce7;">✅</div>
+                <div class="feature-text">
+                    <strong>Padrão isFixedIncome no modelo de dados</strong>
+                    <span><code>quantity</code> = R$ investido · <code>averagePrice</code> = taxa % a.a. · <code>totalValue</code> = face value</span>
+                </div>
+            </li>
+            <li class="feature-item">
+                <div class="feature-icon" style="background: #dbeafe;">✅</div>
+                <div class="feature-text">
+                    <strong>Preview card atualizado</strong>
+                    <span>Mostra "Valor Total Aplicado: R$ X.XXX,00 · Taxa contratada: XX.XX% a.a."</span>
+                </div>
+            </li>
+            <li class="feature-item">
+                <div class="feature-icon" style="background: #fef3c7;">✅</div>
+                <div class="feature-text">
+                    <strong>Cache frontend de 15 minutos para BCB rates</strong>
+                    <span>Evita chamadas repetidas ao abrir vários ativos na mesma sessão</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Seção 4: Trilhas Educacionais -->
+    <div class="section">
+        <div class="section-title">
+            🎓 Trilhas Educacionais
+            <span class="badge-new">NOVO v3.4.0</span>
+        </div>
+
+        <p style="color: var(--gray); margin-bottom: 16px;">
+            Página <code>/trilhas</code> completamente redesenhada inspirada na B3 Educação.
+            Conteúdo 100% em vídeo com hero carousel, navegação sticky e 48 vídeos em 8 categorias.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px;">
+            <div style="background: #F8FAFC; border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border);">
+                <div style="font-weight: 700; color: #0B1F33; margin-bottom: 6px;">📽️ Hero Carousel</div>
+                <div style="font-size: 0.85rem; color: var(--gray);">3 slides · rotação automática 5s · Framer Motion AnimatePresence</div>
+            </div>
+            <div style="background: #F8FAFC; border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border);">
+                <div style="font-weight: 700; color: #0B1F33; margin-bottom: 6px;">📌 Navegação Sticky</div>
+                <div style="font-size: 0.85rem; color: var(--gray);">8 categorias · IntersectionObserver para categoria ativa</div>
+            </div>
+            <div style="background: #F8FAFC; border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border);">
+                <div style="font-weight: 700; color: #0B1F33; margin-bottom: 6px;">🎬 48 Vídeos</div>
+                <div style="font-size: 0.85rem; color: var(--gray);">6 por categoria · scroll horizontal · hover overlay com play</div>
+            </div>
+            <div style="background: #F8FAFC; border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border);">
+                <div style="font-weight: 700; color: #0B1F33; margin-bottom: 6px;">📋 Minha Lista</div>
+                <div style="font-size: 0.85rem; color: var(--gray);">Salvar vídeos · botão +/✓ · modal "Em breve" ao clicar</div>
+            </div>
+        </div>
+
+        <div style="background: #F8FAFC; border-radius: 10px; padding: 16px 20px; border: 1px solid var(--border);">
+            <div style="font-weight: 700; color: #0B1F33; margin-bottom: 10px;">🗂️ 8 Categorias de Vídeo</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <span class="tag-pill" style="background:#dbeafe;color:#1e40af;">🚀 Jornada do Investidor</span>
+                <span class="tag-pill" style="background:#fef3c7;color:#92400e;">⭐ Mais Assistidos</span>
+                <span class="tag-pill" style="background:#dcfce7;color:#166534;">💰 Renda Fixa</span>
+                <span class="tag-pill" style="background:#ede9fe;color:#5b21b6;">📈 Renda Variável</span>
+                <span class="tag-pill" style="background:#fff7ed;color:#c2410c;">🏢 Fundos Imobiliários</span>
+                <span class="tag-pill" style="background:#fdf2f8;color:#9d174d;">₿ Criptomoedas</span>
+                <span class="tag-pill" style="background:#f0f9ff;color:#0369a1;">📊 Análise Técnica</span>
+                <span class="tag-pill" style="background:#f7fee7;color:#365314;">🧾 Imposto de Renda</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção 5: Arquitetura de APIs -->
+    <div class="section">
+        <div class="section-title">
+            🗺️ Mapa Completo de APIs — v3.4.0
+        </div>
+
+        <table class="endpoint-table">
+            <thead>
+                <tr>
+                    <th>API</th>
+                    <th>Rota Backend</th>
+                    <th>Autenticação</th>
+                    <th>Uso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>BCB SGS</strong></td>
+                    <td><code>/api/bcb/*</code></td>
+                    <td>Nenhuma</td>
+                    <td>Selic, CDI, IPCA, IGP-M, Focus</td>
+                </tr>
+                <tr>
+                    <td><strong>Tesouro Transparente CSV</strong></td>
+                    <td><code>/api/tesouro/rates</code></td>
+                    <td>Nenhuma</td>
+                    <td>Taxas Tesouro Direto (fallback)</td>
+                </tr>
+                <tr>
+                    <td><strong>Brapi</strong></td>
+                    <td><code>/api/brapi/*</code></td>
+                    <td>Token</td>
+                    <td>Ações B3, FIIs, BDRs, Selic</td>
+                </tr>
+                <tr>
+                    <td><strong>Finnhub</strong></td>
+                    <td><code>/api/finnhub/*</code></td>
+                    <td>API Key</td>
+                    <td>Ações US, cotações</td>
+                </tr>
+                <tr>
+                    <td><strong>Alpha Vantage</strong></td>
+                    <td><code>/api/crypto/*</code></td>
+                    <td>API Key</td>
+                    <td>Criptomoedas</td>
+                </tr>
+                <tr>
+                    <td><strong>ANBIMA</strong></td>
+                    <td><code>/api/anbima/*</code></td>
+                    <td>OAuth2</td>
+                    <td>Títulos públicos, CRI/CRA</td>
+                </tr>
+                <tr>
+                    <td><strong>OpenAI</strong></td>
+                    <td><code>/api/ai/*</code></td>
+                    <td>API Key</td>
+                    <td>Chatbot de investimentos</td>
+                </tr>
+                <tr>
+                    <td><strong>TradingView</strong></td>
+                    <td>Widget client-side</td>
+                    <td>Nenhuma</td>
+                    <td>Ticker tape no dashboard</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Arquivos modificados -->
+    <div class="section">
+        <div class="section-title">📁 Arquivos Criados / Modificados</div>
+        <table class="endpoint-table">
+            <thead>
+                <tr><th>Arquivo</th><th>Tipo</th><th>O que mudou</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>backend/src/controllers/bcbController.js</code></td>
+                    <td><span class="tag-pill tag-bcb">NOVO</span></td>
+                    <td>6 endpoints BCB SGS + OLINDA Focus, cache 30 min</td>
+                </tr>
+                <tr>
+                    <td><code>backend/src/routes/bcb.js</code></td>
+                    <td><span class="tag-pill tag-bcb">NOVO</span></td>
+                    <td>Registro das rotas /api/bcb/*</td>
+                </tr>
+                <tr>
+                    <td><code>backend/src/controllers/tesouroDiretoController.js</code></td>
+                    <td><span class="tag-pill tag-csv">ATUALIZADO</span></td>
+                    <td>Fallback CSV Tesouro Transparente, fonte dupla com log</td>
+                </tr>
+                <tr>
+                    <td><code>backend/src/server.js</code></td>
+                    <td><span class="tag-pill tag-csv">ATUALIZADO</span></td>
+                    <td>Importação e registro <code>app.use('/api/bcb', bcbRoutes)</code></td>
+                </tr>
+                <tr>
+                    <td><code>frontend/src/services/portfolioService.ts</code></td>
+                    <td><span class="tag-pill tag-ts">ATUALIZADO</span></td>
+                    <td>fetchBCBRates, CDI auto-calc, TESOURO_TICKER_TO_NOME expandido (25 títulos)</td>
+                </tr>
+                <tr>
+                    <td><code>frontend/src/components/portfolio/AddAssetModal.tsx</code></td>
+                    <td><span class="tag-pill tag-ts">ATUALIZADO</span></td>
+                    <td>isFixedIncome %, lista tesouro expandida (14 títulos), mensagem CDI BCB</td>
+                </tr>
+                <tr>
+                    <td><code>frontend/src/app/trilhas/page.tsx</code></td>
+                    <td><span class="tag-pill tag-ts">REESCRITO</span></td>
+                    <td>Hero carousel, nav sticky, 48 vídeos, Minha Lista, modal Em breve</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<footer>
+    <p>Nuvary Invest © 2026 — Documentação v3.4.0 | <a href="index.html" style="color: var(--primary); text-decoration: none;">← Índice</a></p>
+</footer>
+
+</body>
+</html>

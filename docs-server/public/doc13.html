@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 13 - Proximos Passos | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #1e1b4b;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --fire: #EF4444;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 .icon {
+            font-size: 1.3rem;
+        }
+
+        h3 {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin: 20px 0 15px;
+            font-weight: 600;
+        }
+
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+        }
+
+        .task-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .task-text {
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .task-new {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 25px 0 15px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-icon {
+            font-size: 1.2rem;
+        }
+
+        .legend-text {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .section-completed {
+            border-left: 4px solid var(--success);
+        }
+
+        .section-fire {
+            border-left: 4px solid var(--fire);
+        }
+
+        .section-pending {
+            border-left: 4px solid var(--warning);
+        }
+
+        .section-future {
+            border-left: 4px solid var(--primary);
+        }
+
+        .section-tech {
+            border-left: 4px solid #64748b;
+        }
+
+        .update-notice {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .update-notice strong {
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Fevereiro 2026 - v3.4.0</span>
+            <h1>Próximos Passos</h1>
+            <p>Roadmap completo do projeto Nuvary Invest</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
+            <li><a href="#resumo">Resumo</a></li>
+            <li><a href="#concluido">Concluido</a></li>
+            <li><a href="#prioridade">Alta Prioridade</a></li>
+            <li><a href="#pendente">Pendente</a></li>
+            <li><a href="#futuro">Futuro</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">Voltar para o indice</a>
+
+        <div class="update-notice">
+            <span style="font-size: 1.5rem;">🎉</span>
+            <div>
+                <strong>Marco: 100 tarefas concluídas na v3.4.0!</strong>
+                <p style="margin: 0; opacity: 0.9;">BCB SGS + Tesouro Transparente CSV, Trilhas Educacionais e campo % para Renda Fixa com cálculo CDI automático</p>
+            </div>
+        </div>
+
+        <section id="resumo">
+            <h2><span class="icon">📊</span> Resumo do Projeto</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-number">100</div>
+                    <div class="stat-label">Concluídos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Alta Prioridade</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Pendentes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number">20</div>
+                    <div class="stat-label">Melhorias Futuras</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛠️</div>
+                    <div class="stat-number">40</div>
+                    <div class="stat-label">Débito Técnico</div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="legend-icon">✅</span>
+                    <span class="legend-text">Concluido</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">🔥</span>
+                    <span class="legend-text">Alta Prioridade</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">⏳</span>
+                    <span class="legend-text">Pendente</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">⭐</span>
+                    <span class="legend-text">Melhorias Futuras</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">🛠️</span>
+                    <span class="legend-text">Debito Tecnico</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="concluido" class="section-completed">
+            <h2><span class="icon">✅</span> Concluido</h2>
+
+            <div class="category-header">🔐 Autenticacao e Usuarios</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cadastro com email/senha e validacao completa</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Login/Logout com JWT e refresh token</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Recuperacao e redefinicao de senha</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Autenticacao social com Google OAuth</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Campos CPF, data nascimento e telefone no cadastro</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Validacao de CPF com algoritmo oficial (modulo 11)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Mascaras de input para CPF, telefone e data</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Funcao refreshProfile no AuthContext</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Exclusao de conta do usuario</span></li>
+            </ul>
+
+            <div class="category-header">📊 Perfil de Investidor</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Questionario de 10 perguntas em 3 categorias</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Classificacao em 4 perfis (Conservador, Moderado, Arrojado, Agressivo)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Alocacao recomendada por perfil</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Persistencia no Supabase PostgreSQL</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Opcao de refazer questionario</span></li>
+            </ul>
+
+            <div class="category-header">🤖 Chat com IA</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integracao com OpenAI (gpt-4o-mini)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sistema de multiplas conversas (conversa_id)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Listagem e busca de conversas</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Historico persistente no banco de dados</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Acoes rapidas pre-definidas</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Contexto do perfil de investidor nas respostas</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Analise de acoes e noticias</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Explicacao de termos financeiros</span></li>
+            </ul>
+
+            <div class="category-header">⚡ Backend e APIs</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração Alpha Vantage (ações, forex, cripto)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração Finnhub (dados real-time, indicadores)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração News API (notícias financeiras)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração Brapi API (B3 - ações, FIIs, BDRs)<span class="task-new">NOVO v3.0</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração ANBIMA API (títulos públicos, CRI/CRA, letras financeiras)<span class="task-new">NOVO v3.1</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">TradingView Widget (cotações tempo real no dashboard)<span class="task-new">NOVO v3.2</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sistema de cache inteligente (node-cache + Map)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Rotação de API keys para maximizar limites</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Rate limiting nos endpoints de autenticação</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Health check com status de todas as 6 APIs<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🎨 Interface e UX</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Landing page com hero, features e CTA</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Design system com cores e tipografia padronizadas</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Componentes shadcn/ui</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Animacoes com Framer Motion</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Layout responsivo basico</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pagina de documentacao tecnica</span></li>
+            </ul>
+
+            <div class="category-header">📈 Dashboard Principal</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pagina /dashboard apos login</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Resumo do perfil de investidor com alocacao</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Market Overview com 5 acoes principais (AAPL, MSFT, GOOGL, AMZN, TSLA)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Watchlist com 6 acoes populares (META, NVDA, NFLX, JPM, V, DIS)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Feed de noticias financeiras com tempo relativo</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sugestoes de investimento geradas por IA</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Painel de acoes rapidas (Chat, Perfil, Questionario)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Auto-refresh de dados a cada 60 segundos</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Error boundaries nos componentes React</span></li>
+            </ul>
+
+            <div class="category-header">🧭 Layout e Navegacao <span class="task-new">NOVO v2.6.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sidebar lateral fixa estilo B3<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Menu colapsavel com animacao Framer Motion<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sidebar mobile responsiva com slide-out<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Indicador visual de pagina ativa<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">DashboardLayout wrapper component<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Top header com user menu dropdown<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">💼 Minha Carteira <span class="task-new">NOVO v2.6.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pagina /carteira completa<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Card resumo patrimonial (valor total, investido, lucro, rentabilidade)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Grafico donut - Distribuicao por Classe de Ativos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Grafico donut - Distribuicao por Corretora<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabs - Ativos por Produto (Renda Fixa, Variavel, FIIs, Internacional)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Lista de ativos com ticker, quantidade, preco e variacao<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Componente DonutChart reutilizavel (Recharts)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Service de portfolio com dados mock e tipos TypeScript<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Saldo patrimonial no header do dashboard<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Botao toggle para ocultar/mostrar saldo<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Persistencia da preferencia de visibilidade no localStorage<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Indicador de rentabilidade com icone de tendencia<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">📄 Paginas Placeholder <span class="task-new">v2.6.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pagina /relatorios - placeholder "Em breve"</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pagina /trilhas - placeholder "Em breve" com preview de cursos</span></li>
+            </ul>
+
+            <div class="category-header">➕ Adicionar Ativos por Categoria <span class="task-new">NOVO v2.7.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Modal multi-step para adicionar ativos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Step 1: Selecao de categoria (Renda Fixa, Tesouro, Renda Variavel, FIIs, Internacional, Cripto)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Step 2: Lista de ativos pre-definidos com busca (100+ ativos)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Step 3: Formulario de detalhes (quantidade, preco medio, corretora)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Opcao de adicionar ativo personalizado<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Persistencia de ativos em localStorage<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Funcao de remover ativo com confirmacao<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Calculo automatico de percentuais do portfolio<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Remocao do menu Extratos da sidebar<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Busca automática de preço via Finnhub (ações US) e Alpha Vantage (cripto)<span class="task-new">NOVO v2.8</span></span></li>
+            </ul>
+
+            <div class="category-header">🇧🇷 Integração Brapi API (B3) <span class="task-new">NOVO v3.0.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Controller com 6 endpoints: quote, listStocks, crypto, currency, inflation, selic<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cotações em tempo real de ações da B3 (PETR4, VALE3, ITUB4, etc.)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cotações de FIIs (HGLG11, XPLG11, MXRF11, etc.)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cotações de BDRs (AAPL34, MSFT34, etc.)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cache em memória com TTL configurável<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Frontend portfolioService atualizado para usar Brapi como fonte primária<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Fallback para Finnhub em BDRs internacionais<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🏦 Integração ANBIMA API (Renda Fixa) <span class="task-new">NOVO v3.1.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Autenticação OAuth2 com client_credentials<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Controller com 7 endpoints: títulos públicos, VNA, curvas juros, CRI/CRA, letras financeiras, projeções, estimativa Selic<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Renovação automática de token OAuth2<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Registro no portal ANBIMA Developers<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Aguardando aprovação do ambiente de produção (email para anbimafeed@anbima.com.br)</span></li>
+            </ul>
+
+            <div class="category-header">📺 TradingView Ticker Tape <span class="task-new">NOVO v3.2.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Componente TradingViewTicker.tsx com useRef + useEffect<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Widget tv-ticker-tape com 14 símbolos (10 ações B3 + BTC, ETH, SPX, GOLD)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">CSS para ocultar atribuição TradingView (estilo B3)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Animação Framer Motion no mount<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🔤 Padronização UTF-8 <span class="task-new">NOVO v3.2.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Correção de acentos em 24+ arquivos do frontend<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Landing page, dashboard, carteira, perfil, relatórios, trilhas, extratos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Componentes: AddAssetModal, Chatbot, Sidebar, DashboardHeader<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Services: portfolioService, dashboardService, chatService, perfilService<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🌐 Centralização de Strings pt-BR <span class="task-new">NOVO v3.3.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">.editorconfig e .vscode/settings.json com UTF-8 global para todos os editores<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Arquivo central strings.ts com 7 domínios: errors, auth, nav, dashboard, chat, perfil, carteira<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Strings dinâmicas tipadas com funções TypeScript (diasAtras, boasVindas, contextoUsuario)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">15 componentes e services refatorados para usar STRINGS (Chatbot, ChatSidebar, StockList, AISuggestionsCard, etc.)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">TypeScript as const para autocomplete e validação em tempo de compilação (tsc --noEmit zero erros)<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🎓 Trilhas Educacionais <span class="task-new">NOVO v3.4.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Hero banner com carousel rotativo (3 slides, 5s, AnimatePresence Framer Motion)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Barra de navegação sticky com 8 categorias e IntersectionObserver para categoria ativa<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">48 vídeos em 8 seções com scroll horizontal, setas de navegação e thumbnails com gradiente<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Modal "Em breve" com Framer Motion ao clicar em qualquer vídeo<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Funcionalidade "Minha Lista" — salvar/remover vídeos com botão +/✓<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Categorias: Jornada, Mais Assistidos, Renda Fixa, Renda Variável, FIIs, Cripto, Análise Técnica, IR<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">📊 Renda Fixa com Taxa % <span class="task-new">NOVO v3.4.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Campo "Taxa Contratada (%)" com ícone Percent para categorias renda_fixa e tesouro<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Padrão isFixedIncome: quantity = R$ aplicado, averagePrice = taxa % a.a., totalValue = face value<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Preview card atualizado com valor aplicado + taxa a.a. para renda fixa<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Validação com strings centralizadas (taxaDeveSerMaior, taxaNaoDisponivel, valorInvestido)<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🏦 BCB SGS + Tesouro Transparente <span class="task-new">NOVO v3.4.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">bcbController.js com 6 endpoints: /selic, /cdi, /ipca, /igpm, /focus, /rates — cache 30 min<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">BCB OLINDA OData — expectativas Focus (IPCA, Selic, PIB, Câmbio) por DataReferencia<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tesouro Direto com fallback automático para CSV Tesouro Transparente (STN) — 130 títulos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">portfolioService: fetchBCBRates() com cache 15 min, fallback Brapi, mapeamento 25 títulos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cálculo automático CDI: "120% CDI" no nome → busca CDI BCB e preenche taxa efetiva<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Lista de Tesouro Direto expandida para 14 títulos ativos (Selic, IPCA+, Prefixado, Educa+, RendA+)<span class="task-new">NOVO</span></span></li>
+            </ul>
+        </section>
+
+        <section id="prioridade" class="section-fire">
+            <h2><span class="icon">🔥</span> Alta Prioridade</h2>
+
+            <div class="category-header">📊 Visualizacao de Dados</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Graficos de acoes com candlestick (Recharts/Chart.js)</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Indicadores tecnicos visuais (SMA, RSI, MACD)</span></li>
+            </ul>
+
+            <div class="category-header">🔒 Seguranca</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Validacao de entrada em todas as rotas da API</span></li>
+            </ul>
+        </section>
+
+        <section id="pendente" class="section-pending">
+            <h2><span class="icon">⏳</span> Pendente</h2>
+
+            <div class="category-header">📈 Dashboard - Melhorias</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Mostrar estatisticas de uso do chat</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Grafico de evolucao patrimonial</span></li>
+            </ul>
+
+            <div class="category-header">⚙️ Configuracoes e Preferencias</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Pagina de configuracoes do usuario</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Preferencias de notificacao</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Selecao de tema (claro/escuro)</span></li>
+            </ul>
+
+            <div class="category-header">💬 Melhorias no Chat</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Exportar conversas em PDF/TXT</span></li>
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Renomear conversas</span></li>
+            </ul>
+
+            <div class="category-header">👤 Perfil do Usuario</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Upload de foto de perfil</span></li>
+            </ul>
+
+            <div class="category-header">📧 Email e Comunicacao</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Configurar templates de email no Supabase</span></li>
+            </ul>
+        </section>
+
+        <section id="futuro" class="section-future">
+            <h2><span class="icon">⭐</span> Melhorias Futuras</h2>
+
+            <div class="category-header">🚀 Funcionalidades Avancadas</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Conexao com APIs de corretoras reais</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Importacao de extratos (CSV, OFX)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Alertas de preco em tempo real</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Backtesting de estrategias</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Analise de correlacao de ativos</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Metricas de risco (Sharpe, volatilidade)</span></li>
+            </ul>
+
+            <div class="category-header">🔐 Autenticacao e Seguranca</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Autenticacao social com GitHub</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Two-factor authentication (2FA)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Biometria (mobile)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Logs de auditoria de acesso</span></li>
+            </ul>
+
+            <div class="category-header">📚 Conteudo Educacional</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Modulo de cursos sobre investimentos</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Trilhas de aprendizado personalizadas</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Videos e tutoriais interativos</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Glossario financeiro completo</span></li>
+            </ul>
+
+            <div class="category-header">🏗️ Infraestrutura</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Testes unitarios (Jest)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Testes E2E (Playwright/Cypress)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">Monitoramento (Sentry)</span></li>
+                <li class="task-item"><span class="task-icon">⭐</span><span class="task-text">CI/CD pipeline</span></li>
+            </ul>
+        </section>
+
+        <section class="section-tech">
+            <h2><span class="icon">🛠️</span> Debito Tecnico</h2>
+
+            <div class="category-header" style="background: linear-gradient(135deg, #EF4444 0%, #991B1B 100%); color: white;">🔒 Seguranca - CRITICO</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">CORS aberto no backend — <code>cors()</code> aceita qualquer origem (server.js:24)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">JWT secrets com fallback fraco hardcoded (config/index.js:40-41)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Token de reset de senha retornado na resposta da API (auth.js:143)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Rotas publicas sem autenticacao: stocks, crypto, news, finnhub, forex, search</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Perfil de risco acessivel/deletavel sem auth (riskProfile.js:19-26)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem limite de tamanho no body — <code>express.json()</code> sem <code>limit</code> (server.js:25)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem HTTPS enforcement (falta Helmet HSTS)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">localStorage usado para dados sensiveis do perfil investidor (Chatbot.tsx:107)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Input de ticker/nome sem sanitizacao contra XSS (AddAssetModal.tsx:304)</span></li>
+            </ul>
+
+            <div class="category-header" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: white;">⚠️ Validacao e Tratamento de Erros</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Respostas de API aceitas sem validacao de schema (dashboardService.ts:76-122)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Erros silenciados com array vazio — usuario nao sabe que falhou (dashboardService.ts:199)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Tratamento de erros inconsistente — console.error em uns, silencio em outros</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Validacao de input fraca no backend — searchController, cryptoController, forex</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Formato de resposta de erro inconsistente entre controllers do backend</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Validacao de env vars ausente — app inicia com config invalida sem aviso</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Chat input sem limite de caracteres (Chatbot.tsx)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Rate limiter fraco — 30 req/min em memoria, sem store persistente</span></li>
+            </ul>
+
+            <div class="category-header">💻 Qualidade de Codigo</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">25+ console.log/error em codigo de producao (chat, dashboard, portfolio, perfil)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Duplicacao de logica — listarConversas e buscarConversas 80% iguais (chatService.ts)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Validacoes de CPF/telefone/data dentro do componente — mover para lib/validators.ts</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Constantes de cores duplicadas em 3+ arquivos — criar arquivo centralizado</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Auth check duplicado em dashboard e carteira — criar ProtectedPageLayout</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Componentes grandes: AddAssetModal (711 linhas), Chatbot (515), RegisterForm (611)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Tipos <code>unknown</code> sem narrowing adequado (dashboardService, perfilService)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">TODO no codigo: "Implementar login com Supabase" ja implementado (authService.ts:34)</span></li>
+            </ul>
+
+            <div class="category-header">🗄️ Dados e Persistencia</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Portfolio salvo apenas em localStorage — sem sync com Supabase</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Perfil investidor em 3 locais (localStorage, Supabase, Context) sem sincronizacao</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Cotacao USD/BRL hardcoded em R$5.00 — buscar de API forex (portfolioService.ts:76)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Precos simulados com Math.random() no addAsset (portfolioService.ts:253-254)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Delays artificiais simulando API (setTimeout 100-300ms nos services)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Chat historico armazenado em texto plano sem criptografia</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Memory leak: Map() de profiles no backend crece sem limpeza (riskProfile.js:4)</span></li>
+            </ul>
+
+            <div class="category-header">⚡ Performance</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Falta React.memo em itens de lista (ChatMessage, PortfolioByProductCard)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">symbolNames recriado a cada render — mover para fora do componente (MarketOverview)</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem deduplicacao de requests — re-mount causa chamadas duplicadas</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem code splitting / dynamic imports para rotas</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem paginacao no historico do chat — carrega 50 mensagens de uma vez</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Backend sem graceful shutdown — requests perdidos no SIGTERM (server.js)</span></li>
+            </ul>
+
+            <div class="category-header">♿ Acessibilidade</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Inputs de formulario sem aria-label e aria-describedby</span></li>
+                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Modal sem aria-modal e role="dialog" adequados</span></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentação Técnica v3.2.0 | Fevereiro 2026</p>
+        <p><a href="index.html">Voltar para o indice</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 15 - Layout e Minha Carteira | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --secondary: #10b981;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0B1F33 0%, #1e3a5f 50%, #00B8D9 100%);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin: 25px 0 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #475569;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .feature-card h4 {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .component-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .component-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .component-item h4 {
+            color: var(--dark);
+            font-size: 1rem;
+            margin-bottom: 8px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .component-item p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .menu-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .menu-table th,
+        .menu-table td {
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .menu-table th {
+            background: var(--dark);
+            color: white;
+            font-weight: 600;
+        }
+
+        .menu-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e3a5f 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .architecture-diagram {
+            background: linear-gradient(135deg, #0B1F33 0%, #1e3a5f 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .architecture-diagram h4 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .arch-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .arch-box {
+            background: rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .arch-arrow {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #00B8D9 0%, #007EA7 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            margin-bottom: 10px;
+        }
+
+        .new-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .chart-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .chart-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .chart-card .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .chart-card h5 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .chart-card p {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Versao 2.8.0</span>
+            <h1>Layout Sidebar e Minha Carteira</h1>
+            <p>Navegacao lateral estilo B3, portfolio completo com busca automatica de precos via API</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
+            <li><a href="#sidebar">Sidebar</a></li>
+            <li><a href="#carteira">Minha Carteira</a></li>
+            <li><a href="#graficos">Graficos</a></li>
+            <li><a href="#componentes">Componentes</a></li>
+            <li><a href="#codigo">Codigo</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">Voltar para o indice</a>
+
+        <section id="sidebar">
+            <h2>Sidebar de Navegacao</h2>
+            <p>
+                A sidebar foi desenvolvida seguindo o design do portal do investidor B3, com visual moderno
+                e funcionalidades responsivas. Inclui versao desktop colapsavel e versao mobile slide-out.
+            </p>
+
+            <div class="tech-stack">
+                <span class="tech-badge">Framer Motion</span>
+                <span class="tech-badge">Lucide Icons</span>
+                <span class="tech-badge">Next.js Navigation</span>
+                <span class="tech-badge">Responsive Design</span>
+            </div>
+
+            <h3>Menu de Navegacao</h3>
+            <table class="menu-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Icone</th>
+                        <th>Rota</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Dashboard</strong></td>
+                        <td>LayoutDashboard</td>
+                        <td><code>/dashboard</code></td>
+                        <td><span class="new-badge">Completo</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chat IA</strong></td>
+                        <td>MessageSquare</td>
+                        <td><code>/chat</code></td>
+                        <td><span class="new-badge">Completo</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Minha Carteira</strong></td>
+                        <td>Wallet</td>
+                        <td><code>/carteira</code></td>
+                        <td><span class="new-badge">Completo</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Relatorios</strong></td>
+                        <td>BarChart3</td>
+                        <td><code>/relatorios</code></td>
+                        <td>Em breve</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trilhas Educativas</strong></td>
+                        <td>GraduationCap</td>
+                        <td><code>/trilhas</code></td>
+                        <td>Em breve</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Desktop Colapsavel</h4>
+                    <p>Sidebar fixa com botao para expandir (240px) ou recolher (72px). Estado animado com Framer Motion.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Mobile Slide-out</h4>
+                    <p>Menu lateral que desliza da esquerda em dispositivos moveis, com overlay escuro e botao hamburger.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Indicador Ativo</h4>
+                    <p>Item do menu atual destacado com cor de fundo cyan (#00B8D9) usando o pathname do Next.js.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Badge IA</h4>
+                    <p>Badge especial no item "Chat IA" para destacar a funcionalidade de inteligencia artificial.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="carteira">
+            <h2>Pagina Minha Carteira</h2>
+            <p>
+                A pagina "Minha Carteira" apresenta uma visao completa do portfolio de investimentos,
+                inspirada no portal do investidor B3. Inclui resumo patrimonial, graficos de distribuicao
+                e detalhamento por tipo de ativo.
+            </p>
+
+            <div class="highlight-box">
+                <h4>Saldo no Dashboard Header</h4>
+                <p>O patrimonio total tambem e exibido no header do dashboard, ao lado do nome do usuario, com botao para ocultar/mostrar o valor. A preferencia e salva no localStorage.</p>
+            </div>
+
+            <div class="highlight-box" style="background: linear-gradient(135deg, #10b981 0%, #047857 100%);">
+                <h4>Modal de Adicionar Ativos por Categoria <span class="new-badge">v2.8.0</span></h4>
+                <p>Sistema de adicao de ativos em 3 etapas com busca automatica de precos. Selecione a categoria, escolha o ativo (100+ pre-cadastrados), e o preco e preenchido automaticamente via APIs Finnhub/Alpha Vantage quando disponivel.</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Resumo Patrimonial</h4>
+                    <p>Card com gradiente escuro mostrando patrimonio total, valor investido, lucro/prejuizo e rentabilidade.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Distribuicao por Classe</h4>
+                    <p>Grafico donut com distribuicao entre Renda Fixa, Renda Variavel, FIIs e Internacional.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Distribuicao por Produto</h4>
+                    <p>Tabs com lista de ativos por categoria, incluindo ticker, quantidade, preco medio e variacao.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Distribuicao por Corretora</h4>
+                    <p>Grafico donut mostrando quanto esta alocado em cada corretora (XP, Clear, Rico, etc).</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Adicionar Ativo <span class="new-badge">NOVO</span></h4>
+                    <p>Modal multi-step para adicionar ativos por categoria com busca e selecao de ativos pre-definidos.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Remover Ativo <span class="new-badge">NOVO</span></h4>
+                    <p>Botao de remocao que aparece ao passar o mouse sobre cada ativo na lista.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Persistencia Local <span class="new-badge">NOVO</span></h4>
+                    <p>Dados do portfolio salvos em localStorage para persistir entre sessoes.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Preco Automatico <span class="new-badge">NOVO v2.8</span></h4>
+                    <p>Busca automatica de precos via Finnhub (acoes US) e Alpha Vantage (cripto). BDRs convertidos com cotacao USD/BRL.</p>
+                </div>
+            </div>
+
+            <h3>Categorias de Investimento</h3>
+            <div class="chart-preview">
+                <div class="chart-card">
+                    <div class="icon">🏦</div>
+                    <h5>Renda Fixa</h5>
+                    <p>CDBs, LCIs, LCAs, Debentures</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🏛️</div>
+                    <h5>Tesouro Direto</h5>
+                    <p>Selic, IPCA+, Prefixado</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">📈</div>
+                    <h5>Renda Variavel</h5>
+                    <p>Acoes, ETFs, BDRs</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🏢</div>
+                    <h5>FIIs</h5>
+                    <p>Fundos Imobiliarios</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🌍</div>
+                    <h5>Internacional</h5>
+                    <p>BDRs, ETFs globais</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🪙</div>
+                    <h5>Criptomoedas</h5>
+                    <p>Bitcoin, Ethereum, Altcoins</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="graficos">
+            <h2>Graficos Donut (Recharts)</h2>
+            <p>
+                Os graficos de pizza/donut sao renderizados com a biblioteca Recharts, oferecendo
+                animacoes suaves, tooltips interativos e design responsivo.
+            </p>
+
+            <div class="chart-preview">
+                <div class="chart-card">
+                    <div class="icon">🥧</div>
+                    <h5>Por Classe</h5>
+                    <p>Renda Fixa, Variavel, FIIs, Internacional</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">📊</div>
+                    <h5>Por Produto</h5>
+                    <p>CDB, LCI, Acoes, ETFs, FIIs</p>
+                </div>
+                <div class="chart-card">
+                    <div class="icon">🏦</div>
+                    <h5>Por Corretora</h5>
+                    <p>XP, Clear, Rico, Inter, Nubank</p>
+                </div>
+            </div>
+
+            <h3>Configuracao do DonutChart</h3>
+            <pre>
+interface DonutChartProps {
+  data: { name: string; value: number; color: string }[];
+  size?: 'sm' | 'md' | 'lg';
+  centerContent?: React.ReactNode;
+  showTooltip?: boolean;
+}
+
+// Tamanhos disponiveis
+const sizes = {
+  sm: { width: 150, height: 150, innerRadius: 40, outerRadius: 60 },
+  md: { width: 200, height: 200, innerRadius: 55, outerRadius: 80 },
+  lg: { width: 280, height: 280, innerRadius: 75, outerRadius: 110 },
+};</pre>
+        </section>
+
+        <section id="componentes">
+            <h2>Componentes Implementados</h2>
+
+            <h3>Layout</h3>
+            <ul class="component-list">
+                <li class="component-item">
+                    <h4>Sidebar.tsx <span class="new-badge">NOVO</span></h4>
+                    <p>Sidebar desktop com 6 itens de menu, animacao de collapse/expand e indicador de item ativo.</p>
+                </li>
+                <li class="component-item">
+                    <h4>MobileSidebar.tsx <span class="new-badge">NOVO</span></h4>
+                    <p>Componente separado para navegacao mobile com slide-out animado e overlay.</p>
+                </li>
+                <li class="component-item">
+                    <h4>DashboardLayout.tsx <span class="new-badge">NOVO</span></h4>
+                    <p>Layout wrapper que inclui sidebar, top header com user menu e ajuste de margem responsivo.</p>
+                </li>
+                <li class="component-item">
+                    <h4>DashboardHeader.tsx <span class="new-badge">Atualizado</span></h4>
+                    <p>Header com saudacao, data, saldo patrimonial com toggle de visibilidade e badge de perfil.</p>
+                </li>
+            </ul>
+
+            <h3>Portfolio</h3>
+            <ul class="component-list">
+                <li class="component-item">
+                    <h4>DonutChart.tsx <span class="new-badge">NOVO</span></h4>
+                    <p>Componente reutilizavel de grafico donut com Recharts. Suporta 3 tamanhos e conteudo central customizavel.</p>
+                </li>
+                <li class="component-item">
+                    <h4>PortfolioSummaryCard.tsx <span class="new-badge">NOVO</span></h4>
+                    <p>Card escuro com resumo do patrimonio: valor total, investido, lucro e rentabilidade percentual.</p>
+                </li>
+                <li class="component-item">
+                    <h4>PortfolioByClassCard.tsx <span class="new-badge">NOVO</span></h4>
+                    <p>Distribuicao por classe de ativos com grafico donut e legenda colorida.</p>
+                </li>
+                <li class="component-item">
+                    <h4>PortfolioByProductCard.tsx <span class="new-badge">NOVO</span></h4>
+                    <p>Interface com tabs para visualizar ativos por tipo (Renda Fixa, Variavel, FIIs, Internacional).</p>
+                </li>
+                <li class="component-item">
+                    <h4>PortfolioByBrokerCard.tsx <span class="new-badge">NOVO</span></h4>
+                    <p>Distribuicao por corretora com grafico donut e listagem de valores.</p>
+                </li>
+                <li class="component-item">
+                    <h4>AddAssetModal.tsx <span class="new-badge">Atualizado v2.8.0</span></h4>
+                    <p>Modal multi-step com busca automatica de preco. Step 1: selecao de categoria (6 tipos). Step 2: busca e selecao de ativo (100+ pre-cadastrados). Step 3: formulario com preco auto-preenchido via Finnhub/Alpha Vantage.</p>
+                </li>
+            </ul>
+
+            <h3>Services</h3>
+            <ul class="component-list">
+                <li class="component-item">
+                    <h4>portfolioService.ts <span class="new-badge">Atualizado v2.8.0</span></h4>
+                    <p>Service de portfolio com persistencia em localStorage e busca de precos via API. Funcoes: loadSavedAssets, saveAssets, addAsset, removeAsset, updateAsset, calculatePortfolioData, fetchAssetPrice, fetchUSStockPrice, fetchCryptoPrice. Mapeamento BDR-&gt;US e conversao USD/BRL.</p>
+                </li>
+            </ul>
+        </section>
+
+        <section id="codigo">
+            <h2>Estrutura de Arquivos</h2>
+            <pre>
+frontend/src/
+├── app/
+│   ├── carteira/
+│   │   └── page.tsx          # Pagina Minha Carteira
+│   ├── relatorios/
+│   │   └── page.tsx          # Placeholder Relatorios
+│   └── trilhas/
+│       └── page.tsx          # Placeholder Trilhas
+├── components/
+│   ├── layout/
+│   │   ├── Sidebar.tsx       # Sidebar desktop + mobile
+│   │   ├── DashboardLayout.tsx
+│   │   └── Header.tsx
+│   ├── portfolio/
+│   │   ├── index.ts          # Barrel exports
+│   │   ├── DonutChart.tsx
+│   │   ├── PortfolioSummaryCard.tsx
+│   │   ├── PortfolioByClassCard.tsx
+│   │   ├── PortfolioByProductCard.tsx
+│   │   ├── PortfolioByBrokerCard.tsx
+│   │   └── AddAssetModal.tsx  # Modal 3-step para adicionar ativos
+│   └── dashboard/
+│       └── DashboardHeader.tsx  # Atualizado com saldo
+└── services/
+    └── portfolioService.ts   # localStorage + CRUD de ativos</pre>
+
+            <h3>Interface PortfolioData</h3>
+            <pre>
+export interface PortfolioSummary {
+  totalValue: number;      // Patrimonio total
+  totalInvested: number;   // Valor investido
+  totalProfit: number;     // Lucro/Prejuizo
+  profitPercentage: number; // Rentabilidade %
+  lastUpdate: string;      // Data atualizacao
+}
+
+export interface Asset {
+  ticker: string;
+  name: string;
+  quantity: number;
+  averagePrice: number;
+  currentPrice: number;
+  totalValue: number;
+  variation: number;
+  class: AssetClass;
+}
+
+export interface PortfolioData {
+  summary: PortfolioSummary;
+  byClass: { name: string; value: number; color: string }[];
+  byProduct: {
+    rendaFixa: Asset[];
+    rendaVariavel: Asset[];
+    fiis: Asset[];
+    internacional: Asset[];
+  };
+  byBroker: { name: string; value: number; color: string }[];
+}</pre>
+
+            <h3>Toggle de Visibilidade do Saldo</h3>
+            <pre>
+// DashboardHeader.tsx
+const [showBalance, setShowBalance] = useState(true);
+
+useEffect(() =&gt; {
+  const savedPreference = localStorage.getItem('nuvary_show_balance');
+  if (savedPreference !== null) {
+    setShowBalance(savedPreference === 'true');
+  }
+}, []);
+
+const toggleBalance = () =&gt; {
+  const newValue = !showBalance;
+  setShowBalance(newValue);
+  localStorage.setItem('nuvary_show_balance', String(newValue));
+};
+
+// Exibicao condicional
+{showBalance
+  ? formatCurrency(portfolioSummary?.totalValue || 0)
+  : 'R$ ------'
+}</pre>
+
+            <h3>Modal de Adicionar Ativo - 3 Steps</h3>
+            <pre>
+// Step 1: Selecao de Categoria
+const CATEGORIES = [
+  { id: 'renda_fixa', name: 'Renda Fixa', icon: PiggyBank, color: '#1e3a5f' },
+  { id: 'tesouro', name: 'Tesouro Direto', icon: Landmark, color: '#047857' },
+  { id: 'renda_variavel', name: 'Renda Variavel', icon: TrendingUp, color: '#6366f1' },
+  { id: 'fiis', name: 'Fundos Imobiliarios', icon: Building, color: '#10b981' },
+  { id: 'internacional', name: 'Internacional', icon: Globe, color: '#00B8D9' },
+  { id: 'cripto', name: 'Criptomoedas', icon: Coins, color: '#f59e0b' },
+];
+
+// Step 2: Ativos pre-definidos com busca
+const ASSETS_BY_CATEGORY = {
+  renda_variavel: [
+    { ticker: 'PETR4', name: 'Petrobras PN' },
+    { ticker: 'VALE3', name: 'Vale ON' },
+    // ... 100+ ativos
+  ],
+  // ... outras categorias
+};
+
+// Step 3: Formulario de detalhes
+interface NewAssetData {
+  ticker: string;
+  name: string;
+  quantity: number;
+  averagePrice: number;
+  class: AssetClass;
+  broker: string;
+}</pre>
+
+            <h3>Persistencia em localStorage</h3>
+            <pre>
+const STORAGE_KEY = 'nuvary_portfolio_assets';
+
+// Salvar ativos
+export function saveAssets(assets: Asset[]): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(assets));
+}
+
+// Carregar ativos
+export function loadSavedAssets(): Asset[] {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  return saved ? JSON.parse(saved) : [];
+}
+
+// Adicionar novo ativo
+export function addAsset(assetData: {...}): Asset {
+  const assets = loadSavedAssets();
+  const newAsset = { id: generateId(), ...assetData };
+  assets.push(newAsset);
+  saveAssets(assets);
+  return newAsset;
+}
+
+// Remover ativo
+export function removeAsset(assetId: string): void {
+  const assets = loadSavedAssets().filter(a => a.id !== assetId);
+  saveAssets(assets);
+}</pre>
+        </section>
+
+        <section>
+            <h2>Proximos Passos</h2>
+            <p>Funcionalidades planejadas para as proximas versoes:</p>
+            <ul style="margin-left: 20px; color: var(--gray);">
+                <li>Conexao com APIs de corretoras reais</li>
+                <li>Importacao de extratos (CSV, OFX)</li>
+                <li>Historico de evolucao patrimonial</li>
+                <li>Alertas de variacao de ativos</li>
+                <li>Relatorios para IR (Imposto de Renda)</li>
+                <li>Comparativo com benchmarks (CDI, IBOV)</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentacao Tecnica | Fevereiro 2026</p>
+        <p><a href="index.html">Voltar para o indice</a></p>
+    </footer>
+</body>
+</html>
