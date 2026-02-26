@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 21 - Análise Técnica Completa e Roadmap v4.0 | Nuvary Invest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1; --primary-dark: #4f46e5;
+            --secondary: #10b981; --dark: #1e1b4b;
+            --gray: #64748b; --light: #f1f5f9; --white: #ffffff;
+            --danger: #ef4444; --warning: #f59e0b; --success: #10b981;
+            --info: #3b82f6;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #334155; background: var(--light); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%); color: white; padding: 60px 0; text-align: center; }
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        header p { font-size: 1.05rem; opacity: 0.85; }
+        .badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin: 4px; }
+        .badge-purple { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        .badge-green { background: #10b981; color: white; }
+        .badge-amber { background: #f59e0b; color: white; }
+        .badge-red { background: #ef4444; color: white; }
+        .badge-blue { background: #3b82f6; color: white; }
+        .badge-gray { background: #6b7280; color: white; }
+        main { padding: 40px 0; }
+        section { margin-bottom: 40px; }
+        h2 { font-size: 1.6rem; color: var(--dark); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid var(--primary); display: flex; align-items: center; gap: 10px; }
+        h3 { font-size: 1.15rem; color: #1e293b; margin: 20px 0 10px; }
+        .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card-border-green { border-left: 4px solid #10b981; }
+        .card-border-amber { border-left: 4px solid #f59e0b; }
+        .card-border-red { border-left: 4px solid #ef4444; }
+        .card-border-blue { border-left: 4px solid #3b82f6; }
+        .card-border-purple { border-left: 4px solid #8b5cf6; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: #f8fafc; padding: 10px 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+        tr:hover td { background: #fafbfc; }
+        .status-ok { color: #10b981; font-weight: 600; }
+        .status-warn { color: #f59e0b; font-weight: 600; }
+        .status-err { color: #ef4444; font-weight: 600; }
+        .status-info { color: #3b82f6; font-weight: 600; }
+        .feature-list { list-style: none; }
+        .feature-list li { padding: 8px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; }
+        .feature-list li:last-child { border-bottom: none; }
+        .icon-ok { color: #10b981; font-weight: bold; }
+        .icon-warn { color: #f59e0b; font-weight: bold; }
+        .icon-no { color: #ef4444; font-weight: bold; }
+        .priority-high { background: #fef2f2; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; color: #dc2626; }
+        .priority-med { background: #fffbeb; border: 1px solid #fde68a; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; color: #d97706; }
+        .priority-low { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; color: #16a34a; }
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .stat-number { font-size: 2.2rem; font-weight: 700; }
+        .stat-label { font-size: 0.85rem; color: #64748b; margin-top: 4px; }
+        .arch-box { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 24px; font-family: 'Courier New', monospace; font-size: 0.8rem; line-height: 1.8; overflow-x: auto; }
+        .arch-box .highlight { color: #6ee7b7; }
+        .arch-box .warning { color: #fcd34d; }
+        .arch-box .error { color: #fca5a5; }
+        .arch-box .info { color: #93c5fd; }
+        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+        .progress-fill { height: 100%; border-radius: 4px; }
+        .roadmap-phase { border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .roadmap-phase h4 { font-size: 1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .phase-tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .phase-now { background: #dcfce7; color: #16a34a; }
+        .phase-next { background: #dbeafe; color: #1d4ed8; }
+        .phase-future { background: #f3e8ff; color: #7c3aed; }
+        .deploy-url { font-family: monospace; font-size: 0.85rem; background: #1e293b; color: #6ee7b7; padding: 4px 10px; border-radius: 6px; }
+        code { font-family: monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; color: #c026d3; }
+        footer { text-align: center; padding: 30px 0; color: #64748b; border-top: 1px solid #e2e8f0; }
+        @media (max-width: 700px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Análise Técnica Completa + Roadmap v4.0</h1>
+        <p>Estado atual do projeto, pendências críticas e próximas implementações</p>
+        <div style="margin-top: 16px;">
+            <span class="badge badge-purple">v3.5.0</span>
+            <span class="badge badge-green">3 Serviços Railway</span>
+            <span class="badge badge-blue">10 APIs Integradas</span>
+            <span class="badge badge-amber">Fevereiro 2026</span>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- STATS -->
+    <section>
+        <div class="stat-grid" style="margin-top: 32px;">
+            <div class="stat-card">
+                <div class="stat-number" style="color: #6366f1;">14</div>
+                <div class="stat-label">Páginas Frontend</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: #10b981;">10</div>
+                <div class="stat-label">APIs Externas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: #3b82f6;">13</div>
+                <div class="stat-label">Rotas Backend</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: #f59e0b;">3</div>
+                <div class="stat-label">Serviços Railway</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEPLOY STATUS -->
+    <section>
+        <h2>🚀 Status de Deploy (Railway)</h2>
+        <div class="grid-3">
+            <div class="card card-border-green">
+                <div style="font-weight: 700; margin-bottom: 6px;">Backend</div>
+                <div class="deploy-url">nuvaryinvest-production<br>.up.railway.app</div>
+                <div style="margin-top: 10px; font-size: 0.85rem; color: #10b981; font-weight: 600;">✓ Online — /api/health OK</div>
+                <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Node.js 20 + nixpacks</div>
+            </div>
+            <div class="card card-border-green">
+                <div style="font-weight: 700; margin-bottom: 6px;">Frontend</div>
+                <div class="deploy-url">nuvaryfrontend-production<br>.up.railway.app</div>
+                <div style="margin-top: 10px; font-size: 0.85rem; color: #10b981; font-weight: 600;">✓ Online — HTTP 200</div>
+                <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Next.js 16 — npm run build</div>
+            </div>
+            <div class="card card-border-green">
+                <div style="font-weight: 700; margin-bottom: 6px;">Documentação</div>
+                <div class="deploy-url">nuvarydocs-production<br>.up.railway.app</div>
+                <div style="margin-top: 10px; font-size: 0.85rem; color: #10b981; font-weight: 600;">✓ Online — 21 docs</div>
+                <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Express static — docs-server/</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PÁGINAS E STATUS -->
+    <section>
+        <h2>📄 Páginas — Status Atual</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr><th>Rota</th><th>Página</th><th>Status</th><th>Observação</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>/</code></td><td>Landing Page</td><td class="status-ok">✓ Completo</td><td>Hero, features, CTA, estatísticas</td></tr>
+                    <tr><td><code>/login</code></td><td>Login</td><td class="status-ok">✓ Completo</td><td>Email + senha + Google OAuth</td></tr>
+                    <tr><td><code>/cadastro</code></td><td>Cadastro</td><td class="status-ok">✓ Completo</td><td>Nome, CPF, nascimento, telefone, email, senha</td></tr>
+                    <tr><td><code>/recuperar-senha</code></td><td>Recuperar Senha</td><td class="status-ok">✓ Completo</td><td>Envio por email via Supabase</td></tr>
+                    <tr><td><code>/dashboard</code></td><td>Dashboard</td><td class="status-ok">✓ Completo</td><td>Cotações, notícias, IA, TradingView ticker</td></tr>
+                    <tr><td><code>/carteira</code></td><td>Minha Carteira</td><td class="status-warn">⚠ Parcial</td><td>Funcional, mas salva só em <strong>localStorage</strong></td></tr>
+                    <tr><td><code>/questionario</code></td><td>Questionário</td><td class="status-ok">✓ Completo</td><td>10 perguntas, 4 perfis, alocação recomendada</td></tr>
+                    <tr><td><code>/perfil</code></td><td>Perfil</td><td class="status-ok">✓ Completo</td><td>Editar nome, trocar senha, perfil de investidor</td></tr>
+                    <tr><td><code>/chat</code></td><td>Chat IA</td><td class="status-ok">✓ Completo</td><td>GPT-4o-mini, contexto de perfil, histórico</td></tr>
+                    <tr><td><code>/trilhas</code></td><td>Trilhas Educacionais</td><td class="status-warn">⚠ Parcial</td><td>48 cards criados mas <strong>vídeos não integrados</strong></td></tr>
+                    <tr><td><code>/extratos</code></td><td>Extratos</td><td class="status-err">✗ Placeholder</td><td>"Em breve disponível" — não implementado</td></tr>
+                    <tr><td><code>/relatorios</code></td><td>Relatórios</td><td class="status-err">✗ Placeholder</td><td>"Em breve disponível" — não implementado</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- APIS -->
+    <section>
+        <h2>🌐 APIs Integradas — Status</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr><th>API</th><th>Finalidade</th><th>Backend Route</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>BCB SGS</strong></td><td>Selic, CDI, IPCA, IGP-M</td><td><code>/api/bcb/rates</code></td><td class="status-ok">✓ Ativo</td></tr>
+                    <tr><td><strong>BCB OLINDA</strong></td><td>Expectativas Focus</td><td><code>/api/bcb/focus</code></td><td class="status-ok">✓ Ativo</td></tr>
+                    <tr><td><strong>Tesouro Direto</strong></td><td>Taxas títulos públicos</td><td><code>/api/tesouro/rates</code></td><td class="status-ok">✓ Portal + CSV fallback</td></tr>
+                    <tr><td><strong>Brapi</strong></td><td>Ações B3, FIIs, Crypto</td><td><code>/api/brapi/*</code></td><td class="status-ok">✓ Ativo</td></tr>
+                    <tr><td><strong>ANBIMA</strong></td><td>Debêntures, CRI, CRA</td><td><code>/api/anbima/*</code></td><td class="status-warn">⚠ OAuth2 em aprovação</td></tr>
+                    <tr><td><strong>Finnhub</strong></td><td>Ações US, candles, notícias</td><td><code>/api/finnhub/*</code></td><td class="status-ok">✓ Ativo</td></tr>
+                    <tr><td><strong>Alpha Vantage</strong></td><td>Forex, crypto, ações (2 keys)</td><td><code>/api/stocks /crypto /forex</code></td><td class="status-ok">✓ Ativo (2 keys rotativo)</td></tr>
+                    <tr><td><strong>NewsAPI</strong></td><td>Notícias financeiras (2 keys)</td><td><code>/api/news/*</code></td><td class="status-ok">✓ Ativo (2 keys rotativo)</td></tr>
+                    <tr><td><strong>OpenAI</strong></td><td>Chat, análise, sugestões</td><td><code>/api/ai/*</code></td><td class="status-ok">✓ GPT-4o-mini ativo</td></tr>
+                    <tr><td><strong>Supabase</strong></td><td>Autenticação (frontend)</td><td>—</td><td class="status-ok">✓ Auth + perfil ativo</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- PROBLEMAS CRÍTICOS -->
+    <section>
+        <h2>⚠️ Pendências e Problemas Críticos</h2>
+
+        <div class="card card-border-red">
+            <h3 style="color: #dc2626;">🔴 Alta Prioridade</h3>
+            <ul class="feature-list">
+                <li>
+                    <span class="icon-no">✗</span>
+                    <div>
+                        <strong>Dual-Stack de Autenticação</strong> <span class="priority-high">CRÍTICO</span><br>
+                        Frontend usa <strong>Supabase Auth</strong> e backend tem <strong>SQLite + JWT</strong> próprio. Os dois sistemas não se integram. O backend Auth (register/login) nunca é chamado pelo frontend — o frontend usa apenas Supabase. Necessário definir uma única fonte de verdade.
+                    </div>
+                </li>
+                <li>
+                    <span class="icon-no">✗</span>
+                    <div>
+                        <strong>Portfolio salvo apenas em localStorage</strong> <span class="priority-high">CRÍTICO</span><br>
+                        Todos os ativos da carteira são salvos em <code>nuvary_portfolio_assets</code> no localStorage. Ao trocar de dispositivo/navegador todos os dados são perdidos. Necessário persistência no Supabase.
+                    </div>
+                </li>
+                <li>
+                    <span class="icon-no">✗</span>
+                    <div>
+                        <strong>SQLite no Railway — filesystem efêmero</strong> <span class="priority-high">CRÍTICO</span><br>
+                        O banco SQLite (<code>backend/data/nuvary.db</code>) é reiniciado a cada redeploy. Dados de usuários, tokens e histórico de chat são apagados. Migrar para Supabase PostgreSQL.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card card-border-amber">
+            <h3 style="color: #d97706;">🟡 Média Prioridade</h3>
+            <ul class="feature-list">
+                <li>
+                    <span class="icon-warn">!</span>
+                    <div>
+                        <strong>Páginas Extratos e Relatórios são placeholders</strong> <span class="priority-med">MÉDIA</span><br>
+                        As rotas <code>/extratos</code> e <code>/relatorios</code> exibem apenas "Em breve disponível". Precisam ser implementadas com dados reais da carteira.
+                    </div>
+                </li>
+                <li>
+                    <span class="icon-warn">!</span>
+                    <div>
+                        <strong>Trilhas Educacionais — vídeos não integrados</strong> <span class="priority-med">MÉDIA</span><br>
+                        48 cards criados com título, duração e nível. Ao clicar, exibe modal "Em breve". Necessário integrar URLs reais do YouTube ou plataforma própria.
+                    </div>
+                </li>
+                <li>
+                    <span class="icon-warn">!</span>
+                    <div>
+                        <strong>USD/BRL hardcoded (5.0)</strong> <span class="priority-med">MÉDIA</span><br>
+                        A taxa de câmbio para converter ativos internacionais está hardcoded em portfolioService.ts. Usar API de câmbio (BCB ou Alpha Vantage) para valor atualizado.
+                    </div>
+                </li>
+                <li>
+                    <span class="icon-warn">!</span>
+                    <div>
+                        <strong>ANBIMA OAuth2 pendente de aprovação</strong> <span class="priority-med">MÉDIA</span><br>
+                        A integração ANBIMA requer aprovação de acesso à API. Endpoints configurados mas retornam erro sem credenciais válidas.
+                    </div>
+                </li>
+                <li>
+                    <span class="icon-warn">!</span>
+                    <div>
+                        <strong>Sem gráfico de histórico de rentabilidade</strong> <span class="priority-med">MÉDIA</span><br>
+                        A carteira mostra rentabilidade atual mas não tem histórico temporal (P&L ao longo do tempo). Necessário armazenar snapshots diários.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card card-border-blue">
+            <h3 style="color: #2563eb;">🔵 Baixa Prioridade</h3>
+            <ul class="feature-list">
+                <li>
+                    <span class="icon-warn">!</span>
+                    <div>
+                        <strong>Sem export de carteira (PDF/CSV)</strong> <span class="priority-low">BAIXA</span><br>
+                        Usuário não consegue exportar a carteira para declaração de IR ou análise externa.
+                    </div>
+                </li>
+                <li>
+                    <span class="icon-warn">!</span>
+                    <div>
+                        <strong>Sem tracking de dividendos</strong> <span class="priority-low">BAIXA</span><br>
+                        FIIs e ações pagadoras de dividendos não têm campo para registrar recebimentos.
+                    </div>
+                </li>
+                <li>
+                    <span class="icon-warn">!</span>
+                    <div>
+                        <strong>Notificações e alertas de preço</strong> <span class="priority-low">BAIXA</span><br>
+                        Não há sistema de alertas quando um ativo atinge determinado preço ou variação.
+                    </div>
+                </li>
+                <li>
+                    <span class="icon-warn">!</span>
+                    <div>
+                        <strong>Taxa de câmbio hardcoded para BDRs</strong> <span class="priority-low">BAIXA</span><br>
+                        BDRs são convertidos de USD para BRL com taxa fixa 5.0 em portfolioService.ts.
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ARQUITETURA -->
+    <section>
+        <h2>🏗️ Arquitetura Atual</h2>
+        <div class="arch-box">
+<span class="info">┌─────────────────────────────────────────────────────────────┐</span>
+<span class="info">│              FRONTEND — Next.js 16 / React 19                │</span>
+<span class="info">│  nuvaryfrontend-production.up.railway.app                    │</span>
+<span class="info">├─────────────────────────────────────────────────────────────┤</span>
+<span class="highlight">│  Pages: / /dashboard /carteira /chat /trilhas /perfil        │</span>
+<span class="warning">│  Auth: Supabase ─────────────────────────────────────────┐  │</span>
+<span class="highlight">│  Portfolio: localStorage ← PROBLEMA: perde ao trocar PC  │  │</span>
+<span class="highlight">│  Services: portfolioService, dashboardService, chatSvc   │  │</span>
+<span class="info">└──────────────────────────────────┬───────────────────────┘  │</span>
+                                   <span class="info">│</span>                          <span class="info">│</span>
+              <span class="highlight">NEXT_PUBLIC_API_URL</span>  <span class="info">│</span>     <span class="warning">Supabase Auth │</span>
+                                   <span class="info">↓</span>                          <span class="info">↓</span>
+<span class="info">┌─────────────────────────────────────────────────────────────┐</span>
+<span class="info">│              BACKEND — Express.js ESM / Node 20              │</span>
+<span class="info">│  nuvaryinvest-production.up.railway.app                      │</span>
+<span class="info">├─────────────────────────────────────────────────────────────┤</span>
+<span class="highlight">│  /api/bcb    → BCB SGS + OLINDA (Selic 15%, CDI 14.9%)      │</span>
+<span class="highlight">│  /api/tesouro → Portal JSON + CSV Tesouro Transparente       │</span>
+<span class="highlight">│  /api/brapi  → Ações B3, FIIs (Brapi)                       │</span>
+<span class="highlight">│  /api/finnhub → Ações US, candles, notícias                  │</span>
+<span class="highlight">│  /api/news   → NewsAPI (2 keys)                              │</span>
+<span class="highlight">│  /api/ai     → OpenAI GPT-4o-mini (chat + sugestões)        │</span>
+<span class="warning">│  /api/auth   → SQLite JWT ← PROBLEMA: não integrado frontend │</span>
+<span class="error">│  SQLite nuvary.db ← PROBLEMA: apagado a cada redeploy!       │</span>
+<span class="info">└─────────────────────────────────────────────────────────────┘</span>
+                                   <span class="info">↓</span>
+<span class="info">┌─────────────────────────────────────────────────────────────┐</span>
+<span class="info">│  DOCS — Express static / docs-server/public/                 │</span>
+<span class="info">│  nuvarydocs-production.up.railway.app — 21 HTMLs             │</span>
+<span class="info">└─────────────────────────────────────────────────────────────┘</span>
+        </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section>
+        <h2>🗺️ Roadmap — Próximas Versões</h2>
+
+        <div class="roadmap-phase">
+            <h4><span class="phase-tag phase-now">Agora — v3.5.0</span> Análise, Documentação e Deploy Completo</h4>
+            <ul class="feature-list">
+                <li><span class="icon-ok">✓</span> Deploy 3 serviços Railway (Backend, Frontend, Docs)</li>
+                <li><span class="icon-ok">✓</span> Análise técnica completa do projeto</li>
+                <li><span class="icon-ok">✓</span> Documentação atualizada (doc21 — este arquivo)</li>
+                <li><span class="icon-ok">✓</span> BCB SGS integrado (Selic, CDI, IPCA, IGP-M, Focus)</li>
+                <li><span class="icon-ok">✓</span> Cálculo automático CDI% para renda fixa</li>
+                <li><span class="icon-ok">✓</span> Roadmap v4.0 definido</li>
+            </ul>
+        </div>
+
+        <div class="roadmap-phase">
+            <h4><span class="phase-tag phase-next">Próximo — v4.0.0</span> Persistência Real e Autenticação Unificada</h4>
+            <ul class="feature-list">
+                <li><span class="icon-no">○</span> <strong>Migrar carteira do localStorage → Supabase</strong> (tabela <code>portfolio_assets</code>)</li>
+                <li><span class="icon-no">○</span> <strong>Remover backend SQLite</strong> — usar Supabase PostgreSQL para auth</li>
+                <li><span class="icon-no">○</span> <strong>Unificar autenticação</strong> — somente Supabase Auth (eliminar JWT do backend)</li>
+                <li><span class="icon-no">○</span> <strong>Taxa USD/BRL dinâmica</strong> via BCB ou Alpha Vantage</li>
+                <li><span class="icon-no">○</span> <strong>Histórico de snapshots</strong> da carteira (gráfico P&L temporal)</li>
+                <li><span class="icon-no">○</span> <strong>Chat history no Supabase</strong> (substituir SQLite + backend)</li>
+            </ul>
+        </div>
+
+        <div class="roadmap-phase">
+            <h4><span class="phase-tag phase-next">Em seguida — v4.1.0</span> Páginas Pendentes</h4>
+            <ul class="feature-list">
+                <li><span class="icon-no">○</span> <strong>Extratos</strong> — Histórico de transações com filtro de data, tipo e ativo</li>
+                <li><span class="icon-no">○</span> <strong>Relatórios</strong> — Análise de performance, alocação real vs. ideal, rentabilidade mensal</li>
+                <li><span class="icon-no">○</span> <strong>Trilhas — vídeos reais</strong> — Integrar YouTube embed ou links externos por card</li>
+                <li><span class="icon-no">○</span> <strong>Registro de dividendos</strong> — Campo para entrada de proventos recebidos por ativo</li>
+            </ul>
+        </div>
+
+        <div class="roadmap-phase">
+            <h4><span class="phase-tag phase-future">Futuro — v4.2.0+</span> Features Avançadas</h4>
+            <ul class="feature-list">
+                <li><span class="icon-no">○</span> <strong>Export PDF/CSV</strong> — Relatório para IRPF (custo médio, ganhos, proventos)</li>
+                <li><span class="icon-no">○</span> <strong>Alertas de preço</strong> — Notificação quando ativo atingir valor alvo</li>
+                <li><span class="icon-no">○</span> <strong>Múltiplas carteiras</strong> — Separar por objetivo (aposentadoria, reserva, crescimento)</li>
+                <li><span class="icon-no">○</span> <strong>Comparador de ativos</strong> — Side-by-side de dois papéis com métricas</li>
+                <li><span class="icon-no">○</span> <strong>Rebalanceamento automático</strong> — Sugestão de compra/venda para atingir alocação ideal do perfil</li>
+                <li><span class="icon-no">○</span> <strong>App Mobile (PWA)</strong> — Progressive Web App com instalação no celular</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- PROGRESSO -->
+    <section>
+        <h2>📊 Progresso por Módulo</h2>
+        <div class="card">
+            <table>
+                <thead><tr><th>Módulo</th><th>Progresso</th><th>Notas</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Autenticação</strong></td>
+                        <td style="min-width: 160px;">
+                            <div style="font-size: 0.8rem; color: #64748b;">70%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 70%; background: #f59e0b;"></div></div>
+                        </td>
+                        <td>Supabase funcional; backend JWT não integrado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Carteira</strong></td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #64748b;">65%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 65%; background: #f59e0b;"></div></div>
+                        </td>
+                        <td>UI completa; persistência em localStorage (não em nuvem)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dashboard</strong></td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #64748b;">90%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 90%; background: #10b981;"></div></div>
+                        </td>
+                        <td>Dados reais via APIs; falta atualização automática</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chat IA</strong></td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #64748b;">85%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 85%; background: #10b981;"></div></div>
+                        </td>
+                        <td>GPT-4o-mini ativo; histórico em SQLite (ephemeral)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Questionário</strong></td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #64748b;">95%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 95%; background: #10b981;"></div></div>
+                        </td>
+                        <td>Funcional completo; 4 perfis, alocação recomendada</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trilhas</strong></td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #64748b;">40%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 40%; background: #ef4444;"></div></div>
+                        </td>
+                        <td>Cards criados; vídeos não integrados ("Em breve")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extratos</strong></td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #64748b;">5%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 5%; background: #ef4444;"></div></div>
+                        </td>
+                        <td>Somente placeholder "Em breve"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Relatórios</strong></td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #64748b;">5%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 5%; background: #ef4444;"></div></div>
+                        </td>
+                        <td>Somente placeholder "Em breve"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>APIs Backend</strong></td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #64748b;">92%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 92%; background: #10b981;"></div></div>
+                        </td>
+                        <td>9 de 10 APIs ativas; ANBIMA aguardando aprovação</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deploy Railway</strong></td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #64748b;">100%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: #10b981;"></div></div>
+                        </td>
+                        <td>3 serviços online: backend, frontend, docs</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ARQUIVOS CHAVE -->
+    <section>
+        <h2>📁 Arquivos-Chave do Projeto</h2>
+        <div class="grid-2">
+            <div class="card card-border-purple">
+                <h3>Frontend</h3>
+                <ul class="feature-list">
+                    <li><span class="icon-ok">→</span><code>src/services/portfolioService.ts</code></li>
+                    <li><span class="icon-ok">→</span><code>src/services/dashboardService.ts</code></li>
+                    <li><span class="icon-ok">→</span><code>src/services/authService.ts</code></li>
+                    <li><span class="icon-ok">→</span><code>src/components/portfolio/AddAssetModal.tsx</code></li>
+                    <li><span class="icon-ok">→</span><code>src/contexts/AuthContext.tsx</code></li>
+                    <li><span class="icon-ok">→</span><code>src/constants/strings.ts</code></li>
+                </ul>
+            </div>
+            <div class="card card-border-blue">
+                <h3>Backend</h3>
+                <ul class="feature-list">
+                    <li><span class="icon-ok">→</span><code>src/server.js</code></li>
+                    <li><span class="icon-ok">→</span><code>src/controllers/bcbController.js</code></li>
+                    <li><span class="icon-ok">→</span><code>src/controllers/tesouroDiretoController.js</code></li>
+                    <li><span class="icon-ok">→</span><code>src/controllers/brapiController.js</code></li>
+                    <li><span class="icon-ok">→</span><code>src/database/index.js</code></li>
+                    <li><span class="icon-ok">→</span><code>src/config/index.js</code></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- VARIÁVEIS DE AMBIENTE -->
+    <section>
+        <h2>🔑 Variáveis de Ambiente (Railway)</h2>
+        <div class="grid-2">
+            <div class="card card-border-blue">
+                <h3>Frontend (nuvary_frontend)</h3>
+                <table>
+                    <tr><td><code>NEXT_PUBLIC_API_URL</code></td><td>URL do backend Railway</td></tr>
+                    <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>Projeto Supabase</td></tr>
+                    <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>Chave pública Supabase</td></tr>
+                    <tr><td><code>NODE_ENV</code></td><td>production</td></tr>
+                </table>
+            </div>
+            <div class="card card-border-green">
+                <h3>Backend (nuvary_invest)</h3>
+                <table>
+                    <tr><td><code>ALPHA_VANTAGE_API_KEY_1/2</code></td><td>Alpha Vantage (rotativo)</td></tr>
+                    <tr><td><code>FINNHUB_API_KEY</code></td><td>Finnhub</td></tr>
+                    <tr><td><code>NEWS_API_KEY_1/2</code></td><td>NewsAPI (rotativo)</td></tr>
+                    <tr><td><code>BRAPI_API_TOKEN</code></td><td>Brapi B3</td></tr>
+                    <tr><td><code>ANBIMA_CLIENT_ID/SECRET</code></td><td>ANBIMA OAuth2</td></tr>
+                    <tr><td><code>OPENAI_API_KEY</code></td><td>OpenAI GPT-4o-mini</td></tr>
+                    <tr><td><code>NODE_ENV</code></td><td>production</td></tr>
+                </table>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <p><strong>Nuvary Invest</strong> — Documentação v3.5.0 | Análise de Fevereiro 2026</p>
+        <p style="margin-top: 6px; font-size: 0.85rem;">
+            <a href="index.html" style="color: #6366f1;">← Voltar ao Índice</a> &nbsp;|&nbsp;
+            <a href="doc13.html" style="color: #6366f1;">Ver Roadmap Completo</a>
+        </p>
+    </div>
+</footer>
+</body>
+</html>

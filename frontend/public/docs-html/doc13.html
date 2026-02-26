@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Fevereiro 2026 - v3.4.0</span>
+            <span class="version-badge">Fevereiro 2026 - v3.5.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,8 +331,8 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🎉</span>
             <div>
-                <strong>Marco: 100 tarefas concluídas na v3.4.0!</strong>
-                <p style="margin: 0; opacity: 0.9;">BCB SGS + Tesouro Transparente CSV, Trilhas Educacionais e campo % para Renda Fixa com cálculo CDI automático</p>
+                <strong>Marco: 115 tarefas concluídas na v3.5.0!</strong>
+                <p style="margin: 0; opacity: 0.9;">Deploy completo no Railway (3 serviços), análise técnica completa, roadmap v4.0 definido com pendências críticas identificadas</p>
             </div>
         </div>
 
@@ -342,17 +342,17 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">100</div>
+                    <div class="stat-number">115</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🔥</div>
                     <div class="stat-number">3</div>
-                    <div class="stat-label">Alta Prioridade</div>
+                    <div class="stat-label">Críticos</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">⏳</div>
-                    <div class="stat-number">9</div>
+                    <div class="stat-number">12</div>
                     <div class="stat-label">Pendentes</div>
                 </div>
                 <div class="stat-card">
@@ -361,9 +361,9 @@
                     <div class="stat-label">Melhorias Futuras</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">🛠️</div>
-                    <div class="stat-number">40</div>
-                    <div class="stat-label">Débito Técnico</div>
+                    <div class="stat-icon">🚀</div>
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Serviços Railway</div>
                 </div>
             </div>
 
@@ -583,20 +583,49 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cálculo automático CDI: "120% CDI" no nome → busca CDI BCB e preenche taxa efetiva<span class="task-new">NOVO</span></span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Lista de Tesouro Direto expandida para 14 títulos ativos (Selic, IPCA+, Prefixado, Educa+, RendA+)<span class="task-new">NOVO</span></span></li>
             </ul>
+
+            <div class="category-header">🚀 Deploy Railway — 3 Serviços <span class="task-new">NOVO v3.5.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Backend Express no Railway: nuvaryinvest-production.up.railway.app — Node 20 + nixpacks<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Frontend Next.js no Railway: nuvaryfrontend-production.up.railway.app — npm run build<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Docs Express no Railway: nuvarydocs-production.up.railway.app — 21 HTMLs estáticos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Railway CLI configurado via GraphQL API — token, variáveis e domínios automatizados<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">nixpacks.toml no backend: nodejs_20 + python3 para compilar better-sqlite3 (node-gyp)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">16 variáveis de ambiente configuradas via Railway GraphQL API<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">docs-server com Express servindo frontend/public/docs-html como arquivos estáticos<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">📋 Análise Técnica e Roadmap <span class="task-new">NOVO v3.5.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Mapeamento completo de 14 páginas: status, funcionalidades e pendências<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Identificação de 3 problemas críticos: auth dual-stack, localStorage, SQLite efêmero<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Roadmap v4.0 definido: persistência Supabase, unificação auth, páginas pendentes<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">doc21.html criado com análise completa, progress bars e arquitetura atualizada<span class="task-new">NOVO</span></span></li>
+            </ul>
         </section>
 
         <section id="prioridade" class="section-fire">
-            <h2><span class="icon">🔥</span> Alta Prioridade</h2>
+            <h2><span class="icon">🔥</span> Críticos — Alta Prioridade (v4.0.0)</h2>
+
+            <div class="category-header">🔴 Persistência e Banco de Dados</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Migrar carteira do localStorage para Supabase</strong> — tabela portfolio_assets com user_id, ticker, categoria, quantidade, taxa, corretora, data_entrada</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>SQLite no Railway é efêmero</strong> — nuvary.db é apagado a cada redeploy; migrar usuários e histórico de chat para Supabase PostgreSQL</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Unificar autenticação</strong> — eliminar backend JWT (authController, database/index.js) e usar somente Supabase Auth no frontend e no backend (supabase-js verify token)</span></li>
+            </ul>
+
+            <div class="category-header">🟡 Páginas e Funcionalidades Incompletas</div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Página /extratos</strong> — Implementar histórico de transações com filtro de data, tipo e ativo (atualmente só "Em breve")</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Página /relatorios</strong> — Performance mensal, alocação real vs. ideal do perfil, rentabilidade por categoria (atualmente só "Em breve")</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Trilhas — integrar vídeos reais</strong> — 48 cards criados mas sem reprodução; integrar YouTube embed ou URLs externas por card</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Taxa USD/BRL dinâmica</strong> — câmbio hardcoded 5.0 em portfolioService.ts; buscar via BCB SGS série 1 (PTAX) ou Alpha Vantage</span></li>
+            </ul>
 
             <div class="category-header">📊 Visualizacao de Dados</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Graficos de acoes com candlestick (Recharts/Chart.js)</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Indicadores tecnicos visuais (SMA, RSI, MACD)</span></li>
-            </ul>
-
-            <div class="category-header">🔒 Seguranca</div>
-            <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Validacao de entrada em todas as rotas da API</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Gráfico P&L temporal — histórico de rentabilidade da carteira ao longo do tempo (snapshots diários no Supabase)</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text">Gráficos de ações com candlestick (Recharts/Chart.js) — usar endpoint Finnhub /candles já implementado</span></li>
             </ul>
         </section>
 
