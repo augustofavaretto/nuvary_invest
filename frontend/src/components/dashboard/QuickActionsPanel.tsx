@@ -31,9 +31,9 @@ const actions = [
 
 export function QuickActionsPanel() {
   return (
-    <Card className="border-[#E5E7EB]">
+    <Card className="border-border">
       <CardHeader>
-        <CardTitle className="text-[#0B1F33] flex items-center gap-2">
+        <CardTitle className="text-foreground flex items-center gap-2">
           <Zap className="w-5 h-5 text-[#00B8D9]" />
           {STRINGS.dashboard.acoesRapidas}
         </CardTitle>
@@ -46,7 +46,7 @@ export function QuickActionsPanel() {
               <Link
                 key={action.href}
                 href={action.href}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors group"
               >
                 <div
                   className={`w-10 h-10 rounded-lg bg-gradient-to-br ${action.gradient} flex items-center justify-center text-white group-hover:scale-105 transition-transform`}
@@ -54,7 +54,7 @@ export function QuickActionsPanel() {
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-[#0B1F33] group-hover:text-[#00B8D9] transition-colors">
+                  <p className="font-medium text-foreground group-hover:text-[#00B8D9] transition-colors">
                     {action.label}
                   </p>
                   <p className="text-xs text-[#6B7280]">{action.description}</p>

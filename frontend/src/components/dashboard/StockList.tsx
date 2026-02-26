@@ -11,9 +11,9 @@ interface StockListProps {
 
 export function StockList({ stocks }: StockListProps) {
   return (
-    <Card className="border-[#E5E7EB]">
+    <Card className="border-border">
       <CardHeader>
-        <CardTitle className="text-[#0B1F33] flex items-center gap-2">
+        <CardTitle className="text-foreground flex items-center gap-2">
           <BarChart3 className="w-5 h-5 text-[#00B8D9]" />
           {STRINGS.dashboard.acoesPopulares}
         </CardTitle>
@@ -25,19 +25,19 @@ export function StockList({ stocks }: StockListProps) {
             return (
               <div
                 key={stock.symbol}
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#00B8D9] to-[#007EA7] flex items-center justify-center text-white font-bold text-sm">
                     {stock.symbol.substring(0, 2)}
                   </div>
                   <div>
-                    <p className="font-semibold text-[#0B1F33]">{stock.symbol.replace('.SA', '')}</p>
+                    <p className="font-semibold text-foreground">{stock.symbol.replace('.SA', '')}</p>
                     <p className="text-xs text-[#6B7280]">{stock.name}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-[#0B1F33]">
+                  <p className="font-bold text-foreground">
                     $ {stock.price?.toFixed(2) || '—'}
                   </p>
                   <div

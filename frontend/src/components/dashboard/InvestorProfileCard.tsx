@@ -73,9 +73,9 @@ const profileConfig: Record<
 export function InvestorProfileCard({ profile }: InvestorProfileCardProps) {
   if (!profile) {
     return (
-      <Card className="border-[#E5E7EB]">
+      <Card className="border-border">
         <CardHeader>
-          <CardTitle className="text-[#0B1F33] flex items-center gap-2">
+          <CardTitle className="text-foreground flex items-center gap-2">
             <PieChart className="w-5 h-5 text-[#00B8D9]" />
             Perfil de Investidor
           </CardTitle>
@@ -94,9 +94,9 @@ export function InvestorProfileCard({ profile }: InvestorProfileCardProps) {
   const Icon = config.icon;
 
   return (
-    <Card className="border-[#E5E7EB]">
+    <Card className="border-border">
       <CardHeader>
-        <CardTitle className="text-[#0B1F33] flex items-center gap-2">
+        <CardTitle className="text-foreground flex items-center gap-2">
           <PieChart className="w-5 h-5 text-[#00B8D9]" />
           Perfil de Investidor
         </CardTitle>
@@ -107,20 +107,20 @@ export function InvestorProfileCard({ profile }: InvestorProfileCardProps) {
           <Icon className={`w-8 h-8 ${config.color}`} />
           <div>
             <p className={`font-bold text-lg capitalize ${config.color}`}>{profileType}</p>
-            <p className="text-sm text-[#6B7280]">{config.description}</p>
+            <p className="text-sm text-muted-foreground">{config.description}</p>
           </div>
         </div>
 
         {/* Allocation Bars */}
         <div className="space-y-3">
-          <p className="text-sm font-medium text-[#0B1F33]">{STRINGS.perfil.alocacaoRecomendada}:</p>
+          <p className="text-sm font-medium text-foreground">{STRINGS.perfil.alocacaoRecomendada}:</p>
           {config.allocation.map((item, index) => (
             <div key={item.label} className="space-y-1">
               <div className="flex justify-between text-sm">
-                <span className="text-[#6B7280]">{item.label}</span>
-                <span className="font-medium text-[#0B1F33]">{item.percent}%</span>
+                <span className="text-muted-foreground">{item.label}</span>
+                <span className="font-medium text-foreground">{item.percent}%</span>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${item.percent}%` }}
