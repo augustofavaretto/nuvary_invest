@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Fevereiro 2026 - v3.3.0</span>
+            <span class="version-badge">Fevereiro 2026 - v3.4.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,8 +331,8 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🎉</span>
             <div>
-                <strong>Centralização de Strings pt-BR na v3.3.0!</strong>
-                <p style="margin: 0; opacity: 0.9;">Arquivo central strings.ts, EditorConfig UTF-8 global e 15 componentes refatorados</p>
+                <strong>Marco: 100 tarefas concluídas na v3.4.0!</strong>
+                <p style="margin: 0; opacity: 0.9;">BCB SGS + Tesouro Transparente CSV, Trilhas Educacionais e campo % para Renda Fixa com cálculo CDI automático</p>
             </div>
         </div>
 
@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">84</div>
+                    <div class="stat-number">100</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -554,6 +554,34 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Strings dinâmicas tipadas com funções TypeScript (diasAtras, boasVindas, contextoUsuario)<span class="task-new">NOVO</span></span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">15 componentes e services refatorados para usar STRINGS (Chatbot, ChatSidebar, StockList, AISuggestionsCard, etc.)<span class="task-new">NOVO</span></span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">TypeScript as const para autocomplete e validação em tempo de compilação (tsc --noEmit zero erros)<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🎓 Trilhas Educacionais <span class="task-new">NOVO v3.4.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Hero banner com carousel rotativo (3 slides, 5s, AnimatePresence Framer Motion)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Barra de navegação sticky com 8 categorias e IntersectionObserver para categoria ativa<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">48 vídeos em 8 seções com scroll horizontal, setas de navegação e thumbnails com gradiente<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Modal "Em breve" com Framer Motion ao clicar em qualquer vídeo<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Funcionalidade "Minha Lista" — salvar/remover vídeos com botão +/✓<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Categorias: Jornada, Mais Assistidos, Renda Fixa, Renda Variável, FIIs, Cripto, Análise Técnica, IR<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">📊 Renda Fixa com Taxa % <span class="task-new">NOVO v3.4.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Campo "Taxa Contratada (%)" com ícone Percent para categorias renda_fixa e tesouro<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Padrão isFixedIncome: quantity = R$ aplicado, averagePrice = taxa % a.a., totalValue = face value<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Preview card atualizado com valor aplicado + taxa a.a. para renda fixa<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Validação com strings centralizadas (taxaDeveSerMaior, taxaNaoDisponivel, valorInvestido)<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🏦 BCB SGS + Tesouro Transparente <span class="task-new">NOVO v3.4.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">bcbController.js com 6 endpoints: /selic, /cdi, /ipca, /igpm, /focus, /rates — cache 30 min<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">BCB OLINDA OData — expectativas Focus (IPCA, Selic, PIB, Câmbio) por DataReferencia<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tesouro Direto com fallback automático para CSV Tesouro Transparente (STN) — 130 títulos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">portfolioService: fetchBCBRates() com cache 15 min, fallback Brapi, mapeamento 25 títulos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cálculo automático CDI: "120% CDI" no nome → busca CDI BCB e preenche taxa efetiva<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Lista de Tesouro Direto expandida para 14 títulos ativos (Selic, IPCA+, Prefixado, Educa+, RendA+)<span class="task-new">NOVO</span></span></li>
             </ul>
         </section>
 

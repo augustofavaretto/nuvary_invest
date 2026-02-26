@@ -11,6 +11,10 @@ import newsRoutes from './routes/news.js';
 import aiRoutes from './routes/ai.js';
 import riskProfileRoutes from './routes/riskProfile.js';
 import authRoutes from './routes/auth.js';
+import brapiRoutes from './routes/brapi.js';
+import anbimaRoutes from './routes/anbima.js';
+import tesouroDiretoRoutes from './routes/tesouroDireto.js';
+import bcbRoutes from './routes/bcb.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { rateLimiter } from './middleware/rateLimiter.js';
 
@@ -46,6 +50,18 @@ app.use('/api/profile', riskProfileRoutes);
 // Routes - Authentication
 app.use('/api/auth', authRoutes);
 
+// Routes - Brapi (B3, Crypto, Moedas, Inflação, Selic)
+app.use('/api/brapi', brapiRoutes);
+
+// Routes - ANBIMA (Títulos Públicos, Renda Fixa, CRI/CRA)
+app.use('/api/anbima', anbimaRoutes);
+
+// Routes - Tesouro Direto (Taxas e PUs dos títulos públicos)
+app.use('/api/tesouro', tesouroDiretoRoutes);
+
+// Routes - BCB (SGS: Selic, CDI, IPCA, IGP-M + OLINDA Focus)
+app.use('/api/bcb', bcbRoutes);
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({
@@ -54,6 +70,8 @@ app.get('/api/health', (req, res) => {
     apis: {
       alphaVantage: config.alphaVantage.apiKeys.length > 0,
       finnhub: !!config.finnhub.apiKey,
+      brapi: !!config.brapi.token,
+      anbima: !!config.anbima.clientId,
       newsApi: config.newsApi.apiKeys.length > 0,
       openai: !!config.openai.apiKey,
     },
@@ -71,6 +89,8 @@ app.listen(config.port, () => {
   console.log(`🚀 Nuvary Invest Backend rodando na porta ${config.port}`);
   console.log(`📊 Alpha Vantage Keys: ${config.alphaVantage.apiKeys.length}`);
   console.log(`📈 Finnhub Key: ${config.finnhub.apiKey ? 'Configurada' : 'Não configurada'}`);
+  console.log(`🇧🇷 Brapi Token: ${config.brapi.token ? 'Configurado' : 'Não configurado'}`);
+  console.log(`🏦 ANBIMA Client: ${config.anbima.clientId ? 'Configurado' : 'Não configurado'}`);
   console.log(`📰 News API Keys: ${config.newsApi.apiKeys.length}`);
   console.log(`🤖 OpenAI Key: ${config.openai.apiKey ? 'Configurada' : 'Não configurada'}`);
   console.log(`📋 Questionário de Perfil: Ativo`);

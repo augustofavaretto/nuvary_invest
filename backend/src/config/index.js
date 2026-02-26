@@ -32,6 +32,17 @@ export const config = {
     model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
   },
 
+  brapi: {
+    baseUrl: process.env.BRAPI_BASE_URL || 'https://brapi.dev/api',
+    token: process.env.BRAPI_API_TOKEN,
+  },
+
+  anbima: {
+    baseUrl: process.env.ANBIMA_BASE_URL || 'https://api.anbima.com.br',
+    clientId: process.env.ANBIMA_CLIENT_ID,
+    clientSecret: process.env.ANBIMA_CLIENT_SECRET,
+  },
+
   cache: {
     ttl: parseInt(process.env.CACHE_TTL) || 300,
   },
