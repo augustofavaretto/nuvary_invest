@@ -10,6 +10,7 @@ import {
   Wallet,
   BarChart3,
   GraduationCap,
+  Settings,
   ChevronLeft,
   ChevronRight,
   Menu,
@@ -54,6 +55,12 @@ const menuItems: MenuItem[] = [
     label: 'Trilhas Educativas',
     icon: <GraduationCap className="w-5 h-5" />,
     href: '/trilhas',
+  },
+  {
+    id: 'configuracoes',
+    label: 'Configurações',
+    icon: <Settings className="w-5 h-5" />,
+    href: '/configuracoes',
   },
 ];
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ErrorSuppressor } from "@/components/ErrorSuppressor";
 import "./globals.css";
 
@@ -34,9 +35,11 @@ export default function RootLayout({
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
         <ErrorSuppressor>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </ThemeProvider>
         </ErrorSuppressor>
       </body>
     </html>
