@@ -23,6 +23,9 @@ import './database/index.js';
 
 const app = express();
 
+// Trust Railway reverse proxy (fix para express-rate-limit com X-Forwarded-For)
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(helmet());
 app.use(cors());
