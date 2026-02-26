@@ -8,8 +8,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Serve static docs from frontend/public/docs-html
-const docsPath = path.join(__dirname, '../frontend/public/docs-html');
+// Serve static docs from public/ (within docs-server/)
+const docsPath = path.join(__dirname, 'public');
 
 app.use(express.static(docsPath));
 

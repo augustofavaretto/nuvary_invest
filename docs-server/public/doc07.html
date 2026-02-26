@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 07 - Chatbot de Investimentos | Nuvary Invest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --secondary: #0B1F33;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        h3 {
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            margin: 20px 0 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7fa 100%);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .feature-card h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .file-structure {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        .file-structure .folder {
+            color: #fbbf24;
+        }
+
+        .file-structure .file {
+            color: #67e8f9;
+        }
+
+        .file-structure .comment {
+            color: #6b7280;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin: 5px;
+            border: 1px solid var(--border);
+        }
+
+        .action-btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .endpoint {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+
+        .method-post {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .method-get {
+            background: #10b981;
+            color: white;
+        }
+
+        .endpoint-path {
+            font-family: 'Consolas', monospace;
+            color: var(--dark);
+        }
+
+        .endpoint-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+        }
+
+        .chat-demo {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .chat-avatar.user {
+            background: var(--secondary);
+        }
+
+        .chat-avatar.bot {
+            background: var(--primary);
+        }
+
+        .chat-bubble {
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+
+        .chat-bubble.user {
+            background: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+            color: white;
+            border-top-right-radius: 4px;
+        }
+
+        .chat-bubble.bot {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--dark);
+            border-top-left-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Versao 1.6.0</span>
+            <h1>Chatbot de Investimentos</h1>
+            <p>Assistente virtual com IA para consultas financeiras personalizadas</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#visao-geral">Visao Geral</a></li>
+            <li><a href="#funcionalidades">Funcionalidades</a></li>
+            <li><a href="#componentes">Componentes</a></li>
+            <li><a href="#api">API Backend</a></li>
+            <li><a href="#integracao">Integracao</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section id="visao-geral">
+            <h2>Visao Geral</h2>
+            <p>
+                O Chatbot de Investimentos da Nuvary Invest e um assistente virtual alimentado por OpenAI
+                que oferece suporte personalizado aos usuarios. Integrado ao perfil do investidor, o chatbot
+                fornece respostas contextualizadas sobre investimentos, analises de mercado e educacao financeira.
+            </p>
+
+            <h3>Principais Caracteristicas</h3>
+            <ul>
+                <li><strong>Integracao com OpenAI</strong> - Respostas inteligentes usando GPT</li>
+                <li><strong>Contexto do Perfil</strong> - Personalizacao baseada no perfil do investidor</li>
+                <li><strong>Historico de Conversa</strong> - Mantém contexto das ultimas mensagens</li>
+                <li><strong>Acoes Rapidas</strong> - Botoes pre-definidos para perguntas comuns</li>
+                <li><strong>Interface Moderna</strong> - Design conversacional com animacoes</li>
+                <li><strong>Responsivo</strong> - Funciona em desktop e mobile</li>
+            </ul>
+
+            <h3>Demonstracao da Interface</h3>
+            <div class="chat-demo">
+                <div class="chat-message">
+                    <div class="chat-avatar bot">N</div>
+                    <div class="chat-bubble bot">
+                        Ola! Sou o assistente virtual da Nuvary Invest. Vi que seu perfil e <strong>Moderado</strong>. Como posso ajuda-lo hoje?
+                    </div>
+                </div>
+                <div class="chat-message" style="flex-direction: row-reverse;">
+                    <div class="chat-avatar user">U</div>
+                    <div class="chat-bubble user">
+                        Qual a alocacao ideal para meu perfil?
+                    </div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-avatar bot">N</div>
+                    <div class="chat-bubble bot">
+                        Para o perfil Moderado, recomendo: <strong>55% Renda Fixa</strong>, <strong>25% Renda Variavel</strong>, <strong>10% FIIs</strong> e <strong>10% Internacional</strong>...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="funcionalidades">
+            <h2>Funcionalidades</h2>
+
+            <h3>Botoes de Acao Rapida</h3>
+            <p>O chatbot oferece 8 botoes de acao rapida para perguntas frequentes:</p>
+
+            <div class="action-btn-grid">
+                <div class="action-btn">🎯 Meu Perfil</div>
+                <div class="action-btn">📊 Alocacao Ideal</div>
+                <div class="action-btn">📰 Noticias do Mercado</div>
+                <div class="action-btn">📈 Analise de Mercado</div>
+                <div class="action-btn">📚 O que e Renda Fixa?</div>
+                <div class="action-btn">📉 Comecar em Acoes</div>
+                <div class="action-btn">💼 Diversificacao</div>
+                <div class="action-btn">❓ Ajuda</div>
+            </div>
+
+            <h3>Categorias de Perguntas</h3>
+            <table>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Exemplos</th>
+                </tr>
+                <tr>
+                    <td><strong>Perfil</strong></td>
+                    <td>Estrategias para o perfil, alocacao recomendada</td>
+                </tr>
+                <tr>
+                    <td><strong>Mercado</strong></td>
+                    <td>Noticias, analises, tendencias</td>
+                </tr>
+                <tr>
+                    <td><strong>Educacao</strong></td>
+                    <td>Conceitos, tipos de investimento, duvidas</td>
+                </tr>
+                <tr>
+                    <td><strong>Analise</strong></td>
+                    <td>Comparacao de ativos, indicadores</td>
+                </tr>
+            </table>
+
+            <h3>Contexto Inteligente</h3>
+            <div class="feature-card">
+                <h4>Perfil do Investidor</h4>
+                <p>O chatbot recebe automaticamente o perfil do usuario (tipo, pontuacao, alocacao recomendada) e personaliza todas as respostas com base nessas informacoes.</p>
+            </div>
+
+            <div class="feature-card">
+                <h4>Historico de Conversa</h4>
+                <p>As ultimas 10 mensagens sao enviadas como contexto, permitindo conversas continuas e referencias a perguntas anteriores.</p>
+            </div>
+        </section>
+
+        <section id="componentes">
+            <h2>Componentes React</h2>
+
+            <h3>Estrutura de Arquivos</h3>
+            <div class="file-structure">
+<span class="folder">frontend/src/</span><br>
+├── <span class="folder">components/chat/</span><br>
+│   ├── <span class="file">Chatbot.tsx</span> <span class="comment"># Componente principal</span><br>
+│   ├── <span class="file">ChatMessage.tsx</span> <span class="comment"># Bolha de mensagem</span><br>
+│   ├── <span class="file">QuickActions.tsx</span> <span class="comment"># Botoes de acao rapida</span><br>
+│   └── <span class="file">index.ts</span> <span class="comment"># Exports</span><br>
+├── <span class="folder">types/</span><br>
+│   └── <span class="file">chat.ts</span> <span class="comment"># Tipos TypeScript</span><br>
+└── <span class="folder">app/chat/</span><br>
+    └── <span class="file">page.tsx</span> <span class="comment"># Pagina /chat</span>
+            </div>
+
+            <h3>Chatbot.tsx</h3>
+            <p>Componente principal que gerencia todo o fluxo do chat:</p>
+            <ul>
+                <li>Estado das mensagens e loading</li>
+                <li>Carregamento do perfil do localStorage</li>
+                <li>Comunicacao com API do backend</li>
+                <li>Scroll automatico para novas mensagens</li>
+                <li>Mensagem de boas-vindas personalizada</li>
+            </ul>
+
+            <h3>ChatMessage.tsx</h3>
+            <p>Renderiza cada mensagem individual:</p>
+            <ul>
+                <li>Avatar diferenciado (usuario vs assistente)</li>
+                <li>Bolha com estilo apropriado</li>
+                <li>Indicador de digitacao animado</li>
+                <li>Timestamp da mensagem</li>
+                <li>Animacoes com Framer Motion</li>
+            </ul>
+
+            <h3>QuickActions.tsx</h3>
+            <p>Grid de botoes de acao rapida:</p>
+            <ul>
+                <li>8 acoes pre-definidas</li>
+                <li>Icones do Lucide React</li>
+                <li>Animacao de entrada escalonada</li>
+                <li>Dispara prompt ao clicar</li>
+            </ul>
+
+            <h3>Tipos TypeScript</h3>
+            <div class="code-block">
+<code>// types/chat.ts
+
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+  isLoading?: boolean;
+}
+
+interface QuickAction {
+  id: string;
+  label: string;
+  icon: string;
+  prompt: string;
+  category: 'profile' | 'market' | 'education' | 'analysis';
+}
+
+interface InvestorProfileContext {
+  type: 'conservador' | 'moderado' | 'arrojado' | 'agressivo';
+  name: string;
+  score: number;
+  recommendedAllocation: {
+    rendaFixa: number;
+    rendaVariavel: number;
+    fundosImobiliarios: number;
+    internacional: number;
+  };
+}</code>
+            </div>
+        </section>
+
+        <section id="api">
+            <h2>API Backend</h2>
+
+            <h3>Endpoint Principal</h3>
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/ai/chat</span>
+                <p class="endpoint-desc">Envia mensagem e recebe resposta do assistente</p>
+            </div>
+
+            <h3>Request Body</h3>
+            <div class="code-block">
+<code>{
+  "message": "Qual a alocacao ideal para meu perfil?",
+  "conversationHistory": [
+    {
+      "role": "user",
+      "content": "Ola"
+    },
+    {
+      "role": "assistant",
+      "content": "Ola! Como posso ajudar?"
+    }
+  ]
+}</code>
+            </div>
+
+            <h3>Response</h3>
+            <div class="code-block">
+<code>{
+  "success": true,
+  "content": "Para o seu perfil Moderado, a alocacao recomendada e...",
+  "usage": {
+    "prompt_tokens": 150,
+    "completion_tokens": 200,
+    "total_tokens": 350
+  }
+}</code>
+            </div>
+
+            <h3>Outros Endpoints de IA</h3>
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/ai/ask</span>
+                <p class="endpoint-desc">Pergunta simples sem historico</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-get">GET</span>
+                <span class="endpoint-path">/api/ai/explain/:term</span>
+                <p class="endpoint-desc">Explica termo financeiro</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/ai/suggestion</span>
+                <p class="endpoint-desc">Sugestao de investimento baseada no perfil</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/ai/analyze/stock/:symbol</span>
+                <p class="endpoint-desc">Analisa uma acao especifica</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method method-post">POST</span>
+                <span class="endpoint-path">/api/ai/market-summary</span>
+                <p class="endpoint-desc">Resumo geral do mercado</p>
+            </div>
+        </section>
+
+        <section id="integracao">
+            <h2>Integracao com Perfil</h2>
+
+            <h3>Fluxo de Dados</h3>
+            <div class="code-block">
+<code>1. Usuario completa questionario
+   ↓
+2. Perfil salvo no localStorage ('investorProfile')
+   ↓
+3. Chatbot carrega perfil no useEffect
+   ↓
+4. Contexto adicionado a cada mensagem enviada
+   ↓
+5. Backend recebe perfil + mensagem
+   ↓
+6. OpenAI gera resposta personalizada</code>
+            </div>
+
+            <h3>Contexto Enviado</h3>
+            <div class="code-block">
+<code>// Adicionado automaticamente a cada mensagem
+const profileContext = `
+[Contexto: O usuario tem perfil ${profile.name} (${profile.type}),
+com pontuacao ${profile.score}.
+Alocacao recomendada:
+  Renda Fixa ${profile.recommendedAllocation.rendaFixa}%,
+  Renda Variavel ${profile.recommendedAllocation.rendaVariavel}%,
+  FIIs ${profile.recommendedAllocation.fundosImobiliarios}%,
+  Internacional ${profile.recommendedAllocation.internacional}%.]
+`;</code>
+            </div>
+
+            <h3>CTA para Questionario</h3>
+            <p>
+                Se o usuario nao tiver perfil cadastrado, o chatbot exibe um card incentivando
+                a realizacao do questionario para obter respostas personalizadas.
+            </p>
+
+            <h3>URL de Acesso</h3>
+            <table>
+                <tr>
+                    <th>Pagina</th>
+                    <th>URL</th>
+                </tr>
+                <tr>
+                    <td>Chatbot</td>
+                    <td><code>http://localhost:3000/chat</code></td>
+                </tr>
+            </table>
+        </section>
+
+        <a href="index.html" class="back-link">← Voltar para o indice</a>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest &copy; 2024 - Documentacao v1.6.0</p>
+    </footer>
+</body>
+</html>
