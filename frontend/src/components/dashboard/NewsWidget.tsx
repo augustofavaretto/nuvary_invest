@@ -27,9 +27,9 @@ function formatTimeAgo(dateString: string): string {
 
 export function NewsWidget({ news, onRefresh, loading }: NewsWidgetProps) {
   return (
-    <Card className="border-[#E5E7EB]">
+    <Card className="border-border">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-[#0B1F33] flex items-center gap-2">
+        <CardTitle className="text-foreground flex items-center gap-2">
           <Newspaper className="w-5 h-5 text-[#00B8D9]" />
           {STRINGS.dashboard.noticiasFinanceiras}
         </CardTitle>
@@ -51,7 +51,7 @@ export function NewsWidget({ news, onRefresh, loading }: NewsWidgetProps) {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+              className="block p-3 rounded-lg hover:bg-muted transition-colors group"
             >
               <div className="flex gap-3">
                 {item.urlToImage && (
@@ -65,7 +65,7 @@ export function NewsWidget({ news, onRefresh, loading }: NewsWidgetProps) {
                   />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-[#0B1F33] text-sm line-clamp-2 group-hover:text-[#00B8D9] transition-colors">
+                  <p className="font-medium text-foreground text-sm line-clamp-2 group-hover:text-[#00B8D9] transition-colors">
                     {item.title}
                   </p>
                   <div className="flex items-center gap-2 mt-1">

@@ -25,9 +25,9 @@ const symbolNames: Record<string, string> = {
 
 export function MarketOverview({ data, onRefresh, loading }: MarketOverviewProps) {
   return (
-    <Card className="border-[#E5E7EB]">
+    <Card className="border-border">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-[#0B1F33] flex items-center gap-2">
+        <CardTitle className="text-foreground flex items-center gap-2">
           <TrendingUp className="w-5 h-5 text-[#00B8D9]" />
           Mercado em Tempo Real
         </CardTitle>
@@ -48,12 +48,12 @@ export function MarketOverview({ data, onRefresh, loading }: MarketOverviewProps
             return (
               <div
                 key={quote.symbol}
-                className="p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                className="p-3 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
               >
                 <p className="text-xs text-[#6B7280] truncate">
                   {symbolNames[quote.symbol] || quote.symbol}
                 </p>
-                <p className="text-lg font-bold text-[#0B1F33]">
+                <p className="text-lg font-bold text-foreground">
                   ${quote.currentPrice?.toFixed(2) || '—'}
                 </p>
                 <div

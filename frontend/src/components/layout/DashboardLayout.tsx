@@ -31,7 +31,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6]">
+    <div className="min-h-screen bg-background">
       {/* Desktop Sidebar */}
       <div className="hidden lg:block">
         <Sidebar
@@ -52,7 +52,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         style={{ marginLeft: undefined }} // Override for responsive
       >
         {/* Top Header */}
-        <header className="sticky top-0 z-30 bg-white border-b border-[#E5E7EB]">
+        <header className="sticky top-0 z-30 bg-card border-b border-border">
           <div className="flex items-center justify-between px-6 py-4">
             {/* Left spacer for mobile menu button */}
             <div className="lg:hidden w-10" />
@@ -60,7 +60,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             {/* Right section */}
             <div className="flex items-center gap-4 ml-auto">
               {/* Notifications */}
-              <button className="relative p-2 text-[#6B7280] hover:text-[#0B1F33] hover:bg-[#F3F4F6] rounded-lg transition-colors">
+              <button className="relative p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
                 <Bell className="w-5 h-5" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-[#00B8D9] rounded-full" />
               </button>
@@ -69,7 +69,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#F3F4F6] transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
                 >
                   <div className="w-9 h-9 bg-gradient-to-br from-[#00B8D9] to-[#007EA7] rounded-full flex items-center justify-center">
                     <span className="text-white font-semibold text-sm">
@@ -77,12 +77,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     </span>
                   </div>
                   <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium text-[#0B1F33]">
+                    <p className="text-sm font-medium text-foreground">
                       {profile?.nome || user?.email?.split('@')[0] || STRINGS.nav.usuario}
                     </p>
-                    <p className="text-xs text-[#6B7280]">{user?.email}</p>
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
                   </div>
-                  <ChevronDown className={`w-4 h-4 text-[#6B7280] transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {/* Dropdown Menu */}
@@ -96,12 +96,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-[#E5E7EB] py-2 z-20"
+                      className="absolute right-0 top-full mt-2 w-56 bg-card rounded-xl shadow-lg border border-border py-2 z-20"
                     >
                       <Link
                         href="/perfil"
                         onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-[#0B1F33] hover:bg-[#F3F4F6] transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
                       >
                         <User className="w-4 h-4" />
                         Meu Perfil
@@ -109,12 +109,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       <Link
                         href="/configuracoes"
                         onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-[#0B1F33] hover:bg-[#F3F4F6] transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
                       >
                         <Settings className="w-4 h-4" />
                         {STRINGS.nav.configuracoes}
                       </Link>
-                      <div className="border-t border-[#E5E7EB] my-2" />
+                      <div className="border-t border-border my-2" />
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"

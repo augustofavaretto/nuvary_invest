@@ -63,14 +63,14 @@ export function DashboardHeader({ userName, investorProfile }: DashboardHeaderPr
   const isProfit = portfolioSummary ? portfolioSummary.totalProfit >= 0 : true;
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-[#E5E7EB] mb-6">
+    <div className="bg-card rounded-xl p-6 shadow-sm border border-border mb-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         {/* Left side - Greeting and Date */}
         <div className="flex-1">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#0B1F33]">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
             Olá, {userName || 'Investidor'}!
           </h1>
-          <p className="text-[#6B7280] flex items-center gap-2 mt-1">
+          <p className="text-muted-foreground flex items-center gap-2 mt-1">
             <Calendar className="w-4 h-4" />
             {today}
           </p>
@@ -142,8 +142,8 @@ export function DashboardHeader({ userName, investorProfile }: DashboardHeaderPr
         {investorProfile && (
           <div className="flex items-center gap-3 lg:justify-end">
             <div className="flex items-center gap-2">
-              <User className="w-5 h-5 text-[#6B7280]" />
-              <span className="text-sm text-[#6B7280]">Seu perfil:</span>
+              <User className="w-5 h-5 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">Seu perfil:</span>
             </div>
             <span
               className={`px-4 py-2 rounded-full font-semibold text-sm ${profileStyle.bg} ${profileStyle.text}`}
