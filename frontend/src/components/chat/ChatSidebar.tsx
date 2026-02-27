@@ -599,7 +599,7 @@ function ConversaItem({
   return (
     <div
       className={`
-        group relative flex items-center gap-2 px-3 py-2 mx-1 rounded-lg cursor-pointer
+        relative flex items-center gap-2 px-3 py-2 mx-1 rounded-lg cursor-pointer
         transition-colors
         ${isAtiva ? 'bg-[#2D2D2D]' : 'hover:bg-[#2D2D2D]/50'}
       `}
@@ -633,14 +633,14 @@ function ConversaItem({
           <span className={`text-sm truncate flex-1 min-w-0 ${isAtiva ? 'text-white' : 'text-[#9CA3AF]'}`}>
             {conversa.titulo}
           </span>
-          <div className="flex gap-0.5 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex gap-0.5 flex-shrink-0">
             <button
               onClick={e => {
                 e.stopPropagation();
                 setNovoTitulo(conversa.titulo);
                 setIsRenaming(true);
               }}
-              className="p-1 text-[#6B7280] hover:text-[#00B8D9] rounded"
+              className="p-1 text-[#4D4D4D] hover:text-[#00B8D9] rounded transition-colors"
               title="Renomear"
             >
               <Pencil className="w-3.5 h-3.5" />
@@ -650,7 +650,7 @@ function ConversaItem({
                 e.stopPropagation();
                 onDeletar();
               }}
-              className="p-1 text-[#6B7280] hover:text-red-400 rounded"
+              className="p-1 text-[#4D4D4D] hover:text-red-400 rounded transition-colors"
               title="Deletar"
             >
               <Trash2 className="w-3.5 h-3.5" />
