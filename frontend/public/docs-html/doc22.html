@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 22 - UX & UI v3.6.0 | Nuvary Invest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1; --primary-dark: #4f46e5;
+            --secondary: #10b981; --dark: #1e1b4b;
+            --gray: #64748b; --light: #f1f5f9; --white: #ffffff;
+            --danger: #ef4444; --warning: #f59e0b; --success: #10b981;
+            --info: #3b82f6; --border: #e2e8f0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #334155; background: var(--light); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #0B1F33 0%, #007EA7 50%, #00B8D9 100%); color: white; padding: 60px 0; text-align: center; }
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        header p { font-size: 1.05rem; opacity: 0.85; }
+        .badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin: 4px; }
+        .badge-cyan { background: #00B8D9; color: white; }
+        .badge-green { background: #10b981; color: white; }
+        .badge-amber { background: #f59e0b; color: white; }
+        .badge-blue { background: #3b82f6; color: white; }
+        .badge-purple { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        main { padding: 40px 0; }
+        section { margin-bottom: 40px; }
+        h2 { font-size: 1.5rem; color: var(--dark); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #00B8D9; display: flex; align-items: center; gap: 10px; }
+        h3 { font-size: 1.1rem; color: #1e293b; margin: 20px 0 10px; }
+        .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        .card-border-cyan { border-left: 4px solid #00B8D9; }
+        .card-border-green { border-left: 4px solid #10b981; }
+        .card-border-amber { border-left: 4px solid #f59e0b; }
+        .card-border-blue { border-left: 4px solid #3b82f6; }
+        .card-border-purple { border-left: 4px solid #8b5cf6; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .stat-number { font-size: 2.2rem; font-weight: 700; color: var(--dark); }
+        .stat-label { font-size: 0.85rem; color: #64748b; margin-top: 4px; }
+        .feature-list { list-style: none; }
+        .feature-list li { padding: 10px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; }
+        .feature-list li:last-child { border-bottom: none; }
+        .icon-ok { color: #10b981; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
+        .icon-fix { color: #3b82f6; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
+        .tag-new { display: inline-block; background: #10b981; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 600; vertical-align: middle; }
+        .tag-fix { display: inline-block; background: #3b82f6; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 600; vertical-align: middle; }
+        .tag-refactor { display: inline-block; background: #8b5cf6; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 600; vertical-align: middle; }
+        .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+        .ba-box { padding: 16px; border-radius: 10px; font-size: 0.9rem; }
+        .ba-before { background: #fef2f2; border: 1px solid #fecaca; }
+        .ba-after { background: #f0fdf4; border: 1px solid #bbf7d0; }
+        .ba-label { font-weight: 700; margin-bottom: 8px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .ba-before .ba-label { color: #dc2626; }
+        .ba-after .ba-label { color: #16a34a; }
+        code { font-family: monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; color: #c026d3; }
+        .update-notice { background: linear-gradient(135deg, #0B1F33 0%, #007EA7 100%); color: white; padding: 16px 22px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 14px; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #00B8D9; text-decoration: none; margin-bottom: 20px; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+        .commit-list { font-family: monospace; background: #1e293b; color: #e2e8f0; border-radius: 10px; padding: 16px; font-size: 0.85rem; line-height: 2; }
+        .commit-list .commit-hash { color: #6ee7b7; }
+        .commit-list .commit-msg { color: #e2e8f0; }
+        footer { text-align: center; padding: 30px 0; color: #64748b; border-top: 1px solid #e2e8f0; }
+        @media (max-width: 700px) {
+            .grid-2, .before-after { grid-template-columns: 1fr; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>UX & UI — Sidebar, Perfil e Chat</h1>
+        <p>Refatoração visual da navegação, perfil de usuário e interface do chat</p>
+        <div style="margin-top: 16px;">
+            <span class="badge badge-cyan">v3.6.0</span>
+            <span class="badge badge-green">7 Melhorias</span>
+            <span class="badge badge-blue">122 Tarefas Concluídas</span>
+            <span class="badge badge-amber">Fevereiro 2026</span>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <a href="index.html" class="back-link">← Voltar para o índice</a>
+
+    <div class="update-notice">
+        <span style="font-size: 1.8rem;">🎨</span>
+        <div>
+            <strong style="font-size: 1.1rem;">v3.6.0 — Refatoração Visual Completa da Navegação</strong>
+            <p style="margin: 0; opacity: 0.9; font-size: 0.95rem;">Sidebar compacta estilo B3, logo real da Nuvary, página de perfil com DashboardLayout e upload de foto, chat com menu contextual sempre visível</p>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <section>
+        <h2>📊 Resumo da Versão</h2>
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div style="font-size: 2rem; margin-bottom: 8px;">✅</div>
+                <div class="stat-number" style="color: #10b981;">122</div>
+                <div class="stat-label">Total Concluídas</div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 2rem; margin-bottom: 8px;">🆕</div>
+                <div class="stat-number" style="color: #00B8D9;">7</div>
+                <div class="stat-label">Melhorias nesta versão</div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 2rem; margin-bottom: 8px;">📁</div>
+                <div class="stat-number" style="color: #6366f1;">5</div>
+                <div class="stat-label">Arquivos alterados</div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 2rem; margin-bottom: 8px;">🚀</div>
+                <div class="stat-number" style="color: #f59e0b;">3</div>
+                <div class="stat-label">Commits Railway</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SIDEBAR -->
+    <section>
+        <h2>🧭 Sidebar Compacta — Ícone Acima do Texto</h2>
+
+        <div class="card card-border-cyan">
+            <h3>Motivação</h3>
+            <p>O sidebar anterior tinha 240px de largura com layout horizontal (ícone + texto lado a lado). O usuário solicitou um estilo compacto inspirado no app da B3, com ícone centralizado acima do label de texto.</p>
+        </div>
+
+        <div class="before-after">
+            <div class="ba-box ba-before">
+                <div class="ba-label">❌ Antes (v3.5)</div>
+                <ul style="list-style: none; padding: 0;">
+                    <li>• Largura: <code>240px</code></li>
+                    <li>• Layout: ícone + texto horizontal</li>
+                    <li>• Ícone "N" azul no topo</li>
+                    <li>• Tinha opção expandir/recolher</li>
+                    <li>• Margem do conteúdo: <code>ml-[240px]</code></li>
+                </ul>
+            </div>
+            <div class="ba-box ba-after">
+                <div class="ba-label">✅ Depois (v3.6)</div>
+                <ul style="list-style: none; padding: 0;">
+                    <li>• Largura: <code>80px</code></li>
+                    <li>• Layout: ícone centralizado acima do texto</li>
+                    <li>• Logo <code>logo-icon.png</code> no topo</li>
+                    <li>• Fixo, sem expandir/recolher</li>
+                    <li>• Margem do conteúdo: <code>ml-[80px]</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card card-border-green">
+            <h3>Arquivos Alterados</h3>
+            <ul class="feature-list">
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span><code>frontend/src/components/layout/Sidebar.tsx</code> — largura 80px, flex-col nos items, ícone acima do label <code>text-[10px]</code> <span class="tag-refactor">REFACTOR</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span><code>frontend/src/components/layout/DashboardLayout.tsx</code> — margem ajustada de <code>lg:ml-[240px]</code> para <code>lg:ml-[80px]</code> <span class="tag-refactor">REFACTOR</span></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card card-border-blue">
+            <h3>Logo Nuvary Invest no Sidebar</h3>
+            <ul class="feature-list">
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Substituído o placeholder "N" pela imagem <code>/logo-icon.png</code> (nuvem azul com barras de gráfico) <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Container branco arredondado (<code>bg-white rounded-xl w-12 h-12</code>) para contrastar com o fundo escuro <code>#0B1F33</code> <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Importado <code>Image</code> do Next.js para otimização automática de imagem <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Aplicado tanto no <code>Sidebar</code> (desktop) quanto no <code>MobileSidebar</code> (drawer) <span class="tag-new">NOVO</span></span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- PERFIL -->
+    <section>
+        <h2>👤 Página de Perfil — DashboardLayout + Upload de Foto</h2>
+
+        <div class="card card-border-purple">
+            <h3>O que foi feito</h3>
+            <ul class="feature-list">
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Migração da página <code>/perfil</code> do layout antigo para <code>DashboardLayout</code> (mesmo padrão de Configurações) <span class="tag-refactor">REFACTOR</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Upload de foto de perfil com botão câmera circular sobre o avatar — integração com Supabase Storage (bucket <code>avatars</code>) <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Botão X no header da página → <code>router.push('/dashboard')</code> para voltar ao dashboard <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Dark mode corrigido: todas as classes hardcoded substituídas por semânticas (<code>bg-card</code>, <code>text-foreground</code>, <code>border-border</code>, <code>bg-muted/50</code>) <span class="tag-fix">FIX</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Seções com animações <code>motion.section</code> com delay escalonado (0.05s, 0.1s, 0.15s) <span class="tag-refactor">REFACTOR</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Adicionada função <code>uploadAvatar(file: File)</code> em <code>authService.ts</code> — faz upload para Supabase Storage e salva URL na tabela <code>profiles</code> <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Interface <code>Profile</code> no <code>AuthContext</code> atualizada com campo <code>avatar_url?: string</code> <span class="tag-new">NOVO</span></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card card-border-amber">
+            <h3>Nota de Deploy — Supabase Storage</h3>
+            <p style="font-size: 0.95rem; color: #475569;">O bucket <code>avatars</code> no Supabase deve ser criado manualmente com acesso público via <strong>Supabase Dashboard → Storage → New bucket → Public</strong>. Sem isso, o upload de foto não persiste.</p>
+        </div>
+    </section>
+
+    <!-- CONFIGURAÇÕES -->
+    <section>
+        <h2>⚙️ Página de Configurações — Botão Fechar</h2>
+
+        <div class="card card-border-cyan">
+            <ul class="feature-list">
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Adicionado botão X no header da página <code>/configuracoes</code> com ação <code>router.push('/dashboard')</span> <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Comportamento consistente entre Perfil e Configurações: X sempre volta ao Dashboard <span class="tag-new">NOVO</span></span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CHAT SIDEBAR -->
+    <section>
+        <h2>💬 Chat Sidebar — Menu Contextual "..."</h2>
+
+        <div class="card card-border-green">
+            <h3>Problema Anterior</h3>
+            <p style="font-size: 0.95rem; color: #475569; margin-bottom: 12px;">Os ícones de Renomear e Apagar ficavam visíveis apenas no hover via <code>onMouseEnter/onMouseLeave</code>, o que não funcionava corretamente no deploy Railway (eventos de mouse inconsistentes em mobile/touch).</p>
+
+            <h3>Solução Implementada</h3>
+            <ul class="feature-list">
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Botão <code>MoreHorizontal</code> ("...") <strong>sempre visível</strong> ao lado de cada conversa — sem dependência de hover <span class="tag-fix">FIX</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Clique no "..." abre dropdown com duas opções: <strong>Renomear</strong> e <strong>Apagar</strong> — padrão idêntico ao Claude.ai <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Click-outside fecha o dropdown via <code>useRef&lt;HTMLDivElement&gt;</code> + <code>document.addEventListener('mousedown')</code> <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Título editável inline ao clicar em Renomear — <code>input</code> com <code>onBlur</code> e <code>onKeyDown Enter</code> para salvar <span class="tag-new">NOVO</span></span>
+                </li>
+                <li>
+                    <span class="icon-ok">✅</span>
+                    <span>Títulos personalizados persistem em <code>localStorage</code> via chave <code>nuvary_chat_titles</code> <span class="tag-new">NOVO</span></span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- FIX RAILWAY -->
+    <section>
+        <h2>🚀 Fix Railway — Node.js 20 no Frontend</h2>
+
+        <div class="card card-border-blue">
+            <h3>Problema</h3>
+            <p style="font-size: 0.95rem; color: #475569; margin-bottom: 12px;">O Railway usava Node.js 18.20.5 por padrão, mas o Next.js 16.1.2 requer <code>>=20.9.0</code>. O build falhava com erro <em>"You are using Node.js 18.20.5... Please upgrade"</em>.</p>
+
+            <h3>Solução</h3>
+            <ul class="feature-list">
+                <li>
+                    <span class="icon-fix">🔧</span>
+                    <span>Criado <code>frontend/nixpacks.toml</code> com <code>[phases.setup] nixPkgs = ["nodejs_20"]</code> para forçar Node 20 no build do Railway <span class="tag-fix">FIX</span></span>
+                </li>
+                <li>
+                    <span class="icon-fix">🔧</span>
+                    <span>Criado <code>frontend/railway.json</code> com configuração de build NIXPACKS e restart policy <span class="tag-fix">FIX</span></span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- COMMITS -->
+    <section>
+        <h2>📝 Commits desta Versão</h2>
+        <div class="commit-list">
+            <div><span class="commit-hash">05d49af</span> <span class="commit-msg">fix: logo-icon em container branco arredondado no sidebar</span></div>
+            <div><span class="commit-hash">e5f30b9</span> <span class="commit-msg">feat: substituir "N" pela logo-icon.png no sidebar</span></div>
+            <div><span class="commit-hash">03e6f6c</span> <span class="commit-msg">feat: sidebar compacto com ícone acima do texto (80px)</span></div>
+            <div><span class="commit-hash">5f3f42e</span> <span class="commit-msg">fix: dark mode - substituir cores hardcoded por classes semânticas</span></div>
+            <div><span class="commit-hash">38a6a44</span> <span class="commit-msg">feat: página de configurações com tema claro/escuro e notificações</span></div>
+            <div><span class="commit-hash">1e98786</span> <span class="commit-msg">fix: trust proxy no Express para Railway (ERR_ERL_UNEXPECTED_X_FORWARDED_FOR)</span></div>
+        </div>
+    </section>
+
+    <!-- PRÓXIMOS PASSOS -->
+    <section>
+        <h2>⏭️ Próximos Passos Sugeridos</h2>
+        <div class="grid-2">
+            <div class="card card-border-amber">
+                <h3>🔥 Alta Prioridade</h3>
+                <ul class="feature-list">
+                    <li><span style="font-size: 1.1rem;">⏳</span><span>Bucket <code>avatars</code> no Supabase — criar manualmente para habilitar upload de foto</span></li>
+                    <li><span style="font-size: 1.1rem;">⏳</span><span>Persistência de carteira no Supabase PostgreSQL (atualmente localStorage)</span></li>
+                    <li><span style="font-size: 1.1rem;">⏳</span><span>Página /relatorios — gráficos de evolução patrimonial e rentabilidade</span></li>
+                </ul>
+            </div>
+            <div class="card card-border-purple">
+                <h3>⭐ Melhorias Futuras</h3>
+                <ul class="feature-list">
+                    <li><span style="font-size: 1.1rem;">⭐</span><span>Tooltip nos itens do sidebar compacto (hover revela nome completo)</span></li>
+                    <li><span style="font-size: 1.1rem;">⭐</span><span>Notificações em tempo real (badge de contagem no ícone de sino)</span></li>
+                    <li><span style="font-size: 1.1rem;">⭐</span><span>Página /perfil com edição de CPF, telefone e data de nascimento</span></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>Nuvary Invest © 2026 — Documentação v3.6.0 | <a href="index.html" style="color: #00B8D9;">Índice</a></p>
+</footer>
+</body>
+</html>
