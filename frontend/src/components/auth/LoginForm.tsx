@@ -115,7 +115,7 @@ export function LoginForm() {
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-md mx-auto"
     >
-      <Card className="border-[#E5E7EB] shadow-lg">
+      <Card className="border-border shadow-lg">
         <CardHeader className="text-center pb-2">
           <Link href="/" className="inline-block mb-4">
             <Image
@@ -126,8 +126,8 @@ export function LoginForm() {
               className="mx-auto"
             />
           </Link>
-          <h1 className="text-2xl font-bold text-[#0B1F33]">Entrar</h1>
-          <p className="text-[#6B7280] text-sm">
+          <h1 className="text-2xl font-bold text-foreground">Entrar</h1>
+          <p className="text-muted-foreground text-sm">
             Acesse sua conta para continuar
           </p>
         </CardHeader>
@@ -139,7 +139,7 @@ export function LoginForm() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700 text-sm"
+              className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-2 text-green-500 text-sm"
             >
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               Conta criada com sucesso! Faça login para continuar.
@@ -151,7 +151,7 @@ export function LoginForm() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-3 mb-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-sm"
+              className="p-3 mb-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-2 text-red-500 text-sm"
             >
               <AlertCircle className="w-4 h-4 shrink-0" />
               {serverError}
@@ -162,7 +162,7 @@ export function LoginForm() {
           <Button
             type="button"
             variant="outline"
-            className="w-full mb-4 border-[#E5E7EB] text-[#0B1F33] hover:bg-[#F9FAFB]"
+            className="w-full mb-4 border-border text-foreground hover:bg-muted"
             onClick={handleGoogleLogin}
             disabled={isGoogleLoading || isSubmitting}
           >
@@ -199,26 +199,26 @@ export function LoginForm() {
           {/* Divisor */}
           <div className="relative mb-4">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-[#E5E7EB]" />
+              <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-[#9CA3AF]">ou</span>
+              <span className="bg-card px-2 text-muted-foreground">ou</span>
             </div>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Email */}
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[#0B1F33]">
+              <Label htmlFor="email" className="text-foreground">
                 Email
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="seu@email.com"
-                  className={`pl-10 ${errors.email ? 'border-red-500' : 'border-[#E5E7EB]'}`}
+                  className={`pl-10 ${errors.email ? 'border-red-500' : 'border-border'}`}
                   {...register('email')}
                 />
               </div>
@@ -230,7 +230,7 @@ export function LoginForm() {
             {/* Senha */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="senha" className="text-[#0B1F33]">
+                <Label htmlFor="senha" className="text-foreground">
                   Senha
                 </Label>
                 <Link
@@ -268,7 +268,7 @@ export function LoginForm() {
             </Button>
 
             {/* Link para Cadastro */}
-            <p className="text-center text-sm text-[#6B7280]">
+            <p className="text-center text-sm text-muted-foreground">
               Não tem conta?{' '}
               <Link href="/cadastro" className="text-[#0066CC] hover:underline font-medium">
                 Criar conta

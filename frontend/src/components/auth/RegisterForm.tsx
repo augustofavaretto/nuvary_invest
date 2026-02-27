@@ -267,7 +267,7 @@ export function RegisterForm() {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md mx-auto"
       >
-        <Card className="border-[#E5E7EB] shadow-lg">
+        <Card className="border-border shadow-lg">
           <CardContent className="p-8 text-center">
             {/* Ícone de email */}
             <div className="w-20 h-20 bg-[#0066CC]/10 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -275,24 +275,24 @@ export function RegisterForm() {
             </div>
 
             {/* Título */}
-            <h2 className="text-2xl font-bold text-[#0B1F33] mb-3">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
               Verifique seu email
             </h2>
 
             {/* Mensagem */}
-            <p className="text-[#6B7280] mb-2">
+            <p className="text-muted-foreground mb-2">
               Enviamos um link de confirmação para:
             </p>
-            <p className="text-[#0B1F33] font-medium mb-6">
+            <p className="text-foreground font-medium mb-6">
               {registeredEmail}
             </p>
 
             {/* Instruções */}
-            <div className="bg-[#F9FAFB] rounded-lg p-4 mb-6 text-left">
-              <p className="text-sm text-[#6B7280] mb-2">
-                <strong className="text-[#0B1F33]">Próximos passos:</strong>
+            <div className="bg-muted rounded-lg p-4 mb-6 text-left">
+              <p className="text-sm text-muted-foreground mb-2">
+                <strong className="text-foreground">Próximos passos:</strong>
               </p>
-              <ol className="text-sm text-[#6B7280] space-y-1 list-decimal list-inside">
+              <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
                 <li>Abra sua caixa de entrada</li>
                 <li>Procure o email da Nuvary Invest</li>
                 <li>Clique no link de confirmação</li>
@@ -318,13 +318,13 @@ export function RegisterForm() {
 
             {/* Link para login */}
             <Link href="/login">
-              <Button variant="outline" className="w-full border-[#E5E7EB] text-[#6B7280]">
+              <Button variant="outline" className="w-full border-border text-muted-foreground">
                 Já confirmei, fazer login
               </Button>
             </Link>
 
             {/* Aviso spam */}
-            <p className="text-xs text-[#9CA3AF] mt-4">
+            <p className="text-xs text-muted-foreground mt-4">
               Não recebeu o email? Verifique sua pasta de spam ou lixo eletrônico.
             </p>
           </CardContent>
@@ -339,7 +339,7 @@ export function RegisterForm() {
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-md mx-auto"
     >
-      <Card className="border-[#E5E7EB] shadow-lg">
+      <Card className="border-border shadow-lg">
         <CardHeader className="text-center pb-2">
           <Link href="/" className="inline-block mb-4">
             <Image
@@ -350,8 +350,8 @@ export function RegisterForm() {
               className="mx-auto"
             />
           </Link>
-          <h1 className="text-2xl font-bold text-[#0B1F33]">Criar conta</h1>
-          <p className="text-[#6B7280] text-sm">
+          <h1 className="text-2xl font-bold text-foreground">Criar conta</h1>
+          <p className="text-muted-foreground text-sm">
             Preencha os dados para começar sua jornada
           </p>
         </CardHeader>
@@ -362,7 +362,7 @@ export function RegisterForm() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-3 mb-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-sm"
+              className="p-3 mb-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-2 text-red-500 text-sm"
             >
               <AlertCircle className="w-4 h-4 shrink-0" />
               {serverError}
@@ -373,7 +373,7 @@ export function RegisterForm() {
           <Button
             type="button"
             variant="outline"
-            className="w-full mb-4 border-[#E5E7EB] text-[#0B1F33] hover:bg-[#F9FAFB]"
+            className="w-full mb-4 border-border text-foreground hover:bg-muted"
             onClick={handleGoogleLogin}
             disabled={isGoogleLoading || isSubmitting}
           >
@@ -410,25 +410,25 @@ export function RegisterForm() {
           {/* Divisor */}
           <div className="relative mb-4">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-[#E5E7EB]" />
+              <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-[#9CA3AF]">ou</span>
+              <span className="bg-card px-2 text-muted-foreground">ou</span>
             </div>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Nome */}
             <div className="space-y-1.5">
-              <Label htmlFor="nome" className="text-[#0B1F33]">
+              <Label htmlFor="nome" className="text-foreground">
                 Nome completo
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="nome"
                   placeholder="Seu nome"
-                  className={`pl-10 ${errors.nome ? 'border-[#EF4444]' : 'border-[#E5E7EB]'}`}
+                  className={`pl-10 ${errors.nome ? 'border-[#EF4444]' : 'border-border'}`}
                   {...register('nome')}
                 />
               </div>
@@ -439,16 +439,16 @@ export function RegisterForm() {
 
             {/* CPF */}
             <div className="space-y-1.5">
-              <Label htmlFor="cpf" className="text-[#0B1F33]">
+              <Label htmlFor="cpf" className="text-foreground">
                 CPF
               </Label>
               <div className="relative">
-                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="cpf"
                   placeholder="000.000.000-00"
                   maxLength={14}
-                  className={`pl-10 ${errors.cpf ? 'border-[#EF4444]' : 'border-[#E5E7EB]'}`}
+                  className={`pl-10 ${errors.cpf ? 'border-[#EF4444]' : 'border-border'}`}
                   {...register('cpf')}
                   onChange={handleCPFChange}
                 />
@@ -462,16 +462,16 @@ export function RegisterForm() {
             <div className="grid grid-cols-2 gap-3">
               {/* Data de Nascimento */}
               <div className="space-y-1.5">
-                <Label htmlFor="dataNascimento" className="text-[#0B1F33]">
+                <Label htmlFor="dataNascimento" className="text-foreground">
                   Data de nascimento
                 </Label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="dataNascimento"
                     placeholder="DD/MM/AAAA"
                     maxLength={10}
-                    className={`pl-10 ${errors.dataNascimento ? 'border-[#EF4444]' : 'border-[#E5E7EB]'}`}
+                    className={`pl-10 ${errors.dataNascimento ? 'border-[#EF4444]' : 'border-border'}`}
                     {...register('dataNascimento')}
                     onChange={handleDataNascimentoChange}
                   />
@@ -483,16 +483,16 @@ export function RegisterForm() {
 
               {/* Telefone */}
               <div className="space-y-1.5">
-                <Label htmlFor="telefone" className="text-[#0B1F33]">
+                <Label htmlFor="telefone" className="text-foreground">
                   Telefone
                 </Label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="telefone"
                     placeholder="(00) 00000-0000"
                     maxLength={15}
-                    className={`pl-10 ${errors.telefone ? 'border-[#EF4444]' : 'border-[#E5E7EB]'}`}
+                    className={`pl-10 ${errors.telefone ? 'border-[#EF4444]' : 'border-border'}`}
                     {...register('telefone')}
                     onChange={handleTelefoneChange}
                   />
@@ -505,16 +505,16 @@ export function RegisterForm() {
 
             {/* Email */}
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[#0B1F33]">
+              <Label htmlFor="email" className="text-foreground">
                 Email
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="seu@email.com"
-                  className={`pl-10 ${errors.email ? 'border-[#EF4444]' : 'border-[#E5E7EB]'}`}
+                  className={`pl-10 ${errors.email ? 'border-[#EF4444]' : 'border-border'}`}
                   {...register('email')}
                 />
               </div>
@@ -525,7 +525,7 @@ export function RegisterForm() {
 
             {/* Senha */}
             <div className="space-y-1.5">
-              <Label htmlFor="senha" className="text-[#0B1F33]">
+              <Label htmlFor="senha" className="text-foreground">
                 Senha
               </Label>
               <PasswordInput
@@ -541,7 +541,7 @@ export function RegisterForm() {
 
             {/* Confirmar Senha */}
             <div className="space-y-1.5">
-              <Label htmlFor="confirmarSenha" className="text-[#0B1F33]">
+              <Label htmlFor="confirmarSenha" className="text-foreground">
                 Confirmar senha
               </Label>
               <PasswordInput
@@ -560,10 +560,10 @@ export function RegisterForm() {
               <label className="flex items-start gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="mt-1 w-4 h-4 rounded border-[#E5E7EB] text-[#0066CC] focus:ring-[#0066CC]/20"
+                  className="mt-1 w-4 h-4 rounded border-border text-[#0066CC] focus:ring-[#0066CC]/20"
                   {...register('aceiteTermos')}
                 />
-                <span className="text-sm text-[#6B7280]">
+                <span className="text-sm text-muted-foreground">
                   Li e aceito os{' '}
                   <Link href="/termos" className="text-[#0066CC] hover:underline">
                     Termos de Uso
@@ -596,7 +596,7 @@ export function RegisterForm() {
             </Button>
 
             {/* Link para Login */}
-            <p className="text-center text-sm text-[#6B7280]">
+            <p className="text-center text-sm text-muted-foreground">
               Já tem conta?{' '}
               <Link href="/login" className="text-[#0066CC] hover:underline font-medium">
                 Entrar
