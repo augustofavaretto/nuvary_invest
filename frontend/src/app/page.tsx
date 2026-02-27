@@ -30,7 +30,7 @@ export default function Home() {
               className="mx-auto h-24 w-auto"
             />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-[#0B1F33]">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-foreground">
             Invista com{' '}
             <span className="text-[#00B8D9]">inteligência</span>
             <br />e alcance seus objetivos
@@ -57,7 +57,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section className="container mx-auto px-4 py-16">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-[#0B1F33]">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-foreground">
           Por que escolher a <span className="text-[#00B8D9]">Nuvary Invest</span>?
         </h2>
         <div className="grid md:grid-cols-4 gap-6">
@@ -66,7 +66,7 @@ export default function Home() {
               <div className="w-12 h-12 nuvary-gradient rounded-xl flex items-center justify-center mb-4">
                 <Brain className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Inteligência Artificial</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Inteligência Artificial</h3>
               <p className="text-muted-foreground text-sm">
                 Recomendações personalizadas baseadas em IA para otimizar sua
                 carteira de investimentos.
@@ -79,7 +79,7 @@ export default function Home() {
               <div className="w-12 h-12 nuvary-gradient rounded-xl flex items-center justify-center mb-4">
                 <PieChart className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Análise de Perfil</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Análise de Perfil</h3>
               <p className="text-muted-foreground text-sm">
                 Questionário completo para identificar seu perfil de investidor
                 e tolerância a risco.
@@ -92,7 +92,7 @@ export default function Home() {
               <div className="w-12 h-12 nuvary-gradient rounded-xl flex items-center justify-center mb-4">
                 <GraduationCap className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Educação Financeira</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Educação Financeira</h3>
               <p className="text-muted-foreground text-sm">
                 Trilhas de aprendizado para desenvolver sua inteligência
                 financeira.
@@ -105,7 +105,7 @@ export default function Home() {
               <div className="w-12 h-12 nuvary-gradient rounded-xl flex items-center justify-center mb-4">
                 <MessageSquare className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-[#0B1F33]">Chatbot Inteligente</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Chatbot Inteligente</h3>
               <p className="text-muted-foreground text-sm">
                 Assistente virtual para tirar dúvidas sobre investimentos
                 e análises de mercado em tempo real.

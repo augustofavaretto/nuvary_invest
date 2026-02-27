@@ -15,13 +15,13 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
 
     return (
       <div className="relative">
-        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           ref={ref}
           type={showPassword ? 'text' : 'password'}
           className={`
             pl-10 pr-10
-            ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-[#E5E7EB] focus:border-[#00B8D9] focus:ring-[#00B8D9]/20'}
+            ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-border focus:border-[#00B8D9] focus:ring-[#00B8D9]/20'}
             ${className}
           `}
           {...props}
@@ -30,7 +30,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           type="button"
           variant="ghost"
           size="sm"
-          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-[#6B7280] hover:text-[#0B1F33]"
+          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
           onClick={() => setShowPassword(!showPassword)}
           tabIndex={-1}
         >
