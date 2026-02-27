@@ -15,6 +15,7 @@ interface Profile {
   nome: string;
   email: string;
   aceite_termos: boolean;
+  avatar_url?: string;
 }
 
 interface AuthContextType {

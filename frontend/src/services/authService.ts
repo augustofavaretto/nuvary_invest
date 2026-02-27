@@ -140,3 +140,30 @@ export async function atualizarSenha(senhaAtual: string, novaSenha: string) {
   if (error) throw error;
   return data;
 }
+
+export async function uploadAvatar(file: File): Promise<string> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Usuário não autenticado');
+
+  const ext = file.name.split('.').pop() || 'jpg';
+  const path = `${user.id}/avatar.${ext}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('avatars')
+    .upload(path, file, { upsert: true, contentType: file.type });
+
+  if (uploadError) throw uploadError;
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('avatars')
+    .getPublicUrl(path);
+
+  const urlComCache = `${publicUrl}?t=${Date.now()}`;
+
+  await supabase
+    .from('profiles')
+    .update({ avatar_url: urlComCache, updated_at: new Date().toISOString() })
+    .eq('id', user.id);
+
+  return urlComCache;
+}
