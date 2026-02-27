@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -39,11 +40,15 @@ export function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-screen w-[80px] bg-[#0B1F33] flex flex-col z-50">
       {/* Logo */}
-      <div className="flex items-center justify-center py-5 border-b border-[#1a3a5c]">
+      <div className="flex items-center justify-center py-4 border-b border-[#1a3a5c]">
         <Link href="/dashboard">
-          <div className="w-10 h-10 bg-[#00B8D9] rounded-xl flex items-center justify-center">
-            <span className="text-white font-bold text-base">N</span>
-          </div>
+          <Image
+            src="/logo-icon.png"
+            alt="Nuvary Invest"
+            width={44}
+            height={44}
+            className="object-contain"
+          />
         </Link>
       </div>
 
@@ -120,11 +125,15 @@ export function MobileSidebar() {
             transition={{ duration: 0.2, ease: 'easeInOut' }}
             className="lg:hidden fixed left-0 top-0 h-screen w-[80px] bg-[#0B1F33] flex flex-col z-50"
           >
-            <div className="flex items-center justify-center py-5 border-b border-[#1a3a5c] relative">
+            <div className="flex items-center justify-center py-4 border-b border-[#1a3a5c] relative">
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>
-                <div className="w-10 h-10 bg-[#00B8D9] rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-base">N</span>
-                </div>
+                <Image
+                  src="/logo-icon.png"
+                  alt="Nuvary Invest"
+                  width={44}
+                  height={44}
+                  className="object-contain"
+                />
               </Link>
               <button onClick={() => setIsOpen(false)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#8BA3C1] hover:text-white">
                 <X className="w-4 h-4" />
