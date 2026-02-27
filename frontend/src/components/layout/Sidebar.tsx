@@ -42,13 +42,15 @@ export function Sidebar() {
       {/* Logo */}
       <div className="flex items-center justify-center py-4 border-b border-[#1a3a5c]">
         <Link href="/dashboard">
-          <Image
-            src="/logo-icon.png"
-            alt="Nuvary Invest"
-            width={44}
-            height={44}
-            className="object-contain"
-          />
+          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center overflow-hidden">
+            <Image
+              src="/logo-icon.png"
+              alt="Nuvary Invest"
+              width={44}
+              height={44}
+              className="object-contain"
+            />
+          </div>
         </Link>
       </div>
 
@@ -127,13 +129,15 @@ export function MobileSidebar() {
           >
             <div className="flex items-center justify-center py-4 border-b border-[#1a3a5c] relative">
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>
-                <Image
-                  src="/logo-icon.png"
-                  alt="Nuvary Invest"
-                  width={44}
-                  height={44}
-                  className="object-contain"
-                />
+                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center overflow-hidden">
+                  <Image
+                    src="/logo-icon.png"
+                    alt="Nuvary Invest"
+                    width={44}
+                    height={44}
+                    className="object-contain"
+                  />
+                </div>
               </Link>
               <button onClick={() => setIsOpen(false)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#8BA3C1] hover:text-white">
                 <X className="w-4 h-4" />
