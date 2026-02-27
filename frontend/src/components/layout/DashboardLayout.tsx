@@ -20,7 +20,6 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { user, profile, logout } = useAuth();
   const router = useRouter();
@@ -32,29 +31,20 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Desktop Sidebar */}
+      {/* Desktop Sidebar — fixo, sempre expandido */}
       <div className="hidden lg:block">
-        <Sidebar
-          collapsed={sidebarCollapsed}
-          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
+        <Sidebar />
       </div>
 
       {/* Mobile Sidebar */}
       <MobileSidebar />
 
-      {/* Main Content */}
-      <motion.div
-        initial={false}
-        animate={{ marginLeft: sidebarCollapsed ? 72 : 240 }}
-        transition={{ duration: 0.2, ease: 'easeInOut' }}
-        className="min-h-screen flex flex-col lg:ml-[240px] ml-0"
-        style={{ marginLeft: undefined }} // Override for responsive
-      >
+      {/* Main Content — margem fixa de 240px no desktop */}
+      <div className="min-h-screen flex flex-col lg:ml-[240px]">
         {/* Top Header */}
         <header className="sticky top-0 z-30 bg-card border-b border-border">
           <div className="flex items-center justify-between px-6 py-4">
-            {/* Left spacer for mobile menu button */}
+            {/* Espaço para botão mobile */}
             <div className="lg:hidden w-10" />
 
             {/* Right section */}
@@ -85,17 +75,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                {/* Dropdown Menu */}
+                {/* Dropdown */}
                 {userMenuOpen && (
                   <>
-                    <div
-                      className="fixed inset-0 z-10"
-                      onClick={() => setUserMenuOpen(false)}
-                    />
+                    <div className="fixed inset-0 z-10" onClick={() => setUserMenuOpen(false)} />
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
                       className="absolute right-0 top-full mt-2 w-56 bg-card rounded-xl shadow-lg border border-border py-2 z-20"
                     >
                       <Link
@@ -117,7 +103,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       <div className="border-t border-border my-2" />
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors"
                       >
                         <LogOut className="w-4 h-4" />
                         Sair
@@ -134,16 +120,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <main className="flex-1">
           {children}
         </main>
-      </motion.div>
-
-      {/* Responsive styles */}
-      <style jsx global>{`
-        @media (min-width: 1024px) {
-          .lg\\:ml-\\[240px\\] {
-            margin-left: ${sidebarCollapsed ? '72px' : '240px'} !important;
-          }
-        }
-      `}</style>
+      </div>
     </div>
   );
 }
