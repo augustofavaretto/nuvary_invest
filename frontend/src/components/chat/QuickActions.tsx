@@ -121,8 +121,8 @@ export function QuickActions({ onAction, disabled }: QuickActionsProps) {
               className="
                 w-full h-auto py-3 px-3
                 flex flex-col items-center gap-2
-                border-[#E5E7EB] hover:border-[#00B8D9] hover:bg-[#00B8D9]/5
-                text-[#0B1F33] hover:text-[#00B8D9]
+                border-border hover:border-[#00B8D9] hover:bg-[#00B8D9]/5
+                text-foreground hover:text-[#00B8D9]
                 transition-all duration-200
                 disabled:opacity-50
               "
