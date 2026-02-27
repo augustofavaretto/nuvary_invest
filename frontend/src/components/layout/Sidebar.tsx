@@ -32,42 +32,43 @@ const menuItems: MenuItem[] = [
   { id: 'configuracoes', label: 'Configurações',     icon: <Settings className="w-5 h-5" />,       href: '/configuracoes' },
 ];
 
-// ── Desktop Sidebar (fixo, sempre expandido) ─────────────────────────────────
+// ── Desktop Sidebar (fixo, ícone acima do texto) ─────────────────────────────
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#0B1F33] flex flex-col z-50">
+    <aside className="fixed left-0 top-0 h-screen w-[80px] bg-[#0B1F33] flex flex-col z-50">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-[#1a3a5c]">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-[#00B8D9] rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-sm">N</span>
+      <div className="flex items-center justify-center py-5 border-b border-[#1a3a5c]">
+        <Link href="/dashboard">
+          <div className="w-10 h-10 bg-[#00B8D9] rounded-xl flex items-center justify-center">
+            <span className="text-white font-bold text-base">N</span>
           </div>
-          <span className="text-white font-semibold text-lg">Nuvary</span>
         </Link>
       </div>
 
       {/* Menu Items */}
       <nav className="flex-1 py-4 overflow-y-auto">
-        <ul className="space-y-1 px-3">
+        <ul className="flex flex-col items-center gap-1 px-2">
           {menuItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             return (
-              <li key={item.id}>
+              <li key={item.id} className="w-full">
                 <Link
                   href={item.href}
                   className={`
-                    flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                    relative flex flex-col items-center gap-1 py-3 px-1 rounded-xl transition-all duration-200
                     ${isActive
                       ? 'bg-[#00B8D9] text-white'
                       : 'text-[#8BA3C1] hover:bg-[#1a3a5c] hover:text-white'}
                   `}
                 >
                   <span className="flex-shrink-0">{item.icon}</span>
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className="text-[10px] font-medium text-center leading-tight">
+                    {item.label}
+                  </span>
                   {item.badge && (
-                    <span className="ml-auto bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
+                    <span className="absolute top-1.5 right-1.5 bg-white/20 text-white text-[9px] px-1 py-0.5 rounded-full font-semibold leading-none">
                       {item.badge}
                     </span>
                   )}
@@ -117,40 +118,39 @@ export function MobileSidebar() {
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ duration: 0.2, ease: 'easeInOut' }}
-            className="lg:hidden fixed left-0 top-0 h-screen w-[240px] bg-[#0B1F33] flex flex-col z-50"
+            className="lg:hidden fixed left-0 top-0 h-screen w-[80px] bg-[#0B1F33] flex flex-col z-50"
           >
-            <div className="flex items-center justify-between px-5 py-5 border-b border-[#1a3a5c]">
-              <Link href="/dashboard" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
-                <div className="w-8 h-8 bg-[#00B8D9] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">N</span>
+            <div className="flex items-center justify-center py-5 border-b border-[#1a3a5c] relative">
+              <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                <div className="w-10 h-10 bg-[#00B8D9] rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-base">N</span>
                 </div>
-                <span className="text-white font-semibold text-lg">Nuvary</span>
               </Link>
-              <button onClick={() => setIsOpen(false)} className="p-1 text-[#8BA3C1] hover:text-white">
-                <X className="w-5 h-5" />
+              <button onClick={() => setIsOpen(false)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#8BA3C1] hover:text-white">
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             <nav className="flex-1 py-4 overflow-y-auto">
-              <ul className="space-y-1 px-3">
+              <ul className="flex flex-col items-center gap-1 px-2">
                 {menuItems.map((item) => {
                   const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                   return (
-                    <li key={item.id}>
+                    <li key={item.id} className="w-full">
                       <Link
                         href={item.href}
                         onClick={() => setIsOpen(false)}
                         className={`
-                          flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                          relative flex flex-col items-center gap-1 py-3 px-1 rounded-xl transition-all duration-200
                           ${isActive
                             ? 'bg-[#00B8D9] text-white'
                             : 'text-[#8BA3C1] hover:bg-[#1a3a5c] hover:text-white'}
                         `}
                       >
                         <span>{item.icon}</span>
-                        <span className="text-sm font-medium">{item.label}</span>
+                        <span className="text-[10px] font-medium text-center leading-tight">{item.label}</span>
                         {item.badge && (
-                          <span className="ml-auto bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
+                          <span className="absolute top-1.5 right-1.5 bg-white/20 text-white text-[9px] px-1 py-0.5 rounded-full font-semibold leading-none">
                             {item.badge}
                           </span>
                         )}

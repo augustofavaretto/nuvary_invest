@@ -39,8 +39,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Mobile Sidebar */}
       <MobileSidebar />
 
-      {/* Main Content — margem fixa de 240px no desktop */}
-      <div className="min-h-screen flex flex-col lg:ml-[240px]">
+      {/* Main Content — margem fixa de 80px no desktop */}
+      <div className="min-h-screen flex flex-col lg:ml-[80px]">
         {/* Top Header */}
         <header className="sticky top-0 z-30 bg-card border-b border-border">
           <div className="flex items-center justify-between px-6 py-4">
