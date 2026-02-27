@@ -19,6 +19,7 @@ import {
   User,
   Check,
   ChevronRight,
+  X,
 } from 'lucide-react';
 
 type NotifKey =
@@ -95,11 +96,21 @@ export default function ConfiguracoesPage() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
+          className="flex items-start justify-between"
         >
-          <h1 className="text-2xl font-bold text-foreground">Configurações</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Personalize sua experiência na plataforma
-          </p>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Configurações</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Personalize sua experiência na plataforma
+            </p>
+          </div>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+            title="Voltar ao Dashboard"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </motion.div>
 
         {/* === APARÊNCIA === */}
