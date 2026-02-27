@@ -10,14 +10,23 @@ import {
   Search,
   MessageSquare,
   Trash2,
+  Pencil,
+  Check,
   X,
   AlertTriangle,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
-  Clock,
 } from 'lucide-react';
-import { listarConversas, buscarConversas, deletarConversa, limparHistorico } from '@/services/chatService';
+import {
+  listarConversas,
+  buscarConversas,
+  deletarConversa,
+  limparHistorico,
+  getTituloCustomizado,
+  setTituloCustomizado,
+  removerTituloCustomizado,
+} from '@/services/chatService';
 import Image from 'next/image';
 import Link from 'next/link';
 import { STRINGS } from '@/constants/strings';
@@ -56,6 +65,13 @@ export function ChatSidebar({
   const [conversaParaDeletar, setConversaParaDeletar] = useState<string | null>(null);
   const [deletando, setDeletando] = useState(false);
 
+  // Aplica títulos customizados do localStorage sobre a lista
+  const aplicarTitulosCustomizados = (lista: Conversa[]): Conversa[] =>
+    lista.map(c => ({
+      ...c,
+      titulo: getTituloCustomizado(c.id) || c.titulo,
+    }));
+
   // Carrega conversas
   useEffect(() => {
     carregarConversas();
@@ -65,7 +81,7 @@ export function ChatSidebar({
     setCarregando(true);
     try {
       const lista = await listarConversas();
-      setConversas(lista);
+      setConversas(aplicarTitulosCustomizados(lista));
     } catch (e) {
       console.error('Erro ao carregar conversas:', e);
     } finally {
@@ -84,7 +100,7 @@ export function ChatSidebar({
     setBuscando(true);
     try {
       const resultado = await buscarConversas(termo);
-      setConversas(resultado);
+      setConversas(aplicarTitulosCustomizados(resultado));
     } catch (e) {
       console.error('Erro ao buscar conversas:', e);
     } finally {
@@ -112,6 +128,7 @@ export function ChatSidebar({
     setDeletando(true);
     try {
       await deletarConversa(conversaId);
+      removerTituloCustomizado(conversaId);
       setConversas(prev => prev.filter(c => c.id !== conversaId));
       setConversaParaDeletar(null);
       if (conversaAtual === conversaId) {
@@ -122,6 +139,16 @@ export function ChatSidebar({
     } finally {
       setDeletando(false);
     }
+  };
+
+  // Renomear conversa (persiste no localStorage)
+  const handleRenomearConversa = (conversaId: string, novoTitulo: string) => {
+    const titulo = novoTitulo.trim();
+    if (!titulo) return;
+    setTituloCustomizado(conversaId, titulo);
+    setConversas(prev =>
+      prev.map(c => (c.id === conversaId ? { ...c, titulo } : c))
+    );
   };
 
   // Formata data relativa
@@ -310,6 +337,7 @@ export function ChatSidebar({
                       isAtiva={conversaAtual === conversa.id}
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
+                      onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
                     />
                   ))}
                 </div>
@@ -326,6 +354,7 @@ export function ChatSidebar({
                       isAtiva={conversaAtual === conversa.id}
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
+                      onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
                     />
                   ))}
                 </div>
@@ -342,6 +371,7 @@ export function ChatSidebar({
                       isAtiva={conversaAtual === conversa.id}
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
+                      onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
                     />
                   ))}
                 </div>
@@ -358,6 +388,7 @@ export function ChatSidebar({
                       isAtiva={conversaAtual === conversa.id}
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
+                      onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
                     />
                   ))}
                 </div>
@@ -374,6 +405,7 @@ export function ChatSidebar({
                       isAtiva={conversaAtual === conversa.id}
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
+                      onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
                     />
                   ))}
                 </div>
@@ -540,13 +572,30 @@ function ConversaItem({
   isAtiva,
   onSelecionar,
   onDeletar,
+  onRenomear,
 }: {
   conversa: Conversa;
   isAtiva: boolean;
   onSelecionar: () => void;
   onDeletar: () => void;
+  onRenomear: (titulo: string) => void;
 }) {
-  const [showDelete, setShowDelete] = useState(false);
+  const [showActions, setShowActions] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [novoTitulo, setNovoTitulo] = useState(conversa.titulo);
+
+  const salvarRename = () => {
+    const titulo = novoTitulo.trim();
+    if (titulo && titulo !== conversa.titulo) {
+      onRenomear(titulo);
+    }
+    setIsRenaming(false);
+  };
+
+  const cancelarRename = () => {
+    setNovoTitulo(conversa.titulo);
+    setIsRenaming(false);
+  };
 
   return (
     <div
@@ -555,24 +604,64 @@ function ConversaItem({
         transition-colors
         ${isAtiva ? 'bg-[#2D2D2D]' : 'hover:bg-[#2D2D2D]/50'}
       `}
-      onClick={onSelecionar}
-      onMouseEnter={() => setShowDelete(true)}
-      onMouseLeave={() => setShowDelete(false)}
+      onClick={isRenaming ? undefined : onSelecionar}
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => { if (!isRenaming) setShowActions(false); }}
     >
       <MessageSquare className={`w-4 h-4 flex-shrink-0 ${isAtiva ? 'text-[#00B8D9]' : 'text-[#6B7280]'}`} />
-      <span className={`text-sm truncate flex-1 ${isAtiva ? 'text-white' : 'text-[#9CA3AF]'}`}>
-        {conversa.titulo}
-      </span>
-      {showDelete && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDeletar();
-          }}
-          className="p-1 text-[#6B7280] hover:text-red-400 rounded"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-        </button>
+
+      {isRenaming ? (
+        <>
+          <input
+            autoFocus
+            value={novoTitulo}
+            onChange={e => setNovoTitulo(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') salvarRename();
+              if (e.key === 'Escape') cancelarRename();
+            }}
+            onBlur={salvarRename}
+            onClick={e => e.stopPropagation()}
+            className="flex-1 bg-transparent text-sm text-white border-b border-[#00B8D9] outline-none min-w-0"
+          />
+          <button
+            onMouseDown={e => { e.preventDefault(); salvarRename(); }}
+            className="p-1 text-[#00B8D9] hover:text-white rounded flex-shrink-0"
+          >
+            <Check className="w-3.5 h-3.5" />
+          </button>
+        </>
+      ) : (
+        <>
+          <span className={`text-sm truncate flex-1 ${isAtiva ? 'text-white' : 'text-[#9CA3AF]'}`}>
+            {conversa.titulo}
+          </span>
+          {showActions && (
+            <div className="flex gap-0.5 flex-shrink-0">
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  setNovoTitulo(conversa.titulo);
+                  setIsRenaming(true);
+                }}
+                className="p-1 text-[#6B7280] hover:text-[#00B8D9] rounded"
+                title="Renomear"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  onDeletar();
+                }}
+                className="p-1 text-[#6B7280] hover:text-red-400 rounded"
+                title="Deletar"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

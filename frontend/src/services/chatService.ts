@@ -214,6 +214,47 @@ export async function deletarConversa(conversaId: string) {
   if (error) throw error;
 }
 
+// ─── Títulos customizados (localStorage) ───────────────────────────────────
+
+const CUSTOM_TITLES_KEY = 'nuvary_chat_titles';
+
+export function getTituloCustomizado(conversaId: string): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const stored = localStorage.getItem(CUSTOM_TITLES_KEY);
+    if (!stored) return null;
+    const titles = JSON.parse(stored) as Record<string, string>;
+    return titles[conversaId] || null;
+  } catch {
+    return null;
+  }
+}
+
+export function setTituloCustomizado(conversaId: string, titulo: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const stored = localStorage.getItem(CUSTOM_TITLES_KEY);
+    const titles = stored ? (JSON.parse(stored) as Record<string, string>) : {};
+    titles[conversaId] = titulo;
+    localStorage.setItem(CUSTOM_TITLES_KEY, JSON.stringify(titles));
+  } catch {
+    console.error('Erro ao salvar título customizado');
+  }
+}
+
+export function removerTituloCustomizado(conversaId: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const stored = localStorage.getItem(CUSTOM_TITLES_KEY);
+    if (!stored) return;
+    const titles = JSON.parse(stored) as Record<string, string>;
+    delete titles[conversaId];
+    localStorage.setItem(CUSTOM_TITLES_KEY, JSON.stringify(titles));
+  } catch {
+    console.error('Erro ao remover título customizado');
+  }
+}
+
 export async function contarMensagens(): Promise<number> {
   const { data: { user } } = await supabase.auth.getUser();
 
