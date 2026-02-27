@@ -25,9 +25,9 @@ export function PortfolioByBrokerCard({ data }: PortfolioByBrokerCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="bg-white rounded-xl border border-[#E5E7EB] p-6"
+      className="bg-card rounded-xl border border-border p-6"
     >
-      <h3 className="text-lg font-semibold text-[#0B1F33] mb-6">
+      <h3 className="text-lg font-semibold text-foreground mb-6">
         Sua carteira por corretora
       </h3>
 
@@ -50,19 +50,19 @@ export function PortfolioByBrokerCard({ data }: PortfolioByBrokerCardProps) {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 + index * 0.05 }}
-              className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F3F4F6] transition-colors"
+              className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: broker.color }}
                 />
-                <span className="font-medium text-[#0B1F33]">{broker.name}</span>
+                <span className="font-medium text-foreground">{broker.name}</span>
               </div>
 
               <div className="text-right">
-                <p className="font-semibold text-[#0B1F33]">{formatCurrency(broker.value)}</p>
-                <p className="text-sm text-[#6B7280]">{formatPercentage(broker.percentage)} da carteira</p>
+                <p className="font-semibold text-foreground">{formatCurrency(broker.value)}</p>
+                <p className="text-sm text-muted-foreground">{formatPercentage(broker.percentage)} da carteira</p>
               </div>
             </motion.div>
           ))}

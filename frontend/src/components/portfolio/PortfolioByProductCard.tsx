@@ -54,9 +54,9 @@ export function PortfolioByProductCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="bg-white rounded-xl border border-[#E5E7EB] p-6"
+      className="bg-card rounded-xl border border-border p-6"
     >
-      <h3 className="text-lg font-semibold text-[#0B1F33] mb-4">
+      <h3 className="text-lg font-semibold text-foreground mb-4">
         Sua carteira por produto
       </h3>
 
@@ -75,8 +75,8 @@ export function PortfolioByProductCard({
                 ${activeTab === tab.id
                   ? 'bg-[#00B8D9] text-white'
                   : hasData
-                    ? 'bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]'
-                    : 'bg-[#F3F4F6] text-[#D1D5DB] cursor-not-allowed'
+                    ? 'bg-muted text-muted-foreground hover:bg-muted/80'
+                    : 'bg-muted text-muted-foreground/40 cursor-not-allowed'
                 }
               `}
             >
@@ -110,7 +110,7 @@ export function PortfolioByProductCard({
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F3F4F6] transition-colors group cursor-pointer"
+                className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group cursor-pointer"
               >
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <div
@@ -118,14 +118,14 @@ export function PortfolioByProductCard({
                     style={{ backgroundColor: chartData[index]?.color }}
                   />
                   <div className="min-w-0">
-                    <p className="font-medium text-[#0B1F33] truncate">{asset.name}</p>
-                    <p className="text-sm text-[#6B7280]">{asset.ticker}</p>
+                    <p className="font-medium text-foreground truncate">{asset.name}</p>
+                    <p className="text-sm text-muted-foreground">{asset.ticker}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <p className="font-semibold text-[#0B1F33]">{formatCurrency(asset.totalValue)}</p>
+                    <p className="font-semibold text-foreground">{formatCurrency(asset.totalValue)}</p>
                     <div className="flex items-center justify-end gap-1">
                       {asset.variation >= 0 ? (
                         <TrendingUp className="w-3 h-3 text-green-500" />
@@ -138,10 +138,10 @@ export function PortfolioByProductCard({
                     </div>
                   </div>
                   <div className="text-right hidden sm:block">
-                    <p className="text-sm text-[#6B7280]">
+                    <p className="text-sm text-muted-foreground">
                       {formatPercentage(asset.percentageOfProduct)} do produto
                     </p>
-                    <p className="text-sm text-[#6B7280]">
+                    <p className="text-sm text-muted-foreground">
                       {formatPercentage(asset.percentageOfPortfolio)} da carteira
                     </p>
                   </div>
@@ -151,20 +151,20 @@ export function PortfolioByProductCard({
                         e.stopPropagation();
                         onRemoveAsset(asset.id);
                       }}
-                      className="p-2 text-[#D1D5DB] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                      className="p-2 text-muted-foreground/40 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
                       title="Remover ativo"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   )}
-                  <ChevronRight className="w-5 h-5 text-[#D1D5DB] group-hover:text-[#00B8D9] transition-colors" />
+                  <ChevronRight className="w-5 h-5 text-muted-foreground/40 group-hover:text-[#00B8D9] transition-colors" />
                 </div>
               </motion.div>
             ))}
           </div>
         </div>
       ) : (
-        <div className="text-center py-8 text-[#6B7280]">
+        <div className="text-center py-8 text-muted-foreground">
           Nenhum ativo nesta categoria
         </div>
       )}

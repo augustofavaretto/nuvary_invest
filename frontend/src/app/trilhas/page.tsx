@@ -214,14 +214,14 @@ function VideoCardItem({
           <p className={`text-xs font-semibold mb-1 ${accent}`}>
             {video.categoryLabel}
           </p>
-          <p className="text-sm font-medium text-[#0B1F33] leading-tight line-clamp-2 group-hover:text-[#00B8D9] transition-colors">
+          <p className="text-sm font-medium text-foreground leading-tight line-clamp-2 group-hover:text-[#00B8D9] transition-colors">
             {video.title}
           </p>
           <div className="flex items-center gap-2 mt-1.5">
             <span className={`text-white text-[10px] px-1.5 py-0.5 rounded-full font-medium ${LEVEL_COLOR[video.level]}`}>
               {video.level}
             </span>
-            <span className="text-[#6B7280] text-xs flex items-center gap-0.5">
+            <span className="text-muted-foreground text-xs flex items-center gap-0.5">
               <Clock className="w-3 h-3" />
               {video.duration}
             </span>
@@ -267,23 +267,23 @@ function VideoSection({
   return (
     <section id={categoryId} className="mb-10 scroll-mt-20">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-[#0B1F33]">{title}</h2>
+        <h2 className="text-xl font-bold text-foreground">{title}</h2>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-[#6B7280] font-medium cursor-pointer hover:text-[#00B8D9] transition-colors">
+          <span className="text-sm text-muted-foreground font-medium cursor-pointer hover:text-[#00B8D9] transition-colors">
             VER TUDO
           </span>
           <div className="flex gap-1">
             <button
               onClick={() => scroll('left')}
-              className="w-8 h-8 rounded-full border border-[#E5E7EB] flex items-center justify-center hover:bg-[#F3F4F6] transition-colors"
+              className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
             >
-              <ChevronLeft className="w-4 h-4 text-[#6B7280]" />
+              <ChevronLeft className="w-4 h-4 text-muted-foreground" />
             </button>
             <button
               onClick={() => scroll('right')}
-              className="w-8 h-8 rounded-full border border-[#E5E7EB] flex items-center justify-center hover:bg-[#F3F4F6] transition-colors"
+              className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
             >
-              <ChevronRight className="w-4 h-4 text-[#6B7280]" />
+              <ChevronRight className="w-4 h-4 text-muted-foreground" />
             </button>
           </div>
         </div>
@@ -363,7 +363,7 @@ export default function TrilhasPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-[#00B8D9]" />
       </div>
     );
@@ -388,7 +388,7 @@ export default function TrilhasPage() {
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4"
             >
-              <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+              <div className="bg-card rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
                 <div className={`bg-gradient-to-br ${selectedVideo.gradient} p-8 flex flex-col items-center gap-4`}>
                   <div className="w-16 h-16 rounded-full bg-white/20 border-2 border-white flex items-center justify-center">
                     <Play className="w-7 h-7 text-white fill-white ml-1" />
@@ -401,13 +401,13 @@ export default function TrilhasPage() {
                   <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full text-white mb-3 ${LEVEL_COLOR[selectedVideo.level]}`}>
                     {selectedVideo.level}
                   </span>
-                  <p className="text-[#0B1F33] font-semibold text-base mb-1">
+                  <p className="text-foreground font-semibold text-base mb-1">
                     Vídeo em produção
                   </p>
-                  <p className="text-[#6B7280] text-sm mb-4">
+                  <p className="text-muted-foreground text-sm mb-4">
                     Este conteúdo estará disponível em breve. Adicione à sua lista para ser notificado!
                   </p>
-                  <div className="flex items-center justify-center gap-2 text-sm text-[#6B7280] mb-5">
+                  <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mb-5">
                     <Clock className="w-4 h-4" />
                     <span>Duração estimada: {selectedVideo.duration}</span>
                   </div>
@@ -428,7 +428,7 @@ export default function TrilhasPage() {
                     </button>
                     <button
                       onClick={() => setSelectedVideo(null)}
-                      className="px-4 py-2.5 rounded-lg border border-[#E5E7EB] text-[#6B7280] hover:bg-[#F3F4F6] text-sm"
+                      className="px-4 py-2.5 rounded-lg border border-border text-muted-foreground hover:bg-muted text-sm"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -440,7 +440,7 @@ export default function TrilhasPage() {
         )}
       </AnimatePresence>
 
-      <div className="min-h-screen bg-[#F3F4F6]">
+      <div className="min-h-screen bg-background">
 
         {/* ── Hero Banner ── */}
         <div className={`relative bg-gradient-to-r ${slide.gradient} overflow-hidden`}
@@ -531,7 +531,7 @@ export default function TrilhasPage() {
               className="mb-6 flex items-center gap-3 bg-[#00B8D9]/10 border border-[#00B8D9]/30 rounded-xl px-4 py-3"
             >
               <Check className="w-4 h-4 text-[#00B8D9]" />
-              <span className="text-sm text-[#0B1F33] font-medium">
+              <span className="text-sm text-foreground font-medium">
                 {savedList.size} vídeo{savedList.size > 1 ? 's' : ''} na sua lista
               </span>
             </motion.div>
