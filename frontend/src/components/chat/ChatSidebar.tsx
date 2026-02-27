@@ -580,7 +580,6 @@ function ConversaItem({
   onDeletar: () => void;
   onRenomear: (titulo: string) => void;
 }) {
-  const [showActions, setShowActions] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [novoTitulo, setNovoTitulo] = useState(conversa.titulo);
 
@@ -605,8 +604,6 @@ function ConversaItem({
         ${isAtiva ? 'bg-[#2D2D2D]' : 'hover:bg-[#2D2D2D]/50'}
       `}
       onClick={isRenaming ? undefined : onSelecionar}
-      onMouseEnter={() => setShowActions(true)}
-      onMouseLeave={() => { if (!isRenaming) setShowActions(false); }}
     >
       <MessageSquare className={`w-4 h-4 flex-shrink-0 ${isAtiva ? 'text-[#00B8D9]' : 'text-[#6B7280]'}`} />
 
@@ -633,34 +630,32 @@ function ConversaItem({
         </>
       ) : (
         <>
-          <span className={`text-sm truncate flex-1 ${isAtiva ? 'text-white' : 'text-[#9CA3AF]'}`}>
+          <span className={`text-sm truncate flex-1 min-w-0 ${isAtiva ? 'text-white' : 'text-[#9CA3AF]'}`}>
             {conversa.titulo}
           </span>
-          {showActions && (
-            <div className="flex gap-0.5 flex-shrink-0">
-              <button
-                onClick={e => {
-                  e.stopPropagation();
-                  setNovoTitulo(conversa.titulo);
-                  setIsRenaming(true);
-                }}
-                className="p-1 text-[#6B7280] hover:text-[#00B8D9] rounded"
-                title="Renomear"
-              >
-                <Pencil className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={e => {
-                  e.stopPropagation();
-                  onDeletar();
-                }}
-                className="p-1 text-[#6B7280] hover:text-red-400 rounded"
-                title="Deletar"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          )}
+          <div className="flex gap-0.5 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                setNovoTitulo(conversa.titulo);
+                setIsRenaming(true);
+              }}
+              className="p-1 text-[#6B7280] hover:text-[#00B8D9] rounded"
+              title="Renomear"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                onDeletar();
+              }}
+              className="p-1 text-[#6B7280] hover:text-red-400 rounded"
+              title="Deletar"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </>
       )}
     </div>
