@@ -77,10 +77,10 @@ export default function CarteiraPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 animate-spin text-[#00B8D9]" />
-          <p className="text-[#6B7280]">Carregando...</p>
+          <p className="text-muted-foreground">Carregando...</p>
         </div>
       </div>
     );
@@ -98,17 +98,17 @@ export default function CarteiraPage() {
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6"
         >
           <div>
-            <h1 className="text-2xl font-bold text-[#0B1F33] flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
               <Wallet className="w-7 h-7 text-[#00B8D9]" />
               Minha Carteira
             </h1>
-            <p className="text-[#6B7280] mt-1">
+            <p className="text-muted-foreground mt-1">
               Visão geral dos seus investimentos
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-sm text-[#6B7280]">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="w-4 h-4" />
               <span>Valores até {new Date().toLocaleDateString('pt-BR')}</span>
             </div>
@@ -149,9 +149,9 @@ export default function CarteiraPage() {
               </div>
             </div>
             {[1, 2, 3].map(i => (
-              <div key={i} className="bg-white rounded-xl p-6 border border-[#E5E7EB] animate-pulse">
-                <div className="h-6 bg-gray-200 rounded w-1/4 mb-4" />
-                <div className="h-40 bg-gray-200 rounded" />
+              <div key={i} className="bg-card rounded-xl p-6 border border-border animate-pulse">
+                <div className="h-6 bg-muted rounded w-1/4 mb-4" />
+                <div className="h-40 bg-muted rounded" />
               </div>
             ))}
           </div>
@@ -180,7 +180,7 @@ export default function CarteiraPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-center text-sm text-[#6B7280] py-4"
+              className="text-center text-sm text-muted-foreground py-4"
             >
               <p>
                 Os preços atuais são simulados para demonstração.
@@ -195,17 +195,17 @@ export default function CarteiraPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl border border-[#E5E7EB] p-6"
+              className="bg-card rounded-xl border border-border p-6"
             >
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 bg-[#00B8D9]/10 rounded-full flex items-center justify-center">
                   <Wallet className="w-5 h-5 text-[#00B8D9]" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-[#0B1F33]">
+                  <h2 className="text-lg font-semibold text-foreground">
                     Sua carteira está vazia
                   </h2>
-                  <p className="text-sm text-[#6B7280]">
+                  <p className="text-sm text-muted-foreground">
                     Selecione uma categoria para adicionar seu primeiro ativo
                   </p>
                 </div>
@@ -231,7 +231,7 @@ export default function CarteiraPage() {
                     setSelectedModalCategory(category.id);
                     setIsAddModalOpen(true);
                   }}
-                  className="w-full bg-white rounded-xl border border-[#E5E7EB] p-5 flex items-center gap-4 hover:shadow-md hover:border-[#00B8D9]/30 transition-all group text-left"
+                  className="w-full bg-card rounded-xl border border-border p-5 flex items-center gap-4 hover:shadow-md hover:border-[#00B8D9]/30 transition-all group text-left"
                 >
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -240,15 +240,15 @@ export default function CarteiraPage() {
                     <Icon className="w-6 h-6" style={{ color: category.color }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-[#0B1F33] text-base">
+                    <h3 className="font-semibold text-foreground text-base">
                       {category.name}
                     </h3>
-                    <p className="text-sm text-[#6B7280]">
+                    <p className="text-sm text-muted-foreground">
                       {category.description}
                     </p>
                   </div>
-                  <div className="w-8 h-8 rounded-full border border-[#E5E7EB] flex items-center justify-center group-hover:bg-[#00B8D9] group-hover:border-[#00B8D9] transition-colors flex-shrink-0">
-                    <ChevronRight className="w-4 h-4 text-[#6B7280] group-hover:text-white transition-colors" />
+                  <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center group-hover:bg-[#00B8D9] group-hover:border-[#00B8D9] transition-colors flex-shrink-0">
+                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-white transition-colors" />
                   </div>
                 </motion.button>
               );

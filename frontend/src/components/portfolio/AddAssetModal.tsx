@@ -390,16 +390,16 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-card rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
               {/* Header */}
-              <div className="flex items-center justify-between p-5 border-b border-[#E5E7EB]">
+              <div className="flex items-center justify-between p-5 border-b border-border">
                 <div className="flex items-center gap-3">
                   {step !== 'category' && (
                     <button
                       onClick={handleBack}
-                      className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="p-1.5 hover:bg-muted rounded-lg transition-colors"
                     >
-                      <ChevronLeft className="w-5 h-5 text-[#6B7280]" />
+                      <ChevronLeft className="w-5 h-5 text-muted-foreground" />
                     </button>
                   )}
                   <div className="flex items-center gap-3">
@@ -416,22 +416,22 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                       </div>
                     )}
                     <div>
-                      <h2 className="text-lg font-semibold text-[#0B1F33]">
+                      <h2 className="text-lg font-semibold text-foreground">
                         {step === 'category' && 'Adicionar Ativo'}
                         {step === 'asset' && currentCategory?.name}
                         {step === 'details' && (selectedAsset?.name || 'Ativo Personalizado')}
                       </h2>
                       {step === 'category' && (
-                        <p className="text-sm text-[#6B7280]">Selecione a categoria</p>
+                        <p className="text-sm text-muted-foreground">Selecione a categoria</p>
                       )}
                     </div>
                   </div>
                 </div>
                 <button
                   onClick={handleClose}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-muted rounded-lg transition-colors"
                 >
-                  <X className="w-5 h-5 text-[#6B7280]" />
+                  <X className="w-5 h-5 text-muted-foreground" />
                 </button>
               </div>
 
@@ -480,13 +480,13 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                     >
                       {/* Search */}
                       <div className="relative mb-4">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <input
                           type="text"
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
                           placeholder="Buscar ativo..."
-                          className="w-full pl-10 pr-4 py-2.5 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9]"
+                          className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9]"
                         />
                       </div>
 
@@ -496,11 +496,11 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                           <button
                             key={asset.ticker}
                             onClick={() => handleAssetSelect(asset)}
-                            className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[#F3F4F6] transition-colors text-left"
+                            className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors text-left"
                           >
                             <div>
-                              <p className="font-medium text-[#0B1F33]">{asset.name}</p>
-                              <p className="text-sm text-[#6B7280]">{asset.ticker}</p>
+                              <p className="font-medium text-foreground">{asset.name}</p>
+                              <p className="text-sm text-muted-foreground">{asset.ticker}</p>
                             </div>
                             <div
                               className="w-8 h-8 rounded-full flex items-center justify-center"
@@ -512,17 +512,17 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                         ))}
 
                         {filteredAssets.length === 0 && searchTerm && (
-                          <div className="text-center py-8 text-[#6B7280]">
+                          <div className="text-center py-8 text-muted-foreground">
                             Nenhum ativo encontrado
                           </div>
                         )}
                       </div>
 
                       {/* Custom Asset Button */}
-                      <div className="mt-4 pt-4 border-t border-[#E5E7EB]">
+                      <div className="mt-4 pt-4 border-t border-border">
                         <button
                           onClick={handleCustomAsset}
-                          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg border-2 border-dashed border-[#E5E7EB] hover:border-[#00B8D9] hover:bg-[#00B8D9]/5 transition-colors text-[#6B7280] hover:text-[#00B8D9]"
+                          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg border-2 border-dashed border-border hover:border-[#00B8D9] hover:bg-[#00B8D9]/5 transition-colors text-muted-foreground hover:text-[#00B8D9]"
                         >
                           <Plus className="w-4 h-4" />
                           Adicionar ativo personalizado
@@ -544,7 +544,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                         {isCustom && (
                           <>
                             <div>
-                              <label className="block text-sm font-medium text-[#0B1F33] mb-1">
+                              <label className="block text-sm font-medium text-foreground mb-1">
                                 {STRINGS.carteira.tickerCodigo}
                               </label>
                               <input
@@ -553,7 +553,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                                 onChange={(e) => setFormData(prev => ({ ...prev, ticker: e.target.value.toUpperCase() }))}
                                 placeholder="Ex: PETR4"
                                 className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] ${
-                                  errors.ticker ? 'border-red-500' : 'border-[#E5E7EB]'
+                                  errors.ticker ? 'border-red-500' : 'border-border'
                                 }`}
                               />
                               {errors.ticker && (
@@ -562,7 +562,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                             </div>
 
                             <div>
-                              <label className="block text-sm font-medium text-[#0B1F33] mb-1">
+                              <label className="block text-sm font-medium text-foreground mb-1">
                                 Nome do Ativo
                               </label>
                               <input
@@ -571,7 +571,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                                 placeholder="Ex: Petrobras PN"
                                 className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] ${
-                                  errors.name ? 'border-red-500' : 'border-[#E5E7EB]'
+                                  errors.name ? 'border-red-500' : 'border-border'
                                 }`}
                               />
                               {errors.name && (
@@ -583,7 +583,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
 
                         {/* Info do ativo selecionado */}
                         {!isCustom && selectedAsset && (
-                          <div className="bg-[#F3F4F6] rounded-lg p-4 flex items-center gap-3">
+                          <div className="bg-muted rounded-lg p-4 flex items-center gap-3">
                             <div
                               className="w-12 h-12 rounded-lg flex items-center justify-center"
                               style={{ backgroundColor: currentCategory?.color }}
@@ -591,8 +591,8 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                               {currentCategory && <currentCategory.icon className="w-6 h-6 text-white" />}
                             </div>
                             <div>
-                              <p className="font-semibold text-[#0B1F33]">{selectedAsset.name}</p>
-                              <p className="text-sm text-[#6B7280]">{selectedAsset.ticker}</p>
+                              <p className="font-semibold text-foreground">{selectedAsset.name}</p>
+                              <p className="text-sm text-muted-foreground">{selectedAsset.ticker}</p>
                             </div>
                           </div>
                         )}
@@ -600,14 +600,14 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                         {/* Quantidade / Valor Investido e Preço / Taxa */}
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-[#0B1F33] mb-1">
+                            <label className="block text-sm font-medium text-foreground mb-1">
                               {isFixedIncome ? STRINGS.carteira.valorInvestido : 'Quantidade'}
                             </label>
                             <div className="relative">
                               {isFixedIncome ? (
-                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                               ) : (
-                                <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                                <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                               )}
                               <input
                                 type="number"
@@ -617,7 +617,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                                 min="0"
                                 step="0.01"
                                 className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] ${
-                                  errors.quantity ? 'border-red-500' : 'border-[#E5E7EB]'
+                                  errors.quantity ? 'border-red-500' : 'border-border'
                                 }`}
                               />
                             </div>
@@ -627,16 +627,16 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-[#0B1F33] mb-1">
+                            <label className="block text-sm font-medium text-foreground mb-1">
                               {isFixedIncome ? STRINGS.carteira.taxaContratada : STRINGS.carteira.precoMedio}
                             </label>
                             <div className="relative">
                               {priceLoading ? (
                                 <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00B8D9] animate-spin" />
                               ) : isFixedIncome ? (
-                                <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                                <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                               ) : (
-                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                               )}
                               <input
                                 type="number"
@@ -647,8 +647,8 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                                 step="0.01"
                                 disabled={priceLoading}
                                 className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] ${
-                                  errors.averagePrice ? 'border-red-500' : 'border-[#E5E7EB]'
-                                } ${priceLoading ? 'bg-gray-50' : ''}`}
+                                  errors.averagePrice ? 'border-red-500' : 'border-border'
+                                } ${priceLoading ? 'bg-muted' : ''}`}
                               />
                             </div>
                             {errors.averagePrice && (
@@ -683,15 +683,15 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
 
                         {/* Corretora */}
                         <div>
-                          <label className="block text-sm font-medium text-[#0B1F33] mb-1">
+                          <label className="block text-sm font-medium text-foreground mb-1">
                             Corretora
                           </label>
                           <div className="relative">
-                            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <select
                               value={formData.broker}
                               onChange={(e) => setFormData(prev => ({ ...prev, broker: e.target.value }))}
-                              className="w-full pl-10 pr-4 py-2.5 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] bg-white"
+                              className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] bg-card"
                             >
                               {brokers.map((broker) => (
                                 <option key={broker} value={broker}>

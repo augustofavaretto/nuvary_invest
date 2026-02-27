@@ -411,7 +411,7 @@ export function ChatSidebar({
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
+              className="bg-card rounded-xl shadow-xl max-w-md w-full p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start gap-4">
@@ -419,10 +419,10 @@ export function ChatSidebar({
                   <AlertTriangle className="w-6 h-6 text-red-500" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-[#0B1F33] mb-2">
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
                     {STRINGS.chat.limparTudoConfirm}
                   </h3>
-                  <p className="text-[#6B7280] text-sm mb-4">
+                  <p className="text-muted-foreground text-sm mb-4">
                     {STRINGS.chat.acaoIraExcluirTudo}
                   </p>
                   <div className="flex gap-3 justify-end">
@@ -454,7 +454,7 @@ export function ChatSidebar({
                 </div>
                 <button
                   onClick={() => setMostrarConfirmacaoLimpar(false)}
-                  className="text-[#6B7280] hover:text-[#0B1F33]"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -478,7 +478,7 @@ export function ChatSidebar({
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
+              className="bg-card rounded-xl shadow-xl max-w-md w-full p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start gap-4">
@@ -486,10 +486,10 @@ export function ChatSidebar({
                   <Trash2 className="w-6 h-6 text-red-500" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-[#0B1F33] mb-2">
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
                     Deletar conversa?
                   </h3>
-                  <p className="text-[#6B7280] text-sm mb-4">
+                  <p className="text-muted-foreground text-sm mb-4">
                     {STRINGS.chat.seraExcluida}
                   </p>
                   <div className="flex gap-3 justify-end">
@@ -521,7 +521,7 @@ export function ChatSidebar({
                 </div>
                 <button
                   onClick={() => setConversaParaDeletar(null)}
-                  className="text-[#6B7280] hover:text-[#0B1F33]"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   <X className="w-5 h-5" />
                 </button>

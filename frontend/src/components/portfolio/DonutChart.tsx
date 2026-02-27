@@ -28,9 +28,9 @@ export function DonutChart({ data, centerValue, centerLabel, size = 'md' }: Donu
     if (active && payload && payload.length) {
       const item = payload[0].payload;
       return (
-        <div className="bg-white shadow-lg rounded-lg p-3 border border-[#E5E7EB]">
-          <p className="font-semibold text-[#0B1F33]">{item.name}</p>
-          <p className="text-sm text-[#6B7280]">{formatCurrency(item.value)}</p>
+        <div className="bg-card shadow-lg rounded-lg p-3 border border-border">
+          <p className="font-semibold text-foreground">{item.name}</p>
+          <p className="text-sm text-muted-foreground">{formatCurrency(item.value)}</p>
           <p className="text-sm text-[#00B8D9]">{formatPercentage(item.percentage)} da carteira</p>
         </div>
       );
@@ -64,10 +64,10 @@ export function DonutChart({ data, centerValue, centerLabel, size = 'md' }: Donu
       {(centerValue || centerLabel) && (
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           {centerValue && (
-            <span className="text-lg font-bold text-[#0B1F33]">{centerValue}</span>
+            <span className="text-lg font-bold text-foreground">{centerValue}</span>
           )}
           {centerLabel && (
-            <span className="text-xs text-[#6B7280]">{centerLabel}</span>
+            <span className="text-xs text-muted-foreground">{centerLabel}</span>
           )}
         </div>
       )}

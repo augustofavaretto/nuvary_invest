@@ -167,6 +167,15 @@
   --chart-5: #F87171;
 }
 
+/* Inputs nativos no dark mode */
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.dark textarea,
+.dark select {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

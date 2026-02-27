@@ -334,7 +334,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   };
 
   return (
-    <div className="flex h-screen bg-[#F3F4F6]">
+    <div className="flex h-screen bg-background">
       {/* Sidebar */}
       {user && (
         <ChatSidebar
@@ -351,7 +351,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="bg-white border-b border-[#E5E7EB] px-4 py-3">
+        <div className="bg-card border-b border-border px-4 py-3">
           <div className="flex items-center justify-between max-w-4xl mx-auto">
             <div className="flex items-center gap-3">
               {/* Mobile menu toggle */}
@@ -360,7 +360,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                   variant="ghost"
                   size="icon"
                   onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                  className="lg:hidden text-[#6B7280]"
+                  className="lg:hidden text-muted-foreground"
                 >
                   <Menu className="w-5 h-5" />
                 </Button>
@@ -377,15 +377,15 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                       className="object-contain"
                     />
                   </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 rounded-full border-2 border-card flex items-center justify-center">
                     <Sparkles className="w-2 h-2 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-base font-semibold text-[#0B1F33]">
+                  <h1 className="text-base font-semibold text-foreground">
                     Assistente Nuvary
                   </h1>
-                  <p className="text-xs text-[#6B7280]">
+                  <p className="text-xs text-muted-foreground">
                     Seu consultor de investimentos com IA
                   </p>
                 </div>
@@ -419,7 +419,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
           <ScrollArea className="h-full" ref={scrollRef}>
             <div className="max-w-4xl mx-auto px-4 py-6">
               {/* Status indicator */}
-              <div className="flex items-center justify-center gap-2 text-xs text-[#6B7280] mb-6">
+              <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mb-6">
                 <Bot className="w-4 h-4 text-[#00B8D9]" />
                 <span>Chat ativo</span>
                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -442,7 +442,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                   transition={{ delay: 0.5 }}
                   className="mt-8"
                 >
-                  <p className="text-sm text-[#6B7280] mb-4 text-center">
+                  <p className="text-sm text-muted-foreground mb-4 text-center">
                     {STRINGS.chat.escolhaOpcao}
                   </p>
                   <QuickActions onAction={handleQuickAction} disabled={isLoading} />
@@ -460,10 +460,10 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                   <Card className="border-[#00B8D9]/30 bg-[#00B8D9]/5">
                     <CardContent className="p-4 flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-[#0B1F33]">
+                        <p className="font-medium text-foreground">
                           Quer respostas personalizadas?
                         </p>
-                        <p className="text-sm text-[#6B7280]">
+                        <p className="text-sm text-muted-foreground">
                           Descubra seu perfil de investidor
                         </p>
                       </div>
@@ -481,7 +481,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
         </div>
 
         {/* Input Area */}
-        <div className="bg-white border-t border-[#E5E7EB] p-4">
+        <div className="bg-card border-t border-border p-4">
           <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
             <div className="flex gap-3">
               <Input
@@ -491,9 +491,9 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                 placeholder="Digite sua mensagem..."
                 disabled={isLoading}
                 className="
-                  flex-1 border-[#E5E7EB] bg-[#F9FAFB]
+                  flex-1 border-border bg-background
                   focus:border-[#00B8D9] focus:ring-[#00B8D9]/20
-                  placeholder:text-[#6B7280] h-12
+                  placeholder:text-muted-foreground h-12
                 "
               />
               <Button
@@ -504,7 +504,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                 <Send className="w-5 h-5" />
               </Button>
             </div>
-            <p className="text-xs text-[#6B7280] mt-2 text-center">
+            <p className="text-xs text-muted-foreground mt-2 text-center">
               Powered by OpenAI • {STRINGS.chat.respostasIADisclaimer}
             </p>
           </form>

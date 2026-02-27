@@ -40,7 +40,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         className={`
           max-w-[80%] rounded-2xl px-4 py-3
           ${isAssistant
-            ? 'bg-white border border-[#E5E7EB] text-[#0B1F33] rounded-tl-sm'
+            ? 'bg-card border border-border text-foreground rounded-tl-sm'
             : 'nuvary-gradient text-white rounded-tr-sm'
           }
         `}
@@ -72,7 +72,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         {/* Timestamp */}
         {!message.isLoading && (
           <div
-            className={`text-xs mt-1.5 ${isAssistant ? 'text-[#6B7280]' : 'text-white/70'}`}
+            className={`text-xs mt-1.5 ${isAssistant ? 'text-muted-foreground' : 'text-white/70'}`}
           >
             {message.timestamp.toLocaleTimeString('pt-BR', {
               hour: '2-digit',
