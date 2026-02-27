@@ -656,8 +656,8 @@ function ConversaItem({
               className={`
                 p-1 rounded transition-colors
                 ${showMenu
-                  ? 'opacity-100 text-white bg-[#3D3D3D]'
-                  : 'opacity-0 group-hover:opacity-100 text-[#6B7280] hover:text-white hover:bg-[#3D3D3D]'}
+                  ? 'text-white bg-[#3D3D3D]'
+                  : 'text-[#6B7280] hover:text-white hover:bg-[#3D3D3D]'}
               `}
               title="Mais opções"
             >
