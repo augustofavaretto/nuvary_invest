@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Fevereiro 2026 - v3.6.0</span>
+            <span class="version-badge">Março 2026 - v3.7.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,8 +331,8 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🎉</span>
             <div>
-                <strong>Marco: 122 tarefas concluídas na v3.6.0!</strong>
-                <p style="margin: 0; opacity: 0.9;">Sidebar compacta 80px estilo B3, logo Nuvary no menu, perfil com upload de foto, chat com menu contextual, fix Railway Node 20</p>
+                <strong>Marco: 130 tarefas concluídas na v3.7.0!</strong>
+                <p style="margin: 0; opacity: 0.9;">Página /relatorios completa: Performance (Recharts vs CDI/IBOV/IPCA), Extratos (tabela filtrada), Imposto de Renda (DARF, isenções PF)</p>
             </div>
         </div>
 
@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">122</div>
+                    <div class="stat-number">130</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -613,6 +613,18 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Botão X na página /configuracoes para voltar ao dashboard<span class="task-new">NOVO</span></span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Chat sidebar: botão "..." (MoreHorizontal) sempre visível com dropdown Renomear/Apagar<span class="task-new">NOVO</span></span></li>
             </ul>
+
+            <div class="category-header">📊 Página Relatórios Completa <span class="task-new">NOVO v3.7.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Página /relatorios reescrita com 3 abas substituindo placeholder "Em breve" (441 linhas)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Aba Performance: 4 KPIs dinâmicos — Mês atual, Últimos 6M, Últimos 12M, % do CDI<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">LineChart Recharts: rentabilidade da carteira vs CDI, IBOV e IPCA (7 meses, 4 linhas)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">BarChart Recharts: rentabilidade por categoria 12M com cores individuais via &lt;Cell&gt;<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Aba Extratos: tabela de 10 transações com filtros busca/tipo/categoria em tempo real + botão exportar<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Aba IR: 3 cards (Ganho Capital R$2.847, DARF R$427, Dividendos Isentos R$642)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Aba IR: tabela de operações tributáveis por mês com status Pago/Pendente/Isento e botão "Exportar DARF"<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Aba IR: seção de isenções PF — dividendos ações, FIIs, vendas ≤R$20k/mês, poupança<span class="task-new">NOVO</span></span></li>
+            </ul>
         </section>
 
         <section id="prioridade" class="section-fire">
@@ -627,8 +639,8 @@
 
             <div class="category-header">🟡 Páginas e Funcionalidades Incompletas</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Página /extratos</strong> — Implementar histórico de transações com filtro de data, tipo e ativo (atualmente só "Em breve")</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Página /relatorios</strong> — Performance mensal, alocação real vs. ideal do perfil, rentabilidade por categoria (atualmente só "Em breve")</span></li>
+                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Página /extratos</strong> — Conectar tabela de transações a dados reais via Supabase ou integração corretora (mock implementado na aba Extratos em /relatorios)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><strong>Página /relatorios</strong> — Concluída na v3.7.0: 3 abas (Performance, Extratos, IR) com gráficos Recharts, filtros e DARF<span class="task-new">FEITO v3.7</span></span></li>
                 <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Trilhas — integrar vídeos reais</strong> — 48 cards criados mas sem reprodução; integrar YouTube embed ou URLs externas por card</span></li>
                 <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Taxa USD/BRL dinâmica</strong> — câmbio hardcoded 5.0 em portfolioService.ts; buscar via BCB SGS série 1 (PTAX) ou Alpha Vantage</span></li>
             </ul>
@@ -781,7 +793,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentação Técnica v3.2.0 | Fevereiro 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v3.7.0 | Março 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>
