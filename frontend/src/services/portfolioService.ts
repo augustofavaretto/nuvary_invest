@@ -1,7 +1,7 @@
-// Portfolio Service - Persistência via localStorage
-// Em produção, conectaria a APIs de corretoras reais
+// Portfolio Service - Persistência via Supabase
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+import supabase from '@/lib/supabase';
 
 export type AssetClass = 'renda_fixa' | 'renda_variavel' | 'fiis' | 'internacional';
 export type CategoryId = 'renda_fixa' | 'tesouro' | 'renda_variavel' | 'fiis' | 'internacional' | 'cripto';
@@ -400,60 +400,73 @@ function generateId(): string {
   return `asset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
-// Carregar ativos do localStorage
-export function loadSavedAssets(): Asset[] {
-  if (typeof window === 'undefined') return [];
-
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      return JSON.parse(saved);
-    }
-  } catch (error) {
-    console.error('Erro ao carregar ativos:', error);
-  }
-  return [];
+// Mapeia linha do Supabase (snake_case) → Asset (camelCase)
+function dbRowToAsset(row: Record<string, unknown>): Asset {
+  return {
+    id: row.id as string,
+    name: row.name as string,
+    ticker: row.ticker as string,
+    type: row.type as AssetClass,
+    quantity: Number(row.quantity),
+    averagePrice: Number(row.average_price),
+    currentPrice: Number(row.current_price),
+    totalValue: Number(row.total_value),
+    variation: Number(row.variation),
+    broker: row.broker as string,
+    percentageOfPortfolio: 0,
+    percentageOfProduct: 0,
+  };
 }
 
-// Salvar ativos no localStorage
-export function saveAssets(assets: Asset[]): void {
-  if (typeof window === 'undefined') return;
+// Mapeia Asset → payload de insert/update (snake_case para o Supabase)
+function assetToDbRow(asset: Asset, userId: string) {
+  return {
+    id: asset.id,
+    user_id: userId,
+    name: asset.name,
+    ticker: asset.ticker,
+    type: asset.type,
+    quantity: asset.quantity,
+    average_price: asset.averagePrice,
+    current_price: asset.currentPrice,
+    total_value: asset.totalValue,
+    variation: asset.variation,
+    broker: asset.broker,
+  };
+}
 
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(assets));
-  } catch (error) {
-    console.error('Erro ao salvar ativos:', error);
-  }
+// Busca todos os ativos do usuário no Supabase (uso interno)
+async function getAllAssetsFromDB(): Promise<Asset[]> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+  const { data, error } = await supabase
+    .from('portfolio_assets')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: true });
+  if (error) { console.error('Erro ao carregar ativos:', error); return []; }
+  return (data ?? []).map(dbRowToAsset);
 }
 
 // Adicionar novo ativo
-export function addAsset(assetData: {
+export async function addAsset(assetData: {
   ticker: string;
   name: string;
   quantity: number;
   averagePrice: number;
   class: AssetClass;
   broker: string;
-}): Asset {
-  const assets = loadSavedAssets();
+}): Promise<Asset> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Usuário não autenticado');
 
   // Renda Fixa e Tesouro: quantity = R$ investido, averagePrice = taxa (%)
-  // O valor total é o próprio montante investido (sem variação de mercado)
   const isFixedIncome = assetData.class === 'renda_fixa';
-
-  let currentPrice: number;
-  let totalValue: number;
-  let variationPercent: number;
-
-  if (isFixedIncome) {
-    currentPrice = assetData.averagePrice; // armazena a taxa (%)
-    totalValue = assetData.quantity;       // quantity = R$ aplicado
-    variationPercent = 0;
-  } else {
-    variationPercent = (Math.random() * 20) - 5; // -5% a +15%
-    currentPrice = assetData.averagePrice * (1 + variationPercent / 100);
-    totalValue = assetData.quantity * currentPrice;
-  }
+  const variationPercent = isFixedIncome ? 0 : (Math.random() * 20) - 5;
+  const currentPrice = isFixedIncome
+    ? assetData.averagePrice
+    : assetData.averagePrice * (1 + variationPercent / 100);
+  const totalValue = isFixedIncome ? assetData.quantity : assetData.quantity * currentPrice;
 
   const newAsset: Asset = {
     id: generateId(),
@@ -464,38 +477,43 @@ export function addAsset(assetData: {
     averagePrice: assetData.averagePrice,
     currentPrice,
     totalValue,
-    percentageOfPortfolio: 0, // Will be calculated
-    percentageOfProduct: 0, // Will be calculated
+    percentageOfPortfolio: 0,
+    percentageOfProduct: 0,
     variation: variationPercent,
     broker: assetData.broker,
   };
 
-  assets.push(newAsset);
-  saveAssets(assets);
-
+  const { error } = await supabase.from('portfolio_assets').insert(assetToDbRow(newAsset, user.id));
+  if (error) { console.error('Erro ao adicionar ativo:', error); throw error; }
   return newAsset;
 }
 
 // Remove asset
-export function removeAsset(assetId: string): void {
-  const assets = loadSavedAssets();
-  const filtered = assets.filter(a => a.id !== assetId);
-  saveAssets(filtered);
+export async function removeAsset(assetId: string): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  const { error } = await supabase
+    .from('portfolio_assets').delete().eq('id', assetId).eq('user_id', user.id);
+  if (error) console.error('Erro ao remover ativo:', error);
 }
 
 // Update asset
-export function updateAsset(assetId: string, updates: Partial<Asset>): void {
-  const assets = loadSavedAssets();
-  const index = assets.findIndex(a => a.id === assetId);
-
-  if (index !== -1) {
-    assets[index] = { ...assets[index], ...updates };
-    // Recalculate total value if quantity or price changed
-    if (updates.quantity !== undefined || updates.currentPrice !== undefined) {
-      assets[index].totalValue = assets[index].quantity * assets[index].currentPrice;
-    }
-    saveAssets(assets);
-  }
+export async function updateAsset(assetId: string, updates: Partial<Asset>): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  const dbUpdates: Record<string, unknown> = {};
+  if (updates.name          !== undefined) dbUpdates.name          = updates.name;
+  if (updates.ticker        !== undefined) dbUpdates.ticker        = updates.ticker;
+  if (updates.type          !== undefined) dbUpdates.type          = updates.type;
+  if (updates.quantity      !== undefined) dbUpdates.quantity      = updates.quantity;
+  if (updates.averagePrice  !== undefined) dbUpdates.average_price = updates.averagePrice;
+  if (updates.currentPrice  !== undefined) dbUpdates.current_price = updates.currentPrice;
+  if (updates.totalValue    !== undefined) dbUpdates.total_value   = updates.totalValue;
+  if (updates.variation     !== undefined) dbUpdates.variation     = updates.variation;
+  if (updates.broker        !== undefined) dbUpdates.broker        = updates.broker;
+  const { error } = await supabase
+    .from('portfolio_assets').update(dbUpdates).eq('id', assetId).eq('user_id', user.id);
+  if (error) console.error('Erro ao atualizar ativo:', error);
 }
 
 // Calculate portfolio data from saved assets
@@ -615,41 +633,28 @@ export function calculatePortfolioData(assets: Asset[]): PortfolioData {
 
 // Service functions
 export async function getPortfolioData(): Promise<PortfolioData> {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 300));
-
-  const savedAssets = loadSavedAssets();
+  const savedAssets = await getAllAssetsFromDB();
   return calculatePortfolioData(savedAssets);
 }
 
 export async function getPortfolioSummary(): Promise<PortfolioSummary> {
-  await new Promise(resolve => setTimeout(resolve, 200));
-
-  const savedAssets = loadSavedAssets();
-  const data = calculatePortfolioData(savedAssets);
-  return data.summary;
+  const savedAssets = await getAllAssetsFromDB();
+  return calculatePortfolioData(savedAssets).summary;
 }
 
 export async function getPortfolioByClass(): Promise<AssetClassData[]> {
-  await new Promise(resolve => setTimeout(resolve, 200));
-
-  const savedAssets = loadSavedAssets();
-  const data = calculatePortfolioData(savedAssets);
-  return data.byClass;
+  const savedAssets = await getAllAssetsFromDB();
+  return calculatePortfolioData(savedAssets).byClass;
 }
 
 export async function getPortfolioByBroker(): Promise<Broker[]> {
-  await new Promise(resolve => setTimeout(resolve, 200));
-
-  const savedAssets = loadSavedAssets();
-  const data = calculatePortfolioData(savedAssets);
-  return data.byBroker;
+  const savedAssets = await getAllAssetsFromDB();
+  return calculatePortfolioData(savedAssets).byBroker;
 }
 
-// Get all saved assets
+// Get all assets
 export async function getAllAssets(): Promise<Asset[]> {
-  await new Promise(resolve => setTimeout(resolve, 100));
-  return loadSavedAssets();
+  return getAllAssetsFromDB();
 }
 
 // Format currency
@@ -666,7 +671,39 @@ export function formatPercentage(value: number): string {
 }
 
 // Clear all portfolio data
-export function clearPortfolio(): void {
+export async function clearPortfolio(): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  const { error } = await supabase.from('portfolio_assets').delete().eq('user_id', user.id);
+  if (error) console.error('Erro ao limpar carteira:', error);
+}
+
+// Migração única: move dados do localStorage para o Supabase
+export async function migrateLocalStorageToSupabase(): Promise<void> {
   if (typeof window === 'undefined') return;
-  localStorage.removeItem(STORAGE_KEY);
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  // Evita duplicação se o usuário já tem ativos no Supabase
+  const { count } = await supabase
+    .from('portfolio_assets')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', user.id);
+  if (count && count > 0) { localStorage.removeItem(STORAGE_KEY); return; }
+
+  let localAssets: Asset[] = [];
+  try { localAssets = JSON.parse(raw); } catch { localStorage.removeItem(STORAGE_KEY); return; }
+  if (localAssets.length === 0) { localStorage.removeItem(STORAGE_KEY); return; }
+
+  const { error } = await supabase
+    .from('portfolio_assets')
+    .insert(localAssets.map(a => assetToDbRow(a, user.id)));
+
+  if (!error) {
+    localStorage.removeItem(STORAGE_KEY);
+    console.info(`Migração concluída: ${localAssets.length} ativo(s) → Supabase`);
+  }
 }
