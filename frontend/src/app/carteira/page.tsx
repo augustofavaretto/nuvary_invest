@@ -22,6 +22,7 @@ import {
   getPortfolioData,
   addAsset,
   removeAsset,
+  migrateLocalStorageToSupabase,
   PortfolioData,
 } from '@/services/portfolioService';
 
@@ -40,8 +41,9 @@ export default function CarteiraPage() {
     }
   }, [authLoading, isAuthenticated, router]);
 
-  const loadData = async () => {
+  const loadData = async (runMigration = false) => {
     try {
+      if (runMigration) await migrateLocalStorageToSupabase();
       const data = await getPortfolioData();
       setPortfolioData(data);
     } catch (error) {
@@ -53,7 +55,7 @@ export default function CarteiraPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadData();
+      loadData(true);
     }
   }, [isAuthenticated]);
 
@@ -63,15 +65,15 @@ export default function CarteiraPage() {
     setRefreshing(false);
   };
 
-  const handleAddAsset = (assetData: NewAssetData) => {
-    addAsset(assetData);
-    handleRefresh();
+  const handleAddAsset = async (assetData: NewAssetData) => {
+    try { await addAsset(assetData); } catch (e) { console.error(e); }
+    await handleRefresh();
   };
 
-  const handleRemoveAsset = (assetId: string) => {
+  const handleRemoveAsset = async (assetId: string) => {
     if (confirm('Tem certeza que deseja remover este ativo?')) {
-      removeAsset(assetId);
-      handleRefresh();
+      await removeAsset(assetId);
+      await handleRefresh();
     }
   };
 
