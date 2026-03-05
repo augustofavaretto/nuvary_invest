@@ -167,7 +167,7 @@ export function Questionnaire() {
           className="mb-8"
         >
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 text-[#6B7280] hover:text-[#0B1F33] transition-colors">
+            <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="w-4 h-4" />
               <span className="text-sm">Voltar</span>
             </Link>
@@ -180,7 +180,7 @@ export function Questionnaire() {
                 className="h-9 w-auto"
               />
               <div className="flex flex-col leading-none">
-                <span className="text-base font-bold text-[#0B1F33]">Nuvary</span>
+                <span className="text-base font-bold text-foreground">Nuvary</span>
                 <span className="text-xs font-medium text-[#00B8D9]">INVEST</span>
               </div>
             </Link>
@@ -207,16 +207,16 @@ export function Questionnaire() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
             >
-              <Card className="border border-[#E5E7EB] shadow-lg">
+              <Card className="border border-border shadow-lg">
                 <CardContent className="p-8 text-center">
                   <div className="w-20 h-20 nuvary-gradient rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <BarChart3 className="w-10 h-10 text-white" />
                   </div>
 
-                  <h2 className="text-2xl font-bold mb-3 text-[#0B1F33]">
+                  <h2 className="text-2xl font-bold mb-3 text-foreground">
                     {STRINGS.perfil.questionarioDePerfil}
                   </h2>
-                  <p className="text-[#6B7280] mb-8 leading-relaxed">
+                  <p className="text-muted-foreground mb-8 leading-relaxed">
                     Responda 10 perguntas rápidas e descubra qual é o seu perfil
                     de investidor. O resultado vai te ajudar a tomar melhores
                     decisões de investimento.
@@ -227,7 +227,7 @@ export function Questionnaire() {
                       <div className="w-12 h-12 bg-[#00B8D9]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
                         <Target className="w-6 h-6 text-[#00B8D9]" />
                       </div>
-                      <span className="text-sm text-[#6B7280]">
+                      <span className="text-sm text-muted-foreground">
                         10 perguntas
                       </span>
                     </div>
@@ -235,7 +235,7 @@ export function Questionnaire() {
                       <div className="w-12 h-12 bg-[#00B8D9]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
                         <Clock className="w-6 h-6 text-[#00B8D9]" />
                       </div>
-                      <span className="text-sm text-[#6B7280]">
+                      <span className="text-sm text-muted-foreground">
                         2 minutos
                       </span>
                     </div>
@@ -243,7 +243,7 @@ export function Questionnaire() {
                       <div className="w-12 h-12 bg-[#00B8D9]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
                         <BarChart3 className="w-6 h-6 text-[#00B8D9]" />
                       </div>
-                      <span className="text-sm text-[#6B7280]">
+                      <span className="text-sm text-muted-foreground">
                         Resultado instantâneo
                       </span>
                     </div>
@@ -281,9 +281,9 @@ export function Questionnaire() {
               className="space-y-6"
             >
               {/* Progress Bar */}
-              <Card className="border border-[#E5E7EB] shadow-md">
+              <Card className="border border-border shadow-md">
                 <CardContent className="p-4">
-                  <div className="h-2 bg-[#E5E7EB] rounded-full overflow-hidden mb-2">
+                  <div className="h-2 bg-muted rounded-full overflow-hidden mb-2">
                     <motion.div
                       className="h-full nuvary-gradient"
                       initial={{ width: 0 }}
@@ -291,7 +291,7 @@ export function Questionnaire() {
                       transition={{ duration: 0.3 }}
                     />
                   </div>
-                  <div className="flex justify-between text-sm text-[#6B7280]">
+                  <div className="flex justify-between text-sm text-muted-foreground">
                     <span>
                       {currentQuestion.category === 'objetivos' && 'Objetivos'}
                       {currentQuestion.category === 'horizonte' && 'Horizonte'}
@@ -320,7 +320,7 @@ export function Questionnaire() {
                   variant="outline"
                   onClick={handlePrev}
                   disabled={currentIndex === 0}
-                  className="flex-1 border-[#E5E7EB] text-[#6B7280] hover:text-[#0B1F33] hover:border-[#0B1F33]"
+                  className="flex-1 border-border text-muted-foreground hover:text-foreground hover:border-foreground"
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
                   Anterior
@@ -345,13 +345,13 @@ export function Questionnaire() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <Card className="border border-[#E5E7EB] shadow-lg">
+              <Card className="border border-border shadow-lg">
                 <CardContent className="p-12 text-center">
                   <div className="w-16 h-16 nuvary-gradient rounded-full flex items-center justify-center mx-auto mb-4">
                     <Loader2 className="w-8 h-8 text-white animate-spin" />
                   </div>
-                  <p className="text-lg font-semibold text-[#0B1F33]">Analisando suas respostas...</p>
-                  <p className="text-[#6B7280] mt-2">
+                  <p className="text-lg font-semibold text-foreground">Analisando suas respostas...</p>
+                  <p className="text-muted-foreground mt-2">
                     Calculando seu perfil de investidor
                   </p>
                 </CardContent>

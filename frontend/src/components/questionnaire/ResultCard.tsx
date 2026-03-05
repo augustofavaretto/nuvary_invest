@@ -106,7 +106,7 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
       className="space-y-6"
     >
       {/* Profile Header */}
-      <Card className="border border-[#E5E7EB] shadow-lg overflow-hidden">
+      <Card className="border border-border shadow-lg overflow-hidden">
         <div className={`bg-gradient-to-r ${config.gradient} p-8 text-white text-center`}>
           <motion.div
             initial={{ scale: 0 }}
@@ -124,27 +124,27 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
           </div>
         </div>
 
-        <CardContent className="p-6">
-          <p className="text-[#6B7280] text-center leading-relaxed">
+        <CardContent className="p-6 bg-card">
+          <p className="text-muted-foreground text-center leading-relaxed">
             {profile.description}
           </p>
         </CardContent>
       </Card>
 
       {/* Category Analysis */}
-      <Card className="border border-[#E5E7EB] shadow-lg">
+      <Card className="border border-border shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">{STRINGS.perfil.analiseCategoria}</h3>
+          <h3 className="text-lg font-semibold mb-4 text-foreground">{STRINGS.perfil.analiseCategoria}</h3>
           <div className="space-y-4">
             {Object.entries(result.categoryAnalysis).map(([key, analysis]) => (
               <div key={key}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="capitalize text-[#0B1F33]">
+                  <span className="capitalize text-foreground">
                     {key === 'tolerancia_risco' ? STRINGS.perfil.toleranciaRisco : key === 'objetivos' ? 'Objetivos' : 'Horizonte'}
                   </span>
-                  <span className="text-[#6B7280]">{analysis.percentage}%</span>
+                  <span className="text-muted-foreground">{analysis.percentage}%</span>
                 </div>
-                <div className="h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <motion.div
                     className="h-full nuvary-gradient"
                     initial={{ width: 0 }}
@@ -159,9 +159,9 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
       </Card>
 
       {/* Recommended Allocation */}
-      <Card className="border border-[#E5E7EB] shadow-lg">
+      <Card className="border border-border shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">{STRINGS.perfil.alocacaoRecomendada}</h3>
+          <h3 className="text-lg font-semibold mb-4 text-foreground">{STRINGS.perfil.alocacaoRecomendada}</h3>
 
           {/* Allocation Bar */}
           <div className="flex h-10 rounded-lg overflow-hidden mb-4">
@@ -189,11 +189,11 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
                   <div
                     className={`w-3 h-3 rounded ${allocationColors[key as keyof typeof allocationColors]}`}
                   />
-                  <Icon className="w-4 h-4 text-[#6B7280]" />
-                  <span className="text-sm text-[#0B1F33]">
+                  <Icon className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-foreground">
                     {allocationLabels[key as keyof typeof allocationLabels]}
                   </span>
-                  <span className="text-sm font-semibold ml-auto text-[#0B1F33]">{value}%</span>
+                  <span className="text-sm font-semibold ml-auto text-foreground">{value}%</span>
                 </div>
               );
             })}
@@ -202,9 +202,9 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
       </Card>
 
       {/* Suggested Investments */}
-      <Card className="border border-[#E5E7EB] shadow-lg">
+      <Card className="border border-border shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">Investimentos Sugeridos</h3>
+          <h3 className="text-lg font-semibold mb-4 text-foreground">Investimentos Sugeridos</h3>
           <div className="flex flex-wrap gap-2">
             {profile.suggestedInvestments.map((investment, index) => (
               <motion.div
@@ -223,9 +223,9 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
       </Card>
 
       {/* Characteristics */}
-      <Card className="border border-[#E5E7EB] shadow-lg">
+      <Card className="border border-border shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-[#0B1F33]">{STRINGS.perfil.suasCaracteristicas}</h3>
+          <h3 className="text-lg font-semibold mb-4 text-foreground">{STRINGS.perfil.suasCaracteristicas}</h3>
           <ul className="space-y-3">
             {profile.characteristics.map((characteristic, index) => (
               <motion.li
@@ -233,7 +233,7 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1 + index * 0.1 }}
-                className="flex items-center gap-3 text-[#6B7280]"
+                className="flex items-center gap-3 text-muted-foreground"
               >
                 <CheckCircle2 className={`w-5 h-5 ${config.text}`} />
                 {characteristic}
@@ -244,13 +244,13 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
       </Card>
 
       {/* Chat CTA */}
-      <Card className="border-[#00B8D9]/30 bg-[#00B8D9]/5">
+      <Card className="border-[#00B8D9]/30 bg-[#00B8D9]/10 dark:bg-[#00B8D9]/5">
         <CardContent className="p-6 text-center">
           <MessageSquare className="w-10 h-10 text-[#00B8D9] mx-auto mb-3" />
-          <h3 className="text-lg font-semibold text-[#0B1F33] mb-2">
+          <h3 className="text-lg font-semibold text-foreground mb-2">
             Quer saber mais sobre seu perfil?
           </h3>
-          <p className="text-[#6B7280] text-sm mb-4">
+          <p className="text-muted-foreground text-sm mb-4">
             Converse com nosso assistente de IA para tirar dúvidas e receber recomendações personalizadas.
           </p>
           {onGoToChat ? (

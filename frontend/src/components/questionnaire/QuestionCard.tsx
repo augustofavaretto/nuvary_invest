@@ -59,7 +59,7 @@ export function QuestionCard({
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="border border-[#E5E7EB] shadow-lg">
+      <Card className="border border-border shadow-lg bg-card">
         <CardContent className="p-8">
           <div className="flex items-center gap-3 mb-6">
             <Badge
@@ -69,12 +69,12 @@ export function QuestionCard({
               <CategoryIcon className="w-3.5 h-3.5 mr-1.5" />
               {category.label}
             </Badge>
-            <span className="text-sm text-[#6B7280]">
+            <span className="text-sm text-muted-foreground">
               Pergunta {currentIndex + 1} de {totalQuestions}
             </span>
           </div>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-[#0B1F33] mb-8 leading-relaxed">
+          <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-8 leading-relaxed">
             {question.question}
           </h2>
 
@@ -97,8 +97,8 @@ export function QuestionCard({
                     border-2 transition-all duration-200
                     ${
                       selectedAnswer === option.value
-                        ? 'border-[#00B8D9] bg-[#00B8D9]/5 shadow-md'
-                        : 'border-[#E5E7EB] hover:border-[#00B8D9]/50 hover:bg-[#F3F4F6]'
+                        ? 'border-[#00B8D9] bg-[#00B8D9]/10 shadow-md'
+                        : 'border-border hover:border-[#00B8D9]/50 hover:bg-muted'
                     }
                   `}
                 >
@@ -115,13 +115,13 @@ export function QuestionCard({
                         ${
                           selectedAnswer === option.value
                             ? 'nuvary-gradient text-white'
-                            : 'bg-[#F3F4F6] text-[#6B7280]'
+                            : 'bg-muted text-muted-foreground'
                         }
                       `}
                     >
                       {option.value}
                     </span>
-                    <span className="text-base text-[#0B1F33]">{option.text}</span>
+                    <span className="text-base text-foreground">{option.text}</span>
                   </div>
                 </Label>
               </motion.div>
