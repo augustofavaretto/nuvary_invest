@@ -10,16 +10,12 @@ import finnhubRoutes from './routes/finnhub.js';
 import newsRoutes from './routes/news.js';
 import aiRoutes from './routes/ai.js';
 import riskProfileRoutes from './routes/riskProfile.js';
-import authRoutes from './routes/auth.js';
 import brapiRoutes from './routes/brapi.js';
 import anbimaRoutes from './routes/anbima.js';
 import tesouroDiretoRoutes from './routes/tesouroDireto.js';
 import bcbRoutes from './routes/bcb.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { rateLimiter } from './middleware/rateLimiter.js';
-
-// Importa o banco de dados para inicialização
-import './database/index.js';
 
 const app = express();
 
@@ -50,9 +46,6 @@ app.use('/api/ai', aiRoutes);
 // Routes - Risk Profile
 app.use('/api/profile', riskProfileRoutes);
 
-// Routes - Authentication
-app.use('/api/auth', authRoutes);
-
 // Routes - Brapi (B3, Crypto, Moedas, Inflação, Selic)
 app.use('/api/brapi', brapiRoutes);
 
@@ -80,7 +73,6 @@ app.get('/api/health', (req, res) => {
     },
     modules: {
       riskProfile: true,
-      authentication: true,
     },
   });
 });
@@ -97,5 +89,4 @@ app.listen(config.port, () => {
   console.log(`📰 News API Keys: ${config.newsApi.apiKeys.length}`);
   console.log(`🤖 OpenAI Key: ${config.openai.apiKey ? 'Configurada' : 'Não configurada'}`);
   console.log(`📋 Questionário de Perfil: Ativo`);
-  console.log(`🔐 Sistema de Autenticação: Ativo`);
 });
