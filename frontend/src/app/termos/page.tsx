@@ -12,7 +12,6 @@ export default function TermosPage() {
       <header className="border-b border-white/10 bg-[#0d1424]/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="Nuvary Invest" className="h-8 w-auto" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
             <span className="font-bold text-white text-lg">Nuvary Invest</span>
           </Link>
           <Link href="/cadastro" className="text-sm text-[#00B8D9] hover:underline">
