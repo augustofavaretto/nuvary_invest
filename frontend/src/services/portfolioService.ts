@@ -26,6 +26,7 @@ export interface Asset {
   percentageOfProduct: number;
   variation: number;
   broker: string;
+  createdAt?: string;
 }
 
 export interface Broker {
@@ -415,6 +416,7 @@ function dbRowToAsset(row: Record<string, unknown>): Asset {
     broker: row.broker as string,
     percentageOfPortfolio: 0,
     percentageOfProduct: 0,
+    createdAt: row.created_at as string | undefined,
   };
 }
 
