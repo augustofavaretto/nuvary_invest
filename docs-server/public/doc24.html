@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 24 - Migração Supabase PostgreSQL v3.8.0 | Nuvary Invest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1; --primary-dark: #4f46e5;
+            --secondary: #10b981; --dark: #1e1b4b;
+            --gray: #64748b; --light: #f1f5f9; --white: #ffffff;
+            --danger: #ef4444; --warning: #f59e0b; --success: #10b981;
+            --info: #3b82f6; --border: #e2e8f0;
+            --supabase: #3ECF8E; --supabase-dark: #1C1C1C;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #334155; background: var(--light); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #1C1C1C 0%, #0f4c3a 50%, #3ECF8E 100%); color: white; padding: 60px 0; text-align: center; }
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        header p { font-size: 1.05rem; opacity: 0.85; }
+        .badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin: 4px; }
+        .badge-green { background: #3ECF8E; color: #1C1C1C; }
+        .badge-red { background: #ef4444; color: white; }
+        .badge-amber { background: #f59e0b; color: white; }
+        .badge-blue { background: #3b82f6; color: white; }
+        .badge-purple { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        .badge-gray { background: #6B7280; color: white; }
+        main { padding: 40px 0; }
+        section { margin-bottom: 40px; }
+        h2 { font-size: 1.5rem; color: var(--dark); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #3ECF8E; display: flex; align-items: center; gap: 10px; }
+        h3 { font-size: 1.15rem; color: var(--dark); margin: 20px 0 10px; }
+        p { margin-bottom: 12px; color: #475569; }
+        .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+        .card-header { font-size: 1.1rem; font-weight: 700; color: var(--dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+        .stat-number { font-size: 2rem; font-weight: 800; color: #3ECF8E; }
+        .stat-label { font-size: 0.85rem; color: var(--gray); margin-top: 4px; }
+        .stat-icon { font-size: 1.5rem; margin-bottom: 8px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        th { background: linear-gradient(135deg, #1C1C1C 0%, #0f4c3a 100%); color: white; padding: 12px 16px; text-align: left; font-size: 0.9rem; }
+        td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: #475569; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8fafc; }
+        .code-block { background: #1e293b; color: #e2e8f0; padding: 20px; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 0.85rem; overflow-x: auto; margin: 12px 0; line-height: 1.7; }
+        .code-block .keyword { color: #93c5fd; }
+        .code-block .string { color: #86efac; }
+        .code-block .comment { color: #94a3b8; font-style: italic; }
+        .highlight-box { border-radius: 10px; padding: 16px 20px; margin: 16px 0; border-left: 4px solid; }
+        .highlight-green { background: #f0fdf4; border-color: #3ECF8E; }
+        .highlight-red { background: #fef2f2; border-color: #ef4444; }
+        .highlight-amber { background: #fffbeb; border-color: #f59e0b; }
+        .highlight-blue { background: #eff6ff; border-color: #3b82f6; }
+        .task-list { list-style: none; }
+        .task-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+        .task-item:last-child { border-bottom: none; }
+        .task-icon { font-size: 1.1rem; flex-shrink: 0; }
+        .task-text { color: #475569; font-size: 0.95rem; }
+        .tag-new { background: #3ECF8E; color: #1C1C1C; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-left: 6px; }
+        .tag-removed { background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-left: 6px; }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; color: #3ECF8E; text-decoration: none; font-weight: 600; margin-bottom: 30px; font-size: 0.95rem; }
+        .back-link:hover { text-decoration: underline; }
+        footer { background: var(--dark); color: rgba(255,255,255,0.7); text-align: center; padding: 30px 0; margin-top: 60px; }
+        footer a { color: #3ECF8E; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+        .arch-flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 16px; background: #f8fafc; border-radius: 10px; margin: 12px 0; }
+        .arch-box { background: white; border: 2px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 0.85rem; font-weight: 600; color: var(--dark); text-align: center; }
+        .arch-box.supabase { border-color: #3ECF8E; background: #f0fdf4; color: #0f4c3a; }
+        .arch-box.dead { border-color: #ef4444; background: #fef2f2; color: #991b1b; text-decoration: line-through; opacity: 0.6; }
+        .arch-arrow { color: #94a3b8; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="badge badge-green">v3.8.0</span>
+            <span class="badge badge-amber">Março 2026</span>
+            <h1>Migração Supabase PostgreSQL</h1>
+            <p>Carteira, perfil, chat e auth — tudo persistido no Supabase. SQLite removido do backend.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o índice</a>
+
+        <!-- Resumo -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number">140</div>
+                <div class="stat-label">Tarefas Concluídas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🗄️</div>
+                <div class="stat-number">4</div>
+                <div class="stat-label">Tabelas Supabase</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🗑️</div>
+                <div class="stat-number">4</div>
+                <div class="stat-label">Arquivos Removidos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-number">50</div>
+                <div class="stat-label">Pacotes Eliminados</div>
+            </div>
+        </div>
+
+        <!-- Contexto -->
+        <section>
+            <h2>🎯 Contexto e Problema</h2>
+            <div class="card">
+                <p>Dois problemas críticos foram resolvidos nesta versão:</p>
+                <div class="highlight-box highlight-red">
+                    <strong>SQLite efêmero no Railway</strong> — o arquivo <code>nuvary.db</code> era apagado a cada redeploy do backend, perdendo todos os dados de usuários e histórico de chat.
+                </div>
+                <div class="highlight-box highlight-amber">
+                    <strong>Carteira isolada no localStorage</strong> — ativos ficavam presos no browser local, sem sincronização entre dispositivos e sem vínculo com o usuário autenticado.
+                </div>
+                <div class="highlight-box highlight-green">
+                    <strong>Solução</strong> — migração completa para Supabase PostgreSQL com RLS (Row Level Security), garantindo persistência permanente e dados por usuário.
+                </div>
+            </div>
+        </section>
+
+        <!-- Arquitetura antes/depois -->
+        <section>
+            <h2>🏗️ Arquitetura Antes × Depois</h2>
+            <div class="card">
+                <div class="card-header">❌ Antes (problemas)</div>
+                <div class="arch-flow">
+                    <div class="arch-box">Frontend</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box dead">Backend JWT + SQLite</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box dead">nuvary.db (efêmero)</div>
+                </div>
+                <div class="arch-flow" style="margin-top: 8px;">
+                    <div class="arch-box">Carteira</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box dead">localStorage (isolado)</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">✅ Depois (atual)</div>
+                <div class="arch-flow">
+                    <div class="arch-box">Frontend</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box supabase">Supabase Auth</div>
+                    <div class="arch-arrow">+</div>
+                    <div class="arch-box supabase">Supabase PostgreSQL</div>
+                </div>
+                <div class="arch-flow" style="margin-top: 8px;">
+                    <div class="arch-box">Backend Express</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box supabase">Somente APIs externas (BCB, Brapi, etc.)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabelas Supabase -->
+        <section>
+            <h2>🗄️ Tabelas Supabase Criadas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tabela</th>
+                        <th>Versão</th>
+                        <th>Descrição</th>
+                        <th>RLS</th>
+                        <th>Trigger</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>portfolio_assets</strong></td>
+                        <td><span class="badge badge-gray" style="font-size:0.7rem;">v3.7.0</span></td>
+                        <td>Ativos da carteira do usuário — migrada do localStorage</td>
+                        <td>✅</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>profiles</strong></td>
+                        <td><span class="badge badge-green" style="font-size:0.7rem;">v3.8.0</span></td>
+                        <td>Perfil básico (nome, email, aceite_termos, avatar_url)</td>
+                        <td>✅</td>
+                        <td>✅ Auto-signup</td>
+                    </tr>
+                    <tr>
+                        <td><strong>chat_historico</strong></td>
+                        <td><span class="badge badge-green" style="font-size:0.7rem;">v3.8.0</span></td>
+                        <td>Histórico de mensagens do assistente IA por conversa</td>
+                        <td>✅</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>perfil_investidor</strong></td>
+                        <td><span class="badge badge-green" style="font-size:0.7rem;">v3.8.0</span></td>
+                        <td>Questionário de perfil de risco (UNIQUE por user_id)</td>
+                        <td>✅</td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Trigger auto-signup -->
+        <section>
+            <h2>⚡ Trigger de Auto-Criação de Perfil</h2>
+            <div class="card">
+                <p>A tabela <code>profiles</code> é populada automaticamente quando um novo usuário faz signup no Supabase Auth, via trigger PostgreSQL:</p>
+                <div class="code-block">
+<span class="keyword">CREATE OR REPLACE FUNCTION</span> public.handle_new_user()
+<span class="keyword">RETURNS TRIGGER AS</span> $$
+<span class="keyword">BEGIN</span>
+  <span class="keyword">INSERT INTO</span> public.profiles (id, nome, email, aceite_termos)
+  <span class="keyword">VALUES</span> (
+    NEW.id,
+    <span class="keyword">COALESCE</span>(NEW.raw_user_meta_data->><span class="string">'nome'</span>, NEW.email),
+    NEW.email,
+    FALSE
+  )
+  <span class="keyword">ON CONFLICT</span> (id) <span class="keyword">DO NOTHING</span>;
+  <span class="keyword">RETURN</span> NEW;
+<span class="keyword">END</span>;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+<span class="keyword">CREATE TRIGGER</span> on_auth_user_created
+  <span class="keyword">AFTER INSERT ON</span> auth.users
+  <span class="keyword">FOR EACH ROW EXECUTE FUNCTION</span> public.handle_new_user();
+                </div>
+                <div class="highlight-box highlight-blue">
+                    O campo <code>nome</code> é preenchido automaticamente a partir de <code>raw_user_meta_data</code> — que inclui o nome passado no signup. Se não houver, usa o email como fallback.
+                </div>
+            </div>
+        </section>
+
+        <!-- Carteira: localStorage → Supabase -->
+        <section>
+            <h2>💼 Carteira: localStorage → Supabase</h2>
+            <div class="card">
+                <div class="card-header">Mudanças em portfolioService.ts</div>
+                <ul class="task-list">
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Todas as funções de leitura/escrita migradas para <code>supabase.from('portfolio_assets')</code></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Helpers de mapeamento: <code>dbRowToAsset()</code> e <code>assetToDbRow()</code> — snake_case ↔ camelCase</span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>addAsset()</code>, <code>removeAsset()</code>, <code>updateAsset()</code>, <code>clearPortfolio()</code> todos <code>async</code></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Removidos <code>setTimeout</code> artificiais de 100–300ms — chamadas reais ao Supabase</span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>migrateLocalStorageToSupabase()</code> — migração automática na primeira visita à /carteira</span></li>
+                </ul>
+                <div class="highlight-box highlight-green" style="margin-top: 16px;">
+                    <strong>Migração transparente</strong> — se o usuário tinha ativos no localStorage, são migrados para o Supabase na primeira visita à página /carteira, sem nenhuma ação manual.
+                </div>
+            </div>
+        </section>
+
+        <!-- Backend cleanup -->
+        <section>
+            <h2>🧹 Limpeza do Backend</h2>
+            <div class="card">
+                <div class="card-header">Arquivos removidos <span class="tag-removed">DELETED</span></div>
+                <table style="margin-top: 12px;">
+                    <thead>
+                        <tr>
+                            <th>Arquivo</th>
+                            <th>Motivo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>backend/src/database/index.js</code></td>
+                            <td>Inicialização do SQLite com 5 tabelas — todas mortas</td>
+                        </tr>
+                        <tr>
+                            <td><code>backend/src/routes/auth.js</code></td>
+                            <td>Rotas /api/auth — não usadas pelo frontend (usa Supabase direto)</td>
+                        </tr>
+                        <tr>
+                            <td><code>backend/src/services/auth.js</code></td>
+                            <td>13 funções CRUD SQLite para usuários e tokens — todas mortas</td>
+                        </tr>
+                        <tr>
+                            <td><code>backend/src/middleware/auth.js</code></td>
+                            <td>Middleware de verificação JWT — sem rotas que o usavam</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card" style="margin-top: 16px;">
+                <div class="card-header">Dependências removidas — 50 pacotes a menos <span class="tag-removed">DELETED</span></div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                    <span class="badge badge-red">better-sqlite3</span>
+                    <span class="badge badge-red">jsonwebtoken</span>
+                    <span class="badge badge-red">bcryptjs</span>
+                </div>
+                <p style="margin-top: 12px; font-size: 0.9rem;">O script <code>start</code> também foi simplificado: <code>mkdir -p data &&</code> foi removido pois não há mais banco de dados local.</p>
+            </div>
+            <div class="card" style="margin-top: 16px;">
+                <div class="card-header">nixpacks.toml atualizado</div>
+                <p>Antes: <code>[phases.setup] nixPkgs = ["nodejs_20", "python3"]</code> — python3 era necessário para compilar <code>better-sqlite3</code> (node-gyp).</p>
+                <p>Depois: apenas <code>nodejs_20</code> — deploy mais rápido no Railway.</p>
+            </div>
+        </section>
+
+        <!-- RLS policies -->
+        <section>
+            <h2>🔒 Row Level Security (RLS)</h2>
+            <div class="card">
+                <p>Todas as tabelas têm RLS habilitado. Cada usuário acessa apenas seus próprios dados:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tabela</th>
+                            <th>SELECT</th>
+                            <th>INSERT</th>
+                            <th>UPDATE</th>
+                            <th>DELETE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>portfolio_assets</td>
+                            <td>✅ próprio</td>
+                            <td>✅ próprio</td>
+                            <td>✅ próprio</td>
+                            <td>✅ próprio</td>
+                        </tr>
+                        <tr>
+                            <td>profiles</td>
+                            <td>✅ próprio</td>
+                            <td>✅ próprio</td>
+                            <td>✅ próprio</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>chat_historico</td>
+                            <td>✅ próprio</td>
+                            <td>✅ próprio</td>
+                            <td>—</td>
+                            <td>✅ próprio</td>
+                        </tr>
+                        <tr>
+                            <td>perfil_investidor</td>
+                            <td>✅ próprio</td>
+                            <td>✅ próprio</td>
+                            <td>✅ próprio</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Tarefas -->
+        <section>
+            <h2>✅ Tarefas Concluídas nesta Versão</h2>
+            <div class="card">
+                <ul class="task-list">
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela <code>portfolio_assets</code> no Supabase com RLS — carteira migrada do localStorage<span class="tag-new">v3.8</span></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>migrateLocalStorageToSupabase()</code> — migração automática transparente na primeira visita<span class="tag-new">v3.8</span></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>portfolioService.ts</code> reescrito com Supabase — todas as funções async, sem localStorage<span class="tag-new">v3.8</span></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela <code>profiles</code> com trigger auto-criação no signup do Supabase Auth<span class="tag-new">v3.8</span></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela <code>chat_historico</code> com RLS e índices em user_id e conversa_id<span class="tag-new">v3.8</span></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela <code>perfil_investidor</code> com RLS e UNIQUE por user_id<span class="tag-new">v3.8</span></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">SQLite removido do backend — <code>database/index.js</code> e 3 arquivos de auth deletados<span class="tag-new">v3.8</span></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>better-sqlite3</code>, <code>jsonwebtoken</code>, <code>bcryptjs</code> removidos do package.json — 50 pacotes a menos<span class="tag-new">v3.8</span></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Script <code>start</code> simplificado — sem <code>mkdir -p data</code> (não há mais banco local)<span class="tag-new">v3.8</span></span></li>
+                    <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Deploy Railway: backend reinicia sem SQLite, sem risco de perda de dados em redeploy<span class="tag-new">v3.8</span></span></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Nuvary Invest - Documentação Técnica v3.8.0 | Março 2026</p>
+            <p><a href="index.html">Voltar para o índice</a></p>
+        </div>
+    </footer>
+</body>
+</html>
