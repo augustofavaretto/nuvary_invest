@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Março 2026 - v3.8.0</span>
+            <span class="version-badge">Março 2026 - v3.9.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,7 +331,7 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🎉</span>
             <div>
-                <strong>Marco: 140 tarefas concluídas na v3.8.0!</strong>
+                <strong>Marco: 151 tarefas concluídas na v3.9.0!</strong>
                 <p style="margin: 0; opacity: 0.9;">Migração completa para Supabase PostgreSQL: 4 tabelas com RLS, SQLite removido do backend, carteira + chat + perfil persistidos na nuvem</p>
             </div>
         </div>
@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">140</div>
+                    <div class="stat-number">151</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -641,6 +641,19 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Script <code>start</code> simplificado — sem <code>mkdir -p data</code> (sem banco local)<span class="task-new">NOVO</span></span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Deploy Railway: backend sem SQLite — sem perda de dados em redeploy<span class="task-new">NOVO</span></span></li>
             </ul>
+
+            <div class="category-header">🖨️ PDF Fiscal, LGPD e UX Fixes <span class="task-new">NOVO v3.9.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">DARF em PDF — código 6015, lucro × 15%, gerado via window.print() sem dependências externas<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Informe de Rendimentos em PDF — 4 seções, dados reais da carteira, instruções IRPF<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Botão "Sair" corrigido — window.location.href garante hard reload e limpeza do auth state</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Logout redireciona para landing page (/) em vez de /login</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Página /termos — Server Component, 12 seções, isenção CVM, conformidade LGPD<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Página /privacidade — Server Component, 13 seções, base legal Art. 7º LGPD, 8 direitos Art. 18, DPO, ANPD<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Links /termos e /privacidade no RegisterForm com target="_blank"<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Fix build Railway — removido onError de &lt;img&gt; em Server Components</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">QuestionCard, Questionnaire e ResultCard — dark mode: cores hardcoded → CSS vars responsivos ao tema</span></li>
+            </ul>
         </section>
 
         <section id="prioridade" class="section-fire">
@@ -786,7 +799,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentação Técnica v3.8.0 | Março 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v3.9.0 | Março 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>
