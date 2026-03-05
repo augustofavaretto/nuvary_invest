@@ -39,7 +39,7 @@ const TYPE_COLOR: Record<string, string> = {
 // ── Componente principal ──────────────────────────────────────────────────────
 export default function RelatoriosPage() {
   const router = useRouter();
-  const { loading: authLoading, isAuthenticated } = useAuth();
+  const { loading: authLoading, isAuthenticated, profile } = useAuth();
 
   const [aba, setAba] = useState<Aba>('performance');
   const [filtroTipo, setFiltroTipo] = useState('Todos');
@@ -151,6 +151,368 @@ export default function RelatoriosPage() {
   const vsCDI = cdiAnual && cdiAnual > 0 && rentTotal !== 0
     ? Number(((rentTotal / cdiAnual) * 100).toFixed(0))
     : null;
+
+  // ── Geração de documentos PDF ─────────────────────────────────────────
+  function abrirJanelaPDF(html: string, titulo: string) {
+    const win = window.open('', '_blank', 'width=900,height=700');
+    if (!win) return;
+    win.document.write(html);
+    win.document.close();
+    win.document.title = titulo;
+    win.focus();
+    setTimeout(() => { win.print(); }, 500);
+  }
+
+  function gerarDARF() {
+    const agora = new Date();
+    const mes = String(agora.getMonth() + 1).padStart(2, '0');
+    const ano = agora.getFullYear();
+    const periodoApuracao = `${mes}/${ano}`;
+    // Vencimento: último dia útil do mês seguinte (aproximado: dia 30)
+    const mesVenc = String((agora.getMonth() + 2) > 12 ? 1 : agora.getMonth() + 2).padStart(2, '0');
+    const anoVenc = agora.getMonth() + 2 > 12 ? ano + 1 : ano;
+    const vencimento = `${String(new Date(anoVenc, Number(mesVenc) - 1, 0).getDate()).padStart(2, '0')}/${mesVenc}/${anoVenc}`;
+    const valorIR = lucroTotal > 0 ? lucroTotal * 0.15 : 0;
+    const nomeUsuario = profile?.nome || 'Contribuinte';
+    const emailUsuario = profile?.email || '';
+
+    const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<title>DARF - Nuvary Invest</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; font-size: 11px; color: #000; background: #fff; padding: 20px; }
+  .header { border: 2px solid #000; padding: 8px 12px; margin-bottom: 0; }
+  .header-top { display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 14px; font-weight: bold; }
+  .header h2 { font-size: 11px; font-weight: normal; }
+  .rfb { font-size: 10px; text-align: right; }
+  .titulo-darf { background: #000; color: #fff; text-align: center; font-size: 13px; font-weight: bold; padding: 4px; margin-bottom: 0; }
+  table { width: 100%; border-collapse: collapse; }
+  td, th { border: 1px solid #000; padding: 4px 6px; vertical-align: top; }
+  .label { font-size: 8px; color: #333; display: block; margin-bottom: 2px; }
+  .valor { font-size: 11px; font-weight: bold; }
+  .valor-destaque { font-size: 14px; font-weight: bold; color: #000; }
+  .footer { border: 1px solid #000; border-top: none; padding: 6px 8px; font-size: 9px; color: #555; }
+  .aviso { margin-top: 16px; border: 1px solid #aaa; padding: 8px; font-size: 9px; color: #555; background: #f9f9f9; }
+  .logo-area { font-size: 9px; text-align: center; margin-top: 2px; }
+  @media print {
+    body { padding: 10px; }
+    .no-print { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="logo-area">MINISTÉRIO DA FAZENDA</div>
+      <h1>RECEITA FEDERAL DO BRASIL</h1>
+      <h2>Secretaria Especial da Receita Federal do Brasil</h2>
+    </div>
+    <div class="rfb">
+      <strong>DARF</strong><br/>
+      Documento de Arrecadação<br/>de Receitas Federais
+    </div>
+  </div>
+</div>
+<div class="titulo-darf">DARF — DOCUMENTO DE ARRECADAÇÃO DE RECEITAS FEDERAIS</div>
+<table>
+  <tr>
+    <td colspan="3">
+      <span class="label">01 — PERÍODO DE APURAÇÃO</span>
+      <span class="valor">${periodoApuracao}</span>
+    </td>
+    <td colspan="3">
+      <span class="label">02 — NÚMERO DO CPF / CNPJ</span>
+      <span class="valor">___.___.___-__</span>
+    </td>
+    <td colspan="4">
+      <span class="label">03 — CÓDIGO DA RECEITA</span>
+      <span class="valor">6015 — Ganhos Líquidos em Operações em Bolsa</span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="10">
+      <span class="label">04 — NOME DO CONTRIBUINTE</span>
+      <span class="valor">${nomeUsuario.toUpperCase()}</span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="4">
+      <span class="label">05 — DATA DE VENCIMENTO</span>
+      <span class="valor">${vencimento}</span>
+    </td>
+    <td colspan="3">
+      <span class="label">06 — VALOR DO PRINCIPAL (R$)</span>
+      <span class="valor-destaque">${valorIR.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+    </td>
+    <td colspan="3">
+      <span class="label">07 — MULTA (R$)</span>
+      <span class="valor">0,00</span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="4">
+      <span class="label">08 — JUROS / ENCARGOS (R$)</span>
+      <span class="valor">0,00</span>
+    </td>
+    <td colspan="3">
+      <span class="label">09 — TOTAL (R$)</span>
+      <span class="valor-destaque">${valorIR.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+    </td>
+    <td colspan="3">
+      <span class="label">10 — AUTENTICAÇÃO BANCÁRIA</span>
+      <span class="valor" style="font-size:9px;">Gerado em ${agora.toLocaleDateString('pt-BR')} às ${agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="10" style="padding:6px 8px;">
+      <span class="label">INFORMAÇÕES COMPLEMENTARES</span>
+      <span style="font-size:10px;">
+        Contribuinte: ${nomeUsuario} ${emailUsuario ? '| E-mail: ' + emailUsuario : ''}<br/>
+        Lucro estimado no período: R$ ${lucroTotal > 0 ? lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '0,00'}<br/>
+        Alíquota: 15% — Swing Trade / Renda Variável (Art. 2º da Lei 11.033/2004)<br/>
+        Base de cálculo: Resultado positivo entre patrimônio atual e valor total aportado
+      </span>
+    </td>
+  </tr>
+</table>
+<div class="footer">
+  * Este DARF foi gerado pela plataforma Nuvary Invest com fins demonstrativos. Os valores são estimativas baseadas nos ativos cadastrados na carteira.
+  Para declaração oficial, consulte um contador ou utilize o programa GCAP (Receita Federal). Código de receita 6015 aplicável a renda variável (ações, FIIs).
+</div>
+<div class="aviso">
+  <strong>ATENÇÃO:</strong> Este documento tem caráter <strong>informativo e demonstrativo</strong>. Não substitui a apuração oficial do Imposto de Renda.
+  O cálculo correto de IR exige o histórico completo de operações de compra e venda. Consulte sempre um profissional contábil habilitado.
+</div>
+<div style="text-align:center;margin-top:12px;font-size:9px;color:#999;">
+  Gerado por Nuvary Invest em ${agora.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+</div>
+<div class="no-print" style="text-align:center;margin-top:20px;">
+  <button onclick="window.print()" style="padding:10px 24px;background:#1a56db;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;">Imprimir / Salvar PDF</button>
+</div>
+</body>
+</html>`;
+
+    abrirJanelaPDF(html, 'DARF - Nuvary Invest');
+  }
+
+  function gerarInformeRendimentos() {
+    const agora = new Date();
+    const anoBase = agora.getFullYear() - (agora.getMonth() < 2 ? 1 : 0); // ano-calendário
+    const nomeUsuario = profile?.nome || 'Investidor';
+    const emailUsuario = profile?.email || '';
+
+    // Agrupamento por categoria
+    const grupos: Record<string, { ativos: Asset[]; totalInvestido: number; totalAtual: number; rendimento: number }> = {};
+    assets.forEach(a => {
+      if (!grupos[a.type]) grupos[a.type] = { ativos: [], totalInvestido: 0, totalAtual: 0, rendimento: 0 };
+      grupos[a.type].ativos.push(a);
+      grupos[a.type].totalInvestido += a.quantity * a.averagePrice;
+      grupos[a.type].totalAtual += a.totalValue;
+      grupos[a.type].rendimento += a.totalValue - (a.type === 'renda_fixa' ? a.quantity : a.quantity * a.averagePrice);
+    });
+
+    const linhasAtivos = assets.map(a => {
+      const custo = a.type === 'renda_fixa' ? a.quantity : a.quantity * a.averagePrice;
+      const result = a.totalValue - custo;
+      const isento = a.type === 'fiis' || a.type === 'renda_fixa';
+      return `<tr>
+        <td>${a.ticker}</td>
+        <td>${a.name.length > 40 ? a.name.substring(0, 40) + '...' : a.name}</td>
+        <td>${TYPE_LABEL[a.type] ?? a.type}</td>
+        <td style="text-align:right">R$ ${custo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:right">R$ ${a.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:right;color:${result >= 0 ? '#166534' : '#991b1b'}">${result >= 0 ? '+' : ''}R$ ${result.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:center">${isento ? '✓ Isento' : '15%'}</td>
+      </tr>`;
+    }).join('');
+
+    const totalCusto = assets.reduce((s, a) => s + (a.type === 'renda_fixa' ? a.quantity : a.quantity * a.averagePrice), 0);
+    const irEstimado = lucroTotal > 0 ? lucroTotal * 0.15 : 0;
+
+    const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<title>Informe de Rendimentos ${anoBase} - Nuvary Invest</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; font-size: 11px; color: #000; background: #fff; padding: 24px; }
+  .header { border-bottom: 3px solid #1a3a6b; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .header h1 { font-size: 18px; font-weight: bold; color: #1a3a6b; }
+  .header h2 { font-size: 12px; color: #555; font-weight: normal; margin-top: 2px; }
+  .header .meta { text-align: right; font-size: 10px; color: #555; }
+  .secao { margin-bottom: 16px; }
+  .secao-titulo { background: #1a3a6b; color: #fff; padding: 5px 10px; font-size: 11px; font-weight: bold; margin-bottom: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 10px; }
+  td, th { border: 1px solid #ccc; padding: 4px 6px; }
+  th { background: #e8edf5; font-weight: bold; font-size: 9px; text-transform: uppercase; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid #ccc; }
+  .info-cell { padding: 6px 10px; border-bottom: 1px solid #eee; }
+  .info-cell:nth-child(odd) { border-right: 1px solid #eee; }
+  .info-label { font-size: 8px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+  .info-valor { font-size: 12px; font-weight: bold; margin-top: 2px; }
+  .resumo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+  .resumo-card { border: 1px solid #ccc; padding: 8px 10px; }
+  .resumo-label { font-size: 8px; color: #666; text-transform: uppercase; }
+  .resumo-valor { font-size: 14px; font-weight: bold; margin-top: 3px; }
+  .verde { color: #166534; }
+  .vermelho { color: #991b1b; }
+  .azul { color: #1a3a6b; }
+  .footer { margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; font-size: 9px; color: #777; }
+  .aviso { margin-top: 12px; background: #fef9c3; border: 1px solid #fde047; padding: 8px 10px; font-size: 9px; }
+  @media print {
+    body { padding: 12px; }
+    .no-print { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div style="font-size:10px;color:#666;margin-bottom:4px;">INFORME DE RENDIMENTOS</div>
+    <h1>Nuvary Invest</h1>
+    <h2>Ano-Calendário ${anoBase} | Exercício ${anoBase + 1}</h2>
+  </div>
+  <div class="meta">
+    Emitido em: ${agora.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}<br/>
+    Horário: ${agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}<br/>
+    Plataforma: Nuvary Invest
+  </div>
+</div>
+
+<div class="secao">
+  <div class="secao-titulo">1. DADOS DO BENEFICIÁRIO</div>
+  <div class="info-grid">
+    <div class="info-cell">
+      <div class="info-label">Nome Completo</div>
+      <div class="info-valor">${nomeUsuario.toUpperCase()}</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-label">E-mail</div>
+      <div class="info-valor" style="font-size:11px">${emailUsuario}</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-label">CPF</div>
+      <div class="info-valor">___.___.___-__</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-label">Ano-Calendário</div>
+      <div class="info-valor">${anoBase}</div>
+    </div>
+  </div>
+</div>
+
+<div class="secao">
+  <div class="secao-titulo">2. RESUMO PATRIMONIAL</div>
+  <div class="resumo-grid" style="margin-top:0;border:1px solid #ccc;display:grid;">
+    <div style="border-right:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px">
+      <div class="resumo-label">Total Investido (Custo)</div>
+      <div class="resumo-valor azul">R$ ${totalCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+    </div>
+    <div style="border-right:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px">
+      <div class="resumo-label">Patrimônio Atual</div>
+      <div class="resumo-valor azul">R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+    </div>
+    <div style="border-right:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px">
+      <div class="resumo-label">Lucro / Prejuízo Estimado</div>
+      <div class="resumo-valor ${lucroTotal >= 0 ? 'verde' : 'vermelho'}">${lucroTotal >= 0 ? '+' : ''}R$ ${lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+    </div>
+    <div style="border-bottom:1px solid #ccc;padding:10px">
+      <div class="resumo-label">IR Estimado (15%)</div>
+      <div class="resumo-valor ${irEstimado > 0 ? 'vermelho' : ''}">R$ ${irEstimado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+    </div>
+  </div>
+</div>
+
+<div class="secao">
+  <div class="secao-titulo">3. POSIÇÃO DETALHADA DOS ATIVOS</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th style="text-align:right">Custo Total</th>
+        <th style="text-align:right">Valor Atual</th>
+        <th style="text-align:right">Resultado</th>
+        <th style="text-align:center">IR</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${linhasAtivos || '<tr><td colspan="7" style="text-align:center;padding:12px;color:#999">Nenhum ativo na carteira</td></tr>'}
+    </tbody>
+    <tfoot>
+      <tr style="font-weight:bold;background:#e8edf5">
+        <td colspan="3">TOTAL</td>
+        <td style="text-align:right">R$ ${totalCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:right">R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:right;color:${lucroTotal >= 0 ? '#166534' : '#991b1b'}">${lucroTotal >= 0 ? '+' : ''}R$ ${lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:center">—</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<div class="secao">
+  <div class="secao-titulo">4. RENDIMENTOS ISENTOS E NÃO TRIBUTÁVEIS</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Descrição</th>
+        <th style="text-align:right">Valor (estimado)</th>
+        <th>Fundamento Legal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>09</td>
+        <td>Lucros e Dividendos recebidos (Pessoa Física)</td>
+        <td style="text-align:right">Variável</td>
+        <td>Art. 10, Lei 9.249/95</td>
+      </tr>
+      <tr>
+        <td>26</td>
+        <td>Rendimentos de FIIs — ${assets.filter(a => a.type === 'fiis').length} ativo(s) cadastrado(s)</td>
+        <td style="text-align:right">R$ ${grupos['fiis'] ? grupos['fiis'].rendimento.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '0,00'}</td>
+        <td>Art. 3º, Lei 11.033/2004</td>
+      </tr>
+      <tr>
+        <td>12</td>
+        <td>Rendimentos LCI / LCA / CRI / CRA</td>
+        <td style="text-align:right">Variável</td>
+        <td>Art. 3º, Lei 11.033/2004</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  <strong>Declarante:</strong> Nuvary Invest — Plataforma educacional de gestão de carteiras de investimentos<br/>
+  <strong>Contato:</strong> ${emailUsuario || 'Dados cadastrados na plataforma'}<br/>
+  Este informe é gerado com base nos ativos cadastrados na plataforma e tem caráter <strong>demonstrativo</strong>.
+</div>
+
+<div class="aviso">
+  <strong>⚠ ATENÇÃO:</strong> Este documento é gerado com fins <strong>informativos e educacionais</strong>. Não substitui o Informe de Rendimentos oficial emitido por corretoras e instituições financeiras.
+  Para a Declaração de Ajuste Anual, utilize os informes oficiais fornecidos por cada instituição onde você possui investimentos.
+</div>
+
+<div class="no-print" style="text-align:center;margin-top:20px;">
+  <button onclick="window.print()" style="padding:10px 24px;background:#1a3a6b;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;">Imprimir / Salvar PDF</button>
+</div>
+
+</body>
+</html>`;
+
+    abrirJanelaPDF(html, `Informe de Rendimentos ${anoBase} - Nuvary Invest`);
+  }
 
   // ── Estados de carregamento / vazio ──────────────────────────────────────
   if (authLoading || !isAuthenticated) {
@@ -504,6 +866,51 @@ export default function RelatoriosPage() {
                   <p className="text-xs text-muted-foreground mt-1">{c.desc}</p>
                 </div>
               ))}
+            </div>
+
+            {/* Botões de download */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-card border border-border rounded-xl p-5">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center flex-shrink-0">
+                    <FileBarChart className="w-5 h-5 text-red-600 dark:text-red-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">DARF</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Documento de Arrecadação de Receitas Federais. Código 6015 — Ganhos em Bolsa.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={gerarDARF}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  Baixar DARF (PDF)
+                </button>
+              </div>
+
+              <div className="bg-card border border-border rounded-xl p-5">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">Informe de Rendimentos</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Posição completa da carteira com rendimentos, isenções e base para declaração do IR.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={gerarInformeRendimentos}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  Baixar Informe de Rendimentos (PDF)
+                </button>
+              </div>
             </div>
 
             {/* Isenções */}
