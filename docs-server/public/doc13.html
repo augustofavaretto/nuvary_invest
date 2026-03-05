@@ -644,17 +644,9 @@
         <section id="prioridade" class="section-fire">
             <h2><span class="icon">🔥</span> Críticos — Alta Prioridade (v4.0.0)</h2>
 
-            <div class="category-header">🔴 Persistência e Banco de Dados</div>
-            <ul class="task-list">
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><strong>Migrar carteira do localStorage para Supabase</strong> — tabela portfolio_assets com RLS, migrateLocalStorageToSupabase() automático<span class="task-new">FEITO v3.8</span></span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><strong>SQLite no Railway é efêmero</strong> — SQLite removido, 3 tabelas criadas no Supabase (profiles, chat_historico, perfil_investidor)<span class="task-new">FEITO v3.8</span></span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><strong>Unificar autenticação</strong> — backend JWT eliminado (database/index.js, routes/auth.js, services/auth.js removidos), somente Supabase Auth<span class="task-new">FEITO v3.8</span></span></li>
-            </ul>
-
             <div class="category-header">🟡 Páginas e Funcionalidades Incompletas</div>
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Página /extratos</strong> — Conectar tabela de transações a dados reais via Supabase ou integração corretora (mock implementado na aba Extratos em /relatorios)</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><strong>Página /relatorios</strong> — Concluída na v3.7.0: 3 abas (Performance, Extratos, IR) com gráficos Recharts, filtros e DARF<span class="task-new">FEITO v3.7</span></span></li>
                 <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Trilhas — integrar vídeos reais</strong> — 48 cards criados mas sem reprodução; integrar YouTube embed ou URLs externas por card</span></li>
                 <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Taxa USD/BRL dinâmica</strong> — câmbio hardcoded 5.0 em portfolioService.ts; buscar via BCB SGS série 1 (PTAX) ou Alpha Vantage</span></li>
             </ul>
@@ -675,22 +667,9 @@
                 <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Grafico de evolucao patrimonial</span></li>
             </ul>
 
-            <div class="category-header">⚙️ Configuracoes e Preferencias</div>
-            <ul class="task-list">
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pagina de configuracoes do usuario — concluída v3.6.0</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Preferencias de notificacao — concluída v3.6.0</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Selecao de tema (claro/escuro) — concluída v3.6.0</span></li>
-            </ul>
-
             <div class="category-header">💬 Melhorias no Chat</div>
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">⏳</span><span class="task-text">Exportar conversas em PDF/TXT</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Renomear conversas — concluída v3.6.0 (menu "..." sempre visível)</span></li>
-            </ul>
-
-            <div class="category-header">👤 Perfil do Usuario</div>
-            <ul class="task-list">
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Upload de foto de perfil — concluída v3.6.0 (Supabase Storage)</span></li>
             </ul>
 
             <div class="category-header">📧 Email e Comunicacao</div>
