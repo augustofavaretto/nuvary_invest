@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Março 2026 - v3.7.0</span>
+            <span class="version-badge">Março 2026 - v3.8.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,8 +331,8 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🎉</span>
             <div>
-                <strong>Marco: 130 tarefas concluídas na v3.7.0!</strong>
-                <p style="margin: 0; opacity: 0.9;">Página /relatorios completa: Performance (Recharts vs CDI/IBOV/IPCA), Extratos (tabela filtrada), Imposto de Renda (DARF, isenções PF)</p>
+                <strong>Marco: 140 tarefas concluídas na v3.8.0!</strong>
+                <p style="margin: 0; opacity: 0.9;">Migração completa para Supabase PostgreSQL: 4 tabelas com RLS, SQLite removido do backend, carteira + chat + perfil persistidos na nuvem</p>
             </div>
         </div>
 
@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">130</div>
+                    <div class="stat-number">140</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -625,6 +625,20 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Aba IR: tabela de operações tributáveis por mês com status Pago/Pendente/Isento e botão "Exportar DARF"<span class="task-new">NOVO</span></span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Aba IR: seção de isenções PF — dividendos ações, FIIs, vendas ≤R$20k/mês, poupança<span class="task-new">NOVO</span></span></li>
             </ul>
+
+            <div class="category-header">🗄️ Migração Supabase PostgreSQL <span class="task-new">NOVO v3.8.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela <code>portfolio_assets</code> no Supabase com RLS — carteira migrada do localStorage<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>migrateLocalStorageToSupabase()</code> — migração automática transparente na primeira visita à /carteira<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>portfolioService.ts</code> reescrito com Supabase — todas as funções async, helpers dbRowToAsset/assetToDbRow<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela <code>profiles</code> com trigger auto-criação no signup do Supabase Auth<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela <code>chat_historico</code> com RLS e índices em user_id e conversa_id<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela <code>perfil_investidor</code> com RLS e UNIQUE por user_id<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">SQLite removido do backend — database/index.js, routes/auth.js, services/auth.js, middleware/auth.js deletados<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>better-sqlite3</code>, <code>jsonwebtoken</code>, <code>bcryptjs</code> removidos — 50 pacotes a menos no backend<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Script <code>start</code> simplificado — sem <code>mkdir -p data</code> (sem banco local)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Deploy Railway: backend sem SQLite — sem perda de dados em redeploy<span class="task-new">NOVO</span></span></li>
+            </ul>
         </section>
 
         <section id="prioridade" class="section-fire">
@@ -632,9 +646,9 @@
 
             <div class="category-header">🔴 Persistência e Banco de Dados</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Migrar carteira do localStorage para Supabase</strong> — tabela portfolio_assets com user_id, ticker, categoria, quantidade, taxa, corretora, data_entrada</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>SQLite no Railway é efêmero</strong> — nuvary.db é apagado a cada redeploy; migrar usuários e histórico de chat para Supabase PostgreSQL</span></li>
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Unificar autenticação</strong> — eliminar backend JWT (authController, database/index.js) e usar somente Supabase Auth no frontend e no backend (supabase-js verify token)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><strong>Migrar carteira do localStorage para Supabase</strong> — tabela portfolio_assets com RLS, migrateLocalStorageToSupabase() automático<span class="task-new">FEITO v3.8</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><strong>SQLite no Railway é efêmero</strong> — SQLite removido, 3 tabelas criadas no Supabase (profiles, chat_historico, perfil_investidor)<span class="task-new">FEITO v3.8</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><strong>Unificar autenticação</strong> — backend JWT eliminado (database/index.js, routes/auth.js, services/auth.js removidos), somente Supabase Auth<span class="task-new">FEITO v3.8</span></span></li>
             </ul>
 
             <div class="category-header">🟡 Páginas e Funcionalidades Incompletas</div>
@@ -765,11 +779,11 @@
 
             <div class="category-header">🗄️ Dados e Persistencia</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Portfolio salvo apenas em localStorage — sem sync com Supabase</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Portfolio salvo apenas em localStorage — resolvido: migrado para Supabase portfolio_assets<span class="task-new">FEITO v3.8</span></span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Perfil investidor em 3 locais (localStorage, Supabase, Context) sem sincronizacao</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Cotacao USD/BRL hardcoded em R$5.00 — buscar de API forex (portfolioService.ts:76)</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Precos simulados com Math.random() no addAsset (portfolioService.ts:253-254)</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Delays artificiais simulando API (setTimeout 100-300ms nos services)</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Delays artificiais simulando API (setTimeout 100-300ms) — resolvido: chamadas reais ao Supabase<span class="task-new">FEITO v3.8</span></span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Chat historico armazenado em texto plano sem criptografia</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Memory leak: Map() de profiles no backend crece sem limpeza (riskProfile.js:4)</span></li>
             </ul>
@@ -793,7 +807,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentação Técnica v3.7.0 | Março 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v3.8.0 | Março 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>
