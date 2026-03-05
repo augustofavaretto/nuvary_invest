@@ -565,11 +565,11 @@ export function RegisterForm() {
                 />
                 <span className="text-sm text-muted-foreground">
                   Li e aceito os{' '}
-                  <Link href="/termos" className="text-[#0066CC] hover:underline">
+                  <Link href="/termos" target="_blank" rel="noopener noreferrer" className="text-[#0066CC] hover:underline">
                     Termos de Uso
                   </Link>{' '}
                   e{' '}
-                  <Link href="/privacidade" className="text-[#0066CC] hover:underline">
+                  <Link href="/privacidade" target="_blank" rel="noopener noreferrer" className="text-[#0066CC] hover:underline">
                     Política de Privacidade
                   </Link>
                 </span>
