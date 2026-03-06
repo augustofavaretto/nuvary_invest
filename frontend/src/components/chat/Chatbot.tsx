@@ -269,7 +269,8 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       });
 
       if (!response.ok) {
-        throw new Error(STRINGS.errors.erroServidor);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || STRINGS.errors.erroServidor);
       }
 
       const data = await response.json();
@@ -300,12 +301,13 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       );
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Erro desconhecido';
       setMessages((prev) =>
         prev.map((m) =>
           m.id === loadingId
             ? {
                 ...m,
-                content: 'Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente.',
+                content: `Desculpe, ocorreu um erro ao processar sua mensagem: ${errorMsg}`,
                 isLoading: false,
               }
             : m
