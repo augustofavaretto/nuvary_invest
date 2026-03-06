@@ -363,7 +363,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-full bg-background">
       {/* Sidebar */}
       {user && (
         <ChatSidebar
