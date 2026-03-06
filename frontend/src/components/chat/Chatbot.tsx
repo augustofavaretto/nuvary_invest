@@ -13,6 +13,7 @@ import { QuickActions } from './QuickActions';
 import { ChatSidebar } from './ChatSidebar';
 import { ChatMessage as ChatMessageType, InvestorProfileContext } from '@/types/chat';
 import { buscarPerfilInvestidor } from '@/services/perfilService';
+import { getAllAssets } from '@/services/portfolioService';
 import {
   salvarMensagem,
   buscarMensagensPorConversa,
@@ -76,6 +77,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState<InvestorProfileContext | null>(initialProfile);
+  const [portfolioAssets, setPortfolioAssets] = useState<Array<{ name: string; ticker: string; type: string; totalValue: number }>>([]);
   const [showQuickActions, setShowQuickActions] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -122,6 +124,19 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     };
     loadProfile();
   }, [profile, user]);
+
+  // Carrega a carteira do Supabase
+  useEffect(() => {
+    if (!user) return;
+    getAllAssets().then(assets => {
+      setPortfolioAssets(assets.map(a => ({
+        name: a.name,
+        ticker: a.ticker,
+        type: a.type,
+        totalValue: a.totalValue,
+      })));
+    }).catch(() => {});
+  }, [user]);
 
   // Inicializa com mensagem de boas-vindas
   useEffect(() => {
@@ -252,10 +267,21 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
           content: m.content,
         }));
 
-      // Prepara o contexto do perfil
-      const profileContext = profile
-        ? '\n\n' + STRINGS.chat.contextoUsuario(profile.name, profile.type, profile.score, profile.recommendedAllocation.rendaFixa, profile.recommendedAllocation.rendaVariavel, profile.recommendedAllocation.fundosImobiliarios, profile.recommendedAllocation.internacional)
-        : '';
+      // Monta contexto do usuário para o backend
+      const userContext = {
+        ...(profile && {
+          profile: {
+            nome: profile.name,
+            tipo: profile.type,
+            pontuacao: profile.score,
+            rf: profile.recommendedAllocation.rendaFixa,
+            rv: profile.recommendedAllocation.rendaVariavel,
+            fii: profile.recommendedAllocation.fundosImobiliarios,
+            intl: profile.recommendedAllocation.internacional,
+          },
+        }),
+        ...(portfolioAssets.length > 0 && { portfolio: portfolioAssets }),
+      };
 
       const response = await fetch(`${API_URL}/ai/chat`, {
         method: 'POST',
@@ -263,8 +289,9 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: content + profileContext,
+          message: content,
           conversationHistory,
+          userContext,
         }),
       });
 
