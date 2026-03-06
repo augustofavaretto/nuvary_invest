@@ -32,7 +32,7 @@ export default function ChatPage() {
 
   return (
     <DashboardLayout>
-      <div className="h-[calc(100vh-73px)]">
+      <div className="h-full overflow-hidden">
         <Chatbot />
       </div>
     </DashboardLayout>
