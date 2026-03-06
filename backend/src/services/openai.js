@@ -12,12 +12,11 @@ class OpenAIService {
   // === CHAT COMPLETION ===
 
   async chat(messages, options = {}) {
-    const { model = this.model, temperature = 0.7, maxTokens = 1000 } = options;
+    const { model = this.model } = options;
 
     const response = await this.client.chat.completions.create({
       model,
       messages,
-      max_completion_tokens: maxTokens,
     });
 
     return {
