@@ -30,7 +30,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen overflow-hidden bg-background">
       {/* Desktop Sidebar — fixo, sempre expandido */}
       <div className="hidden lg:block">
         <Sidebar />
@@ -40,7 +40,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <MobileSidebar />
 
       {/* Main Content — margem fixa de 80px no desktop */}
-      <div className="min-h-screen flex flex-col lg:ml-[80px]">
+      <div className="h-screen flex flex-col lg:ml-[80px]">
         {/* Top Header */}
         <header className="sticky top-0 z-30 bg-card border-b border-border">
           <div className="flex items-center justify-between px-6 py-4">
@@ -117,7 +117,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1">
+        <main className="flex-1 overflow-auto">
           {children}
         </main>
       </div>
