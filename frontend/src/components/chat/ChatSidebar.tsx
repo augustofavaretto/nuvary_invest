@@ -279,13 +279,25 @@ export function ChatSidebar({
           </div>
 
           {/* Botão Nova Conversa */}
-          <Button
-            onClick={onNovaConversa}
-            className="w-full bg-[#2D2D2D] hover:bg-[#3D3D3D] text-white border border-[#3D3D3D] justify-start gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Nova conversa
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={onNovaConversa}
+              className="flex-1 bg-[#2D2D2D] hover:bg-[#3D3D3D] text-white border border-[#3D3D3D] justify-start gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Nova conversa
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMostrarConfirmacaoLimpar(true)}
+              disabled={conversas.length === 0}
+              className="w-9 h-9 flex-shrink-0 text-[#6B7280] hover:text-red-400 hover:bg-red-500/10 disabled:opacity-30 disabled:cursor-not-allowed"
+              title={STRINGS.chat.limparHistorico}
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Busca */}
@@ -415,19 +427,6 @@ export function ChatSidebar({
           )}
         </ScrollArea>
 
-        {/* Footer com opções */}
-        {conversas.length > 0 && (
-          <div className="p-3 border-t border-[#2D2D2D]">
-            <Button
-              variant="ghost"
-              onClick={() => setMostrarConfirmacaoLimpar(true)}
-              className="w-full justify-start gap-2 text-[#6B7280] hover:text-red-400 hover:bg-red-500/10"
-            >
-              <Trash2 className="w-4 h-4" />
-              {STRINGS.chat.limparHistorico}
-            </Button>
-          </div>
-        )}
       </div>
 
       {/* Modal confirmar limpar histórico */}
