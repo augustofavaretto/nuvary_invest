@@ -101,6 +101,32 @@ export function ResetPasswordForm() {
     }
   };
 
+  // Tela de sucesso — verificada antes de qualquer cheque de sessão,
+  // pois o logout() dispara SIGNED_OUT e invalida a sessão após o reset.
+  if (isSuccess) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-md mx-auto"
+      >
+        <Card className="border-[#E5E7EB] shadow-lg">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 bg-[#10B981]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-8 h-8 text-[#10B981]" />
+            </div>
+            <h2 className="text-xl font-bold text-[#0B1F33] mb-2">
+              Senha redefinida!
+            </h2>
+            <p className="text-[#6B7280] mb-6">
+              Sua senha foi alterada com sucesso. Redirecionando para o login...
+            </p>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  }
+
   // Loading enquanto verifica sessao
   if (isValidSession === null) {
     return (
@@ -134,31 +160,6 @@ export function ResetPasswordForm() {
                 Solicitar novo link
               </Button>
             </Link>
-          </CardContent>
-        </Card>
-      </motion.div>
-    );
-  }
-
-  // Tela de sucesso
-  if (isSuccess) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md mx-auto"
-      >
-        <Card className="border-[#E5E7EB] shadow-lg">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-[#10B981]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="w-8 h-8 text-[#10B981]" />
-            </div>
-            <h2 className="text-xl font-bold text-[#0B1F33] mb-2">
-              Senha redefinida!
-            </h2>
-            <p className="text-[#6B7280] mb-6">
-              Sua senha foi alterada com sucesso. Redirecionando para o login...
-            </p>
           </CardContent>
         </Card>
       </motion.div>
