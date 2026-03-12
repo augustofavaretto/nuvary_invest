@@ -78,11 +78,6 @@ export function ResetPasswordForm() {
 
     try {
       await redefinirSenha(data.novaSenha);
-      await logout();
-      setIsSuccess(true);
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000);
     } catch (error) {
       if (error instanceof Error) {
         const msg = error.message.toLowerCase();
@@ -90,15 +85,22 @@ export function ResetPasswordForm() {
           setServerError('A nova senha deve ser diferente da senha atual.');
         } else if (msg.includes('weak') || msg.includes('strength')) {
           setServerError('Senha fraca. Use letras maiúsculas, minúsculas, números e símbolos.');
-        } else if (msg.includes('session') || msg.includes('not authenticated') || msg.includes('422')) {
-          setServerError('Sessão expirada. Solicite um novo link de recuperação.');
         } else {
-          setServerError(error.message || 'Erro ao redefinir senha');
+          setServerError('Sessão expirada. Solicite um novo link de recuperação.');
         }
       } else {
-        setServerError('Erro ao redefinir senha');
+        setServerError('Sessão expirada. Solicite um novo link de recuperação.');
       }
+      return;
     }
+
+    // Logout silencioso — não bloqueia o fluxo se falhar
+    try { await logout(); } catch { /* ignora */ }
+
+    setIsSuccess(true);
+    setTimeout(() => {
+      router.push('/login');
+    }, 2000);
   };
 
   // Tela de sucesso — verificada antes de qualquer cheque de sessão,
