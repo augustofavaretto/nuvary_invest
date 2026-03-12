@@ -195,7 +195,7 @@ export default function Home() {
                 className="h-8 w-auto"
               />
               <span className="text-sm text-muted-foreground">
-                © 2024 Nuvary Invest. Todos os direitos reservados.
+                © 2026 Nuvary Invest. Todos os direitos reservados.
               </span>
             </div>
             <div className="flex items-center gap-6">
