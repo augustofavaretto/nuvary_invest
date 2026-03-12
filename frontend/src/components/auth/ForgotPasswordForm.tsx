@@ -77,15 +77,15 @@ export function ForgotPasswordForm() {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md mx-auto"
       >
-        <Card className="border-[#E5E7EB] shadow-lg">
+        <Card className="border-border shadow-lg">
           <CardContent className="p-8 text-center">
             <div className="w-16 h-16 bg-[#10B981]/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="w-8 h-8 text-[#10B981]" />
             </div>
-            <h2 className="text-xl font-bold text-[#0B1F33] mb-2">
+            <h2 className="text-xl font-bold text-foreground mb-2">
               Email enviado!
             </h2>
-            <p className="text-[#6B7280] mb-6">
+            <p className="text-muted-foreground mb-6">
               Se o email existir em nossa base, você receberá as instruções para redefinir sua senha.
             </p>
             <div className="flex flex-col gap-3">
@@ -97,7 +97,7 @@ export function ForgotPasswordForm() {
                 </a>
               )}
               <Link href="/login">
-                <Button variant="outline" className="w-full border-[#E5E7EB] text-[#6B7280] hover:bg-gray-50">
+                <Button variant="outline" className="w-full border-border text-muted-foreground hover:bg-gray-50">
                   Voltar para login
                 </Button>
               </Link>
@@ -114,7 +114,7 @@ export function ForgotPasswordForm() {
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-md mx-auto"
     >
-      <Card className="border-[#E5E7EB] shadow-lg">
+      <Card className="border-border shadow-lg">
         <CardHeader className="text-center pb-2">
           <Link href="/" className="inline-block mb-4">
             <Image
@@ -125,10 +125,10 @@ export function ForgotPasswordForm() {
               className="mx-auto"
             />
           </Link>
-          <h1 className="text-2xl font-bold text-[#0B1F33]">
+          <h1 className="text-2xl font-bold text-foreground">
             Recuperar senha
           </h1>
-          <p className="text-[#6B7280] text-sm">
+          <p className="text-muted-foreground text-sm">
             Digite seu email para receber instruções
           </p>
         </CardHeader>
@@ -149,16 +149,16 @@ export function ForgotPasswordForm() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Email */}
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[#0B1F33]">
+              <Label htmlFor="email" className="text-foreground">
                 Email
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="seu@email.com"
-                  className={`pl-10 ${errors.email ? 'border-[#EF4444]' : 'border-[#E5E7EB]'}`}
+                  className={`pl-10 ${errors.email ? 'border-[#EF4444]' : 'border-border'}`}
                   {...register('email')}
                 />
               </div>
@@ -184,7 +184,7 @@ export function ForgotPasswordForm() {
           </form>
 
           {/* Link para Login */}
-          <p className="text-center text-sm text-[#6B7280] mt-4">
+          <p className="text-center text-sm text-muted-foreground mt-4">
             Lembrou a senha?{' '}
             <Link href="/login" className="text-[#0066CC] hover:underline font-medium">
               Voltar para login
