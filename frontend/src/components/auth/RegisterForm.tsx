@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -170,6 +171,7 @@ function getEmailProviderUrl(email: string): string | null {
 }
 
 export function RegisterForm() {
+  const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState('');
@@ -225,8 +227,15 @@ export function RegisterForm() {
         aceiteTermos: data.aceiteTermos,
       });
 
-      setRegisteredEmail(data.email);
-      setIsSuccess(true);
+      const result = await import('@/lib/supabase').then(m => m.default.auth.getSession());
+      if (result.data.session) {
+        // Email confirmation desabilitado — sessão criada imediatamente
+        router.push('/questionario');
+      } else {
+        // Email confirmation habilitado — mostrar tela de verificação
+        setRegisteredEmail(data.email);
+        setIsSuccess(true);
+      }
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes('already registered')) {
