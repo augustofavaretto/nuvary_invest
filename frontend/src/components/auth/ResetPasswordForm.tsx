@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from './PasswordInput';
-import { redefinirSenha } from '@/services/authService';
+import { redefinirSenha, logout } from '@/services/authService';
 import supabase from '@/lib/supabase';
 import {
   AlertCircle,
@@ -78,6 +78,7 @@ export function ResetPasswordForm() {
 
     try {
       await redefinirSenha(data.novaSenha);
+      await logout();
       setIsSuccess(true);
       setTimeout(() => {
         router.push('/login');
