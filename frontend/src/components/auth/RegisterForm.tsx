@@ -339,7 +339,7 @@ export function RegisterForm() {
           </p>
         </CardHeader>
 
-        <CardContent className="p-6">
+        <CardContent className="px-6 pb-6 pt-2">
           {/* Erro do servidor */}
           {serverError && (
             <motion.div
