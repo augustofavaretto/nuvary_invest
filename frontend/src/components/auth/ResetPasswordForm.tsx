@@ -5,13 +5,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from './PasswordInput';
-import { redefinirSenha, logout } from '@/services/authService';
+import { redefinirSenha } from '@/services/authService';
 import supabase from '@/lib/supabase';
 import {
   AlertCircle,
@@ -42,7 +41,6 @@ export function ResetPasswordForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [isValidSession, setIsValidSession] = useState<boolean | null>(null);
-  const router = useRouter();
 
   const {
     register,
@@ -53,24 +51,11 @@ export function ResetPasswordForm() {
     defaultValues: { novaSenha: '', confirmarSenha: '' },
   });
 
-  // Detecta sessão de recuperação via evento do Supabase (token chega no fragment da URL)
+  // Verifica sessão uma única vez na montagem (sem listener para evitar conflitos com AuthContext)
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
-        setIsValidSession(!!session);
-      } else if (event === 'SIGNED_OUT') {
-        setIsValidSession(false);
-      }
-    });
-
-    // Verifica sessão já existente (caso o fragment já tenha sido processado)
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setIsValidSession(true);
-      else if (isValidSession === null) setIsValidSession(false);
+      setIsValidSession(!!session);
     });
-
-    return () => subscription.unsubscribe();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async (data: ResetFormData) => {
@@ -94,17 +79,18 @@ export function ResetPasswordForm() {
       return;
     }
 
-    // Logout silencioso — não bloqueia o fluxo se falhar
-    try { await logout(); } catch { /* ignora */ }
+    // Logout silencioso para limpar a sessão
+    try { await supabase.auth.signOut(); } catch { /* ignora */ }
 
     setIsSuccess(true);
+
+    // Hard redirect para garantir estado limpo na página de login
     setTimeout(() => {
-      router.push('/login');
+      window.location.href = '/login';
     }, 2000);
   };
 
-  // Tela de sucesso — verificada antes de qualquer cheque de sessão,
-  // pois o logout() dispara SIGNED_OUT e invalida a sessão após o reset.
+  // Tela de sucesso
   if (isSuccess) {
     return (
       <motion.div
