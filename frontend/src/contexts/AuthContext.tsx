@@ -49,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (event, session) => {
         // Redireciona para redefinir senha quando o link de recuperação é clicado
         if (event === 'PASSWORD_RECOVERY') {
+          setUser(session?.user ?? null);
           router.push('/redefinir-senha');
           return;
         }

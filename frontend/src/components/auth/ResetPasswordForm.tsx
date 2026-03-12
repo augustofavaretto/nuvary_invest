@@ -79,13 +79,21 @@ export function ResetPasswordForm() {
     try {
       await redefinirSenha(data.novaSenha);
       setIsSuccess(true);
-      // Redireciona para login após 3 segundos
       setTimeout(() => {
         router.push('/login');
-      }, 3000);
+      }, 2000);
     } catch (error) {
       if (error instanceof Error) {
-        setServerError(error.message || 'Erro ao redefinir senha');
+        const msg = error.message.toLowerCase();
+        if (msg.includes('same password') || msg.includes('different from')) {
+          setServerError('A nova senha deve ser diferente da senha atual.');
+        } else if (msg.includes('weak') || msg.includes('strength')) {
+          setServerError('Senha fraca. Use letras maiúsculas, minúsculas, números e símbolos.');
+        } else if (msg.includes('session') || msg.includes('not authenticated') || msg.includes('422')) {
+          setServerError('Sessão expirada. Solicite um novo link de recuperação.');
+        } else {
+          setServerError(error.message || 'Erro ao redefinir senha');
+        }
       } else {
         setServerError('Erro ao redefinir senha');
       }
