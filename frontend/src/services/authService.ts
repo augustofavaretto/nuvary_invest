@@ -15,6 +15,7 @@ export async function cadastrar({ nome, cpf, dataNascimento, telefone, email, se
     email,
     password: senha,
     options: {
+      emailRedirectTo: `${window.location.origin}/questionario`,
       data: {
         nome,
         cpf,
