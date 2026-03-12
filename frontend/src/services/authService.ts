@@ -28,6 +28,20 @@ export async function cadastrar({ nome, cpf, dataNascimento, telefone, email, se
   });
 
   if (error) throw error;
+
+  // O trigger cria o perfil com id/nome/email.
+  // Atualiza os campos adicionais que o trigger não copia.
+  if (data.user) {
+    await supabase.from('profiles').update({
+      cpf,
+      data_nascimento: dataNascimento,
+      telefone,
+      aceite_termos: aceiteTermos,
+      data_aceite_termos: aceiteTermos ? new Date().toISOString() : null,
+      updated_at: new Date().toISOString()
+    }).eq('id', data.user.id);
+  }
+
   return data;
 }
 
