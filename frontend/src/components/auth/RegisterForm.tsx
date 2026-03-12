@@ -238,8 +238,10 @@ export function RegisterForm() {
       }
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes('already registered')) {
-          setServerError('Este email já está cadastrado');
+        if (error.message.includes('already registered') || error.message.includes('already been registered')) {
+          setServerError('Este email já está cadastrado. Tente fazer login.');
+        } else if (error.message.includes('rate') || error.message.includes('429') || error.message.includes('over_email')) {
+          setServerError('Muitas tentativas. Aguarde alguns minutos e tente novamente.');
         } else {
           setServerError(error.message || 'Erro ao criar conta');
         }
