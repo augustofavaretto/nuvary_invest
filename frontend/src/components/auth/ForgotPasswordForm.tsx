@@ -26,9 +26,20 @@ const requestSchema = z.object({
 
 type RequestFormData = z.infer<typeof requestSchema>;
 
+const EMAIL_PROVIDERS: Record<string, { nome: string; url: string }> = {
+  'gmail.com': { nome: 'Abrir Gmail', url: 'https://mail.google.com' },
+  'googlemail.com': { nome: 'Abrir Gmail', url: 'https://mail.google.com' },
+  'outlook.com': { nome: 'Abrir Outlook', url: 'https://outlook.live.com' },
+  'hotmail.com': { nome: 'Abrir Outlook', url: 'https://outlook.live.com' },
+  'live.com': { nome: 'Abrir Outlook', url: 'https://outlook.live.com' },
+  'yahoo.com': { nome: 'Abrir Yahoo Mail', url: 'https://mail.yahoo.com' },
+  'icloud.com': { nome: 'Abrir iCloud Mail', url: 'https://www.icloud.com/mail' },
+};
+
 export function ForgotPasswordForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [emailEnviado, setEmailEnviado] = useState('');
 
   const {
     register,
@@ -44,6 +55,7 @@ export function ForgotPasswordForm() {
 
     try {
       await recuperarSenha(data.email);
+      setEmailEnviado(data.email);
       setIsSuccess(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -56,6 +68,9 @@ export function ForgotPasswordForm() {
 
   // Tela de sucesso
   if (isSuccess) {
+    const dominio = emailEnviado.split('@')[1]?.toLowerCase() ?? '';
+    const provider = EMAIL_PROVIDERS[dominio];
+
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -73,11 +88,20 @@ export function ForgotPasswordForm() {
             <p className="text-[#6B7280] mb-6">
               Se o email existir em nossa base, você receberá as instruções para redefinir sua senha.
             </p>
-            <Link href="/login">
-              <Button className="bg-[#0066CC] hover:bg-[#0052A3] text-white">
-                Voltar para login
-              </Button>
-            </Link>
+            <div className="flex flex-col gap-3">
+              {provider && (
+                <a href={provider.url} target="_blank" rel="noopener noreferrer">
+                  <Button className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white">
+                    {provider.nome}
+                  </Button>
+                </a>
+              )}
+              <Link href="/login">
+                <Button variant="outline" className="w-full border-[#E5E7EB] text-[#6B7280] hover:bg-gray-50">
+                  Voltar para login
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </motion.div>

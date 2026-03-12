@@ -53,13 +53,24 @@ export function ResetPasswordForm() {
     defaultValues: { novaSenha: '', confirmarSenha: '' },
   });
 
-  // Verifica se existe uma sessao valida do link de recuperacao
+  // Detecta sessão de recuperação via evento do Supabase (token chega no fragment da URL)
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsValidSession(!!session);
-    };
-    checkSession();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+        setIsValidSession(!!session);
+      } else if (event === 'SIGNED_OUT') {
+        setIsValidSession(false);
+      }
+    });
+
+    // Verifica sessão já existente (caso o fragment já tenha sido processado)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) setIsValidSession(true);
+      else if (isValidSession === null) setIsValidSession(false);
+    });
+
+    return () => subscription.unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async (data: ResetFormData) => {
