@@ -51,11 +51,28 @@ export function ResetPasswordForm() {
     defaultValues: { novaSenha: '', confirmarSenha: '' },
   });
 
-  // Verifica sessão uma única vez na montagem (sem listener para evitar conflitos com AuthContext)
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsValidSession(!!session);
+    // Ouve PASSWORD_RECOVERY e SIGNED_IN para pegar o token quando ele chega assincronamente
+    // NÃO ouve SIGNED_OUT (causava conflito com o signOut do reset)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+        setIsValidSession(true);
+      }
     });
+
+    // Fallback: sessão já processada antes do listener montar
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setIsValidSession(true);
+      } else {
+        // Aguarda 800ms para o SDK processar o token da URL antes de invalidar
+        setTimeout(() => {
+          setIsValidSession(prev => prev === null ? false : prev);
+        }, 800);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const onSubmit = async (data: ResetFormData) => {
