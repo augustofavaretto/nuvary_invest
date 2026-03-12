@@ -13,6 +13,86 @@ interface DocItem {
 
 const docs: DocItem[] = [
   {
+    number: '26',
+    title: 'Deploy Vercel e Autenticação',
+    description: 'Migração Railway → Vercel, remoção Google OAuth, correção reset de senha com hard redirect',
+    date: 'Março 2026',
+    version: '4.0.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0066CC 100%)',
+    href: '/docs-html/doc26.html'
+  },
+  {
+    number: '25',
+    title: 'PDF Fiscal, LGPD e UX Fixes',
+    description: 'DARF e informe de rendimentos em PDF, páginas /termos e /privacidade, dark mode no questionário',
+    date: 'Março 2026',
+    version: '3.9.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #134e4a 0%, #0d9488 100%)',
+    href: '/docs-html/doc25.html'
+  },
+  {
+    number: '24',
+    title: 'Migração Supabase PostgreSQL',
+    description: 'Carteira migrada do localStorage para Supabase, SQLite removido, 4 tabelas com RLS',
+    date: 'Março 2026',
+    version: '3.8.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #1C1C1C 0%, #3ECF8E 100%)',
+    href: '/docs-html/doc24.html'
+  },
+  {
+    number: '23',
+    title: 'Página Relatórios Completa',
+    description: '3 abas: Performance (Recharts), Extratos com filtros, IR com DARF e isenções PF',
+    date: 'Março 2026',
+    version: '3.7.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #1e3a5f 0%, #7c3aed 100%)',
+    href: '/docs-html/doc23.html'
+  },
+  {
+    number: '22',
+    title: 'UX & UI — Sidebar, Perfil e Chat',
+    description: 'Sidebar compacta 80px, upload de foto, renomear conversas, página /configuracoes completa',
+    date: 'Fevereiro 2026',
+    version: '3.6.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #4C1D95 0%, #0066CC 100%)',
+    href: '/docs-html/doc22.html'
+  },
+  {
+    number: '21',
+    title: 'Análise Técnica e Roadmap v4.0',
+    description: 'Mapeamento de 14 páginas, identificação de débitos técnicos e roadmap de persistência Supabase',
+    date: 'Fevereiro 2026',
+    version: '3.5.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%)',
+    href: '/docs-html/doc21.html'
+  },
+  {
+    number: '20',
+    title: 'Trilhas Educacionais e Renda Fixa',
+    description: '48 vídeos em 8 categorias, campo taxa % a.a., BCB SGS + Tesouro Direto, cálculo CDI automático',
+    date: 'Fevereiro 2026',
+    version: '3.4.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #064e3b 0%, #10b981 100%)',
+    href: '/docs-html/doc20.html'
+  },
+  {
+    number: '19',
+    title: 'Centralização de Strings pt-BR',
+    description: 'strings.ts com 7 domínios, 15 componentes refatorados, TypeScript as const zero erros',
+    date: 'Fevereiro 2026',
+    version: '3.3.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #92400e 0%, #f59e0b 100%)',
+    href: '/docs-html/doc19.html'
+  },
+  {
     number: '18',
     title: 'TradingView Widget e Correções UTF-8',
     description: 'Widget de cotações em tempo real da TradingView e padronização UTF-8 para português brasileiro',
@@ -75,10 +155,10 @@ const docs: DocItem[] = [
   {
     number: '12',
     title: 'Google OAuth e Campos de Cadastro',
-    description: 'Autenticação social com Google, campos CPF, data de nascimento e telefone com validação',
+    description: 'Autenticação social com Google (removido em v4.0), campos CPF, data de nascimento e telefone',
     date: 'Fevereiro 2026',
     version: '2.3.0',
-    status: 'Concluído',
+    status: 'Substituído',
     gradient: 'linear-gradient(135deg, #EA4335 0%, #FBBC05 100%)',
     href: '/docs-html/doc12.html'
   },

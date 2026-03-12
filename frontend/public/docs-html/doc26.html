@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 26 - Deploy Vercel e Autenticacao | Nuvary Invest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #1e1b4b;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+        }
+        body { font-family: 'Inter', 'Segoe UI', sans-serif; line-height: 1.6; color: #334155; background: var(--light); }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0066CC 100%); color: white; padding: 40px 0; text-align: center; }
+        .version-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; }
+        header h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        header p { font-size: 1.1rem; opacity: 0.95; }
+        nav { background: var(--white); padding: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; }
+        nav a { color: var(--gray); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        nav a:hover { color: var(--primary); }
+        main { padding: 40px 0; }
+        section { background: var(--white); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        h2 { color: var(--dark); font-size: 1.5rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid var(--primary); display: flex; align-items: center; gap: 10px; }
+        h3 { color: var(--dark); font-size: 1.1rem; margin: 20px 0 12px; font-weight: 600; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; margin-bottom: 20px; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+        .update-notice { background: linear-gradient(135deg, #0066CC 0%, #0052A3 100%); color: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; }
+        .update-notice strong { font-size: 1.1rem; }
+        code { background: var(--code-bg); color: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; font-family: 'Fira Code', monospace; }
+        pre { background: var(--code-bg); color: #e2e8f0; padding: 20px; border-radius: 8px; margin: 15px 0; overflow-x: auto; font-size: 0.85rem; line-height: 1.8; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .info-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+        .info-card .label { font-size: 0.8rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .info-card .value { font-size: 1rem; font-weight: 600; color: var(--dark); }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .step-list { list-style: none; counter-reset: steps; }
+        .step-item { counter-increment: steps; display: flex; align-items: flex-start; gap: 15px; padding: 15px; margin-bottom: 10px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--primary); }
+        .step-num { background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; }
+        .step-text { color: #475569; font-size: 0.95rem; }
+        .step-text strong { color: var(--dark); }
+        .change-list { list-style: none; }
+        .change-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 15px; margin-bottom: 8px; background: #f8fafc; border-radius: 8px; }
+        .change-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .change-text { color: #475569; font-size: 0.95rem; }
+        .arch-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 15px 0; }
+        .arch-box .arch-title { font-weight: 700; color: var(--dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .arch-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+        .arch-row:last-child { border-bottom: none; }
+        .arch-label { font-weight: 600; color: var(--dark); min-width: 120px; font-size: 0.9rem; }
+        .arch-value { color: #475569; font-size: 0.9rem; }
+        footer { text-align: center; padding: 30px 0; color: var(--gray); }
+        footer a { color: var(--primary); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Marco 2026 - v4.0.0</span>
+            <h1>Deploy Vercel e Autenticacao</h1>
+            <p>Migracao Railway → Vercel, remocao Google OAuth e correcao reset de senha</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
+            <li><a href="#visao-geral">Visao Geral</a></li>
+            <li><a href="#vercel">Deploy Vercel</a></li>
+            <li><a href="#auth">Autenticacao</a></li>
+            <li><a href="#reset-senha">Reset de Senha</a></li>
+            <li><a href="#arquivos">Arquivos</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o indice</a>
+
+        <div class="update-notice">
+            <span style="font-size: 1.5rem;">🚀</span>
+            <div>
+                <strong>v4.0.0 — Migracao completa Railway → Vercel</strong>
+                <p style="margin: 0; opacity: 0.9;">Frontend e backend deployados no Vercel. Google OAuth removido. Fluxo de reset de senha corrigido com hard redirect.</p>
+            </div>
+        </div>
+
+        <!-- Visao Geral -->
+        <section id="visao-geral">
+            <h2>📋 Visao Geral das Mudancas</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="label">Versao</div>
+                    <div class="value">v4.0.0</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Data</div>
+                    <div class="value">Marco 2026</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Deploy Frontend</div>
+                    <div class="value">Vercel</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Deploy Backend</div>
+                    <div class="value">Vercel Serverless</div>
+                </div>
+            </div>
+
+            <h3>Mudancas principais</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🚀</span><span class="change-text">Migracao completa de Railway para Vercel — frontend + backend</span></li>
+                <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text">Pasta <code>docs-server/</code> removida — servidor Express de documentacao nao e mais necessario</span></li>
+                <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text">Pasta <code>docs/</code> legada removida — documentacao servida pelo proprio frontend Next.js</span></li>
+                <li class="change-item"><span class="change-icon">🔐</span><span class="change-text">Google OAuth removido do Login e Cadastro — simplificacao do fluxo de autenticacao</span></li>
+                <li class="change-item"><span class="change-icon">🔧</span><span class="change-text">Reset de senha corrigido — sem conflito com AuthContext, hard redirect para /login apos sucesso</span></li>
+                <li class="change-item"><span class="change-icon">💬</span><span class="change-text">ChatSidebar — botao "Limpar historico" movido para o header (sempre visivel)</span></li>
+            </ul>
+        </section>
+
+        <!-- Deploy Vercel -->
+        <section id="vercel">
+            <h2>🚀 Deploy Vercel</h2>
+
+            <h3>Arquitetura de Deploy</h3>
+            <div class="arch-box">
+                <div class="arch-title">🌐 URLs de Producao</div>
+                <div class="arch-row">
+                    <span class="arch-label">Frontend</span>
+                    <span class="arch-value">https://nuvary-invest.vercel.app</span>
+                </div>
+                <div class="arch-row">
+                    <span class="arch-label">Backend</span>
+                    <span class="arch-value">https://nuvary-invest-backend.vercel.app/api</span>
+                </div>
+                <div class="arch-row">
+                    <span class="arch-label">Repositorio</span>
+                    <span class="arch-value">github.com/augustofavaretto/nuvary_invest (branch main)</span>
+                </div>
+            </div>
+
+            <h3>Configuracao do Frontend no Vercel</h3>
+            <ul class="step-list">
+                <li class="step-item">
+                    <span class="step-num">1</span>
+                    <span class="step-text"><strong>Framework:</strong> Next.js | <strong>Root Directory:</strong> frontend</span>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">2</span>
+                    <span class="step-text"><strong>Variaveis de ambiente:</strong> NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_API_URL</span>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">3</span>
+                    <span class="step-text"><strong>NEXT_PUBLIC_API_URL:</strong> https://nuvary-invest-backend.vercel.app/api</span>
+                </li>
+            </ul>
+
+            <h3>Configuracao do Backend no Vercel</h3>
+            <ul class="step-list">
+                <li class="step-item">
+                    <span class="step-num">1</span>
+                    <span class="step-text"><strong>Framework:</strong> Express (Other) | <strong>Root Directory:</strong> backend</span>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">2</span>
+                    <span class="step-text"><strong>Entry point serverless:</strong> <code>backend/api/index.js</code> — importa <code>app.js</code> sem <code>listen()</code></span>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">3</span>
+                    <span class="step-text"><strong>vercel.json:</strong> builds com <code>@vercel/node</code>, routes <code>/(.*)</code> → <code>api/index.js</code></span>
+                </li>
+            </ul>
+
+            <h3>Novos arquivos criados para Vercel</h3>
+            <pre>backend/
+  api/
+    index.js        ← entry point serverless (exporta app sem listen)
+  src/
+    app.js          ← Express app sem app.listen()
+    server.js       ← importa app.js + chama listen (dev local)
+  vercel.json       ← config de build + rotas</pre>
+
+            <h3>Conteudo de backend/vercel.json</h3>
+            <pre>{
+  "version": 2,
+  "builds": [{ "src": "api/index.js", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "api/index.js" }]
+}</pre>
+
+            <h3>Conteudo de backend/api/index.js</h3>
+            <pre>import app from '../src/app.js';
+export default app;</pre>
+
+            <h3>Supabase — URL Configuration</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🔗</span><span class="change-text"><strong>URL do site:</strong> https://nuvary-invest.vercel.app</span></li>
+                <li class="change-item"><span class="change-icon">🔗</span><span class="change-text"><strong>URLs de redirecionamento:</strong> https://nuvary-invest.vercel.app/redefinir-senha</span></li>
+            </ul>
+
+            <h3>Problemas resolvidos durante a migracao</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Build error <code>Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL</code> — corrigido adicionando fallback placeholder em <code>supabase.ts</code> para SSR/prerender sem env vars</span></li>
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Warning Turbopack <code>Both outputFileTracingRoot and turbopack.root are set</code> — corrigido removendo <code>turbopack.root</code> do <code>next.config.ts</code></span></li>
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Framework detectado incorretamente como "Create React App" — corrigido manualmente para Next.js no painel do Vercel</span></li>
+            </ul>
+        </section>
+
+        <!-- Autenticacao -->
+        <section id="auth">
+            <h2>🔐 Autenticacao — Remocao Google OAuth</h2>
+
+            <h3>O que foi removido</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text">Botao "Entrar com Google" removido de <code>LoginForm.tsx</code></span></li>
+                <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text">Botao "Continuar com Google" removido de <code>RegisterForm.tsx</code></span></li>
+                <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text">Divisor "OU" removido de ambas as paginas</span></li>
+                <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text">Import e chamada de <code>loginComGoogle()</code> removidos dos componentes</span></li>
+            </ul>
+
+            <h3>Fluxo atual de autenticacao</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Login com email + senha via Supabase Auth</span></li>
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Cadastro com email + senha + CPF + data nascimento + telefone</span></li>
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Recuperacao e redefinicao de senha via email</span></li>
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Logout com hard redirect para landing page</span></li>
+            </ul>
+
+            <h3>Servico loginComGoogle (mantido no authService.ts)</h3>
+            <p style="color: var(--gray); font-size: 0.9rem; margin-top: 10px;">A funcao <code>loginComGoogle()</code> permanece em <code>authService.ts</code> pois e exportada e pode ser reativada futuramente. Apenas a UI foi removida.</p>
+        </section>
+
+        <!-- Reset de Senha -->
+        <section id="reset-senha">
+            <h2>🔧 Correcao do Fluxo de Reset de Senha</h2>
+
+            <h3>Problema identificado</h3>
+            <p style="color: #475569; margin-bottom: 15px;">O <code>onAuthStateChange</code> no <code>ResetPasswordForm</code> conflitava com o <code>AuthContext</code>: quando <code>logout()</code> era chamado apos o reset, o evento <code>SIGNED_OUT</code> re-renderizava o componente para "Link expirado" antes de <code>setIsSuccess(true)</code> ser processado pelo React.</p>
+
+            <h3>Solucao implementada</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Removido <code>onAuthStateChange</code> do <code>ResetPasswordForm</code> — conflitava com o listener do <code>AuthContext</code></span></li>
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Sessao validada apenas uma vez com <code>getSession()</code> no mount do componente</span></li>
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Substituido <code>router.push('/login')</code> por <code>window.location.href = '/login'</code> — hard redirect garante estado limpo</span></li>
+                <li class="change-item"><span class="change-icon">✅</span><span class="change-text">Chamada direta <code>supabase.auth.signOut()</code> em vez de <code>logout()</code> do service — evita side effects</span></li>
+            </ul>
+
+            <h3>Fluxo de reset corrigido</h3>
+            <ol class="step-list">
+                <li class="step-item">
+                    <span class="step-num">1</span>
+                    <span class="step-text">Usuario clica em "Esqueci minha senha" → digita email → Supabase envia email com link</span>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">2</span>
+                    <span class="step-text">Link do email redireciona para <code>/redefinir-senha</code> com token no fragment da URL</span>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">3</span>
+                    <span class="step-text"><code>AuthContext</code> detecta evento <code>PASSWORD_RECOVERY</code> → redireciona para <code>/redefinir-senha</code></span>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">4</span>
+                    <span class="step-text"><code>ResetPasswordForm</code> monta → <code>getSession()</code> valida sessao → exibe formulario</span>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">5</span>
+                    <span class="step-text">Usuario digita nova senha → <code>supabase.auth.updateUser({ password })</code> → senha salva</span>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">6</span>
+                    <span class="step-text"><code>supabase.auth.signOut()</code> → tela de sucesso → <code>window.location.href = '/login'</code> apos 2s</span>
+                </li>
+            </ol>
+
+            <h3>Codigo final do submit</h3>
+            <pre>const onSubmit = async (data: ResetFormData) => {
+  try {
+    await redefinirSenha(data.novaSenha); // supabase.auth.updateUser
+  } catch (error) {
+    setServerError('Sessao expirada. Solicite um novo link.');
+    return;
+  }
+
+  try { await supabase.auth.signOut(); } catch { /* ignora */ }
+
+  setIsSuccess(true);
+  setTimeout(() => {
+    window.location.href = '/login'; // hard redirect
+  }, 2000);
+};</pre>
+        </section>
+
+        <!-- Arquivos Modificados -->
+        <section id="arquivos">
+            <h2>📁 Arquivos Modificados / Criados</h2>
+
+            <h3>Criados</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🆕</span><span class="change-text"><code>backend/src/app.js</code> — Express app sem listen() para uso serverless</span></li>
+                <li class="change-item"><span class="change-icon">🆕</span><span class="change-text"><code>backend/api/index.js</code> — entry point Vercel serverless</span></li>
+                <li class="change-item"><span class="change-icon">🆕</span><span class="change-text"><code>backend/vercel.json</code> — configuracao de build e rotas Vercel</span></li>
+            </ul>
+
+            <h3>Modificados</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✏️</span><span class="change-text"><code>backend/src/server.js</code> — simplificado para importar app.js e chamar listen()</span></li>
+                <li class="change-item"><span class="change-icon">✏️</span><span class="change-text"><code>frontend/src/lib/supabase.ts</code> — fallback placeholder URL/key para build sem env vars</span></li>
+                <li class="change-item"><span class="change-icon">✏️</span><span class="change-text"><code>frontend/next.config.ts</code> — removido turbopack.root conflitante</span></li>
+                <li class="change-item"><span class="change-icon">✏️</span><span class="change-text"><code>frontend/src/components/auth/LoginForm.tsx</code> — removido botao Google OAuth</span></li>
+                <li class="change-item"><span class="change-icon">✏️</span><span class="change-text"><code>frontend/src/components/auth/RegisterForm.tsx</code> — removido botao Google OAuth</span></li>
+                <li class="change-item"><span class="change-icon">✏️</span><span class="change-text"><code>frontend/src/components/auth/ResetPasswordForm.tsx</code> — sem onAuthStateChange, hard redirect</span></li>
+                <li class="change-item"><span class="change-icon">✏️</span><span class="change-text"><code>frontend/src/components/chat/ChatSidebar.tsx</code> — botao limpar historico movido para header</span></li>
+            </ul>
+
+            <h3>Deletados</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text"><code>docs-server/</code> — servidor Express para servir documentacao no Railway</span></li>
+                <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text"><code>docs/</code> — pasta de documentacao legada (Markdown + HTML antigos)</span></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentacao Tecnica v4.0.0 | Marco 2026</p>
+        <p><a href="index.html">Voltar para o indice</a></p>
+    </footer>
+</body>
+</html>
