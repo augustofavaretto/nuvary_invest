@@ -79,15 +79,14 @@ export function ResetPasswordForm() {
       return;
     }
 
-    // Logout silencioso para limpar a sessão
-    try { await supabase.auth.signOut(); } catch { /* ignora */ }
-
+    // Sucesso imediato — signOut roda em background sem travar o fluxo
     setIsSuccess(true);
+    supabase.auth.signOut().catch(() => {});
 
-    // Hard redirect para garantir estado limpo na página de login
+    // Hard redirect garante estado limpo (sessão já foi encerrada no background)
     setTimeout(() => {
       window.location.href = '/login';
-    }, 2000);
+    }, 2500);
   };
 
   // Tela de sucesso
