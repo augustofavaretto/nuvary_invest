@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Março 2026 - v3.9.0</span>
+            <span class="version-badge">Março 2026 - v4.0.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -329,10 +329,10 @@
         <a href="index.html" class="back-link">Voltar para o indice</a>
 
         <div class="update-notice">
-            <span style="font-size: 1.5rem;">🎉</span>
+            <span style="font-size: 1.5rem;">🚀</span>
             <div>
-                <strong>Marco: 151 tarefas concluídas na v3.9.0!</strong>
-                <p style="margin: 0; opacity: 0.9;">Migração completa para Supabase PostgreSQL: 4 tabelas com RLS, SQLite removido do backend, carteira + chat + perfil persistidos na nuvem</p>
+                <strong>Marco: v4.0.0 — Deploy Vercel + autenticacao simplificada!</strong>
+                <p style="margin: 0; opacity: 0.9;">Migracao Railway → Vercel (frontend + backend serverless). Google OAuth removido. Fluxo de reset de senha corrigido.</p>
             </div>
         </div>
 
@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">151</div>
+                    <div class="stat-number">162</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -352,7 +352,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">⏳</div>
-                    <div class="stat-number">12</div>
+                    <div class="stat-number">10</div>
                     <div class="stat-label">Pendentes</div>
                 </div>
                 <div class="stat-card">
@@ -361,9 +361,9 @@
                     <div class="stat-label">Melhorias Futuras</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">🚀</div>
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Serviços Railway</div>
+                    <div class="stat-icon">🌐</div>
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Serviços Vercel</div>
                 </div>
             </div>
 
@@ -399,7 +399,7 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cadastro com email/senha e validacao completa</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Login/Logout com JWT e refresh token</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Recuperacao e redefinicao de senha</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Autenticacao social com Google OAuth</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Recuperacao e redefinicao de senha — hard redirect, sem conflito com AuthContext</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Campos CPF, data nascimento e telefone no cadastro</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Validacao de CPF com algoritmo oficial (modulo 11)</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Mascaras de input para CPF, telefone e data</span></li>
@@ -584,15 +584,24 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Lista de Tesouro Direto expandida para 14 títulos ativos (Selic, IPCA+, Prefixado, Educa+, RendA+)<span class="task-new">NOVO</span></span></li>
             </ul>
 
-            <div class="category-header">🚀 Deploy Railway — 3 Serviços <span class="task-new">NOVO v3.5.0</span></div>
+            <div class="category-header">🌐 Deploy Vercel — 2 Serviços <span class="task-new">NOVO v4.0.0</span></div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Backend Express no Railway: nuvaryinvest-production.up.railway.app — Node 20 + nixpacks<span class="task-new">NOVO</span></span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Frontend Next.js no Railway: nuvaryfrontend-production.up.railway.app — npm run build<span class="task-new">NOVO</span></span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Docs Express no Railway: nuvarydocs-production.up.railway.app — 21 HTMLs estáticos<span class="task-new">NOVO</span></span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Railway CLI configurado via GraphQL API — token, variáveis e domínios automatizados<span class="task-new">NOVO</span></span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">nixpacks.toml no backend: nodejs_20 + python3 para compilar better-sqlite3 (node-gyp)<span class="task-new">NOVO</span></span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">16 variáveis de ambiente configuradas via Railway GraphQL API<span class="task-new">NOVO</span></span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">docs-server com Express servindo frontend/public/docs-html como arquivos estáticos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Frontend Next.js no Vercel: nuvary-invest.vercel.app — Root Directory: frontend<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Backend Express serverless no Vercel: nuvary-invest-backend.vercel.app — api/index.js + vercel.json<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">backend/src/app.js — Express app sem listen() para uso serverless e local<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">backend/api/index.js — entry point Vercel Functions (importa app.js)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Docs servidos pelo proprio frontend (/docs) — docs-server removido<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">supabase.ts com fallback placeholder para build sem env vars (SSR Vercel)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Supabase URL Configuration: site URL e redirect URL configurados para Vercel<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🔐 Autenticacao Simplificada <span class="task-new">NOVO v4.0.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Google OAuth removido do LoginForm e RegisterForm — fluxo email/senha apenas<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">ResetPasswordForm reescrito — sem onAuthStateChange conflitante, getSession() unico<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Hard redirect window.location.href apos reset de senha — garante estado limpo<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">ChatSidebar — botao limpar historico movido para header (sempre visivel)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Pastas legadas removidas: docs-server/ e docs/ (Railway)<span class="task-new">NOVO</span></span></li>
             </ul>
 
             <div class="category-header">📋 Análise Técnica e Roadmap <span class="task-new">NOVO v3.5.0</span></div>
@@ -799,7 +808,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentação Técnica v3.9.0 | Março 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v4.0.0 | Março 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>
