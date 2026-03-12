@@ -116,7 +116,7 @@ export function LoginForm() {
           </p>
         </CardHeader>
 
-        <CardContent className="p-6">
+        <CardContent className="px-6 pb-6 pt-2">
           {/* Mensagem de sucesso do cadastro */}
           {showSuccess && (
             <motion.div
