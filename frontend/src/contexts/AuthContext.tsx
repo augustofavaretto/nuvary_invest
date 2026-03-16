@@ -67,13 +67,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function fetchProfile(userId: string) {
+    const { data: { user } } = await supabase.auth.getUser();
     const { data } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
 
-    setProfile(data);
+    if (data) {
+      // Preenche campos extras do user_metadata como fallback se não estiverem no perfil
+      const meta = user?.user_metadata ?? {};
+      setProfile({
+        ...data,
+        cpf: data.cpf ?? meta.cpf ?? null,
+        data_nascimento: data.data_nascimento ?? meta.data_nascimento ?? null,
+        telefone: data.telefone ?? meta.telefone ?? null,
+        aceite_termos: data.aceite_termos ?? meta.aceite_termos ?? false,
+        data_aceite_termos: data.data_aceite_termos ?? meta.data_aceite_termos ?? null,
+      });
+    } else {
+      setProfile(data);
+    }
   }
 
   async function logout() {

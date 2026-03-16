@@ -29,24 +29,30 @@ export async function cadastrar({ nome, cpf, dataNascimento, telefone, email, se
 
   if (error) throw error;
 
-  // O trigger cria o perfil com id/nome/email.
-  // Atualiza os campos adicionais que o trigger não copia.
+  // Salva campos adicionais na tabela profiles (upsert para garantir mesmo se trigger ainda não rodou)
   if (data.user) {
-    await supabase.from('profiles').update({
+    const agora = new Date().toISOString();
+    const { error: upsertError } = await supabase.from('profiles').upsert({
+      id: data.user.id,
+      nome,
+      email,
       cpf,
       data_nascimento: dataNascimento,
       telefone,
       aceite_termos: aceiteTermos,
-      data_aceite_termos: aceiteTermos ? new Date().toISOString() : null,
-      updated_at: new Date().toISOString()
-    }).eq('id', data.user.id);
+      data_aceite_termos: aceiteTermos ? agora : null,
+      updated_at: agora
+    }, { onConflict: 'id' });
+
+    if (upsertError) {
+      console.error('[cadastrar] Erro ao salvar perfil:', upsertError.message);
+    }
   }
 
   return data;
 }
 
 export async function login(email: string, senha: string) {
-  // TODO: Implementar login com Supabase
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password: senha
@@ -59,22 +65,6 @@ export async function login(email: string, senha: string) {
 export async function logout() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
-}
-
-export async function loginWithGoogle() {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${window.location.origin}/questionario`,
-      queryParams: {
-        access_type: 'offline',
-        prompt: 'consent',
-      }
-    }
-  });
-
-  if (error) throw error;
-  return data;
 }
 
 export async function recuperarSenha(email: string) {

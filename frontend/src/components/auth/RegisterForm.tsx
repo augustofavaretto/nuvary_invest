@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from './PasswordInput';
 import { cadastrar } from '@/services/authService';
+import supabase from '@/lib/supabase';
 import {
   User,
   Mail,
@@ -227,8 +228,8 @@ export function RegisterForm() {
         aceiteTermos: data.aceiteTermos,
       });
 
-      const result = await import('@/lib/supabase').then(m => m.default.auth.getSession());
-      if (result.data.session) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
         // Email confirmation desabilitado — sessão criada imediatamente
         router.push('/questionario');
       } else {

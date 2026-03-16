@@ -97,7 +97,7 @@ export function ForgotPasswordForm() {
                 </a>
               )}
               <Link href="/login">
-                <Button variant="outline" className="w-full border-border text-muted-foreground hover:bg-gray-50">
+                <Button variant="outline" className="w-full border-border text-muted-foreground hover:bg-muted">
                   Voltar para login
                 </Button>
               </Link>
@@ -139,7 +139,7 @@ export function ForgotPasswordForm() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-[#EF4444] text-sm"
+              className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-2 text-red-500 text-sm"
             >
               <AlertCircle className="w-4 h-4 shrink-0" />
               {serverError}
