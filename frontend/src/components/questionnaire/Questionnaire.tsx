@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { QuestionCard } from './QuestionCard';
 import { ResultCard } from './ResultCard';
-import { salvarPerfilInvestidor } from '@/services/perfilService';
+import { salvarPerfilInvestidor, verificarSeTemPerfil } from '@/services/perfilService';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Question,
@@ -43,7 +43,15 @@ export function Questionnaire() {
   const { user } = useAuth();
 
   useEffect(() => {
-    fetchQuestionnaire();
+    // Redireciona para o dashboard se o usuário já completou o questionário
+    verificarSeTemPerfil().then((temPerfil) => {
+      if (temPerfil) {
+        router.replace('/dashboard');
+      } else {
+        fetchQuestionnaire();
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchQuestionnaire = async () => {

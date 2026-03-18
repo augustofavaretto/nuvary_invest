@@ -47,7 +47,7 @@ export async function salvarPerfilInvestidor(respostas: PerfilInvestidor) {
         valor_investir: respostas.valorInvestir || respostas.valor_investir,
         respostas_completas: respostas,
         updated_at: new Date().toISOString()
-      })
+      }, { onConflict: 'user_id' })
       .select()
       .single();
 
@@ -61,14 +61,14 @@ export async function salvarPerfilInvestidor(respostas: PerfilInvestidor) {
 
 export async function buscarPerfilInvestidor(): Promise<PerfilInvestidor | null> {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
 
-    if (!user) return null;
+    if (!session?.user) return null;
 
     const { data, error } = await supabase
       .from('perfil_investidor')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', session.user.id)
       .single();
 
     if (error && error.code !== 'PGRST116') {
