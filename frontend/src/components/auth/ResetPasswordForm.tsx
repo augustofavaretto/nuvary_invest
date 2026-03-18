@@ -44,7 +44,7 @@ export function ResetPasswordForm() {
       }
 
       setIsSuccess(true);
-      await supabase.auth.signOut();
+      supabase.auth.signOut().catch(() => {});
       window.location.href = 'https://nuvary-invest.vercel.app/login';
 
     } catch {

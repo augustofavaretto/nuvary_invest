@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         // Redireciona para redefinir senha quando o link de recuperação é clicado
         if (event === 'PASSWORD_RECOVERY') {
           setUser(session?.user ?? null);
@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         setUser(session?.user ?? null);
         if (session?.user) {
-          await fetchProfile(session.user.id);
+          fetchProfile(session.user.id); // sem await — não bloqueia a fila de eventos
         } else {
           setProfile(null);
         }
