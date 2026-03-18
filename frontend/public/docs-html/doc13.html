@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">162</div>
+                    <div class="stat-number">168</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -397,7 +397,7 @@
             <div class="category-header">🔐 Autenticacao e Usuarios</div>
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cadastro com email/senha e validacao completa</span></li>
-                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Login/Logout com JWT e refresh token</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Login/Logout com Supabase Auth (sessão gerenciada pelo SDK)</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Recuperacao e redefinicao de senha</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Recuperacao e redefinicao de senha — hard redirect, sem conflito com AuthContext</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Campos CPF, data nascimento e telefone no cadastro</span></li>
@@ -663,6 +663,16 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Fix build Railway — removido onError de &lt;img&gt; em Server Components</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">QuestionCard, Questionnaire e ResultCard — dark mode: cores hardcoded → CSS vars responsivos ao tema</span></li>
             </ul>
+
+            <div class="category-header">🔐 Fixes de Autenticação e Cadastro <span class="task-new">NOVO v3.7.1+</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Fluxo completo de autenticação corrigido — onAuthStateChange sem deadlock no redefinir-senha</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Mensagem amigável para rate limit 429 no cadastro — "Aguarde alguns minutos..."</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Salvar cpf, data_nascimento, telefone e aceite_termos na tabela profiles no cadastro</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Redirecionar para /questionario após cadastro sem confirmação de email habilitada</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Redirecionar para /questionario após confirmação de email no cadastro</span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Usuário com perfil existente vai direto ao /dashboard — sem repetir questionário</span></li>
+            </ul>
         </section>
 
         <section id="prioridade" class="section-fire">
@@ -747,7 +757,6 @@
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">CORS aberto no backend — <code>cors()</code> aceita qualquer origem (server.js:24)</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">JWT secrets com fallback fraco hardcoded (config/index.js:40-41)</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Token de reset de senha retornado na resposta da API (auth.js:143)</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Rotas publicas sem autenticacao: stocks, crypto, news, finnhub, forex, search</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Perfil de risco acessivel/deletavel sem auth (riskProfile.js:19-26)</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Sem limite de tamanho no body — <code>express.json()</code> sem <code>limit</code> (server.js:25)</span></li>
@@ -777,7 +786,6 @@
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Auth check duplicado em dashboard e carteira — criar ProtectedPageLayout</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Componentes grandes: AddAssetModal (711 linhas), Chatbot (515), RegisterForm (611)</span></li>
                 <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">Tipos <code>unknown</code> sem narrowing adequado (dashboardService, perfilService)</span></li>
-                <li class="task-item"><span class="task-icon">🛠️</span><span class="task-text">TODO no codigo: "Implementar login com Supabase" ja implementado (authService.ts:34)</span></li>
             </ul>
 
             <div class="category-header">🗄️ Dados e Persistencia</div>
