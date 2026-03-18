@@ -35,7 +35,8 @@ type ResetFormData = z.infer<typeof resetSchema>;
 export function ResetPasswordForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [isValidSession, setIsValidSession] = useState<boolean | null>(null);
+  // null = verificando | true = token válido | false = token inválido/expirado
+  const [tokenValido, setTokenValido] = useState<boolean | null>(null);
 
   const {
     register,
@@ -47,24 +48,22 @@ export function ResetPasswordForm() {
   });
 
   useEffect(() => {
+    // Só aceita PASSWORD_RECOVERY como sessão válida para esta página
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
-        setIsValidSession(true);
-      }
-      // Não ouve USER_UPDATED nem SIGNED_OUT — redirect é feito no onSubmit
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setIsValidSession(true);
-      } else {
-        setTimeout(() => {
-          setIsValidSession(prev => prev === null ? false : prev);
-        }, 800);
+      if (event === 'PASSWORD_RECOVERY') {
+        setTokenValido(true);
       }
     });
 
-    return () => subscription.unsubscribe();
+    // Aguarda o SDK processar o token da URL antes de invalidar
+    const timer = setTimeout(() => {
+      setTokenValido(prev => prev === null ? false : prev);
+    }, 1000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timer);
+    };
   }, []);
 
   const onSubmit = async (data: ResetFormData) => {
@@ -75,7 +74,12 @@ export function ResetPasswordForm() {
     } catch (error) {
       if (error instanceof Error) {
         const msg = error.message.toLowerCase();
-        if (msg.includes('same password') || msg.includes('different from')) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const status = (error as any).status ?? (error as any).code;
+
+        if (status === 422 || msg.includes('422')) {
+          setServerError('Link de redefinição expirado ou já utilizado. Solicite um novo link.');
+        } else if (msg.includes('same password') || msg.includes('different from')) {
           setServerError('A nova senha deve ser diferente da senha atual.');
         } else if (msg.includes('weak') || msg.includes('strength')) {
           setServerError('Senha fraca. Use letras maiúsculas, minúsculas, números e símbolos.');
@@ -88,12 +92,12 @@ export function ResetPasswordForm() {
       return;
     }
 
-    // Senha atualizada — mostra sucesso, faz logout e redireciona
     setIsSuccess(true);
     await supabase.auth.signOut();
     window.location.replace('/login');
   };
 
+  // Tela de sucesso
   if (isSuccess) {
     return (
       <motion.div
@@ -118,7 +122,8 @@ export function ResetPasswordForm() {
     );
   }
 
-  if (isValidSession === null) {
+  // Verificando token
+  if (tokenValido === null) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066CC]" />
@@ -126,7 +131,8 @@ export function ResetPasswordForm() {
     );
   }
 
-  if (!isValidSession) {
+  // Token expirado ou já utilizado
+  if (!tokenValido) {
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -139,10 +145,10 @@ export function ResetPasswordForm() {
               <AlertCircle className="w-8 h-8 text-[#EF4444]" />
             </div>
             <h2 className="text-xl font-bold text-foreground mb-2">
-              Link expirado
+              Link expirado ou já utilizado
             </h2>
             <p className="text-muted-foreground mb-6">
-              Este link de recuperação expirou ou é inválido. Solicite um novo link.
+              Este link de recuperação é válido para uso único. Solicite um novo link.
             </p>
             <Link href="/recuperar-senha">
               <Button className="bg-[#0066CC] hover:bg-[#0052A3] text-white">
@@ -155,6 +161,7 @@ export function ResetPasswordForm() {
     );
   }
 
+  // Formulário — token válido
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -189,6 +196,11 @@ export function ResetPasswordForm() {
             >
               <AlertCircle className="w-4 h-4 shrink-0" />
               {serverError}
+              {serverError.includes('expirado') && (
+                <Link href="/recuperar-senha" className="ml-1 underline font-medium whitespace-nowrap">
+                  Novo link
+                </Link>
+              )}
             </motion.div>
           )}
 
