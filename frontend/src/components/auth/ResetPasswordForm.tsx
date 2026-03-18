@@ -12,14 +12,9 @@ import { Label } from '@/components/ui/label';
 import { PasswordInput } from './PasswordInput';
 import { redefinirSenha } from '@/services/authService';
 import supabase from '@/lib/supabase';
-import {
-  AlertCircle,
-  Loader2,
-  CheckCircle2,
-} from 'lucide-react';
+import { AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
 
-// Schema para redefinir senha
 const resetSchema = z
   .object({
     novaSenha: z
@@ -52,20 +47,26 @@ export function ResetPasswordForm() {
   });
 
   useEffect(() => {
-    // Ouve PASSWORD_RECOVERY e SIGNED_IN para pegar o token quando ele chega assincronamente
-    // NÃO ouve SIGNED_OUT (causava conflito com o signOut do reset)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
         setIsValidSession(true);
       }
+
+      // Senha atualizada com sucesso — faz signOut e redireciona
+      if (event === 'USER_UPDATED') {
+        setIsSuccess(true);
+        await supabase.auth.signOut();
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2500);
+      }
     });
 
-    // Fallback: sessão já processada antes do listener montar
+    // Verifica sessão já existente (token processado antes do listener montar)
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setIsValidSession(true);
       } else {
-        // Aguarda 800ms para o SDK processar o token da URL antes de invalidar
         setTimeout(() => {
           setIsValidSession(prev => prev === null ? false : prev);
         }, 800);
@@ -80,6 +81,7 @@ export function ResetPasswordForm() {
 
     try {
       await redefinirSenha(data.novaSenha);
+      // USER_UPDATED event dispara automaticamente e cuida do redirect
     } catch (error) {
       if (error instanceof Error) {
         const msg = error.message.toLowerCase();
@@ -93,17 +95,7 @@ export function ResetPasswordForm() {
       } else {
         setServerError('Sessão expirada. Solicite um novo link de recuperação.');
       }
-      return;
     }
-
-    // Sucesso imediato — signOut roda em background sem travar o fluxo
-    setIsSuccess(true);
-    supabase.auth.signOut().catch(() => {});
-
-    // Hard redirect garante estado limpo (sessão já foi encerrada no background)
-    setTimeout(() => {
-      window.location.href = '/login';
-    }, 2500);
   };
 
   // Tela de sucesso
@@ -120,10 +112,10 @@ export function ResetPasswordForm() {
               <CheckCircle2 className="w-8 h-8 text-[#10B981]" />
             </div>
             <h2 className="text-xl font-bold text-foreground mb-2">
-              Senha redefinida!
+              Senha redefinida com sucesso!
             </h2>
-            <p className="text-muted-foreground mb-6">
-              Sua senha foi alterada com sucesso. Redirecionando para o login...
+            <p className="text-muted-foreground">
+              Redirecionando para o login...
             </p>
           </CardContent>
         </Card>
@@ -131,16 +123,16 @@ export function ResetPasswordForm() {
     );
   }
 
-  // Loading enquanto verifica sessao
+  // Loading enquanto verifica sessão
   if (isValidSession === null) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066CC]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066CC]" />
       </div>
     );
   }
 
-  // Sessao invalida
+  // Sessão inválida ou link expirado
   if (!isValidSession) {
     return (
       <motion.div
@@ -196,7 +188,6 @@ export function ResetPasswordForm() {
         </CardHeader>
 
         <CardContent className="px-6 pb-6 pt-2">
-          {/* Erro do servidor */}
           {serverError && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -209,7 +200,6 @@ export function ResetPasswordForm() {
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Nova Senha */}
             <div className="space-y-1.5">
               <Label htmlFor="novaSenha" className="text-foreground">
                 Nova senha
@@ -225,7 +215,6 @@ export function ResetPasswordForm() {
               )}
             </div>
 
-            {/* Confirmar Nova Senha */}
             <div className="space-y-1.5">
               <Label htmlFor="confirmarSenha" className="text-foreground">
                 Confirmar nova senha
@@ -257,7 +246,6 @@ export function ResetPasswordForm() {
             </Button>
           </form>
 
-          {/* Link para Login */}
           <p className="text-center text-sm text-muted-foreground mt-4">
             Lembrou a senha?{' '}
             <Link href="/login" className="text-[#0066CC] hover:underline font-medium">
