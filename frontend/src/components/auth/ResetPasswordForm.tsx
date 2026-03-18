@@ -47,24 +47,13 @@ export function ResetPasswordForm() {
   });
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
         setIsValidSession(true);
       }
-
-      // Senha atualizada com sucesso — redireciona para login
-      if (event === 'USER_UPDATED') {
-        setIsSuccess(true);
-        // signOut fora do contexto do evento para evitar deadlock
-        setTimeout(() => {
-          supabase.auth.signOut().finally(() => {
-            window.location.href = '/login';
-          });
-        }, 2000);
-      }
+      // Não ouve USER_UPDATED nem SIGNED_OUT — redirect é feito no onSubmit
     });
 
-    // Verifica sessão já existente (token processado antes do listener montar)
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setIsValidSession(true);
@@ -83,7 +72,6 @@ export function ResetPasswordForm() {
 
     try {
       await redefinirSenha(data.novaSenha);
-      // USER_UPDATED event dispara automaticamente e cuida do redirect
     } catch (error) {
       if (error instanceof Error) {
         const msg = error.message.toLowerCase();
@@ -97,10 +85,15 @@ export function ResetPasswordForm() {
       } else {
         setServerError('Sessão expirada. Solicite um novo link de recuperação.');
       }
+      return;
     }
+
+    // Senha atualizada — mostra sucesso, faz logout e redireciona
+    setIsSuccess(true);
+    await supabase.auth.signOut();
+    window.location.replace('/login');
   };
 
-  // Tela de sucesso
   if (isSuccess) {
     return (
       <motion.div
@@ -125,7 +118,6 @@ export function ResetPasswordForm() {
     );
   }
 
-  // Loading enquanto verifica sessão
   if (isValidSession === null) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -134,7 +126,6 @@ export function ResetPasswordForm() {
     );
   }
 
-  // Sessão inválida ou link expirado
   if (!isValidSession) {
     return (
       <motion.div
