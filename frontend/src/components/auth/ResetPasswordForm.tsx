@@ -35,8 +35,7 @@ type ResetFormData = z.infer<typeof resetSchema>;
 export function ResetPasswordForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  // null = verificando | true = token válido | false = token inválido/expirado
-  const [tokenValido, setTokenValido] = useState<boolean | null>(null);
+  const [status, setStatus] = useState<'loading' | 'valido' | 'expirado'>('loading');
 
   const {
     register,
@@ -48,21 +47,20 @@ export function ResetPasswordForm() {
   });
 
   useEffect(() => {
-    // Só aceita PASSWORD_RECOVERY como sessão válida para esta página
+    const timeout = setTimeout(() => {
+      setStatus(s => s === 'loading' ? 'expirado' : s);
+    }, 3000);
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') {
-        setTokenValido(true);
+        clearTimeout(timeout);
+        setStatus('valido');
       }
     });
 
-    // Aguarda o SDK processar o token da URL antes de invalidar
-    const timer = setTimeout(() => {
-      setTokenValido(prev => prev === null ? false : prev);
-    }, 1000);
-
     return () => {
+      clearTimeout(timeout);
       subscription.unsubscribe();
-      clearTimeout(timer);
     };
   }, []);
 
@@ -123,7 +121,7 @@ export function ResetPasswordForm() {
   }
 
   // Verificando token
-  if (tokenValido === null) {
+  if (status === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066CC]" />
@@ -132,7 +130,7 @@ export function ResetPasswordForm() {
   }
 
   // Token expirado ou já utilizado
-  if (!tokenValido) {
+  if (status === 'expirado') {
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -161,7 +159,7 @@ export function ResetPasswordForm() {
     );
   }
 
-  // Formulário — token válido
+  // Formulário — status === 'valido'
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
