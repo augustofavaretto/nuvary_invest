@@ -52,13 +52,15 @@ export function ResetPasswordForm() {
         setIsValidSession(true);
       }
 
-      // Senha atualizada com sucesso — faz signOut e redireciona
+      // Senha atualizada com sucesso — redireciona para login
       if (event === 'USER_UPDATED') {
         setIsSuccess(true);
-        await supabase.auth.signOut();
+        // signOut fora do contexto do evento para evitar deadlock
         setTimeout(() => {
-          window.location.href = '/login';
-        }, 2500);
+          supabase.auth.signOut().finally(() => {
+            window.location.href = '/login';
+          });
+        }, 2000);
       }
     });
 
