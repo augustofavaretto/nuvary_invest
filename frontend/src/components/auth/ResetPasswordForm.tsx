@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -35,7 +35,6 @@ type ResetFormData = z.infer<typeof resetSchema>;
 export function ResetPasswordForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [status, setStatus] = useState<'loading' | 'valido' | 'expirado'>('loading');
 
   const {
     register,
@@ -46,24 +45,6 @@ export function ResetPasswordForm() {
     defaultValues: { novaSenha: '', confirmarSenha: '' },
   });
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setStatus(s => s === 'loading' ? 'expirado' : s);
-    }, 3000);
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') {
-        clearTimeout(timeout);
-        setStatus('valido');
-      }
-    });
-
-    return () => {
-      clearTimeout(timeout);
-      subscription.unsubscribe();
-    };
-  }, []);
-
   const onSubmit = async (data: ResetFormData) => {
     setServerError(null);
 
@@ -73,7 +54,7 @@ export function ResetPasswordForm() {
       if (error instanceof Error) {
         const msg = error.message.toLowerCase();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const status = (error as any).status ?? (error as any).code;
+        const status = (error as any).status;
 
         if (status === 422 || msg.includes('422')) {
           setServerError('Link de redefinição expirado ou já utilizado. Solicite um novo link.');
@@ -82,10 +63,10 @@ export function ResetPasswordForm() {
         } else if (msg.includes('weak') || msg.includes('strength')) {
           setServerError('Senha fraca. Use letras maiúsculas, minúsculas, números e símbolos.');
         } else {
-          setServerError('Sessão expirada. Solicite um novo link de recuperação.');
+          setServerError('Erro ao redefinir senha. Tente novamente.');
         }
       } else {
-        setServerError('Sessão expirada. Solicite um novo link de recuperação.');
+        setServerError('Erro ao redefinir senha. Tente novamente.');
       }
       return;
     }
@@ -95,7 +76,6 @@ export function ResetPasswordForm() {
     window.location.replace('/login');
   };
 
-  // Tela de sucesso
   if (isSuccess) {
     return (
       <motion.div
@@ -120,46 +100,6 @@ export function ResetPasswordForm() {
     );
   }
 
-  // Verificando token
-  if (status === 'loading') {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066CC]" />
-      </div>
-    );
-  }
-
-  // Token expirado ou já utilizado
-  if (status === 'expirado') {
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md mx-auto"
-      >
-        <Card className="border-border shadow-lg">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-[#EF4444]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <AlertCircle className="w-8 h-8 text-[#EF4444]" />
-            </div>
-            <h2 className="text-xl font-bold text-foreground mb-2">
-              Link expirado ou já utilizado
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              Este link de recuperação é válido para uso único. Solicite um novo link.
-            </p>
-            <Link href="/recuperar-senha">
-              <Button className="bg-[#0066CC] hover:bg-[#0052A3] text-white">
-                Solicitar novo link
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </motion.div>
-    );
-  }
-
-  // Formulário — status === 'valido'
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -193,7 +133,7 @@ export function ResetPasswordForm() {
               className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-[#EF4444] text-sm"
             >
               <AlertCircle className="w-4 h-4 shrink-0" />
-              {serverError}
+              <span>{serverError}</span>
               {serverError.includes('expirado') && (
                 <Link href="/recuperar-senha" className="ml-1 underline font-medium whitespace-nowrap">
                   Novo link
