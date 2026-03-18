@@ -1,79 +1,56 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from './PasswordInput';
-import { redefinirSenha } from '@/services/authService';
 import supabase from '@/lib/supabase';
 import { AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
 
-const resetSchema = z
-  .object({
-    novaSenha: z
-      .string()
-      .min(8, 'Senha deve ter pelo menos 8 caracteres')
-      .regex(/[a-z]/, 'Senha deve conter pelo menos uma letra minúscula')
-      .regex(/[A-Z]/, 'Senha deve conter pelo menos uma letra maiúscula')
-      .regex(/[0-9]/, 'Senha deve conter pelo menos um número'),
-    confirmarSenha: z.string(),
-  })
-  .refine((data) => data.novaSenha === data.confirmarSenha, {
-    message: 'Senhas não conferem',
-    path: ['confirmarSenha'],
-  });
-
-type ResetFormData = z.infer<typeof resetSchema>;
-
 export function ResetPasswordForm() {
+  const [novaSenha, setNovaSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<ResetFormData>({
-    resolver: zodResolver(resetSchema),
-    defaultValues: { novaSenha: '', confirmarSenha: '' },
-  });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const onSubmit = async (data: ResetFormData) => {
-    setServerError(null);
-
-    try {
-      await redefinirSenha(data.novaSenha);
-    } catch (error) {
-      if (error instanceof Error) {
-        const msg = error.message.toLowerCase();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const status = (error as any).status;
-
-        if (status === 422 || msg.includes('422')) {
-          setServerError('Link de redefinição expirado ou já utilizado. Solicite um novo link.');
-        } else if (msg.includes('same password') || msg.includes('different from')) {
-          setServerError('A nova senha deve ser diferente da senha atual.');
-        } else if (msg.includes('weak') || msg.includes('strength')) {
-          setServerError('Senha fraca. Use letras maiúsculas, minúsculas, números e símbolos.');
-        } else {
-          setServerError('Erro ao redefinir senha. Tente novamente.');
-        }
-      } else {
-        setServerError('Erro ao redefinir senha. Tente novamente.');
-      }
+    if (novaSenha.length < 8) {
+      setErro('Senha deve ter pelo menos 8 caracteres.');
       return;
     }
 
-    setIsSuccess(true);
-    await supabase.auth.signOut();
-    window.location.replace('/login');
+    if (novaSenha !== confirmarSenha) {
+      setErro('As senhas não coincidem.');
+      return;
+    }
+
+    setLoading(true);
+    setErro('');
+
+    try {
+      const { error } = await supabase.auth.updateUser({ password: novaSenha });
+
+      if (error) {
+        setErro(error.message);
+        setLoading(false);
+        return;
+      }
+
+      setIsSuccess(true);
+      await supabase.auth.signOut();
+      window.location.href = 'https://nuvary-invest.vercel.app/login';
+
+    } catch {
+      setErro('Erro inesperado. Tente novamente.');
+      setLoading(false);
+    }
   };
 
   if (isSuccess) {
@@ -126,23 +103,18 @@ export function ResetPasswordForm() {
         </CardHeader>
 
         <CardContent className="px-6 pb-6 pt-2">
-          {serverError && (
+          {erro && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-[#EF4444] text-sm"
             >
               <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{serverError}</span>
-              {serverError.includes('expirado') && (
-                <Link href="/recuperar-senha" className="ml-1 underline font-medium whitespace-nowrap">
-                  Novo link
-                </Link>
-              )}
+              <span>{erro}</span>
             </motion.div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="novaSenha" className="text-foreground">
                 Nova senha
@@ -150,12 +122,9 @@ export function ResetPasswordForm() {
               <PasswordInput
                 id="novaSenha"
                 placeholder="Mínimo 8 caracteres"
-                error={errors.novaSenha?.message}
-                {...register('novaSenha')}
+                value={novaSenha}
+                onChange={e => setNovaSenha(e.target.value)}
               />
-              {errors.novaSenha && (
-                <p className="text-[#EF4444] text-xs">{errors.novaSenha.message}</p>
-              )}
             </div>
 
             <div className="space-y-1.5">
@@ -165,20 +134,17 @@ export function ResetPasswordForm() {
               <PasswordInput
                 id="confirmarSenha"
                 placeholder="Digite a senha novamente"
-                error={errors.confirmarSenha?.message}
-                {...register('confirmarSenha')}
+                value={confirmarSenha}
+                onChange={e => setConfirmarSenha(e.target.value)}
               />
-              {errors.confirmarSenha && (
-                <p className="text-[#EF4444] text-xs">{errors.confirmarSenha.message}</p>
-              )}
             </div>
 
             <Button
               type="submit"
               className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"
-              disabled={isSubmitting}
+              disabled={loading}
             >
-              {isSubmitting ? (
+              {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   Redefinindo...
