@@ -126,15 +126,14 @@ export function Questionnaire() {
       if (data.success) {
         // Salvar perfil no Supabase
         try {
-          // Converte answers para objeto genérico para salvar
-          const respostasObj = Object.entries(answers).reduce((acc, [key, value]) => {
-            acc[key] = value;
-            return acc;
-          }, {} as Record<string, string>);
-
           await salvarPerfilInvestidor({
             perfilRisco: data.profile?.type || data.profile,
-            ...respostasObj,
+            idade: answers[1],
+            objetivo_principal: answers[2],
+            renda_mensal: answers[3],
+            nivel_conhecimento: answers[4] ? Number(answers[4] === 'A' ? 1 : answers[4] === 'B' ? 2 : answers[4] === 'C' ? 3 : 4) : undefined,
+            horizonte_investimento: answers[5],
+            respostas_completas: { ...answers, perfilRisco: data.profile?.type || data.profile },
           });
           console.log('Perfil salvo no Supabase com sucesso!');
         } catch (saveError) {
