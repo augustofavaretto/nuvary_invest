@@ -62,13 +62,6 @@ export function QuestionCard({
       <Card className="border border-border shadow-lg bg-card">
         <CardContent className="p-8">
           <div className="flex items-center gap-3 mb-6">
-            <Badge
-              variant="outline"
-              className={`${category.bgColor} ${category.textColor} ${category.borderColor} font-medium`}
-            >
-              <CategoryIcon className="w-3.5 h-3.5 mr-1.5" />
-              {category.label}
-            </Badge>
             <span className="text-sm text-muted-foreground">
               Pergunta {currentIndex + 1} de {totalQuestions}
             </span>

@@ -231,7 +231,7 @@ export function Questionnaire() {
                     {STRINGS.perfil.questionarioDePerfil}
                   </h2>
                   <p className="text-muted-foreground mb-8 leading-relaxed">
-                    Responda 10 perguntas rápidas e descubra qual é o seu perfil
+                    Responda 11 perguntas rápidas e descubra qual é o seu perfil
                     de investidor. O resultado vai te ajudar a tomar melhores
                     decisões de investimento.
                   </p>
@@ -242,7 +242,7 @@ export function Questionnaire() {
                         <Target className="w-6 h-6 text-[#00B8D9]" />
                       </div>
                       <span className="text-sm text-muted-foreground">
-                        10 perguntas
+                        11 perguntas
                       </span>
                     </div>
                     <div className="text-center">
