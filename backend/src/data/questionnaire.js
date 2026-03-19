@@ -58,9 +58,9 @@ export const questionnaire = {
       question: 'Em qual grupo de investimentos você possui mais familiaridade e aplicou a maior parte dos seus recursos nos últimos 12 meses?',
       options: [
         { value: 'A', text: 'Nenhum', points: 1 },
-        { value: 'B', text: '(Grupo 1) Poupança, CDB, LCI, LCA ou Fundos DI', points: 2 },
-        { value: 'C', text: '(Grupo 2) Grupo 1 + Fundos Cambiais ou Fundos de Ações', points: 3 },
-        { value: 'D', text: '(Grupo 3) Grupo 2 + Ações, Derivativos ou COE', points: 4 },
+        { value: 'B', text: 'Poupança, CDB, LCI, LCA ou Fundos DI', points: 2 },
+        { value: 'C', text: 'Fundos Cambiais, Fundos de Ações e os anteriores', points: 3 },
+        { value: 'D', text: 'Ações, Derivativos, COE e os anteriores', points: 4 },
       ],
     },
     {
