@@ -305,13 +305,7 @@ export function Questionnaire() {
                       transition={{ duration: 0.3 }}
                     />
                   </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>
-                      {currentQuestion.category === 'objetivos' && 'Objetivos'}
-                      {currentQuestion.category === 'horizonte' && 'Horizonte'}
-                      {currentQuestion.category === 'tolerancia_risco' &&
-                        'Tolerância a Risco'}
-                    </span>
+                  <div className="flex justify-end text-sm text-muted-foreground">
                     <span>
                       {currentIndex + 1} de {questions.length}
                     </span>

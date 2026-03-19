@@ -5,9 +5,19 @@ export const questionnaire = {
   title: 'Questionário de Perfil de Investidor',
   description: 'Responda às 10 perguntas abaixo para descobrir seu perfil de investidor',
   questions: [
-    // === OBJETIVOS FINANCEIROS (3 perguntas) ===
     {
       id: 1,
+      category: 'horizonte',
+      question: 'Qual sua idade?',
+      options: [
+        { value: 'A', text: 'Abaixo de 30 anos', points: 4 },
+        { value: 'B', text: 'Entre 30 e 45 anos', points: 3 },
+        { value: 'C', text: 'Entre 45 e 60 anos', points: 2 },
+        { value: 'D', text: 'Acima de 60 anos', points: 1 },
+      ],
+    },
+    {
+      id: 2,
       category: 'objetivos',
       question: 'Qual seu principal objetivo ao investir?',
       options: [
@@ -18,7 +28,7 @@ export const questionnaire = {
       ],
     },
     {
-      id: 2,
+      id: 3,
       category: 'objetivos',
       question: 'Qual porcentagem da sua renda mensal você consegue investir?',
       options: [
@@ -29,7 +39,7 @@ export const questionnaire = {
       ],
     },
     {
-      id: 3,
+      id: 4,
       category: 'objetivos',
       question: 'Como você descreveria seu conhecimento sobre investimentos?',
       options: [
@@ -39,10 +49,8 @@ export const questionnaire = {
         { value: 'D', text: 'Avançado - conheço derivativos e mercado internacional', points: 4 },
       ],
     },
-
-    // === HORIZONTE DE INVESTIMENTO (3 perguntas) ===
     {
-      id: 4,
+      id: 5,
       category: 'horizonte',
       question: 'Em quanto tempo você pretende usar o dinheiro que está investindo?',
       options: [
@@ -53,7 +61,7 @@ export const questionnaire = {
       ],
     },
     {
-      id: 5,
+      id: 6,
       category: 'horizonte',
       question: 'Em qual grupo de investimentos você possui mais familiaridade e aplicou a maior parte dos seus recursos nos últimos 12 meses?',
       options: [
@@ -63,19 +71,6 @@ export const questionnaire = {
         { value: 'D', text: 'Ações, Derivativos, COE e os anteriores', points: 4 },
       ],
     },
-    {
-      id: 6,
-      category: 'horizonte',
-      question: 'Qual sua idade?',
-      options: [
-        { value: 'A', text: 'Abaixo de 30 anos', points: 4 },
-        { value: 'B', text: 'Entre 30 e 45 anos', points: 3 },
-        { value: 'C', text: 'Entre 45 e 60 anos', points: 2 },
-        { value: 'D', text: 'Acima de 60 anos', points: 1 },
-      ],
-    },
-
-    // === TOLERÂNCIA A RISCO (4 perguntas) ===
     {
       id: 7,
       category: 'tolerancia_risco',
