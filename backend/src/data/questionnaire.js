@@ -55,12 +55,12 @@ export const questionnaire = {
     {
       id: 5,
       category: 'horizonte',
-      question: 'Se precisasse do dinheiro antes do prazo planejado, como seria?',
+      question: 'Em qual grupo de investimentos você possui mais familiaridade e aplicou a maior parte dos seus recursos nos últimos 12 meses?',
       options: [
-        { value: 'A', text: 'Muito provável, preciso de liquidez total', points: 1 },
-        { value: 'B', text: 'Possível, mas tenho reserva de emergência', points: 2 },
-        { value: 'C', text: 'Improvável, tenho outras fontes de renda', points: 3 },
-        { value: 'D', text: 'Quase impossível, esse dinheiro é de longo prazo', points: 4 },
+        { value: 'A', text: 'Nenhum', points: 1 },
+        { value: 'B', text: '(Grupo 1) Poupança, CDB, LCI, LCA ou Fundos DI', points: 2 },
+        { value: 'C', text: '(Grupo 2) Grupo 1 + Fundos Cambiais ou Fundos de Ações', points: 3 },
+        { value: 'D', text: '(Grupo 3) Grupo 2 + Ações, Derivativos ou COE', points: 4 },
       ],
     },
     {
@@ -68,10 +68,10 @@ export const questionnaire = {
       category: 'horizonte',
       question: 'Qual sua idade?',
       options: [
-        { value: 'A', text: 'Acima de 60 anos', points: 1 },
-        { value: 'B', text: 'Entre 45 e 60 anos', points: 2 },
-        { value: 'C', text: 'Entre 30 e 45 anos', points: 3 },
-        { value: 'D', text: 'Abaixo de 30 anos', points: 4 },
+        { value: 'A', text: 'Abaixo de 30 anos', points: 4 },
+        { value: 'B', text: 'Entre 30 e 45 anos', points: 3 },
+        { value: 'C', text: 'Entre 45 e 60 anos', points: 2 },
+        { value: 'D', text: 'Acima de 60 anos', points: 1 },
       ],
     },
 
@@ -117,7 +117,18 @@ export const questionnaire = {
         { value: 'A', text: 'Nunca e não pretendo', points: 1 },
         { value: 'B', text: 'Nunca, mas tenho curiosidade', points: 2 },
         { value: 'C', text: 'Sim, com valores pequenos', points: 3 },
-        { value: 'D', text: 'Sim, represente boa parte dos meus investimentos', points: 4 },
+        { value: 'D', text: 'Sim, representa boa parte dos meus investimentos', points: 4 },
+      ],
+    },
+    {
+      id: 11,
+      category: 'tolerancia_risco',
+      question: 'O que você costuma fazer quando recebe um recurso extra?',
+      options: [
+        { value: 'A', text: 'Acerto minha vida financeira', points: 1 },
+        { value: 'B', text: 'Gasto a maior parte com experiências que me dão prazer e invisto o restante', points: 2 },
+        { value: 'C', text: 'Reservo alguma parte, mantendo minha estratégia de investimentos', points: 3 },
+        { value: 'D', text: 'Aproveito para aplicar uma parte em opções mais arrojadas', points: 4 },
       ],
     },
   ],
@@ -127,8 +138,8 @@ export const questionnaire = {
 export const investorProfiles = {
   conservador: {
     name: 'Conservador',
-    minScore: 10,
-    maxScore: 17,
+    minScore: 11,
+    maxScore: 18,
     color: '#3b82f6', // Azul
     description:
       'Você prioriza a segurança e preservação do seu patrimônio. Prefere investimentos de baixo risco, mesmo que isso signifique retornos menores.',
@@ -153,8 +164,8 @@ export const investorProfiles = {
   },
   moderado: {
     name: 'Moderado',
-    minScore: 18,
-    maxScore: 25,
+    minScore: 19,
+    maxScore: 27,
     color: '#10b981', // Verde
     description:
       'Você busca equilíbrio entre segurança e rentabilidade. Aceita algum risco em troca de retornos potencialmente maiores.',
@@ -180,8 +191,8 @@ export const investorProfiles = {
   },
   arrojado: {
     name: 'Arrojado',
-    minScore: 26,
-    maxScore: 33,
+    minScore: 28,
+    maxScore: 36,
     color: '#f59e0b', // Laranja
     description:
       'Você está disposto a correr riscos moderados a altos em busca de melhores retornos. Entende que oscilações fazem parte do processo.',
@@ -207,8 +218,8 @@ export const investorProfiles = {
   },
   agressivo: {
     name: 'Agressivo',
-    minScore: 34,
-    maxScore: 40,
+    minScore: 37,
+    maxScore: 44,
     color: '#ef4444', // Vermelho
     description:
       'Você busca maximizar retornos e está preparado para alta volatilidade. Tem conhecimento avançado e horizonte de longo prazo.',

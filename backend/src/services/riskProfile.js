@@ -157,9 +157,9 @@ class RiskProfileService {
       timestamp: new Date().toISOString(),
       score: {
         total: score,
-        min: 10,
-        max: 40,
-        percentage: Math.round(((score - 10) / 30) * 100),
+        min: 11,
+        max: 44,
+        percentage: Math.round(((score - 11) / 33) * 100),
       },
       profile,
       categoryAnalysis,
