@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { QuestionCard } from './QuestionCard';
@@ -40,9 +40,15 @@ export function Questionnaire() {
   const [error, setError] = useState<string | null>(null);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(true);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
 
   useEffect(() => {
+    const refazer = searchParams.get('refazer') === '1';
+    if (refazer) {
+      fetchQuestionnaire();
+      return;
+    }
     // Redireciona para o dashboard se o usuário já completou o questionário
     verificarSeTemPerfil().then((temPerfil) => {
       if (temPerfil) {

@@ -185,7 +185,7 @@ export default function PerfilPage() {
       await deletarPerfilInvestidor();
       setPerfilInvestidor(null);
       setMostrarConfirmacao(false);
-      router.push('/questionario');
+      router.push('/questionario?refazer=1');
     } catch (error) {
       console.error('Erro ao deletar perfil:', error);
     } finally {
