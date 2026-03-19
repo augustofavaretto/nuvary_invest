@@ -294,25 +294,6 @@ export function Questionnaire() {
               exit={{ opacity: 0 }}
               className="space-y-6"
             >
-              {/* Progress Bar */}
-              <Card className="border border-border shadow-md">
-                <CardContent className="p-4">
-                  <div className="h-2 bg-muted rounded-full overflow-hidden mb-2">
-                    <motion.div
-                      className="h-full nuvary-gradient"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progress}%` }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </div>
-                  <div className="flex justify-end text-sm text-muted-foreground">
-                    <span>
-                      {currentIndex + 1} de {questions.length}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Question Card */}
               <QuestionCard
                 question={currentQuestion}
