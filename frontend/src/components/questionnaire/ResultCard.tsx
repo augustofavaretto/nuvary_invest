@@ -117,18 +117,8 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
             <ProfileIcon className="w-10 h-10" />
           </motion.div>
           <p className="text-white/80 text-sm mb-2">{STRINGS.perfil.sePerfilE}</p>
-          <h2 className="text-3xl font-bold mb-2">{profile.name}</h2>
-          <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
-            <span className="text-2xl font-bold">{result.score.total}</span>
-            <span className="text-white/80">/ 44 pontos</span>
-          </div>
+          <h2 className="text-3xl font-bold">{profile.name}</h2>
         </div>
-
-        <CardContent className="p-6 bg-card">
-          <p className="text-muted-foreground text-center leading-relaxed">
-            {profile.description}
-          </p>
-        </CardContent>
       </Card>
 
       {/* Recommended Allocation */}
