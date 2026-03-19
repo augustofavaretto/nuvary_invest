@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Questionnaire } from '@/components/questionnaire';
 
 export const metadata = {
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function QuestionarioPage() {
-  return <Questionnaire />;
+  return (
+    <Suspense>
+      <Questionnaire />
+    </Suspense>
+  );
 }
