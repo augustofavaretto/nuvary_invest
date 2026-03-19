@@ -120,7 +120,7 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
           <h2 className="text-3xl font-bold mb-2">{profile.name}</h2>
           <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
             <span className="text-2xl font-bold">{result.score.total}</span>
-            <span className="text-white/80">/ 40 pontos</span>
+            <span className="text-white/80">/ 44 pontos</span>
           </div>
         </div>
 
@@ -128,33 +128,6 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
           <p className="text-muted-foreground text-center leading-relaxed">
             {profile.description}
           </p>
-        </CardContent>
-      </Card>
-
-      {/* Category Analysis */}
-      <Card className="border border-border shadow-lg">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-foreground">{STRINGS.perfil.analiseCategoria}</h3>
-          <div className="space-y-4">
-            {Object.entries(result.categoryAnalysis).map(([key, analysis]) => (
-              <div key={key}>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="capitalize text-foreground">
-                    {key === 'tolerancia_risco' ? STRINGS.perfil.toleranciaRisco : key === 'objetivos' ? 'Objetivos' : 'Horizonte'}
-                  </span>
-                  <span className="text-muted-foreground">{analysis.percentage}%</span>
-                </div>
-                <div className="h-2 bg-muted rounded-full overflow-hidden">
-                  <motion.div
-                    className="h-full nuvary-gradient"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${analysis.percentage}%` }}
-                    transition={{ delay: 0.3, duration: 0.6 }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
         </CardContent>
       </Card>
 
@@ -198,48 +171,6 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
               );
             })}
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Suggested Investments */}
-      <Card className="border border-border shadow-lg">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-foreground">Investimentos Sugeridos</h3>
-          <div className="flex flex-wrap gap-2">
-            {profile.suggestedInvestments.map((investment, index) => (
-              <motion.div
-                key={investment}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.8 + index * 0.1 }}
-              >
-                <Badge className="px-3 py-1.5 text-sm bg-[#00B8D9]/10 text-[#00B8D9] border border-[#00B8D9]/30 hover:bg-[#00B8D9]/20">
-                  {investment}
-                </Badge>
-              </motion.div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Characteristics */}
-      <Card className="border border-border shadow-lg">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-foreground">{STRINGS.perfil.suasCaracteristicas}</h3>
-          <ul className="space-y-3">
-            {profile.characteristics.map((characteristic, index) => (
-              <motion.li
-                key={index}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1 + index * 0.1 }}
-                className="flex items-center gap-3 text-muted-foreground"
-              >
-                <CheckCircle2 className={`w-5 h-5 ${config.text}`} />
-                {characteristic}
-              </motion.li>
-            ))}
-          </ul>
         </CardContent>
       </Card>
 
