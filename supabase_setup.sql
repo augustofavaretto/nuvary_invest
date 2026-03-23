@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS public.perfil_investidor (
   horizonte_investimento  TEXT,
   nivel_conhecimento      NUMERIC,
   renda_mensal            TEXT,
-  valor_investir          TEXT,
   idade                   TEXT,
   respostas_completas     JSONB,
   created_at              TIMESTAMPTZ  DEFAULT NOW(),

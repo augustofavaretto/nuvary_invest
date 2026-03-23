@@ -33,7 +33,6 @@ interface PerfilInvestidorData {
   horizonte_investimento?: string;
   nivel_conhecimento?: number;
   renda_mensal?: string;
-  valor_investir?: string;
   created_at?: string;
   updated_at?: string;
 }

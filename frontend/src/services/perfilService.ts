@@ -7,16 +7,10 @@ export interface PerfilInvestidor {
   idade?: string;
   perfil_risco?: string;
   perfilRisco?: string;
-  objetivo?: string;
   objetivo_principal?: string;
-  horizonte?: string;
   horizonte_investimento?: string;
-  nivelConhecimento?: number;
   nivel_conhecimento?: number;
-  renda?: string;
   renda_mensal?: string;
-  valorInvestir?: string;
-  valor_investir?: string;
   respostas_completas?: unknown;
   created_at?: string;
   updated_at?: string;
@@ -40,11 +34,10 @@ export async function salvarPerfilInvestidor(respostas: PerfilInvestidor) {
         user_id: user.id,
         idade: respostas.idade,
         perfil_risco: respostas.perfilRisco || respostas.perfil_risco,
-        objetivo_principal: respostas.objetivo || respostas.objetivo_principal,
-        horizonte_investimento: respostas.horizonte || respostas.horizonte_investimento,
-        nivel_conhecimento: respostas.nivelConhecimento || respostas.nivel_conhecimento,
-        renda_mensal: respostas.renda || respostas.renda_mensal,
-        valor_investir: respostas.valorInvestir || respostas.valor_investir,
+        objetivo_principal: respostas.objetivo_principal,
+        horizonte_investimento: respostas.horizonte_investimento,
+        nivel_conhecimento: respostas.nivel_conhecimento,
+        renda_mensal: respostas.renda_mensal,
         respostas_completas: respostas,
         updated_at: new Date().toISOString()
       }, { onConflict: 'user_id' })
