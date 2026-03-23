@@ -90,7 +90,7 @@ class NewsApiService {
       domains,
       from,
       to,
-      language = 'en',
+      language,
       sortBy = 'publishedAt',
       pageSize = 20,
       page = 1,

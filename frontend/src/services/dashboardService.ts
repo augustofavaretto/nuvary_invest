@@ -166,11 +166,14 @@ export const dashboardService = {
     return stocks;
   },
 
-  // Buscar notícias financeiras
+  // Buscar notícias financeiras em português
   async getFinancialNews(limit = 6): Promise<NewsItem[]> {
     try {
-      // Tentar News API primeiro
-      const res = await fetch(`${API_URL}/news/business?pageSize=${limit}`);
+      // News API — busca em português com termos financeiros brasileiros
+      const q = encodeURIComponent('investimentos OR bolsa OR ações OR economia OR mercado financeiro');
+      const res = await fetch(
+        `${API_URL}/news/search?q=${q}&language=pt&sortBy=publishedAt&pageSize=${limit}`
+      );
       if (res.ok) {
         const data = await res.json();
         if (data.articles?.length > 0) {
@@ -178,21 +181,13 @@ export const dashboardService = {
         }
       }
 
-      // Fallback para Finnhub news
-      const finnhubRes = await fetch(`${API_URL}/finnhub/news/market?category=general`);
-      if (finnhubRes.ok) {
-        const finnhubData = await finnhubRes.json();
-        return (finnhubData.slice?.(0, limit) || []).map((item: Record<string, unknown>) => ({
-          id: String(item.id || Math.random()),
-          title: item.headline || item.title || '',
-          description: item.summary || item.description || '',
-          source: { name: String(item.source || 'Finnhub') },
-          url: String(item.url || ''),
-          publishedAt: item.datetime
-            ? new Date(Number(item.datetime) * 1000).toISOString()
-            : new Date().toISOString(),
-          urlToImage: item.image ? String(item.image) : undefined,
-        }));
+      // Fallback: top-headlines Brasil categoria business
+      const brRes = await fetch(`${API_URL}/news/business?country=br&pageSize=${limit}`);
+      if (brRes.ok) {
+        const brData = await brRes.json();
+        if (brData.articles?.length > 0) {
+          return brData.articles;
+        }
       }
 
       return [];
