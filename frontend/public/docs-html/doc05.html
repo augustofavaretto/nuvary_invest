@@ -364,11 +364,33 @@
     </nav>
 
     <main class="container">
+
+        <!-- Banner de atualização v4.0.0 -->
+        <div style="background: linear-gradient(135deg, #064e3b, #059669); color: white; border-radius: 12px; padding: 20px 24px; margin-bottom: 30px; margin-top: 30px; display: flex; align-items: flex-start; gap: 16px;">
+            <span style="font-size: 1.5rem; flex-shrink: 0;">✏️</span>
+            <div>
+                <strong style="font-size: 1rem;">Questionário reestruturado em v4.0.0 — Março 2026</strong>
+                <ul style="margin: 8px 0 0 18px; font-size: 0.9rem; opacity: 0.9; line-height: 1.8;">
+                    <li>Expandido de 10 para <strong>11 perguntas</strong></li>
+                    <li>Questão de idade movida para primeira posição</li>
+                    <li>Q5 substituída: "Em qual grupo de investimentos você possui mais familiaridade?" (últimos 12 meses)</li>
+                    <li>Q11 adicionada: "O que você costuma fazer quando recebe um recurso extra?" (tolerância a risco comportamental)</li>
+                    <li>Pontuação máxima atualizada: 40 → <strong>44 pontos</strong></li>
+                    <li>Thresholds dos perfis recalibrados proporcionalmente</li>
+                    <li>Categorias removidas da UI (não exibidas ao usuário)</li>
+                    <li>Barra de progresso separada removida — contador unificado no card da pergunta</li>
+                    <li>Tela inicial atualizada para "11 perguntas"</li>
+                    <li>Resultado: Chat IA substituído por botão "Ir para Minha Carteira"</li>
+                    <li>Colunas individuais da tabela <code style="background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px;">perfil_investidor</code> agora preenchidas (idade, objetivo_principal, horizonte_investimento, nivel_conhecimento, renda_mensal)</li>
+                </ul>
+            </div>
+        </div>
+
         <section id="visao-geral">
             <h2>Visão Geral</h2>
             <p>
                 O módulo de Questionário de Perfil de Risco permite identificar o perfil de investidor dos usuários
-                através de 10 perguntas objetivas divididas em três categorias: Tolerância a Risco, Horizonte de
+                através de 11 perguntas objetivas divididas em três categorias: Tolerância a Risco, Horizonte de
                 Investimento e Objetivos Financeiros.
             </p>
 
