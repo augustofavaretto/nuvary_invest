@@ -161,9 +161,6 @@ export function Questionnaire() {
     setScreen('intro');
   };
 
-  const handleGoToChat = () => {
-    router.push('/chat');
-  };
 
   const currentQuestion = questions[currentIndex];
   const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
@@ -355,7 +352,7 @@ export function Questionnaire() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <ResultCard result={result} onRestart={handleRestart} onGoToChat={handleGoToChat} />
+              <ResultCard result={result} onRestart={handleRestart} />
             </motion.div>
           )}
         </AnimatePresence>

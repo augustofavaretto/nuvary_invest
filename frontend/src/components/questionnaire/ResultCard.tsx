@@ -17,15 +17,13 @@ import {
   PiggyBank,
   Building2,
   Globe,
-  CheckCircle2,
-  MessageSquare,
+  Wallet,
 } from 'lucide-react';
 import { STRINGS } from '@/constants/strings';
 
 interface ResultCardProps {
   result: QuestionnaireResult;
   onRestart: () => void;
-  onGoToChat?: () => void;
 }
 
 // Cores dos perfis conforme manual da marca
@@ -82,7 +80,7 @@ const allocationColors = {
   internacional: 'bg-[#6B7280]',
 };
 
-export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
+export function ResultCard({ result, onRestart }: ResultCardProps) {
   const profile = result.profile;
   const config = profileConfig[profile.type];
   const ProfileIcon = config.icon;
@@ -164,31 +162,13 @@ export function ResultCard({ result, onRestart, onGoToChat }: ResultCardProps) {
         </CardContent>
       </Card>
 
-      {/* Chat CTA */}
-      <Card className="border-[#00B8D9]/30 bg-[#00B8D9]/10 dark:bg-[#00B8D9]/5">
-        <CardContent className="p-6 text-center">
-          <MessageSquare className="w-10 h-10 text-[#00B8D9] mx-auto mb-3" />
-          <h3 className="text-lg font-semibold text-foreground mb-2">
-            Quer saber mais sobre seu perfil?
-          </h3>
-          <p className="text-muted-foreground text-sm mb-4">
-            Converse com nosso assistente de IA para tirar dúvidas e receber recomendações personalizadas.
-          </p>
-          {onGoToChat ? (
-            <Button onClick={onGoToChat} className="nuvary-gradient text-white w-full" size="lg">
-              <MessageSquare className="w-4 h-4 mr-2" />
-              Conversar com Assistente
-            </Button>
-          ) : (
-            <Link href="/chat">
-              <Button className="nuvary-gradient text-white w-full" size="lg">
-                <MessageSquare className="w-4 h-4 mr-2" />
-                Conversar com Assistente
-              </Button>
-            </Link>
-          )}
-        </CardContent>
-      </Card>
+      {/* Ir para Carteira */}
+      <Link href="/carteira">
+        <Button className="nuvary-gradient text-white w-full" size="lg">
+          <Wallet className="w-4 h-4 mr-2" />
+          Ir para Minha Carteira
+        </Button>
+      </Link>
 
       {/* Restart Button */}
       <Button
