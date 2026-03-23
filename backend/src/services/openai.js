@@ -181,49 +181,102 @@ Forneça:
     );
   }
 
+  // === DADOS DE MERCADO EM TEMPO REAL ===
+
+  async fetchMarketData() {
+    const SGS = {
+      selic_meta: 432,
+      cdi_anual:  4389,
+      ipca_12m:   13522,
+      igpm_mensal: 189,
+    };
+
+    async function fetchSGS(serie) {
+      const url = `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${serie}/dados/ultimos/1?formato=json`;
+      const res = await fetch(url, {
+        headers: { Accept: 'application/json' },
+        signal: AbortSignal.timeout(8000),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) return null;
+      return { valor: parseFloat(data[0].valor), data: data[0].data };
+    }
+
+    const [selic, cdi, ipca, igpm] = await Promise.allSettled([
+      fetchSGS(SGS.selic_meta),
+      fetchSGS(SGS.cdi_anual),
+      fetchSGS(SGS.ipca_12m),
+      fetchSGS(SGS.igpm_mensal),
+    ]);
+
+    return {
+      selic: selic.status === 'fulfilled' ? selic.value : null,
+      cdi:   cdi.status   === 'fulfilled' ? cdi.value   : null,
+      ipca:  ipca.status  === 'fulfilled' ? ipca.value  : null,
+      igpm:  igpm.status  === 'fulfilled' ? igpm.value  : null,
+    };
+  }
+
   // === ASSISTENTE GERAL ===
 
   async assistantChat(message, conversationHistory = [], userContext = {}) {
     const { profile, portfolio } = userContext;
 
-    let systemPrompt = `Você é o **Nuvary**, assistente virtual inteligente da **Nuvary Invest** — plataforma brasileira de gestão e educação de investimentos.
+    // Busca dados de mercado em tempo real (com fallback silencioso)
+    let market = null;
+    try {
+      market = await this.fetchMarketData();
+    } catch {
+      // falhou — segue sem dados de mercado
+    }
 
-## Identidade
-- Você representa a Nuvary Invest, uma plataforma moderna e acessível para investidores brasileiros
-- Seu objetivo é ajudar o usuário a tomar melhores decisões financeiras com base no seu perfil e carteira real
+    const today = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    let systemPrompt = `Você é o **Nuvary**, assistente virtual de investimentos da **Nuvary Invest**.
+Data de hoje: ${today}
+
+## Identidade e missão
+Você é um especialista em mercado financeiro brasileiro. Seu objetivo é ajudar o usuário a tomar decisões de investimento mais inteligentes, com base no perfil de risco dele, na carteira real e nos dados de mercado atuais.
 
 ## O que a Nuvary Invest oferece
-- **Dashboard**: visão geral do patrimônio, performance e evolução da carteira
-- **Minha Carteira**: cadastro e acompanhamento de ações B3, FIIs, Renda Fixa, Tesouro Direto, Criptomoedas, ETFs e fundos
-- **Chat IA**: você — assistente personalizado de investimentos
-- **Trilhas Educativas**: 8 categorias com 48 vídeos sobre finanças e investimentos
-- **Relatórios**: performance, extratos, DARF e análise de Imposto de Renda
-- **Perfil de Investidor**: questionário de análise de risco (Conservador, Moderado, Arrojado, Agressivo)
+- **Dashboard**: visão do patrimônio, performance e evolução da carteira
+- **Minha Carteira**: ações B3, FIIs, Renda Fixa, Tesouro Direto, Criptomoedas, ETFs
+- **Chat IA**: você — assistente personalizado
+- **Trilhas Educativas**: 8 categorias, 48 vídeos sobre finanças
+- **Relatórios**: performance, extratos, DARF e IR
+- **Perfil de Investidor**: Conservador, Moderado, Arrojado, Agressivo
 
-## Mercado brasileiro
-- Principais referências: IBOVESPA, IFIX, CDI, Selic, IPCA, IGP-M
-- Ativos: ações B3, FIIs, CDB, LCI, LCA, Tesouro Direto (Selic, IPCA+, Prefixado), debêntures, fundos, criptomoedas
-- Reguladores: CVM, ANBIMA, BCB (Banco Central do Brasil)
+## Mercado e regulação brasileira
+- Índices: IBOVESPA, IFIX, CDI, Selic, IPCA, IGP-M, SMLL, IDIV
+- Ativos: ações B3, FIIs, CDB, LCI, LCA, Tesouro Selic/IPCA+/Prefixado, debêntures, fundos multimercado, criptomoedas, ETFs, BDRs
+- Reguladores: CVM, ANBIMA, BCB, B3
+- Tributação: ações (15–20% IR sobre ganho), FIIs isentos PF, renda fixa tabela regressiva, cripto 15–22,5%`;
 
-## Diretrizes de resposta
-- Responda SEMPRE em português brasileiro claro e direto
-- Use markdown quando útil (negrito, listas, tabelas)
-- Personalize as respostas com base no perfil e carteira do usuário quando disponíveis
-- Para análise de ativos: apresente pontos positivos, riscos e contexto do mercado
-- Nunca garanta lucros ou retornos específicos — sempre mencione riscos
-- Se não souber algo, admita e indique fontes confiáveis (CVM, ANBIMA, B3, Tesouro Direto)
-- Seja conciso mas completo — evite respostas longas desnecessárias`;
+    // Bloco de dados de mercado em tempo real
+    if (market && (market.selic || market.cdi || market.ipca || market.igpm)) {
+      systemPrompt += `
 
+## Indicadores de mercado em tempo real (Banco Central do Brasil)`;
+      if (market.selic) systemPrompt += `\n- **Selic (meta COPOM)**: ${market.selic.valor.toFixed(2)}% a.a. (ref. ${market.selic.data})`;
+      if (market.cdi)   systemPrompt += `\n- **CDI anualizado (base 252)**: ${market.cdi.valor.toFixed(2)}% a.a. (ref. ${market.cdi.data})`;
+      if (market.ipca)  systemPrompt += `\n- **IPCA acumulado 12 meses**: ${market.ipca.valor.toFixed(2)}% (ref. ${market.ipca.data})`;
+      if (market.igpm)  systemPrompt += `\n- **IGP-M mensal**: ${market.igpm.valor.toFixed(2)}% (ref. ${market.igpm.data})`;
+      systemPrompt += `\nUse estes dados reais nas suas respostas sobre rentabilidade, comparação de ativos e projeções.`;
+    }
+
+    // Bloco de perfil do usuário
     if (profile) {
       systemPrompt += `
 
 ## Perfil do usuário
-- **Perfil de risco**: ${profile.nome} (${profile.tipo})
-- **Nível de conhecimento**: ${profile.pontuacao}/100
+- **Perfil de risco**: ${profile.nome || profile.tipo} (${profile.tipo})
+- **Nível de conhecimento**: ${profile.pontuacao || profile.nivel}/100
 - **Alocação recomendada**: Renda Fixa ${profile.rf}% | Renda Variável ${profile.rv}% | FIIs ${profile.fii}% | Internacional ${profile.intl}%
-- Adapte sempre suas sugestões a este perfil`;
+Adapte linguagem e sugestões ao nível de conhecimento do usuário. Para iniciantes, explique conceitos; para avançados, seja mais técnico.`;
     }
 
+    // Bloco de carteira real
     if (portfolio && portfolio.length > 0) {
       const totalValue = portfolio.reduce((sum, a) => sum + (a.totalValue || 0), 0);
       const categories = {};
@@ -237,8 +290,8 @@ Forneça:
         .join('\n');
       const topAssets = [...portfolio]
         .sort((a, b) => (b.totalValue || 0) - (a.totalValue || 0))
-        .slice(0, 8)
-        .map(a => `  - ${a.name} (${a.ticker}): R$ ${Number(a.totalValue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`)
+        .slice(0, 10)
+        .map(a => `  - ${a.name}${a.ticker ? ` (${a.ticker})` : ''}: R$ ${Number(a.totalValue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`)
         .join('\n');
 
       systemPrompt += `
@@ -247,10 +300,20 @@ Forneça:
 - **Patrimônio total**: R$ ${totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
 - **Distribuição por categoria**:
 ${categoryLines}
-- **Principais ativos**:
+- **Principais ativos (top 10)**:
 ${topAssets}
-- Use estes dados para análises e sugestões personalizadas`;
+Ao analisar a carteira, avalie diversificação, concentração de risco e aderência ao perfil.`;
     }
+
+    systemPrompt += `
+
+## Diretrizes de resposta
+- Responda SEMPRE em português brasileiro claro e direto
+- Use markdown: **negrito** para dados importantes, listas para múltiplos itens, tabelas para comparações
+- Seja conciso mas completo — prefira respostas objetivas a longas dissertações
+- Nunca garanta lucros ou retornos específicos — sempre mencione que investimentos envolvem riscos
+- Se não tiver certeza sobre algo, diga claramente e indique fontes (CVM, ANBIMA, B3, Tesouro Direto)
+- Quando citar rentabilidade de renda fixa, compare sempre com o CDI atual`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -258,7 +321,18 @@ ${topAssets}
       { role: 'user', content: message },
     ];
 
-    return this.chat(messages);
+    const response = await this.client.chat.completions.create({
+      model: this.model,
+      messages,
+      max_tokens: 1200,
+      temperature: 0.5,
+    });
+
+    return {
+      content: response.choices[0]?.message?.content,
+      usage: response.usage,
+      model: response.model,
+    };
   }
 }
 
