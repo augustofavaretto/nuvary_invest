@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,7 +17,6 @@ import {
   RefreshCw,
   ChevronLeft,
   ChevronRight,
-  MoreHorizontal,
 } from 'lucide-react';
 import {
   listarConversas,
@@ -582,20 +581,6 @@ function ConversaItem({
 }) {
   const [isRenaming, setIsRenaming] = useState(false);
   const [novoTitulo, setNovoTitulo] = useState(conversa.titulo);
-  const [showMenu, setShowMenu] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  // Fecha dropdown ao clicar fora
-  useEffect(() => {
-    if (!showMenu) return;
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setShowMenu(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [showMenu]);
 
   const salvarRename = () => {
     const titulo = novoTitulo.trim();
@@ -615,9 +600,9 @@ function ConversaItem({
       className={`
         group relative flex items-center gap-2 px-3 py-2 mx-1 rounded-lg cursor-pointer
         transition-colors
-        ${isAtiva || showMenu ? 'bg-[#2D2D2D]' : 'hover:bg-[#2D2D2D]/50'}
+        ${isAtiva ? 'bg-[#2D2D2D]' : 'hover:bg-[#2D2D2D]/50'}
       `}
-      onClick={isRenaming || showMenu ? undefined : onSelecionar}
+      onClick={isRenaming ? undefined : onSelecionar}
     >
       <MessageSquare className={`w-4 h-4 flex-shrink-0 ${isAtiva ? 'text-[#00B8D9]' : 'text-[#6B7280]'}`} />
 
@@ -648,49 +633,29 @@ function ConversaItem({
             {conversa.titulo}
           </span>
 
-          {/* Botão três pontos */}
-          <div ref={menuRef} className="relative flex-shrink-0">
+          {/* Botões inline visíveis no hover */}
+          <div className="flex-shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
-              onClick={e => { e.stopPropagation(); setShowMenu(v => !v); }}
-              className={`
-                p-1 rounded transition-colors
-                ${showMenu
-                  ? 'text-white bg-[#3D3D3D]'
-                  : 'text-[#6B7280] hover:text-white hover:bg-[#3D3D3D]'}
-              `}
-              title="Mais opções"
+              onClick={e => {
+                e.stopPropagation();
+                setNovoTitulo(conversa.titulo);
+                setIsRenaming(true);
+              }}
+              className="p-1 rounded text-[#6B7280] hover:text-white hover:bg-[#3D3D3D] transition-colors"
+              title="Renomear"
             >
-              <MoreHorizontal className="w-4 h-4" />
+              <Pencil className="w-3.5 h-3.5" />
             </button>
-
-            {/* Dropdown */}
-            {showMenu && (
-              <div className="absolute right-0 top-7 z-50 bg-[#2D2D2D] border border-[#3D3D3D] rounded-lg shadow-xl py-1 min-w-[150px]">
-                <button
-                  onClick={e => {
-                    e.stopPropagation();
-                    setShowMenu(false);
-                    setNovoTitulo(conversa.titulo);
-                    setIsRenaming(true);
-                  }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#9CA3AF] hover:text-white hover:bg-[#3D3D3D] transition-colors"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Renomear
-                </button>
-                <button
-                  onClick={e => {
-                    e.stopPropagation();
-                    setShowMenu(false);
-                    onDeletar();
-                  }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  Apagar
-                </button>
-              </div>
-            )}
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                onDeletar();
+              }}
+              className="p-1 rounded text-[#6B7280] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+              title="Apagar conversa"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
           </div>
         </>
       )}
