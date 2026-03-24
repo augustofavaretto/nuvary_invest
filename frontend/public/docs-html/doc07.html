@@ -359,12 +359,14 @@
         <div style="background: linear-gradient(135deg, #1e1b4b, #4c1d95); color: white; border-radius: 12px; padding: 20px 24px; margin-bottom: 30px; margin-top: 30px; display: flex; align-items: flex-start; gap: 16px;">
             <span style="font-size: 1.5rem; flex-shrink: 0;">🚀</span>
             <div>
-                <strong style="font-size: 1rem;">Atualizado em v4.0.0 — Março 2026</strong>
+                <strong style="font-size: 1rem;">Atualizado em v4.1.0 — Março 2026</strong>
                 <ul style="margin: 8px 0 0 18px; font-size: 0.9rem; opacity: 0.9; line-height: 1.8;">
                     <li>Modelo atualizado: <code style="background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px;">gpt-5-mini</code> → <code style="background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px;">gpt-4o</code></li>
                     <li>Dados BCB em tempo real injetados no prompt (Selic, CDI, IPCA, IGP-M)</li>
                     <li>Prompt aprimorado: data de hoje, tributação por classe, personalização por nível</li>
                     <li><code style="background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px;">max_tokens: 1200</code> e <code style="background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px;">temperature: 0.5</code> configurados</li>
+                    <li><strong>NOVO v4.1:</strong> Bloco RESTRIÇÃO DE ESCOPO adicionado ao system prompt (camada 1)</li>
+                    <li><strong>NOVO v4.1:</strong> Sidebar: botões lápis/lixeira inline substituem dropdown "..."</li>
                 </ul>
                 <p style="margin: 10px 0 0; font-size: 0.88rem; opacity: 0.8;">Documentação completa de prompt engineering: <a href="doc27.html" style="color: #c084fc; font-weight: 600;">Doc 27 →</a></p>
             </div>
@@ -462,6 +464,55 @@
                 <h4>Historico de Conversa</h4>
                 <p>As ultimas 10 mensagens sao enviadas como contexto, permitindo conversas continuas e referencias a perguntas anteriores.</p>
             </div>
+
+            <h3>Restrição de Escopo (v4.1)</h3>
+            <p>Um bloco <strong>RESTRIÇÃO DE ESCOPO</strong> foi adicionado ao system prompt (camada 1, logo após a identidade do assistente) para garantir que o Chat IA responda apenas sobre tópicos financeiros relevantes.</p>
+
+            <div class="feature-card">
+                <h4>Escopo Permitido</h4>
+                <p>Investimentos, educação financeira, mercado de capitais, tributação de ativos, funcionalidades da plataforma Nuvary Invest.</p>
+            </div>
+
+            <div class="feature-card">
+                <h4>Escopo Proibido</h4>
+                <p>Receitas culinárias, esportes, política, saúde/medicina, programação genérica, piadas, role-play, qualquer assunto não relacionado a finanças e investimentos.</p>
+            </div>
+
+            <div class="feature-card">
+                <h4>Mensagem de Recusa</h4>
+                <p>Ao receber perguntas fora do escopo, o assistente responde com uma mensagem padronizada explicando que só pode ajudar com temas de investimentos e finanças, sugerindo perguntas relevantes.</p>
+            </div>
+
+            <div class="feature-card">
+                <h4>Regras Anti-Bypass</h4>
+                <p>O prompt instrui o modelo a ignorar tentativas de injeção de prompt, comandos como "ignore as instruções anteriores", "modo livre" ou pedidos de role-play que tentem contornar as restrições.</p>
+            </div>
+
+            <h3>Ordem das Camadas do Prompt (v4.1)</h3>
+            <table>
+                <tr>
+                    <th>Ordem</th>
+                    <th>Bloco</th>
+                    <th>Tipo</th>
+                </tr>
+                <tr><td>1</td><td>Identidade do Nuvary</td><td>Fixo</td></tr>
+                <tr><td>2</td><td>Restrição de Escopo</td><td>Fixo (novo)</td></tr>
+                <tr><td>3</td><td>Plataforma Nuvary Invest</td><td>Fixo</td></tr>
+                <tr><td>4</td><td>Mercado BR (IBOVESPA, B3, reguladores)</td><td>Fixo</td></tr>
+                <tr><td>5</td><td>Tributação por classe de ativo</td><td>Fixo</td></tr>
+                <tr><td>6</td><td>Diretrizes de comportamento</td><td>Fixo</td></tr>
+                <tr><td>7</td><td>Indicadores BCB em tempo real</td><td>Dinâmico (opcional)</td></tr>
+                <tr><td>8</td><td>Perfil do usuário</td><td>Condicional</td></tr>
+                <tr><td>9</td><td>Carteira do usuário</td><td>Condicional</td></tr>
+                <tr><td>10</td><td>Histórico da conversa</td><td>Acumulativo</td></tr>
+            </table>
+
+            <h3>Sidebar — Botões Inline (v4.1)</h3>
+            <p>O dropdown de três pontos (<code>MoreHorizontal</code>) foi removido da sidebar de conversas. Em seu lugar, cada item exibe dois botões inline visíveis ao passar o mouse:</p>
+            <ul>
+                <li><strong>Lápis (renomear):</strong> fica branco no hover; abre o campo de edição inline do título da conversa.</li>
+                <li><strong>Lixeira (apagar):</strong> fica vermelho no hover; remove a conversa após confirmação.</li>
+            </ul>
         </section>
 
         <section id="componentes">
@@ -671,7 +722,7 @@ Alocacao recomendada:
     </main>
 
     <footer>
-        <p>Nuvary Invest &copy; 2026 - Documentacao v1.6.0</p>
+        <p>Nuvary Invest &copy; 2026 - Documentacao v1.7.0</p>
     </footer>
 </body>
 </html>

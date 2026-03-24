@@ -408,11 +408,28 @@
 
             <h3>2. Aba Perfil de Investidor</h3>
             <ul>
-                <li><strong>Tipo de perfil:</strong> Conservador, Moderado ou Agressivo</li>
+                <li><strong>Tipo de perfil:</strong> Conservador, Moderado, Arrojado ou Agressivo</li>
                 <li><strong>Data do questionario:</strong> Quando o perfil foi definido</li>
                 <li><strong>Descricao do perfil:</strong> Caracteristicas do tipo de investidor</li>
                 <li><strong>Refazer questionario:</strong> Botao para atualizar o perfil</li>
             </ul>
+
+            <h3>Mapeamento Q → Colunas Supabase (<code>perfil_investidor</code>)</h3>
+            <table>
+                <tr>
+                    <th>Pergunta</th>
+                    <th>Coluna preenchida</th>
+                </tr>
+                <tr><td>Q1</td><td><code>idade</code></td></tr>
+                <tr><td>Q2</td><td><code>objetivo_principal</code></td></tr>
+                <tr><td>Q3</td><td><code>renda_mensal</code></td></tr>
+                <tr><td>Q4</td><td><code>nivel_conhecimento</code></td></tr>
+                <tr><td>Q5</td><td><code>horizonte_investimento</code></td></tr>
+            </table>
+
+            <div class="info-box">
+                <strong>Nota:</strong> A coluna <code>valor_investir</code> foi removida das interfaces TypeScript e do insert no Supabase — era uma coluna sem uso que não correspondia a nenhuma pergunta do questionário.
+            </div>
 
             <div class="info-box">
                 <strong>Perfis de Investidor:</strong>

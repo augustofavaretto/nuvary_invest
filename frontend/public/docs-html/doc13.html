@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Março 2026 - v4.0.0</span>
+            <span class="version-badge">Março 2026 - v4.1.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,7 +331,7 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🚀</span>
             <div>
-                <strong>Marco: v4.0.0 — Deploy Vercel + autenticacao simplificada!</strong>
+                <strong>Marco: v4.1.0 — Questionário 11 perguntas, restrição de escopo Chat IA, botões inline sidebar!</strong>
                 <p style="margin: 0; opacity: 0.9;">Migracao Railway → Vercel (frontend + backend serverless). Google OAuth removido. Fluxo de reset de senha corrigido.</p>
             </div>
         </div>
@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">168</div>
+                    <div class="stat-number">176</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -673,6 +673,27 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Redirecionar para /questionario após confirmação de email no cadastro</span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Usuário com perfil existente vai direto ao /dashboard — sem repetir questionário</span></li>
             </ul>
+
+            <div class="category-header">📋 Questionário de Perfil — Reestruturação <span class="task-new">NOVO v4.1.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Questionário expandido de 10 para <strong>11 perguntas</strong> (Q1=idade, Q5 nova: grupo de investimentos, Q11 nova: recurso extra)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Thresholds de perfil atualizados para escala 11-44: Conservador 11-18, Moderado 19-27, Arrojado 28-36, Agressivo 37-44<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tela de resultado simplificada — removidas seções "Análise por Categoria", "Investimentos Sugeridos", "Suas Características", "Chat IA CTA" e score numérico<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Botão "Ir para Minha Carteira" adicionado na tela de resultado do questionário<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Colunas da tabela <code>perfil_investidor</code> agora preenchidas corretamente: Q1→idade, Q2→objetivo_principal, Q3→renda_mensal, Q4→nivel_conhecimento, Q5→horizonte_investimento<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Coluna <code>valor_investir</code> removida das interfaces TypeScript e do insert Supabase — era sem uso<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Labels de categoria (Horizonte, Objetivos, Tolerância a Risco) removidos da UI de perguntas<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Barra de progresso separada removida — contador integrado no QuestionCard<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🤖 Chat IA — Restrição de Escopo e Sidebar <span class="task-new">NOVO v4.1.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Bloco RESTRIÇÃO DE ESCOPO adicionado ao system prompt (camada 1): escopo permitido = investimentos, educação financeira, funcionalidades Nuvary<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Escopo proibido definido: receitas, esportes, política, saúde, programação genérica, piadas, role-play<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Mensagem de recusa padronizada e regras anti-bypass (prompt injection, "modo livre", "ignore instruções")<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Sidebar do chat: dropdown "..." (MoreHorizontal) removido — substituído por botões lápis (renomear) e lixeira (apagar) inline no hover<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Lixeira fica vermelha no hover | Lápis fica branco no hover — melhor UX sem menu contextual<span class="task-new">NOVO</span></span></li>
+            </ul>
         </section>
 
         <section id="prioridade" class="section-fire">
@@ -816,7 +837,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentação Técnica v4.0.0 | Março 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v4.1.0 | Março 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>

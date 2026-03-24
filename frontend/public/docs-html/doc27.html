@@ -308,7 +308,7 @@
 
 <header>
     <div class="container">
-        <div class="version-badge">Doc 27 · Versão 4.0.0 · Março 2026</div>
+        <div class="version-badge">Doc 27 · Versão 4.1.0 · Março 2026</div>
         <h1>Prompt Engineering — Chat IA</h1>
         <p>Arquitetura completa do sistema de prompts do assistente Nuvary: camadas, dados em tempo real, personalização e parâmetros da API OpenAI</p>
     </div>
@@ -367,8 +367,8 @@
             <div class="layer layer-system">
                 <div class="layer-num">1</div>
                 <div>
-                    <div>System Prompt — Identidade e Regras</div>
-                    <div class="layer-desc">Fixo · Enviado em toda mensagem · Define quem é o Nuvary e como deve responder</div>
+                    <div>System Prompt — Identidade, Restrição de Escopo e Regras</div>
+                    <div class="layer-desc">Fixo · Enviado em toda mensagem · Define quem é o Nuvary, tópicos permitidos/proibidos, anti-bypass e comportamento</div>
                 </div>
             </div>
             <div class="arrow">↓</div>
@@ -428,6 +428,10 @@
                 <tr>
                     <td><span class="badge badge-purple">Identidade</span></td>
                     <td>"Você é o <strong>Nuvary</strong>, assistente virtual de investimentos da Nuvary Invest"</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-red">Restrição de Escopo</span></td>
+                    <td>Bloco RESTRIÇÃO DE ESCOPO: define tópicos permitidos (investimentos, educação financeira, plataforma) e proibidos (receitas, esportes, política, saúde, programação genérica, piadas, role-play). Inclui regras anti-bypass contra prompt injection e "modo livre". Mensagem de recusa padronizada para tópicos fora do escopo.</td>
                 </tr>
                 <tr>
                     <td><span class="badge badge-cyan">Data</span></td>
