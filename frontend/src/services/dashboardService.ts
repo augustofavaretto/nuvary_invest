@@ -166,31 +166,39 @@ export const dashboardService = {
     return stocks;
   },
 
-  // Buscar notícias financeiras em português
+  // Buscar notícias financeiras
   async getFinancialNews(limit = 6): Promise<NewsItem[]> {
     try {
-      // Top-headlines Brasil — endpoint mais confiável no plano gratuito
-      const res = await fetch(`${API_URL}/news/headlines/country/br?pageSize=${limit}`);
+      // News API — business headlines
+      const res = await fetch(`${API_URL}/news/business?pageSize=${limit}`);
       if (res.ok) {
         const data = await res.json();
         if (data.articles?.length > 0) {
           return data.articles;
         }
       }
+    } catch { /* continua para fallback */ }
 
-      // Fallback: business Brasil
-      const brRes = await fetch(`${API_URL}/news/headlines/category/business?country=br&pageSize=${limit}`);
-      if (brRes.ok) {
-        const brData = await brRes.json();
-        if (brData.articles?.length > 0) {
-          return brData.articles;
-        }
+    try {
+      // Fallback: Finnhub market news
+      const finnhubRes = await fetch(`${API_URL}/finnhub/news/market?category=general`);
+      if (finnhubRes.ok) {
+        const finnhubData = await finnhubRes.json();
+        return (finnhubData.slice?.(0, limit) || []).map((item: Record<string, unknown>) => ({
+          id: String(item.id || Math.random()),
+          title: item.headline || item.title || '',
+          description: item.summary || item.description || '',
+          source: { name: String(item.source || 'Finnhub') },
+          url: String(item.url || ''),
+          publishedAt: item.datetime
+            ? new Date(Number(item.datetime) * 1000).toISOString()
+            : new Date().toISOString(),
+          urlToImage: item.image ? String(item.image) : undefined,
+        }));
       }
+    } catch { /* sem notícias */ }
 
-      return [];
-    } catch {
-      return [];
-    }
+    return [];
   },
 
   // Buscar sugestões da IA baseado no perfil
