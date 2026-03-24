@@ -169,11 +169,8 @@ export const dashboardService = {
   // Buscar notícias financeiras em português
   async getFinancialNews(limit = 6): Promise<NewsItem[]> {
     try {
-      // News API — busca em português com termos financeiros brasileiros
-      const q = encodeURIComponent('investimentos OR bolsa OR ações OR economia OR mercado financeiro');
-      const res = await fetch(
-        `${API_URL}/news/search?q=${q}&language=pt&sortBy=publishedAt&pageSize=${limit}`
-      );
+      // Top-headlines Brasil — endpoint mais confiável no plano gratuito
+      const res = await fetch(`${API_URL}/news/headlines/country/br?pageSize=${limit}`);
       if (res.ok) {
         const data = await res.json();
         if (data.articles?.length > 0) {
@@ -181,8 +178,8 @@ export const dashboardService = {
         }
       }
 
-      // Fallback: top-headlines Brasil categoria business
-      const brRes = await fetch(`${API_URL}/news/business?country=br&pageSize=${limit}`);
+      // Fallback: business Brasil
+      const brRes = await fetch(`${API_URL}/news/headlines/category/business?country=br&pageSize=${limit}`);
       if (brRes.ok) {
         const brData = await brRes.json();
         if (brData.articles?.length > 0) {
