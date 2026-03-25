@@ -213,19 +213,6 @@ export default function CarteiraPage() {
             {/* Portfolio by Broker */}
             <PortfolioByBrokerCard data={portfolioData.byBroker} />
 
-            {/* Disclaimer */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="text-center text-sm text-muted-foreground py-4"
-            >
-              <p>
-                Os preços atuais são simulados para demonstração.
-                <br />
-                Em produção, os dados serão sincronizados com APIs de mercado.
-              </p>
-            </motion.div>
           </div>
         ) : (
           // Empty state - lista de categorias
