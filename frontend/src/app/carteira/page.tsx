@@ -24,6 +24,7 @@ import {
   addAsset,
   removeAsset,
   updateAsset,
+  saveTransaction,
   migrateLocalStorageToSupabase,
   PortfolioData,
   Asset,
@@ -82,18 +83,27 @@ export default function CarteiraPage() {
   };
 
   const handleSellAsset = async (assetId: string, qtd: number, vendaTotal: boolean) => {
-    if (vendaTotal) {
-      await removeAsset(assetId);
-    } else {
-      const allAssets = [
-        ...(portfolioData?.byProduct.rendaFixa || []),
-        ...(portfolioData?.byProduct.rendaVariavel || []),
-        ...(portfolioData?.byProduct.fiis || []),
-        ...(portfolioData?.byProduct.internacional || []),
-      ];
-      const asset = allAssets.find(a => a.id === assetId);
-      if (asset) {
-        const isFixed = ['renda_fixa', 'tesouro'].includes(asset.type);
+    const allAssets = [
+      ...(portfolioData?.byProduct.rendaFixa || []),
+      ...(portfolioData?.byProduct.rendaVariavel || []),
+      ...(portfolioData?.byProduct.fiis || []),
+      ...(portfolioData?.byProduct.internacional || []),
+    ];
+    const asset = allAssets.find(a => a.id === assetId);
+    if (asset) {
+      const isFixed = ['renda_fixa', 'tesouro'].includes(asset.type);
+      await saveTransaction({
+        tipo: 'venda',
+        ticker: asset.ticker,
+        name: asset.name,
+        asset_type: asset.type,
+        quantity: qtd,
+        price: isFixed ? qtd : asset.currentPrice,
+        total_value: isFixed ? qtd : qtd * asset.currentPrice,
+      });
+      if (vendaTotal) {
+        await removeAsset(assetId);
+      } else {
         const newQty = asset.quantity - qtd;
         const newTotal = isFixed ? newQty : newQty * asset.currentPrice;
         await updateAsset(assetId, { quantity: newQty, totalValue: newTotal });

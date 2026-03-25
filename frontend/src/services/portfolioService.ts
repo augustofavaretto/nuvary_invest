@@ -659,6 +659,38 @@ export async function getAllAssets(): Promise<Asset[]> {
   return getAllAssetsFromDB();
 }
 
+// ── Transactions ─────────────────────────────────────────────────────────────
+export interface Transaction {
+  id: string;
+  tipo: 'compra' | 'venda';
+  ticker: string;
+  name: string;
+  asset_type: string;
+  quantity: number;
+  price: number;
+  total_value: number;
+  created_at: string;
+}
+
+export async function saveTransaction(data: Omit<Transaction, 'id' | 'created_at'>): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  const { error } = await supabase.from('portfolio_transactions').insert({ ...data, user_id: user.id });
+  if (error) console.error('Erro ao salvar transação:', error);
+}
+
+export async function getTransactions(): Promise<Transaction[]> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+  const { data, error } = await supabase
+    .from('portfolio_transactions')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+  if (error) console.error('Erro ao buscar transações:', error);
+  return data ?? [];
+}
+
 // Format currency
 export function formatCurrency(value: number): string {
   return new Intl.NumberFormat('pt-BR', {

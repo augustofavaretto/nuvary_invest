@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
-import { getAllAssets, getPortfolioData, Asset, PortfolioData } from '@/services/portfolioService';
+import { getAllAssets, getPortfolioData, getTransactions, Asset, PortfolioData, Transaction } from '@/services/portfolioService';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 type Aba = 'performance' | 'extratos' | 'ir';
@@ -48,6 +48,7 @@ export default function RelatoriosPage() {
 
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [sellTransactions, setSellTransactions] = useState<Transaction[]>([]);
   const [cdiAnual, setCdiAnual] = useState<number | null>(null);
   const [loadingData, setLoadingData] = useState(true);
 
@@ -61,9 +62,10 @@ export default function RelatoriosPage() {
     async function load() {
       setLoadingData(true);
       try {
-        const [pd, a] = await Promise.all([getPortfolioData(), getAllAssets()]);
+        const [pd, a, txs] = await Promise.all([getPortfolioData(), getAllAssets(), getTransactions()]);
         setPortfolioData(pd);
         setAssets(a);
+        setSellTransactions(txs.filter(t => t.tipo === 'venda'));
         // Busca CDI atual do backend
         try {
           const res = await fetch(`${API_URL}/bcb/rates`);
@@ -105,18 +107,18 @@ export default function RelatoriosPage() {
       }));
   }, [assets]);
 
-  // Extratos: cada ativo da carteira como transação "Compra"
-  const transacoes = useMemo(() =>
-    [...assets]
+  // Extratos: compras (ativos na carteira) + vendas (portfolio_transactions)
+  const transacoes = useMemo(() => {
+    const compras = [...assets]
       .sort((a, b) => {
         const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
         return db - da;
       })
       .map((a, i) => ({
-        id: i + 1,
+        id: `c-${i}`,
         data: a.createdAt ?? new Date().toISOString(),
-        tipo: 'Compra' as const,
+        tipo: 'Compra' as 'Compra' | 'Venda',
         ativo: a.ticker,
         nome: a.name,
         categoria: TYPE_LABEL[a.type] ?? a.type,
@@ -124,8 +126,23 @@ export default function RelatoriosPage() {
         preco: a.averagePrice,
         total: a.totalValue,
         type: a.type,
-      })),
-  [assets]);
+      }));
+    const vendas = sellTransactions.map((t, i) => ({
+      id: `v-${i}`,
+      data: t.created_at,
+      tipo: 'Venda' as 'Compra' | 'Venda',
+      ativo: t.ticker,
+      nome: t.name,
+      categoria: TYPE_LABEL[t.asset_type] ?? t.asset_type,
+      qtd: t.quantity,
+      preco: t.price,
+      total: t.total_value,
+      type: t.asset_type,
+    }));
+    return [...compras, ...vendas].sort((a, b) =>
+      new Date(b.data).getTime() - new Date(a.data).getTime()
+    );
+  }, [assets, sellTransactions]);
 
   const transacoesFiltradas = useMemo(() => {
     const catMap: Record<string, string> = {
@@ -711,7 +728,7 @@ export default function RelatoriosPage() {
                     onChange={e => setFiltroTipo(e.target.value)}
                     className="pl-3 pr-8 py-2 text-sm bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-[#00B8D9] appearance-none cursor-pointer"
                   >
-                    {['Todos', 'Compra'].map(t => (
+                    {['Todos', 'Compra', 'Venda'].map(t => (
                       <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
@@ -779,10 +796,17 @@ export default function RelatoriosPage() {
                           {new Date(t.data).toLocaleDateString('pt-BR')}
                         </td>
                         <td className="px-4 py-3">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                            <ArrowUpRight className="w-3 h-3 mr-1" />
-                            Compra
-                          </span>
+                          {t.tipo === 'Compra' ? (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                              <ArrowUpRight className="w-3 h-3 mr-1" />
+                              Compra
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                              <ArrowDownRight className="w-3 h-3 mr-1" />
+                              Venda
+                            </span>
+                          )}
                         </td>
                         <td className="px-4 py-3 font-semibold text-foreground">{t.ativo}</td>
                         <td className="px-4 py-3 text-muted-foreground text-xs max-w-[160px] truncate">{t.nome}</td>
