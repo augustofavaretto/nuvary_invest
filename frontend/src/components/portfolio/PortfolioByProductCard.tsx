@@ -150,10 +150,11 @@ export function PortfolioByProductCard({
                   {onSellAsset && (
                     <button
                       onClick={(e) => { e.stopPropagation(); onSellAsset(asset); }}
-                      className="p-2 text-muted-foreground/40 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-500/15 text-amber-500 border border-amber-500/30 hover:bg-amber-500 hover:text-white hover:border-amber-500 transition-all opacity-0 group-hover:opacity-100"
                       title="Vender ativo"
                     >
-                      <SellIcon className="w-4 h-4" />
+                      <SellIcon className="w-3.5 h-3.5" />
+                      Vender
                     </button>
                   )}
                   {onRemoveAsset && (
