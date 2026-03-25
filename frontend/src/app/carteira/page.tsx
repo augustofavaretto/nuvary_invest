@@ -16,14 +16,17 @@ import {
   PortfolioByProductCard,
   PortfolioByBrokerCard,
   AddAssetModal,
+  SellAssetModal,
 } from '@/components/portfolio';
 import type { NewAssetData } from '@/components/portfolio';
 import {
   getPortfolioData,
   addAsset,
   removeAsset,
+  updateAsset,
   migrateLocalStorageToSupabase,
   PortfolioData,
+  Asset,
 } from '@/services/portfolioService';
 
 export default function CarteiraPage() {
@@ -34,6 +37,7 @@ export default function CarteiraPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedModalCategory, setSelectedModalCategory] = useState<string | null>(null);
+  const [assetToSell, setAssetToSell] = useState<Asset | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -75,6 +79,27 @@ export default function CarteiraPage() {
       await removeAsset(assetId);
       await handleRefresh();
     }
+  };
+
+  const handleSellAsset = async (assetId: string, qtd: number, vendaTotal: boolean) => {
+    if (vendaTotal) {
+      await removeAsset(assetId);
+    } else {
+      const allAssets = [
+        ...(portfolioData?.byProduct.rendaFixa || []),
+        ...(portfolioData?.byProduct.rendaVariavel || []),
+        ...(portfolioData?.byProduct.fiis || []),
+        ...(portfolioData?.byProduct.internacional || []),
+      ];
+      const asset = allAssets.find(a => a.id === assetId);
+      if (asset) {
+        const isFixed = ['renda_fixa', 'tesouro'].includes(asset.type);
+        const newQty = asset.quantity - qtd;
+        const newTotal = isFixed ? newQty : newQty * asset.currentPrice;
+        await updateAsset(assetId, { quantity: newQty, totalValue: newTotal });
+      }
+    }
+    await handleRefresh();
   };
 
   if (authLoading || !isAuthenticated) {
@@ -172,6 +197,7 @@ export default function CarteiraPage() {
               fiis={portfolioData.byProduct.fiis}
               internacional={portfolioData.byProduct.internacional}
               onRemoveAsset={handleRemoveAsset}
+              onSellAsset={(asset) => setAssetToSell(asset)}
             />
 
             {/* Portfolio by Broker */}
@@ -258,6 +284,13 @@ export default function CarteiraPage() {
           </div>
         )}
       </div>
+
+      {/* Sell Asset Modal */}
+      <SellAssetModal
+        asset={assetToSell}
+        onClose={() => setAssetToSell(null)}
+        onSell={handleSellAsset}
+      />
 
       {/* Add Asset Modal */}
       <AddAssetModal

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, TrendingUp, TrendingDown, Trash2 } from 'lucide-react';
+import { ChevronRight, TrendingUp, TrendingDown, Trash2, TrendingDown as SellIcon } from 'lucide-react';
 import { DonutChart } from './DonutChart';
 import { Asset, formatCurrency, formatPercentage } from '@/services/portfolioService';
 
@@ -12,6 +12,7 @@ interface PortfolioByProductCardProps {
   fiis: Asset[];
   internacional: Asset[];
   onRemoveAsset?: (assetId: string) => void;
+  onSellAsset?: (asset: Asset) => void;
 }
 
 const TABS = [
@@ -27,6 +28,7 @@ export function PortfolioByProductCard({
   fiis,
   internacional,
   onRemoveAsset,
+  onSellAsset,
 }: PortfolioByProductCardProps) {
   const [activeTab, setActiveTab] = useState('rendaFixa');
 
@@ -145,12 +147,18 @@ export function PortfolioByProductCard({
                       {formatPercentage(asset.percentageOfPortfolio)} da carteira
                     </p>
                   </div>
+                  {onSellAsset && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); onSellAsset(asset); }}
+                      className="p-2 text-muted-foreground/40 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                      title="Vender ativo"
+                    >
+                      <SellIcon className="w-4 h-4" />
+                    </button>
+                  )}
                   {onRemoveAsset && (
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onRemoveAsset(asset.id);
-                      }}
+                      onClick={(e) => { e.stopPropagation(); onRemoveAsset(asset.id); }}
                       className="p-2 text-muted-foreground/40 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
                       title="Remover ativo"
                     >

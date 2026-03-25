@@ -5,3 +5,4 @@ export { PortfolioByProductCard } from './PortfolioByProductCard';
 export { PortfolioByBrokerCard } from './PortfolioByBrokerCard';
 export { AddAssetModal } from './AddAssetModal';
 export type { NewAssetData } from './AddAssetModal';
+export { SellAssetModal } from './SellAssetModal';
