@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, useMemo, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Loader2, BarChart3, TrendingUp, FileText,
@@ -37,13 +37,14 @@ const TYPE_COLOR: Record<string, string> = {
 };
 
 // ── Componente principal ──────────────────────────────────────────────────────
-export default function RelatoriosPage() {
+function RelatoriosContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { loading: authLoading, isAuthenticated, profile } = useAuth();
 
-  const [aba, setAba] = useState<Aba>('performance');
+  const [aba, setAba] = useState<Aba>((searchParams.get('aba') as Aba) || 'performance');
   const [filtroTipo, setFiltroTipo] = useState('Todos');
-  const [filtroCategoria, setFiltroCategoria] = useState('Todas');
+  const [filtroCategoria, setFiltroCategoria] = useState(searchParams.get('categoria') || 'Todas');
   const [busca, setBusca] = useState('');
 
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
@@ -982,4 +983,8 @@ export default function RelatoriosPage() {
       </div>
     </DashboardLayout>
   );
+}
+
+export default function RelatoriosPage() {
+  return <Suspense><RelatoriosContent /></Suspense>;
 }

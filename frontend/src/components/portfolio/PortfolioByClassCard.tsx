@@ -1,9 +1,18 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { DonutChart } from './DonutChart';
 import { AssetClassData, formatCurrency, formatPercentage } from '@/services/portfolioService';
+
+// Mapa de nome da classe → valor do filtro em /relatorios
+const CLASS_TO_FILTER: Record<string, string> = {
+  'Renda Fixa': 'Renda Fixa',
+  'Renda Variável': 'Ações B3',
+  'Fundos Imobiliários': 'FIIs',
+  'Internacional': 'Internac.',
+};
 
 interface PortfolioByClassCardProps {
   data: AssetClassData[];
@@ -11,7 +20,14 @@ interface PortfolioByClassCardProps {
 }
 
 export function PortfolioByClassCard({ data, onClassClick }: PortfolioByClassCardProps) {
+  const router = useRouter();
   const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+
+  const handleClick = (item: AssetClassData) => {
+    onClassClick?.(item.name);
+    const categoria = CLASS_TO_FILTER[item.name] ?? item.name;
+    router.push(`/relatorios?aba=extratos&categoria=${encodeURIComponent(categoria)}`);
+  };
 
   return (
     <motion.div
@@ -43,7 +59,7 @@ export function PortfolioByClassCard({ data, onClassClick }: PortfolioByClassCar
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 + index * 0.05 }}
-              onClick={() => onClassClick?.(item.name)}
+              onClick={() => handleClick(item)}
               className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group"
             >
               <div className="flex items-center gap-3">
