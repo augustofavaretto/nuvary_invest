@@ -166,7 +166,6 @@ export function PortfolioByProductCard({
                       <Trash2 className="w-4 h-4" />
                     </button>
                   )}
-                  <ChevronRight className="w-5 h-5 text-muted-foreground/40 group-hover:text-[#00B8D9] transition-colors" />
                 </div>
               </motion.div>
             ))}
