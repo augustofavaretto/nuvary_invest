@@ -45,6 +45,7 @@ function RelatoriosContent() {
   const [aba, setAba] = useState<Aba>((searchParams.get('aba') as Aba) || 'performance');
   const [filtroTipo, setFiltroTipo] = useState('Todos');
   const [filtroCategoria, setFiltroCategoria] = useState(searchParams.get('categoria') || 'Todas');
+  const [filtroCorretora, setFiltroCorretora] = useState('Todas');
   const [busca, setBusca] = useState('');
 
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
@@ -127,6 +128,7 @@ function RelatoriosContent() {
         preco: a.averagePrice,
         total: a.totalValue,
         type: a.type,
+        broker: a.broker ?? '',
       }));
     const vendas = sellTransactions.map((t, i) => ({
       id: `v-${i}`,
@@ -139,11 +141,17 @@ function RelatoriosContent() {
       preco: t.price,
       total: t.total_value,
       type: t.asset_type,
+      broker: '',
     }));
     return [...compras, ...vendas].sort((a, b) =>
       new Date(b.data).getTime() - new Date(a.data).getTime()
     );
   }, [assets, sellTransactions]);
+
+  const corretoras = useMemo(() => {
+    const set = new Set(assets.map(a => a.broker).filter(Boolean));
+    return ['Todas', ...Array.from(set).sort()];
+  }, [assets]);
 
   const transacoesFiltradas = useMemo(() => {
     const catMap: Record<string, string> = {
@@ -156,9 +164,10 @@ function RelatoriosContent() {
       const matchBusca = busca === '' ||
         t.ativo.toLowerCase().includes(busca.toLowerCase()) ||
         t.nome.toLowerCase().includes(busca.toLowerCase());
-      return matchTipo && matchCat && matchBusca;
+      const matchCorretora = filtroCorretora === 'Todas' || t.broker === filtroCorretora;
+      return matchTipo && matchCat && matchBusca && matchCorretora;
     });
-  }, [transacoes, filtroTipo, filtroCategoria, busca]);
+  }, [transacoes, filtroTipo, filtroCategoria, filtroCorretora, busca]);
 
   // KPIs
   const summary = portfolioData?.summary;
@@ -743,6 +752,19 @@ function RelatoriosContent() {
                     className="pl-3 pr-8 py-2 text-sm bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-[#00B8D9] appearance-none cursor-pointer"
                   >
                     {['Todas', 'Renda Fixa', 'Ações B3', 'FIIs', 'Internac.'].map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                </div>
+
+                <div className="relative">
+                  <select
+                    value={filtroCorretora}
+                    onChange={e => setFiltroCorretora(e.target.value)}
+                    className="pl-3 pr-8 py-2 text-sm bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-[#00B8D9] appearance-none cursor-pointer"
+                  >
+                    {corretoras.map(c => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
