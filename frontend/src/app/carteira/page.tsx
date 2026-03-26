@@ -25,6 +25,7 @@ import {
   removeAsset,
   updateAsset,
   saveTransaction,
+  refreshAllPrices,
   migrateLocalStorageToSupabase,
   PortfolioData,
   Asset,
@@ -46,9 +47,10 @@ export default function CarteiraPage() {
     }
   }, [authLoading, isAuthenticated, router]);
 
-  const loadData = async (runMigration = false) => {
+  const loadData = async (runMigration = false, forceRefresh = false) => {
     try {
       if (runMigration) await migrateLocalStorageToSupabase();
+      await refreshAllPrices(forceRefresh);
       const data = await getPortfolioData();
       setPortfolioData(data);
     } catch (error) {
@@ -66,7 +68,7 @@ export default function CarteiraPage() {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await loadData();
+    await loadData(false, true); // força refresh de preços
     setRefreshing(false);
   };
 

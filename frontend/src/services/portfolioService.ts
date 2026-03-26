@@ -659,6 +659,58 @@ export async function getAllAssets(): Promise<Asset[]> {
   return getAllAssetsFromDB();
 }
 
+// ── Refresh de preços com cache ───────────────────────────────────────────────
+const PRICE_CACHE_KEY = 'nuvary_price_cache_ts';
+const PRICE_CACHE_TTL = 15 * 60 * 1000; // 15 minutos
+
+// Tipos que têm preço de mercado (renda fixa usa taxa fixa, não precisa refresh)
+const MARKET_PRICE_TYPES: AssetClass[] = ['renda_variavel', 'fiis', 'internacional'];
+
+export async function refreshAllPrices(force = false): Promise<boolean> {
+  if (typeof window === 'undefined') return false;
+
+  // Verifica cache
+  const lastUpdate = localStorage.getItem(PRICE_CACHE_KEY);
+  const now = Date.now();
+  if (!force && lastUpdate && now - parseInt(lastUpdate) < PRICE_CACHE_TTL) {
+    return false; // cache ainda válido
+  }
+
+  const assets = await getAllAssetsFromDB();
+  const toRefresh = assets.filter(a => MARKET_PRICE_TYPES.includes(a.type));
+
+  if (toRefresh.length === 0) {
+    localStorage.setItem(PRICE_CACHE_KEY, now.toString());
+    return true;
+  }
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  for (const asset of toRefresh) {
+    try {
+      const result = await fetchAssetPrice(asset.ticker, asset.type as CategoryId, asset.name);
+      if (result.price && result.price > 0) {
+        const variation = asset.averagePrice > 0
+          ? ((result.price - asset.averagePrice) / asset.averagePrice) * 100
+          : 0;
+        const totalValue = asset.quantity * result.price;
+        const { error } = await supabase
+          .from('portfolio_assets')
+          .update({ current_price: result.price, total_value: totalValue, variation })
+          .eq('id', asset.id)
+          .eq('user_id', user.id);
+        if (error) console.error(`Erro ao atualizar preço de ${asset.ticker}:`, error);
+      }
+    } catch {
+      // silencioso — mantém preço anterior
+    }
+  }
+
+  localStorage.setItem(PRICE_CACHE_KEY, now.toString());
+  return true;
+}
+
 // ── Transactions ─────────────────────────────────────────────────────────────
 export interface Transaction {
   id: string;
