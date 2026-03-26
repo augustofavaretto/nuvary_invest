@@ -338,7 +338,7 @@ function RelatoriosContent() {
     assets.forEach(a => {
       if (!grupos[a.type]) grupos[a.type] = { ativos: [], totalInvestido: 0, totalAtual: 0, rendimento: 0 };
       grupos[a.type].ativos.push(a);
-      grupos[a.type].totalInvestido += a.quantity * a.averagePrice;
+      grupos[a.type].totalInvestido += a.type === 'renda_fixa' ? a.quantity : a.quantity * a.averagePrice;
       grupos[a.type].totalAtual += a.totalValue;
       grupos[a.type].rendimento += a.totalValue - (a.type === 'renda_fixa' ? a.quantity : a.quantity * a.averagePrice);
     });

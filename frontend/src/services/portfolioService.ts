@@ -542,7 +542,9 @@ export function calculatePortfolioData(assets: Asset[]): PortfolioData {
 
   // Calculate totals
   const totalValue = assets.reduce((sum, a) => sum + a.totalValue, 0);
-  const totalInvested = assets.reduce((sum, a) => sum + (a.quantity * a.averagePrice), 0);
+  // Renda fixa: quantity = R$ investido, averagePrice = taxa (%) — não multiplicar
+  const totalInvested = assets.reduce((sum, a) =>
+    sum + (a.type === 'renda_fixa' ? a.quantity : a.quantity * a.averagePrice), 0);
   const totalProfit = totalValue - totalInvested;
   const profitPercentage = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
 
