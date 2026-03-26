@@ -45,7 +45,7 @@ function RelatoriosContent() {
   const [aba, setAba] = useState<Aba>((searchParams.get('aba') as Aba) || 'performance');
   const [filtroTipo, setFiltroTipo] = useState('Todos');
   const [filtroCategoria, setFiltroCategoria] = useState(searchParams.get('categoria') || 'Todas');
-  const [filtroCorretora, setFiltroCorretora] = useState('Todas');
+  const [filtroCorretora, setFiltroCorretora] = useState(searchParams.get('corretora') || 'Todas');
   const [busca, setBusca] = useState('');
 
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);

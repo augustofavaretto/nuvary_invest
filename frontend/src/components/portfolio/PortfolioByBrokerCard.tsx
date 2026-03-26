@@ -1,6 +1,8 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { ChevronRight } from 'lucide-react';
 import { DonutChart } from './DonutChart';
 import { Broker, formatCurrency, formatPercentage } from '@/services/portfolioService';
 
@@ -11,6 +13,7 @@ interface PortfolioByBrokerCardProps {
 const BROKER_COLORS = ['#1e3a5f', '#00B8D9', '#10b981', '#6366f1', '#f59e0b', '#ef4444'];
 
 export function PortfolioByBrokerCard({ data }: PortfolioByBrokerCardProps) {
+  const router = useRouter();
   const totalValue = data.reduce((sum, item) => sum + item.value, 0);
 
   const chartData = data.map((broker, index) => ({
@@ -45,12 +48,13 @@ export function PortfolioByBrokerCard({ data }: PortfolioByBrokerCardProps) {
         {/* Broker List */}
         <div className="flex-1 w-full space-y-3">
           {chartData.map((broker, index) => (
-            <motion.div
+            <motion.button
               key={broker.name}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 + index * 0.05 }}
-              className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors"
+              onClick={() => router.push(`/relatorios?aba=extratos&corretora=${encodeURIComponent(broker.name)}`)}
+              className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group"
             >
               <div className="flex items-center gap-3">
                 <div
@@ -60,11 +64,16 @@ export function PortfolioByBrokerCard({ data }: PortfolioByBrokerCardProps) {
                 <span className="font-medium text-foreground">{broker.name}</span>
               </div>
 
-              <div className="text-right">
-                <p className="font-semibold text-foreground">{formatCurrency(broker.value)}</p>
-                <p className="text-sm text-muted-foreground">{formatPercentage(broker.percentage)} da carteira</p>
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="font-semibold text-foreground">{formatCurrency(broker.value)}</p>
+                  <p className="text-sm text-muted-foreground">{formatPercentage(broker.percentage)} da carteira</p>
+                </div>
+                <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center group-hover:bg-[#00B8D9] group-hover:border-[#00B8D9] transition-colors">
+                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-white transition-colors" />
+                </div>
               </div>
-            </motion.div>
+            </motion.button>
           ))}
         </div>
       </div>
