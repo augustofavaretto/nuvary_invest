@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { User, Calendar, Eye, EyeOff, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PerfilInvestidor } from '@/services/perfilService';
-import { getPortfolioSummary, formatCurrency, PortfolioSummary } from '@/services/portfolioService';
+import { getPortfolioSummary, refreshAllPrices, formatCurrency, PortfolioSummary } from '@/services/portfolioService';
 
 interface DashboardHeaderProps {
   userName: string;
@@ -33,6 +33,7 @@ export function DashboardHeader({ userName, investorProfile }: DashboardHeaderPr
     // Load portfolio summary
     async function loadSummary() {
       try {
+        await refreshAllPrices(false);
         const summary = await getPortfolioSummary();
         setPortfolioSummary(summary);
       } catch (error) {

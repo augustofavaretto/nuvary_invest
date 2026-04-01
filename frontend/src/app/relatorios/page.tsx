@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
-import { getAllAssets, getPortfolioData, getTransactions, Asset, PortfolioData, Transaction } from '@/services/portfolioService';
+import { getAllAssets, getPortfolioData, getTransactions, refreshAllPrices, Asset, PortfolioData, Transaction } from '@/services/portfolioService';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 type Aba = 'performance' | 'extratos' | 'ir';
@@ -64,6 +64,7 @@ function RelatoriosContent() {
     async function load() {
       setLoadingData(true);
       try {
+        await refreshAllPrices(false);
         const [pd, a, txs] = await Promise.all([getPortfolioData(), getAllAssets(), getTransactions()]);
         setPortfolioData(pd);
         setAssets(a);
