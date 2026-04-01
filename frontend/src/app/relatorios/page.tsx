@@ -779,68 +779,123 @@ function RelatoriosContent() {
             {/* Gráficos lado a lado */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-              {/* Variação % por ativo */}
+              {/* Variação % por ativo — lista com barras divergentes */}
               {variacaoPorAtivo.length > 0 && (
                 <div className="bg-card border border-border rounded-xl p-5">
                   <h2 className="text-sm font-semibold text-foreground mb-1">Variação % por Ativo</h2>
-                  <p className="text-xs text-muted-foreground mb-4">Preço médio de compra vs. cotação atual</p>
-                  <ResponsiveContainer width="100%" height={Math.max(180, variacaoPorAtivo.length * 38)}>
-                    <BarChart
-                      data={variacaoPorAtivo}
-                      layout="vertical"
-                      margin={{ top: 0, right: 40, bottom: 0, left: 10 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" horizontal={false} />
-                      <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => `${v}%`} />
-                      <YAxis type="category" dataKey="nome" tick={{ fontSize: 11 }} width={60} />
-                      <Tooltip
-                        formatter={(v: number | undefined) => v != null ? [`${v.toFixed(2)}%`, 'Variação'] : ''}
-                        contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
-                      />
-                      <ReferenceLine x={0} stroke="#94a3b8" />
-                      <Bar dataKey="variacao" name="Variação %" radius={[0, 6, 6, 0]}>
-                        {variacaoPorAtivo.map((entry, i) => (
-                          <Cell key={i} fill={entry.variacao >= 0 ? '#10b981' : '#ef4444'} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <p className="text-xs text-muted-foreground mb-5">Retorno desde o preço médio de compra</p>
+
+                  {/* Cabeçalho */}
+                  <div className="flex items-center gap-3 mb-2 px-1">
+                    <span className="text-[10px] text-muted-foreground w-16 flex-shrink-0">Ativo</span>
+                    <div className="flex-1 flex text-[10px] text-muted-foreground">
+                      <span className="flex-1 text-right pr-2">Queda</span>
+                      <span className="flex-1 pl-2">Alta</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground w-14 text-right">Variação</span>
+                  </div>
+
+                  <div className="space-y-3">
+                    {(() => {
+                      const maxAbs = Math.max(...variacaoPorAtivo.map(e => Math.abs(e.variacao)), 0.01);
+                      return variacaoPorAtivo.map((entry, i) => {
+                        const isPos = entry.variacao >= 0;
+                        const pct = (Math.abs(entry.variacao) / maxAbs) * 48; // max 48% de cada lado
+                        return (
+                          <div key={i} className="flex items-center gap-3">
+                            <span className="text-xs font-mono font-semibold text-foreground w-16 flex-shrink-0 truncate">
+                              {entry.nome}
+                            </span>
+                            {/* Barra divergente centralizada */}
+                            <div className="flex-1 flex items-center h-7 relative">
+                              {/* Linha central */}
+                              <div className="absolute left-1/2 -translate-x-px w-px h-full bg-border z-10" />
+                              {/* Fundo da barra */}
+                              <div className="flex-1 flex h-5 rounded overflow-hidden bg-muted/30">
+                                <div className="w-1/2 flex justify-end">
+                                  {!isPos && (
+                                    <div
+                                      className="h-full rounded-l-sm"
+                                      style={{ width: `${pct}%`, background: '#ef4444' }}
+                                    />
+                                  )}
+                                </div>
+                                <div className="w-1/2 flex justify-start">
+                                  {isPos && (
+                                    <div
+                                      className="h-full rounded-r-sm"
+                                      style={{ width: `${pct}%`, background: '#10b981' }}
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <span className={`text-xs font-bold w-14 text-right tabular-nums ${isPos ? 'text-green-500' : 'text-red-500'}`}>
+                              {isPos ? '+' : ''}{entry.variacao.toFixed(2)}%
+                            </span>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
                 </div>
               )}
 
-              {/* Rentabilidade por categoria */}
+              {/* Rentabilidade por categoria — cards com indicador visual */}
               {rentabilidadePorCategoria.length > 0 && (
                 <div className="bg-card border border-border rounded-xl p-5">
                   <h2 className="text-sm font-semibold text-foreground mb-1">Rentabilidade por Categoria</h2>
-                  <p className="text-xs text-muted-foreground mb-4">Variação média ponderada por valor alocado</p>
-                  <ResponsiveContainer width="100%" height={220}>
-                    <BarChart data={rentabilidadePorCategoria} margin={{ top: 5, right: 20, bottom: 5, left: -10 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
-                      <XAxis dataKey="categoria" tick={{ fontSize: 11 }} />
-                      <YAxis tick={{ fontSize: 11 }} tickFormatter={v => `${v}%`} />
-                      <Tooltip
-                        formatter={(v: number | undefined) => v != null ? [`${v.toFixed(2)}%`, 'Rentabilidade'] : ''}
-                        contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
-                      />
-                      <ReferenceLine y={0} stroke="#94a3b8" />
-                      <Bar dataKey="rentabilidade" name="Rentabilidade %" radius={[6, 6, 0, 0]}>
-                        {rentabilidadePorCategoria.map((entry, i) => (
-                          <Cell key={i} fill={entry.rentabilidade >= 0 ? entry.cor : '#ef4444'} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                  <div className="flex flex-wrap gap-3 mt-3">
-                    {rentabilidadePorCategoria.map(c => (
-                      <div key={c.categoria} className="flex items-center gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full" style={{ background: c.rentabilidade >= 0 ? c.cor : '#ef4444' }} />
-                        <span className="text-xs text-muted-foreground">{c.categoria}</span>
-                        <span className="text-xs font-semibold" style={{ color: c.rentabilidade >= 0 ? c.cor : '#ef4444' }}>
-                          {c.rentabilidade >= 0 ? '+' : ''}{c.rentabilidade}%
-                        </span>
-                      </div>
-                    ))}
+                  <p className="text-xs text-muted-foreground mb-5">Média ponderada pelo valor alocado em cada classe</p>
+
+                  <div className="space-y-4">
+                    {(() => {
+                      const maxAbs = Math.max(...rentabilidadePorCategoria.map(c => Math.abs(c.rentabilidade)), 0.01);
+                      return rentabilidadePorCategoria.map((c, i) => {
+                        const isPos = c.rentabilidade >= 0;
+                        const barPct = (Math.abs(c.rentabilidade) / maxAbs) * 100;
+                        const cor = isPos ? c.cor : '#ef4444';
+                        return (
+                          <div key={i}>
+                            <div className="flex items-center justify-between mb-1.5">
+                              <div className="flex items-center gap-2">
+                                <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: cor }} />
+                                <span className="text-sm font-medium text-foreground">{c.categoria}</span>
+                              </div>
+                              <span className="text-sm font-bold tabular-nums" style={{ color: cor }}>
+                                {isPos ? '+' : ''}{c.rentabilidade.toFixed(2)}%
+                              </span>
+                            </div>
+                            {/* Barra de progresso */}
+                            <div className="h-2 bg-muted rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all duration-500"
+                                style={{ width: `${barPct}%`, background: cor }}
+                              />
+                            </div>
+                            <p className="text-[10px] text-muted-foreground mt-1">
+                              {isPos ? 'Acima do preço médio' : 'Abaixo do preço médio'}
+                            </p>
+                          </div>
+                        );
+                      });
+                    })()}
                   </div>
+
+                  {/* Comparativo CDI */}
+                  {cdiAnual && (
+                    <div className="mt-5 pt-4 border-t border-border">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/50 flex-shrink-0" />
+                          <span className="text-sm font-medium text-muted-foreground">CDI (referência)</span>
+                        </div>
+                        <span className="text-sm font-bold text-muted-foreground">{cdiAnual.toFixed(2)}% a.a.</span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full">
+                        <div className="h-full w-full rounded-full bg-muted-foreground/20" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
