@@ -233,3 +233,14 @@
 .hover-nuvary-gradient:hover {
   background: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
 }
+
+/* Chat sidebar — botão três pontos aparece no hover (CSS puro) */
+.conversa-dots-btn {
+  opacity: 0;
+  transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease;
+  pointer-events: none;
+}
+.conversa-item-row:hover .conversa-dots-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
