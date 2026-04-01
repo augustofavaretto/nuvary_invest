@@ -657,7 +657,7 @@ function MenuContexto({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.1 }}
       style={{ position: 'fixed', left: x, top: y, zIndex: 50 }}
-      className="bg-[#2D2D2D] border border-[#3D3D3D] rounded-xl shadow-xl p-1.5 min-w-[180px]"
+      className="bg-[#2D2D2D] border border-[#3D3D3D] rounded-xl shadow-xl p-1.5 min-w-[200px]"
     >
       <button
         onClick={onFavoritar}
@@ -736,7 +736,7 @@ function ConversaItem({
   const handleMoreVertical = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const rect = e.currentTarget.getBoundingClientRect();
-    onAbrirMenu(conversa.id, rect.left, rect.bottom + 4);
+    onAbrirMenu(conversa.id, rect.right, rect.bottom);
   };
 
   return (
