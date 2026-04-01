@@ -124,6 +124,9 @@ export const STRINGS = {
       `Olá! Sou o assistente virtual da Nuvary Invest. Vi que seu perfil é **${nome}**. Como posso ajudá-lo hoje com seus investimentos?`,
     boasVindasSemPerfil:
       'Olá! Sou o assistente virtual da Nuvary Invest. Estou aqui para ajudá-lo com dúvidas sobre investimentos, análises de mercado e educação financeira. Como posso ajudá-lo hoje?',
+    favoritar: 'Favoritar',
+    mudarNome: 'Mudar o nome',
+    apagar: 'Apagar',
   },
 
   // ─── Questionário / Perfil de Investidor ──────────────────────────────────

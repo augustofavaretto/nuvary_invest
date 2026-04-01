@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,8 @@ import {
   RefreshCw,
   ChevronLeft,
   ChevronRight,
+  MoreVertical,
+  Star,
 } from 'lucide-react';
 import {
   listarConversas,
@@ -64,6 +66,29 @@ export function ChatSidebar({
   const [limpando, setLimpando] = useState(false);
   const [conversaParaDeletar, setConversaParaDeletar] = useState<string | null>(null);
   const [deletando, setDeletando] = useState(false);
+  const [menuAberto, setMenuAberto] = useState<{ conversaId: string; x: number; y: number } | null>(null);
+  const [renameConversaId, setRenameConversaId] = useState<string | null>(null);
+
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Fecha menu ao clicar fora ou pressionar Escape
+  useEffect(() => {
+    if (!menuAberto) return;
+    const handleClickFora = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuAberto(null);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuAberto(null);
+    };
+    document.addEventListener('mousedown', handleClickFora);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickFora);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [menuAberto]);
 
   // Aplica títulos customizados do localStorage sobre a lista
   const aplicarTitulosCustomizados = (lista: Conversa[]): Conversa[] =>
@@ -350,6 +375,9 @@ export function ChatSidebar({
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
                       onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
+                      onAbrirMenu={(id, x, y) => setMenuAberto({ conversaId: id, x, y })}
+                      startRenaming={renameConversaId === conversa.id}
+                      onRenameActivated={() => setRenameConversaId(null)}
                     />
                   ))}
                 </div>
@@ -367,6 +395,9 @@ export function ChatSidebar({
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
                       onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
+                      onAbrirMenu={(id, x, y) => setMenuAberto({ conversaId: id, x, y })}
+                      startRenaming={renameConversaId === conversa.id}
+                      onRenameActivated={() => setRenameConversaId(null)}
                     />
                   ))}
                 </div>
@@ -384,6 +415,9 @@ export function ChatSidebar({
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
                       onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
+                      onAbrirMenu={(id, x, y) => setMenuAberto({ conversaId: id, x, y })}
+                      startRenaming={renameConversaId === conversa.id}
+                      onRenameActivated={() => setRenameConversaId(null)}
                     />
                   ))}
                 </div>
@@ -401,6 +435,9 @@ export function ChatSidebar({
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
                       onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
+                      onAbrirMenu={(id, x, y) => setMenuAberto({ conversaId: id, x, y })}
+                      startRenaming={renameConversaId === conversa.id}
+                      onRenameActivated={() => setRenameConversaId(null)}
                     />
                   ))}
                 </div>
@@ -418,6 +455,9 @@ export function ChatSidebar({
                       onSelecionar={() => onSelecionarConversa(conversa.id)}
                       onDeletar={() => setConversaParaDeletar(conversa.id)}
                       onRenomear={(titulo) => handleRenomearConversa(conversa.id, titulo)}
+                      onAbrirMenu={(id, x, y) => setMenuAberto({ conversaId: id, x, y })}
+                      startRenaming={renameConversaId === conversa.id}
+                      onRenameActivated={() => setRenameConversaId(null)}
                     />
                   ))}
                 </div>
@@ -427,6 +467,26 @@ export function ChatSidebar({
         </ScrollArea>
 
       </div>
+
+      {/* Menu de contexto */}
+      <AnimatePresence>
+        {menuAberto && (
+          <MenuContexto
+            position={{ x: menuAberto.x, y: menuAberto.y }}
+            onRenomear={() => {
+              setRenameConversaId(menuAberto.conversaId);
+              setMenuAberto(null);
+            }}
+            onDeletar={() => {
+              setConversaParaDeletar(menuAberto.conversaId);
+              setMenuAberto(null);
+            }}
+            onFavoritar={() => setMenuAberto(null)}
+            onFechar={() => setMenuAberto(null)}
+            menuRef={menuRef}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Modal confirmar limpar histórico */}
       <AnimatePresence>
@@ -565,6 +625,65 @@ export function ChatSidebar({
   );
 }
 
+// Menu de contexto dropdown
+function MenuContexto({
+  position,
+  onRenomear,
+  onDeletar,
+  onFavoritar,
+  onFechar,
+  menuRef,
+}: {
+  position: { x: number; y: number };
+  onRenomear: () => void;
+  onDeletar: () => void;
+  onFavoritar: () => void;
+  onFechar: () => void;
+  menuRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const MENU_WIDTH = 180;
+  const MENU_HEIGHT = 132; // ~3 itens × 44px
+
+  const x = Math.min(position.x, window.innerWidth - MENU_WIDTH - 8);
+  const y = position.y + MENU_HEIGHT > window.innerHeight
+    ? position.y - MENU_HEIGHT
+    : position.y;
+
+  return (
+    <motion.div
+      ref={menuRef}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.1 }}
+      style={{ position: 'fixed', left: x, top: y, zIndex: 50 }}
+      className="bg-[#2D2D2D] border border-[#3D3D3D] rounded-xl shadow-xl p-1.5 min-w-[180px]"
+    >
+      <button
+        onClick={onFavoritar}
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#D1D5DB] hover:bg-[#3D3D3D] cursor-pointer transition-colors w-full text-left"
+      >
+        <Star className="w-4 h-4" />
+        {STRINGS.chat.favoritar}
+      </button>
+      <button
+        onClick={onRenomear}
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#D1D5DB] hover:bg-[#3D3D3D] cursor-pointer transition-colors w-full text-left"
+      >
+        <Pencil className="w-4 h-4" />
+        {STRINGS.chat.mudarNome}
+      </button>
+      <button
+        onClick={onDeletar}
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-400 hover:bg-[#3D3D3D] cursor-pointer transition-colors w-full text-left"
+      >
+        <Trash2 className="w-4 h-4 text-red-400" />
+        {STRINGS.chat.apagar}
+      </button>
+    </motion.div>
+  );
+}
+
 // Componente de item de conversa
 function ConversaItem({
   conversa,
@@ -572,15 +691,29 @@ function ConversaItem({
   onSelecionar,
   onDeletar,
   onRenomear,
+  onAbrirMenu,
+  startRenaming,
+  onRenameActivated,
 }: {
   conversa: Conversa;
   isAtiva: boolean;
   onSelecionar: () => void;
   onDeletar: () => void;
   onRenomear: (titulo: string) => void;
+  onAbrirMenu: (conversaId: string, x: number, y: number) => void;
+  startRenaming?: boolean;
+  onRenameActivated?: () => void;
 }) {
   const [isRenaming, setIsRenaming] = useState(false);
   const [novoTitulo, setNovoTitulo] = useState(conversa.titulo);
+
+  useEffect(() => {
+    if (startRenaming) {
+      setNovoTitulo(conversa.titulo);
+      setIsRenaming(true);
+      onRenameActivated?.();
+    }
+  }, [startRenaming]);
 
   const salvarRename = () => {
     const titulo = novoTitulo.trim();
@@ -595,6 +728,17 @@ function ConversaItem({
     setIsRenaming(false);
   };
 
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onAbrirMenu(conversa.id, e.clientX, e.clientY);
+  };
+
+  const handleMoreVertical = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    onAbrirMenu(conversa.id, rect.left, rect.bottom + 4);
+  };
+
   return (
     <div
       className={`
@@ -603,6 +747,7 @@ function ConversaItem({
         ${isAtiva ? 'bg-[#2D2D2D]' : 'hover:bg-[#2D2D2D]/50'}
       `}
       onClick={isRenaming ? undefined : onSelecionar}
+      onContextMenu={handleContextMenu}
     >
       <MessageSquare className={`w-4 h-4 flex-shrink-0 ${isAtiva ? 'text-[#00B8D9]' : 'text-[#6B7280]'}`} />
 
@@ -633,30 +778,14 @@ function ConversaItem({
             {conversa.titulo}
           </span>
 
-          {/* Botões inline visíveis no hover */}
-          <div className="flex-shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={e => {
-                e.stopPropagation();
-                setNovoTitulo(conversa.titulo);
-                setIsRenaming(true);
-              }}
-              className="p-1 rounded text-[#6B7280] hover:text-white hover:bg-[#3D3D3D] transition-colors"
-              title="Renomear"
-            >
-              <Pencil className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={e => {
-                e.stopPropagation();
-                onDeletar();
-              }}
-              className="p-1 rounded text-[#6B7280] hover:text-red-400 hover:bg-red-500/10 transition-colors"
-              title="Apagar conversa"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          {/* Botão três pontos — aparece no hover */}
+          <button
+            onClick={handleMoreVertical}
+            className="flex-shrink-0 p-1 rounded text-[#6B7280] hover:text-white hover:bg-[#3D3D3D] transition-colors opacity-0 group-hover:opacity-100"
+            title="Opções"
+          >
+            <MoreVertical className="w-3.5 h-3.5" />
+          </button>
         </>
       )}
     </div>
