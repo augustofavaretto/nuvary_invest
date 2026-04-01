@@ -706,6 +706,7 @@ function ConversaItem({
 }) {
   const [isRenaming, setIsRenaming] = useState(false);
   const [novoTitulo, setNovoTitulo] = useState(conversa.titulo);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (startRenaming) {
@@ -742,12 +743,14 @@ function ConversaItem({
   return (
     <div
       className={`
-        group relative flex items-center gap-2 px-3 py-2 mx-1 rounded-lg cursor-pointer
+        relative flex items-center gap-2 px-3 py-2 mx-1 rounded-lg cursor-pointer
         transition-colors
         ${isAtiva ? 'bg-[#2D2D2D]' : 'hover:bg-[#2D2D2D]/50'}
       `}
       onClick={isRenaming ? undefined : onSelecionar}
       onContextMenu={handleContextMenu}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <MessageSquare className={`w-4 h-4 flex-shrink-0 ${isAtiva ? 'text-[#00B8D9]' : 'text-[#6B7280]'}`} />
 
@@ -781,10 +784,10 @@ function ConversaItem({
           {/* Botão três pontos — aparece no hover */}
           <button
             onClick={handleMoreVertical}
-            className="flex-shrink-0 p-1 rounded text-[#6B7280] hover:text-white hover:bg-[#3D3D3D] transition-colors opacity-0 group-hover:opacity-100"
+            className={`flex-shrink-0 p-1 rounded text-[#6B7280] hover:text-white hover:bg-[#3D3D3D] transition-all duration-150 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
             title="Opções"
           >
-            <MoreVertical className="w-3.5 h-3.5" />
+            <MoreVertical className="w-4 h-4" />
           </button>
         </>
       )}
