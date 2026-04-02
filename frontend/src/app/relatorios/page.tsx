@@ -1163,10 +1163,9 @@ function RelatoriosContent() {
             {/* KPI cards — baseados em vendas reais */}
             {(() => {
               const totalVendas = sellTransactions.reduce((s, t) => s + t.total_value, 0);
-              const numVendas = sellTransactions.length;
-              const fiiCount = assets.filter(a => a.type === 'fiis').length;
+              const irEstimadoIR = lucroTotal > 0 ? lucroTotal * 0.15 : 0;
               return (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
                     {
                       label: 'Total em Vendas',
@@ -1176,18 +1175,11 @@ function RelatoriosContent() {
                       desc: 'Soma do valor recebido nas operações de venda',
                     },
                     {
-                      label: 'Operações de Venda',
-                      valor: `${numVendas} operaç${numVendas === 1 ? 'ão' : 'ões'}`,
-                      cor: numVendas > 0 ? '#10b981' : '#6b7280',
+                      label: 'IR Estimado (15%)',
+                      valor: `R$ ${irEstimadoIR.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+                      cor: irEstimadoIR > 0 ? '#ef4444' : '#6b7280',
                       icon: FileBarChart,
-                      desc: 'Vendas registradas na plataforma',
-                    },
-                    {
-                      label: 'FIIs na Carteira',
-                      valor: `${fiiCount} ativo${fiiCount !== 1 ? 's' : ''}`,
-                      cor: '#6366f1',
-                      icon: DollarSign,
-                      desc: 'Rendimentos de FIIs são isentos de IR (pessoa física)',
+                      desc: 'Estimativa sobre lucro realizado (swing trade)',
                     },
                   ].map(c => (
                     <div key={c.label} className="bg-card border border-border rounded-xl p-5">
