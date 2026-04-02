@@ -1160,136 +1160,139 @@ function RelatoriosContent() {
         {aba === 'ir' && (
           <div className="space-y-6">
 
-            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex gap-3">
-              <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold text-amber-700 dark:text-amber-400">Dados Demonstrativos</p>
-                <p className="text-xs text-amber-600 dark:text-amber-500 mt-0.5">
-                  O cálculo completo de IR requer histórico de vendas (não rastreado ainda). Os valores abaixo são estimativas.
-                  Consulte sempre um contador para declaração oficial.
-                </p>
-              </div>
-            </div>
-
-            {/* Cards IR estimados */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                {
-                  label: 'Lucro Total (estimado)',
-                  valor: `${lucroTotal >= 0 ? '+' : ''}R$ ${lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-                  cor: lucroTotal >= 0 ? '#10b981' : '#ef4444',
-                  icon: TrendingUp,
-                  desc: 'Diferença entre patrimônio atual e total aportado',
-                },
-                {
-                  label: 'IR Estimado (15%)',
-                  valor: lucroTotal > 0 ? `R$ ${(lucroTotal * 0.15).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : 'R$ 0,00',
-                  cor: '#ef4444',
-                  icon: FileBarChart,
-                  desc: 'Estimativa sobre lucro realizado (swing trade)',
-                },
-                {
-                  label: 'FIIs na Carteira',
-                  valor: `${assets.filter(a => a.type === 'fiis').length} ativos`,
-                  cor: '#00B8D9',
-                  icon: DollarSign,
-                  desc: 'Rendimentos de FIIs são isentos de IR (pessoa física)',
-                },
-              ].map(c => (
-                <div key={c.label} className="bg-card border border-border rounded-xl p-5">
-                  <div className="flex items-start justify-between mb-3">
-                    <p className="text-sm text-muted-foreground">{c.label}</p>
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `${c.cor}20` }}>
-                      <c.icon className="w-5 h-5" style={{ color: c.cor }} />
+            {/* KPI cards — baseados em vendas reais */}
+            {(() => {
+              const totalVendas = sellTransactions.reduce((s, t) => s + t.total_value, 0);
+              const numVendas = sellTransactions.length;
+              const fiiCount = assets.filter(a => a.type === 'fiis').length;
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    {
+                      label: 'Total em Vendas',
+                      valor: `R$ ${totalVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+                      cor: '#00B8D9',
+                      icon: TrendingUp,
+                      desc: 'Soma do valor recebido nas operações de venda',
+                    },
+                    {
+                      label: 'Operações de Venda',
+                      valor: `${numVendas} operaç${numVendas === 1 ? 'ão' : 'ões'}`,
+                      cor: numVendas > 0 ? '#10b981' : '#6b7280',
+                      icon: FileBarChart,
+                      desc: 'Vendas registradas na plataforma',
+                    },
+                    {
+                      label: 'FIIs na Carteira',
+                      valor: `${fiiCount} ativo${fiiCount !== 1 ? 's' : ''}`,
+                      cor: '#6366f1',
+                      icon: DollarSign,
+                      desc: 'Rendimentos de FIIs são isentos de IR (pessoa física)',
+                    },
+                  ].map(c => (
+                    <div key={c.label} className="bg-card border border-border rounded-xl p-5">
+                      <div className="flex items-start justify-between mb-3">
+                        <p className="text-sm text-muted-foreground">{c.label}</p>
+                        <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `${c.cor}20` }}>
+                          <c.icon className="w-5 h-5" style={{ color: c.cor }} />
+                        </div>
+                      </div>
+                      <p className="text-2xl font-bold" style={{ color: c.cor }}>{c.valor}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{c.desc}</p>
                     </div>
-                  </div>
-                  <p className="text-2xl font-bold" style={{ color: c.cor }}>{c.valor}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{c.desc}</p>
+                  ))}
                 </div>
-              ))}
-            </div>
+              );
+            })()}
 
-            {/* Botões de download */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center flex-shrink-0">
-                    <FileBarChart className="w-5 h-5 text-red-600 dark:text-red-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-foreground">DARF</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Documento de Arrecadação de Receitas Federais. Código 6015 — Ganhos em Bolsa.
-                    </p>
-                  </div>
+            {/* Informe de Rendimentos */}
+            <div className="bg-card border border-border rounded-xl p-5">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
-                <button
-                  onClick={gerarDARF}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                  Baixar DARF (PDF)
-                </button>
-              </div>
-
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
-                    <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-foreground">Informe de Rendimentos</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Posição completa da carteira com rendimentos, isenções e base para declaração do IR.
-                    </p>
-                  </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">Informe de Rendimentos</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Posição completa da carteira com rendimentos, isenções e base para declaração do IR.
+                  </p>
                 </div>
-                <button
-                  onClick={gerarInformeRendimentos}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                  Baixar Informe de Rendimentos (PDF)
-                </button>
+              </div>
+              <button
+                onClick={gerarInformeRendimentos}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                Baixar Informe de Rendimentos (PDF)
+              </button>
+            </div>
+
+            {/* Relatório de Vendas */}
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <div className="px-5 py-4 border-b border-border">
+                <h2 className="text-sm font-semibold text-foreground">Relatório de Vendas</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Histórico de operações de venda registradas na plataforma</p>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/50">
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Data</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Ticker</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Nome</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Categoria</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground">Qtd / R$</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground">Preço de Venda</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground">Total Recebido</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sellTransactions.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="text-center py-12 text-muted-foreground">
+                          Nenhuma venda registrada ainda
+                        </td>
+                      </tr>
+                    ) : sellTransactions.map((t, i) => (
+                      <tr key={t.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? '' : 'bg-muted/20'}`}>
+                        <td className="px-4 py-3 text-muted-foreground">
+                          {new Date(t.created_at).toLocaleDateString('pt-BR')}
+                        </td>
+                        <td className="px-4 py-3 font-bold text-foreground">{t.ticker}</td>
+                        <td className="px-4 py-3 text-muted-foreground max-w-[160px] truncate">{t.name}</td>
+                        <td className="px-4 py-3">
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                            {TYPE_LABEL[t.asset_type] ?? t.asset_type}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right text-foreground">
+                          {t.quantity.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </td>
+                        <td className="px-4 py-3 text-right text-foreground">
+                          R$ {t.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </td>
+                        <td className="px-4 py-3 text-right font-semibold text-foreground">
+                          R$ {t.total_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  {sellTransactions.length > 0 && (
+                    <tfoot>
+                      <tr className="border-t border-border bg-muted/50">
+                        <td colSpan={6} className="px-4 py-3 text-xs font-semibold text-muted-foreground">
+                          {sellTransactions.length} operaç{sellTransactions.length === 1 ? 'ão' : 'ões'}
+                        </td>
+                        <td className="px-4 py-3 text-right text-sm font-bold text-foreground">
+                          R$ {sellTransactions.reduce((s, t) => s + t.total_value, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  )}
+                </table>
               </div>
             </div>
 
-            {/* Isenções */}
-            <div className="bg-card border border-border rounded-xl p-6">
-              <h2 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-500" />
-                Isenções e Rendimentos não Tributáveis
-              </h2>
-              <div className="space-y-3">
-                {[
-                  { desc: 'Dividendos de ações (pessoa física)', isento: true },
-                  { desc: 'Rendimentos de FIIs (isenção PF)',     isento: true },
-                  { desc: 'Vendas de ações ≤ R$20.000/mês',       isento: true },
-                  { desc: 'Rendimento caderneta poupança',        isento: true },
-                  { desc: 'Rendimentos Renda Fixa (LCI/LCA/CRI/CRA)', isento: true },
-                ].map(item => (
-                  <div key={item.desc} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                      <span className="text-sm text-foreground">{item.desc}</span>
-                    </div>
-                    <span className="text-xs font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">Isento</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Aviso sobre rastreamento futuro */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 flex gap-3">
-              <AlertCircle className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold text-blue-700 dark:text-blue-400">Histórico de Vendas</p>
-                <p className="text-xs text-blue-600 dark:text-blue-500 mt-0.5">
-                  Para calcular o IR com precisão, o sistema precisará registrar cada operação de venda.
-                  Esta funcionalidade será adicionada em breve.
-                </p>
-              </div>
-            </div>
           </div>
         )}
 
