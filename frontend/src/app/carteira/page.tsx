@@ -102,6 +102,7 @@ export default function CarteiraPage() {
         quantity: qtd,
         price: isFixed ? qtd : asset.currentPrice,
         total_value: isFixed ? qtd : qtd * asset.currentPrice,
+        cost_basis: isFixed ? qtd : qtd * asset.averagePrice,
       });
       if (vendaTotal) {
         await removeAsset(assetId);

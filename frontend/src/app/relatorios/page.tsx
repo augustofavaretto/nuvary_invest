@@ -1163,7 +1163,11 @@ function RelatoriosContent() {
             {/* KPI cards — baseados em vendas reais */}
             {(() => {
               const totalVendas = sellTransactions.reduce((s, t) => s + t.total_value, 0);
-              const irEstimadoIR = lucroTotal > 0 ? lucroTotal * 0.15 : 0;
+              const lucroRealizado = sellTransactions.reduce((s, t) => {
+                const custo = t.cost_basis ?? 0;
+                return s + (t.total_value - custo);
+              }, 0);
+              const irEstimadoIR = lucroRealizado > 0 ? lucroRealizado * 0.15 : 0;
               return (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[

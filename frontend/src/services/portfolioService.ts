@@ -723,6 +723,7 @@ export interface Transaction {
   quantity: number;
   price: number;
   total_value: number;
+  cost_basis?: number;
   created_at: string;
 }
 
