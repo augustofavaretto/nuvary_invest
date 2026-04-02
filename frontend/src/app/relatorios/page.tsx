@@ -586,25 +586,12 @@ function RelatoriosContent() {
       t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
       t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
       t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
-    ]);
+    ].join('\t'));
     const totalGeral = transacoesFiltradas.reduce((s, t) => s + t.total, 0);
-
-    const tableRows = linhas.map(row =>
-      `<tr>${row.map((c, i) => `<td${i >= 5 ? ' style="text-align:right"' : ''}>${c}</td>`).join('')}</tr>`
-    ).join('');
-
-    const xls = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
-      xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="utf-8"/><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>
-<x:ExcelWorksheet><x:Name>Extratos</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
-</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>
-<body><table>
-<tr style="background:#0B1F33;color:#fff;font-weight:bold">${cabecalho.map(h => `<th>${h}</th>`).join('')}</tr>
-${tableRows}
-<tr style="font-weight:bold;background:#f3f4f6"><td colspan="7">Total</td><td style="text-align:right">R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td></tr>
-</table></body></html>`;
-
-    const blob = new Blob([xls], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const totalRow = ['Total', '', '', '', '', '', '', `R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`].join('\t');
+    // \uFEFF = BOM UTF-8 para Excel reconhecer acentos corretamente
+    const conteudo = '\uFEFF' + [cabecalho.join('\t'), ...linhas, totalRow].join('\n');
+    const blob = new Blob([conteudo], { type: 'application/vnd.ms-excel;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
