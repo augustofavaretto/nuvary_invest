@@ -1067,39 +1067,15 @@ function RelatoriosContent() {
                   {showExportMenu && (
                     <div className="absolute right-0 top-full mt-1 bg-card border border-border rounded-xl shadow-xl z-30 min-w-[160px] p-1 overflow-hidden">
                       {[
-                        {
-                          label: 'CSV',
-                          sub: '.csv',
-                          onClick: () => {
-                            const linhas = transacoesFiltradas.map(t =>
-                              `${new Date(t.data).toLocaleDateString('pt-BR')};${t.tipo};${t.ativo};${t.nome};${t.categoria};${t.qtd};${t.preco.toFixed(2)};${t.total.toFixed(2)}`
-                            );
-                            const csv = ['Data;Tipo;Ticker;Nome;Categoria;Qtd;Preço;Total', ...linhas].join('\n');
-                            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a'); a.href = url; a.download = 'extratos_nuvary.csv'; a.click();
-                            URL.revokeObjectURL(url);
-                            setShowExportMenu(false);
-                          },
-                        },
-                        {
-                          label: 'Excel (XLS)',
-                          sub: '.xls',
-                          onClick: () => { exportarXLS(); setShowExportMenu(false); },
-                        },
-                        {
-                          label: 'PDF',
-                          sub: 'Imprimir / PDF',
-                          onClick: () => { exportarPDF(); setShowExportMenu(false); },
-                        },
+                        { label: 'Excel (XLS)', onClick: () => { exportarXLS(); setShowExportMenu(false); } },
+                        { label: 'PDF',         onClick: () => { exportarPDF(); setShowExportMenu(false); } },
                       ].map(item => (
                         <button
                           key={item.label}
                           onClick={item.onClick}
-                          className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-muted text-sm text-foreground transition-colors"
+                          className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-muted text-sm font-medium text-foreground transition-colors"
                         >
-                          <span className="font-medium">{item.label}</span>
-                          <span className="text-xs text-muted-foreground">{item.sub}</span>
+                          {item.label}
                         </button>
                       ))}
                     </div>
