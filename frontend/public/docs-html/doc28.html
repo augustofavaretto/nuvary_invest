@@ -74,7 +74,7 @@
 <body>
 <header>
     <div class="container">
-        <span class="version-badge">Marco 2026 - v4.2.0</span>
+        <span class="version-badge">Abril 2026 - v4.3.0</span>
         <h1>Operacoes da Carteira</h1>
         <p>Calculos de rentabilidade, lucro/prejuizo e todas as operacoes disponíveis em Minha Carteira</p>
     </div>
@@ -342,9 +342,11 @@ const totalInvested = assets.reduce((sum, a) =>
   quantity: qtdVendida,
   price: precoAtual,           // currentPrice para variavel; qtdVendida para renda_fixa
   total_value: valorDaVenda,
+  cost_basis: custoBase,       // qty × averagePrice (variavel) | total_value (renda_fixa)
   created_at: now()
 }</code></pre>
         <p>As vendas aparecem na aba <strong>Extratos</strong> de Relatorios com badge vermelha "Venda" e podem ser filtradas pelo dropdown <strong>Tipo</strong>.</p>
+        <p>O campo <code>cost_basis</code> armazena o custo de aquisição no momento da venda — necessário para calcular o <strong>IR Estimado</strong> na aba Imposto de Renda. Requer coluna no Supabase: <code>ALTER TABLE portfolio_transactions ADD COLUMN IF NOT EXISTS cost_basis NUMERIC DEFAULT 0;</code></p>
     </section>
 
     <!-- REMOVER ATIVO -->
@@ -503,7 +505,7 @@ REMOVER ATIVO (lixeira)
 
 <footer>
     <div class="container">
-        <p>Nuvary Invest &mdash; Doc 28 | Versao v4.2.0 &mdash; Marco 2026</p>
+        <p>Nuvary Invest &mdash; Doc 28 | Versao v4.3.0 &mdash; Abril 2026</p>
         <p style="margin-top:6px;"><a href="index.html">Voltar ao Indice</a></p>
     </div>
 </footer>
