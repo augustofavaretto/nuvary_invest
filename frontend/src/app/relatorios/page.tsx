@@ -55,6 +55,7 @@ function RelatoriosContent() {
   const [loadingData, setLoadingData] = useState(true);
   const [periodoEvolucao, setPeriodoEvolucao] = useState<'7D' | '7S' | '12M' | 'ANOS'>('7D');
   const [tipoGraficoEvolucao, setTipoGraficoEvolucao] = useState<'line' | 'bar'>('line');
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) router.push('/login');
@@ -573,6 +574,112 @@ function RelatoriosContent() {
     abrirJanelaPDF(html, `Informe de Rendimentos ${anoBase} - Nuvary Invest`);
   }
 
+  // ── Exportar Extratos XLS ─────────────────────────────────────────────────
+  function exportarXLS() {
+    const cabecalho = ['Data', 'Tipo', 'Ticker', 'Nome', 'Categoria', 'Qtd / R$', 'Preço / Taxa', 'Total'];
+    const linhas = transacoesFiltradas.map(t => [
+      new Date(t.data).toLocaleDateString('pt-BR'),
+      t.tipo,
+      t.ativo,
+      t.nome,
+      t.categoria,
+      t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+    ]);
+    const totalGeral = transacoesFiltradas.reduce((s, t) => s + t.total, 0);
+
+    const tableRows = linhas.map(row =>
+      `<tr>${row.map((c, i) => `<td${i >= 5 ? ' style="text-align:right"' : ''}>${c}</td>`).join('')}</tr>`
+    ).join('');
+
+    const xls = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"/><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>
+<x:ExcelWorksheet><x:Name>Extratos</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
+</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>
+<body><table>
+<tr style="background:#0B1F33;color:#fff;font-weight:bold">${cabecalho.map(h => `<th>${h}</th>`).join('')}</tr>
+${tableRows}
+<tr style="font-weight:bold;background:#f3f4f6"><td colspan="7">Total</td><td style="text-align:right">R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td></tr>
+</table></body></html>`;
+
+    const blob = new Blob([xls], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'extratos_nuvary.xls';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Exportar Extratos PDF ─────────────────────────────────────────────────
+  function exportarPDF() {
+    const agora = new Date();
+    const totalGeral = transacoesFiltradas.reduce((s, t) => s + t.total, 0);
+    const linhas = transacoesFiltradas.map(t => `
+      <tr>
+        <td>${new Date(t.data).toLocaleDateString('pt-BR')}</td>
+        <td style="color:${t.tipo === 'Compra' ? '#166534' : '#991b1b'};font-weight:600">${t.tipo}</td>
+        <td style="font-weight:700">${t.ativo}</td>
+        <td>${t.nome.length > 30 ? t.nome.substring(0, 30) + '…' : t.nome}</td>
+        <td>${t.categoria}</td>
+        <td style="text-align:right">${t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:right">R$ ${t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:right;font-weight:600">R$ ${t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+      </tr>`).join('');
+
+    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>
+<title>Extratos — Nuvary Invest</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: Arial, sans-serif; font-size: 11px; color: #000; padding: 24px; }
+  .header { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid #0B1F33; padding-bottom:12px; margin-bottom:16px; }
+  .header h1 { font-size:18px; font-weight:bold; color:#0B1F33; }
+  .header .meta { font-size:10px; color:#555; text-align:right; }
+  table { width:100%; border-collapse:collapse; }
+  th { background:#0B1F33; color:#fff; padding:6px 8px; text-align:left; font-size:10px; }
+  th:nth-child(n+6) { text-align:right; }
+  td { border-bottom:1px solid #e5e7eb; padding:5px 8px; font-size:10px; }
+  tr:nth-child(even) td { background:#f9fafb; }
+  .total-row td { font-weight:bold; background:#f3f4f6; border-top:2px solid #0B1F33; }
+  .footer { margin-top:16px; font-size:9px; color:#777; border-top:1px solid #ccc; padding-top:8px; }
+  .no-print { text-align:center; margin-top:20px; }
+  @media print { .no-print { display:none; } body { padding:12px; } }
+</style></head><body>
+<div class="header">
+  <div>
+    <div style="font-size:10px;color:#666;margin-bottom:4px;">EXTRATO DE TRANSAÇÕES</div>
+    <h1>Nuvary Invest</h1>
+    <div style="font-size:11px;color:#555;margin-top:2px;">${transacoesFiltradas.length} registro(s) exportados</div>
+  </div>
+  <div class="meta">
+    Emitido em: ${agora.toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' })}<br/>
+    Horário: ${agora.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' })}
+  </div>
+</div>
+<table>
+  <thead><tr>
+    <th>Data</th><th>Tipo</th><th>Ticker</th><th>Nome</th><th>Categoria</th>
+    <th style="text-align:right">Qtd / R$</th><th style="text-align:right">Preço / Taxa</th><th style="text-align:right">Total</th>
+  </tr></thead>
+  <tbody>${linhas}</tbody>
+  <tfoot><tr class="total-row">
+    <td colspan="7">Total geral</td>
+    <td style="text-align:right">R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+  </tr></tfoot>
+</table>
+<div class="footer">Gerado pela plataforma Nuvary Invest. Documento com fins informativos.</div>
+<div class="no-print">
+  <button onclick="window.print()" style="padding:10px 24px;background:#0B1F33;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;">
+    Imprimir / Salvar PDF
+  </button>
+</div>
+</body></html>`;
+
+    abrirJanelaPDF(html, 'Extratos — Nuvary Invest');
+  }
+
   // ── Estados de carregamento / vazio ──────────────────────────────────────
   if (authLoading || !isAuthenticated) {
     return (
@@ -960,22 +1067,57 @@ function RelatoriosContent() {
                   <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                 </div>
 
-                <button
-                  onClick={() => {
-                    const linhas = transacoesFiltradas.map(t =>
-                      `${new Date(t.data).toLocaleDateString('pt-BR')};${t.tipo};${t.ativo};${t.nome};${t.categoria};${t.qtd};${t.preco.toFixed(2)};${t.total.toFixed(2)}`
-                    );
-                    const csv = ['Data;Tipo;Ticker;Nome;Categoria;Qtd;Preço;Total', ...linhas].join('\n');
-                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a'); a.href = url; a.download = 'extratos_nuvary.csv'; a.click();
-                    URL.revokeObjectURL(url);
-                  }}
-                  className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#00B8D9] hover:bg-[#007EA7] text-white rounded-lg transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                  Exportar CSV
-                </button>
+                {/* Dropdown exportar */}
+                <div className="ml-auto relative">
+                  <button
+                    onClick={() => setShowExportMenu(v => !v)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#00B8D9] hover:bg-[#007EA7] text-white rounded-lg transition-colors"
+                  >
+                    <Download className="w-4 h-4" />
+                    Exportar
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </button>
+                  {showExportMenu && (
+                    <div className="absolute right-0 top-full mt-1 bg-card border border-border rounded-xl shadow-xl z-30 min-w-[160px] p-1 overflow-hidden">
+                      {[
+                        {
+                          label: 'CSV',
+                          sub: '.csv',
+                          onClick: () => {
+                            const linhas = transacoesFiltradas.map(t =>
+                              `${new Date(t.data).toLocaleDateString('pt-BR')};${t.tipo};${t.ativo};${t.nome};${t.categoria};${t.qtd};${t.preco.toFixed(2)};${t.total.toFixed(2)}`
+                            );
+                            const csv = ['Data;Tipo;Ticker;Nome;Categoria;Qtd;Preço;Total', ...linhas].join('\n');
+                            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a'); a.href = url; a.download = 'extratos_nuvary.csv'; a.click();
+                            URL.revokeObjectURL(url);
+                            setShowExportMenu(false);
+                          },
+                        },
+                        {
+                          label: 'Excel (XLS)',
+                          sub: '.xls',
+                          onClick: () => { exportarXLS(); setShowExportMenu(false); },
+                        },
+                        {
+                          label: 'PDF',
+                          sub: 'Imprimir / PDF',
+                          onClick: () => { exportarPDF(); setShowExportMenu(false); },
+                        },
+                      ].map(item => (
+                        <button
+                          key={item.label}
+                          onClick={item.onClick}
+                          className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-muted text-sm text-foreground transition-colors"
+                        >
+                          <span className="font-medium">{item.label}</span>
+                          <span className="text-xs text-muted-foreground">{item.sub}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
