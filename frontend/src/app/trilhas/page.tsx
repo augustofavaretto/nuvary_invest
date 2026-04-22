@@ -26,6 +26,7 @@ interface VideoCard {
   level: Level;
   gradient: string;
   icon: React.ElementType;
+  videoUrl?: string;
 }
 
 interface HeroSlide {
@@ -79,51 +80,51 @@ const CATEGORIES = [
 
 const VIDEOS: VideoCard[] = [
   // Jornada
-  { id: 'j1', title: 'Comece a Investir do Zero', category: 'jornada', categoryLabel: 'JORNADA', duration: '12:30', level: 'Iniciante', gradient: 'from-[#1e3a5f] to-[#00B8D9]', icon: GraduationCap },
-  { id: 'j2', title: 'Conhecendo seu Perfil de Investidor', category: 'jornada', categoryLabel: 'JORNADA', duration: '8:45', level: 'Iniciante', gradient: 'from-[#0B1F33] to-[#1e3a5f]', icon: Star },
-  { id: 'j3', title: 'Como Funciona o Mercado Financeiro', category: 'jornada', categoryLabel: 'JORNADA', duration: '15:20', level: 'Iniciante', gradient: 'from-[#1e3a5f] to-[#4f46e5]', icon: BookOpen },
-  { id: 'j4', title: 'Montando sua Primeira Carteira', category: 'jornada', categoryLabel: 'JORNADA', duration: '18:10', level: 'Iniciante', gradient: 'from-[#0B1F33] to-[#00B8D9]', icon: GraduationCap },
-  { id: 'j5', title: 'Diversificação de Investimentos', category: 'jornada', categoryLabel: 'JORNADA', duration: '11:55', level: 'Intermediário', gradient: 'from-[#1e3a5f] to-[#6366f1]', icon: Star },
-  { id: 'j6', title: 'Reserva de Emergência: Quanto Guardar?', category: 'jornada', categoryLabel: 'JORNADA', duration: '9:30', level: 'Iniciante', gradient: 'from-[#0B1F33] to-[#4f46e5]', icon: BookOpen },
+  { id: 'j1', title: 'Comece a Investir do Zero', category: 'jornada', categoryLabel: 'JORNADA', duration: '12:30', level: 'Iniciante', gradient: 'from-[#1e3a5f] to-[#00B8D9]', icon: GraduationCap, videoUrl: 'https://www.youtube.com/watch?v=dJyJ77GkhBE' },
+  { id: 'j2', title: 'Conhecendo seu Perfil de Investidor', category: 'jornada', categoryLabel: 'JORNADA', duration: '8:45', level: 'Iniciante', gradient: 'from-[#0B1F33] to-[#1e3a5f]', icon: Star, videoUrl: 'https://www.youtube.com/watch?v=shfYMvEXqm4' },
+  { id: 'j3', title: 'Como Funciona o Mercado Financeiro', category: 'jornada', categoryLabel: 'JORNADA', duration: '15:20', level: 'Iniciante', gradient: 'from-[#1e3a5f] to-[#4f46e5]', icon: BookOpen, videoUrl: 'https://www.youtube.com/watch?v=rdYo6GR1MuI' },
+  { id: 'j4', title: 'Montando sua Primeira Carteira', category: 'jornada', categoryLabel: 'JORNADA', duration: '18:10', level: 'Iniciante', gradient: 'from-[#0B1F33] to-[#00B8D9]', icon: GraduationCap, videoUrl: 'https://www.youtube.com/watch?v=JdJyp__diIc' },
+  { id: 'j5', title: 'Diversificação de Investimentos', category: 'jornada', categoryLabel: 'JORNADA', duration: '11:55', level: 'Intermediário', gradient: 'from-[#1e3a5f] to-[#6366f1]', icon: Star, videoUrl: 'https://www.youtube.com/watch?v=uuciPHqVYVk' },
+  { id: 'j6', title: 'Reserva de Emergência: Quanto Guardar?', category: 'jornada', categoryLabel: 'JORNADA', duration: '9:30', level: 'Iniciante', gradient: 'from-[#0B1F33] to-[#4f46e5]', icon: BookOpen, videoUrl: 'https://www.youtube.com/watch?v=shfYMvEXqm4' },
 
   // Populares
-  { id: 'p1', title: 'O que é CDI e Selic?', category: 'populares', categoryLabel: 'POPULAR', duration: '9:15', level: 'Iniciante', gradient: 'from-amber-700 to-amber-500', icon: TrendingUp },
-  { id: 'p2', title: 'Renda Fixa vs Renda Variável', category: 'populares', categoryLabel: 'POPULAR', duration: '14:30', level: 'Iniciante', gradient: 'from-orange-700 to-orange-500', icon: BarChart2 },
-  { id: 'p3', title: 'Juros Compostos na Prática', category: 'populares', categoryLabel: 'POPULAR', duration: '10:20', level: 'Iniciante', gradient: 'from-amber-800 to-yellow-500', icon: TrendingUp },
-  { id: 'p4', title: 'Como Declarar Investimentos no IR', category: 'populares', categoryLabel: 'POPULAR', duration: '22:00', level: 'Intermediário', gradient: 'from-orange-800 to-amber-600', icon: FileText },
-  { id: 'p5', title: 'Análise Fundamentalista para Iniciantes', category: 'populares', categoryLabel: 'POPULAR', duration: '16:45', level: 'Intermediário', gradient: 'from-amber-900 to-amber-600', icon: BookOpen },
+  { id: 'p1', title: 'O que é CDI e Selic?', category: 'populares', categoryLabel: 'POPULAR', duration: '9:15', level: 'Iniciante', gradient: 'from-amber-700 to-amber-500', icon: TrendingUp, videoUrl: 'https://www.youtube.com/watch?v=dJyJ77GkhBE' },
+  { id: 'p2', title: 'Renda Fixa vs Renda Variável', category: 'populares', categoryLabel: 'POPULAR', duration: '14:30', level: 'Iniciante', gradient: 'from-orange-700 to-orange-500', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=rdYo6GR1MuI' },
+  { id: 'p3', title: 'Juros Compostos na Prática', category: 'populares', categoryLabel: 'POPULAR', duration: '10:20', level: 'Iniciante', gradient: 'from-amber-800 to-yellow-500', icon: TrendingUp, videoUrl: 'https://www.youtube.com/watch?v=uuciPHqVYVk' },
+  { id: 'p4', title: 'Como Declarar Investimentos no IR', category: 'populares', categoryLabel: 'POPULAR', duration: '22:00', level: 'Intermediário', gradient: 'from-orange-800 to-amber-600', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=NcOXbDJFPtY' },
+  { id: 'p5', title: 'Análise Fundamentalista para Iniciantes', category: 'populares', categoryLabel: 'POPULAR', duration: '16:45', level: 'Intermediário', gradient: 'from-amber-900 to-amber-600', icon: BookOpen, videoUrl: 'https://www.youtube.com/@investidorsardinha' },
   { id: 'p6', title: 'O que são Dividendos?', category: 'populares', categoryLabel: 'POPULAR', duration: '8:10', level: 'Iniciante', gradient: 'from-yellow-700 to-amber-500', icon: Star },
 
   // Renda Fixa
-  { id: 'rf1', title: 'CDB, LCI e LCA: Qual Escolher?', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '13:20', level: 'Iniciante', gradient: 'from-[#1e3a5f] to-[#0066CC]', icon: PiggyBank },
-  { id: 'rf2', title: 'Tesouro Direto: Guia Completo', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '20:15', level: 'Iniciante', gradient: 'from-[#0B1F33] to-[#1e3a5f]', icon: Landmark },
-  { id: 'rf3', title: 'Como Funciona o IPCA+', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '11:40', level: 'Intermediário', gradient: 'from-blue-900 to-blue-600', icon: TrendingUp },
+  { id: 'rf1', title: 'CDB, LCI e LCA: Qual Escolher?', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '13:20', level: 'Iniciante', gradient: 'from-[#1e3a5f] to-[#0066CC]', icon: PiggyBank, videoUrl: 'https://www.youtube.com/watch?v=shfYMvEXqm4' },
+  { id: 'rf2', title: 'Tesouro Direto: Guia Completo', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '20:15', level: 'Iniciante', gradient: 'from-[#0B1F33] to-[#1e3a5f]', icon: Landmark, videoUrl: 'https://www.youtube.com/watch?v=dJyJ77GkhBE' },
+  { id: 'rf3', title: 'Como Funciona o IPCA+', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '11:40', level: 'Intermediário', gradient: 'from-blue-900 to-blue-600', icon: TrendingUp, videoUrl: 'https://www.youtube.com/watch?v=rdYo6GR1MuI' },
   { id: 'rf4', title: 'Debêntures e CRI/CRA', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '17:55', level: 'Avançado', gradient: 'from-[#0B1F33] to-blue-700', icon: FileText },
-  { id: 'rf5', title: 'Tesouro Prefixado ou IPCA+?', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '14:10', level: 'Intermediário', gradient: 'from-blue-800 to-[#00B8D9]', icon: BarChart2 },
+  { id: 'rf5', title: 'Tesouro Prefixado ou IPCA+?', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '14:10', level: 'Intermediário', gradient: 'from-blue-800 to-[#00B8D9]', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=uuciPHqVYVk' },
   { id: 'rf6', title: 'Rentabilidade Líquida: Calculando o IR', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '10:35', level: 'Intermediário', gradient: 'from-[#1e3a5f] to-sky-600', icon: FileText },
 
   // Renda Variável
-  { id: 'rv1', title: 'Como Comprar sua Primeira Ação', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '15:30', level: 'Iniciante', gradient: 'from-[#4f46e5] to-[#7c3aed]', icon: TrendingUp },
-  { id: 'rv2', title: 'ETFs - Fundos de Índice na Prática', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '12:45', level: 'Iniciante', gradient: 'from-[#6366f1] to-[#4f46e5]', icon: BarChart2 },
-  { id: 'rv3', title: 'Dividendos: Renda Passiva com Ações', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '18:20', level: 'Intermediário', gradient: 'from-[#7c3aed] to-[#6366f1]', icon: Star },
-  { id: 'rv4', title: 'BDRs: Investindo no Exterior pela B3', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '16:00', level: 'Intermediário', gradient: 'from-[#4338ca] to-[#6366f1]', icon: Globe },
-  { id: 'rv5', title: 'Small Caps vs Blue Chips', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '13:55', level: 'Avançado', gradient: 'from-[#5b21b6] to-[#7c3aed]', icon: TrendingUp },
+  { id: 'rv1', title: 'Como Comprar sua Primeira Ação', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '15:30', level: 'Iniciante', gradient: 'from-[#4f46e5] to-[#7c3aed]', icon: TrendingUp, videoUrl: 'https://www.youtube.com/watch?v=rdYo6GR1MuI' },
+  { id: 'rv2', title: 'ETFs - Fundos de Índice na Prática', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '12:45', level: 'Iniciante', gradient: 'from-[#6366f1] to-[#4f46e5]', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=dJyJ77GkhBE' },
+  { id: 'rv3', title: 'Dividendos: Renda Passiva com Ações', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '18:20', level: 'Intermediário', gradient: 'from-[#7c3aed] to-[#6366f1]', icon: Star, videoUrl: 'https://www.youtube.com/watch?v=33Tzz6LVdvU&list=PL5vSn8ej1b0vjMvjb5p2Z_Fr_ISV3cs_s' },
+  { id: 'rv4', title: 'BDRs: Investindo no Exterior pela B3', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '16:00', level: 'Intermediário', gradient: 'from-[#4338ca] to-[#6366f1]', icon: Globe, videoUrl: 'https://www.youtube.com/@BrunoPerini' },
+  { id: 'rv5', title: 'Small Caps vs Blue Chips', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '13:55', level: 'Avançado', gradient: 'from-[#5b21b6] to-[#7c3aed]', icon: TrendingUp, videoUrl: 'https://www.youtube.com/@investidorsardinha' },
   { id: 'rv6', title: 'P/L, P/VP e EV/EBITDA', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '19:40', level: 'Avançado', gradient: 'from-violet-800 to-purple-600', icon: BookOpen },
 
   // FIIs
-  { id: 'fii1', title: 'O que são Fundos Imobiliários?', category: 'fiis', categoryLabel: 'FIIs', duration: '11:20', level: 'Iniciante', gradient: 'from-emerald-800 to-emerald-600', icon: Building },
-  { id: 'fii2', title: 'FIIs de Papel vs Tijolo', category: 'fiis', categoryLabel: 'FIIs', duration: '14:35', level: 'Intermediário', gradient: 'from-green-800 to-emerald-600', icon: Building },
-  { id: 'fii3', title: 'Dividend Yield em FIIs', category: 'fiis', categoryLabel: 'FIIs', duration: '10:50', level: 'Intermediário', gradient: 'from-teal-700 to-emerald-600', icon: TrendingUp },
-  { id: 'fii4', title: 'Como Analisar um FII', category: 'fiis', categoryLabel: 'FIIs', duration: '19:15', level: 'Intermediário', gradient: 'from-[#059669] to-[#10b981]', icon: BarChart2 },
-  { id: 'fii5', title: 'Carteira de FIIs para Iniciantes', category: 'fiis', categoryLabel: 'FIIs', duration: '16:40', level: 'Iniciante', gradient: 'from-emerald-900 to-teal-700', icon: GraduationCap },
-  { id: 'fii6', title: 'Vacância e FFO: Indicadores Chave', category: 'fiis', categoryLabel: 'FIIs', duration: '13:00', level: 'Avançado', gradient: 'from-green-900 to-emerald-700', icon: FileText },
+  { id: 'fii1', title: 'O que são Fundos Imobiliários?', category: 'fiis', categoryLabel: 'FIIs', duration: '11:20', level: 'Iniciante', gradient: 'from-emerald-800 to-emerald-600', icon: Building, videoUrl: 'https://www.youtube.com/watch?v=4gLDeLA6cz8' },
+  { id: 'fii2', title: 'FIIs de Papel vs Tijolo', category: 'fiis', categoryLabel: 'FIIs', duration: '14:35', level: 'Intermediário', gradient: 'from-green-800 to-emerald-600', icon: Building, videoUrl: 'https://www.youtube.com/watch?v=4gLDeLA6cz8' },
+  { id: 'fii3', title: 'Dividend Yield em FIIs', category: 'fiis', categoryLabel: 'FIIs', duration: '10:50', level: 'Intermediário', gradient: 'from-teal-700 to-emerald-600', icon: TrendingUp, videoUrl: 'https://www.youtube.com/watch?v=8yOeM-yc2sU' },
+  { id: 'fii4', title: 'Como Analisar um FII', category: 'fiis', categoryLabel: 'FIIs', duration: '19:15', level: 'Intermediário', gradient: 'from-[#059669] to-[#10b981]', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=6J8bHlauoSw' },
+  { id: 'fii5', title: 'Carteira de FIIs para Iniciantes', category: 'fiis', categoryLabel: 'FIIs', duration: '16:40', level: 'Iniciante', gradient: 'from-emerald-900 to-teal-700', icon: GraduationCap, videoUrl: 'https://www.youtube.com/watch?v=8yOeM-yc2sU' },
+  { id: 'fii6', title: 'Vacância e FFO: Indicadores Chave', category: 'fiis', categoryLabel: 'FIIs', duration: '13:00', level: 'Avançado', gradient: 'from-green-900 to-emerald-700', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=pLRCrKLsf_k' },
 
   // Criptomoedas
-  { id: 'c1', title: 'Bitcoin para Iniciantes', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '13:10', level: 'Iniciante', gradient: 'from-amber-700 to-yellow-500', icon: Coins },
-  { id: 'c2', title: 'Ethereum e Contratos Inteligentes', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '15:25', level: 'Intermediário', gradient: 'from-purple-700 to-violet-600', icon: Coins },
-  { id: 'c3', title: 'Carteiras Cripto: Hot vs Cold Wallet', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '12:00', level: 'Intermediário', gradient: 'from-orange-700 to-amber-500', icon: Star },
-  { id: 'c4', title: 'Riscos das Criptomoedas', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '9:45', level: 'Iniciante', gradient: 'from-red-700 to-orange-600', icon: BookOpen },
-  { id: 'c5', title: 'DeFi e Staking Explicados', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '17:30', level: 'Avançado', gradient: 'from-purple-800 to-indigo-600', icon: Coins },
+  { id: 'c1', title: 'Bitcoin para Iniciantes', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '13:10', level: 'Iniciante', gradient: 'from-amber-700 to-yellow-500', icon: Coins, videoUrl: 'https://www.youtube.com/@MePoupe' },
+  { id: 'c2', title: 'Ethereum e Contratos Inteligentes', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '15:25', level: 'Intermediário', gradient: 'from-purple-700 to-violet-600', icon: Coins, videoUrl: 'https://www.youtube.com/@AugustoBackes' },
+  { id: 'c3', title: 'Carteiras Cripto: Hot vs Cold Wallet', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '12:00', level: 'Intermediário', gradient: 'from-orange-700 to-amber-500', icon: Star, videoUrl: 'https://www.youtube.com/@FernandoUlworking' },
+  { id: 'c4', title: 'Riscos das Criptomoedas', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '9:45', level: 'Iniciante', gradient: 'from-red-700 to-orange-600', icon: BookOpen, videoUrl: 'https://www.youtube.com/@investidorsardinha' },
+  { id: 'c5', title: 'DeFi e Staking Explicados', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '17:30', level: 'Avançado', gradient: 'from-purple-800 to-indigo-600', icon: Coins, videoUrl: 'https://www.youtube.com/@OPrimoRico' },
   { id: 'c6', title: 'NFTs: Entendendo o Hype', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '11:15', level: 'Intermediário', gradient: 'from-indigo-700 to-purple-600', icon: Star },
 
   // Análise Técnica
@@ -135,12 +136,12 @@ const VIDEOS: VideoCard[] = [
   { id: 'at6', title: 'Ondas de Elliott Simplificadas', category: 'analise', categoryLabel: 'ANÁLISE TÉCNICA', duration: '22:10', level: 'Avançado', gradient: 'from-[#1e3a5f] to-gray-700', icon: TrendingUp },
 
   // Imposto de Renda
-  { id: 'ir1', title: 'IR sobre Investimentos: Regras Gerais', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '14:15', level: 'Iniciante', gradient: 'from-[#374151] to-[#6B7280]', icon: FileText },
-  { id: 'ir2', title: 'Como Declarar Ações no IR', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '22:30', level: 'Intermediário', gradient: 'from-gray-800 to-gray-600', icon: FileText },
-  { id: 'ir3', title: 'FIIs e a Isenção de Imposto de Renda', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '11:00', level: 'Iniciante', gradient: 'from-[#374151] to-[#4B5563]', icon: Building },
-  { id: 'ir4', title: 'Nota de Corretagem Explicada', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '13:40', level: 'Iniciante', gradient: 'from-gray-800 to-gray-600', icon: FileText },
-  { id: 'ir5', title: 'Cripto e Imposto de Renda', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '17:20', level: 'Intermediário', gradient: 'from-slate-700 to-gray-600', icon: Coins },
-  { id: 'ir6', title: 'Day Trade: Tributação Específica', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '16:05', level: 'Avançado', gradient: 'from-gray-900 to-slate-700', icon: BarChart2 },
+  { id: 'ir1', title: 'IR sobre Investimentos: Regras Gerais', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '14:15', level: 'Iniciante', gradient: 'from-[#374151] to-[#6B7280]', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=NcOXbDJFPtY' },
+  { id: 'ir2', title: 'Como Declarar Ações no IR', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '22:30', level: 'Intermediário', gradient: 'from-gray-800 to-gray-600', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=v0AZzHEF9Og' },
+  { id: 'ir3', title: 'FIIs e a Isenção de Imposto de Renda', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '11:00', level: 'Iniciante', gradient: 'from-[#374151] to-[#4B5563]', icon: Building, videoUrl: 'https://www.youtube.com/watch?v=1LpBOXzgQtA' },
+  { id: 'ir4', title: 'Nota de Corretagem Explicada', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '13:40', level: 'Iniciante', gradient: 'from-gray-800 to-gray-600', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=xOo8UoGuVEA' },
+  { id: 'ir5', title: 'Cripto e Imposto de Renda', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '17:20', level: 'Intermediário', gradient: 'from-slate-700 to-gray-600', icon: Coins, videoUrl: 'https://www.youtube.com/@seudinheiro' },
+  { id: 'ir6', title: 'Day Trade: Tributação Específica', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '16:05', level: 'Avançado', gradient: 'from-gray-900 to-slate-700', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=v0AZzHEF9Og' },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -198,7 +199,9 @@ function VideoCardItem({
             <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white flex items-center justify-center">
               <Play className="w-5 h-5 text-white fill-white ml-0.5" />
             </div>
-            <span className="text-white text-xs font-medium">Em breve</span>
+            <span className="text-white text-xs font-medium">
+              {video.videoUrl ? 'Assistir' : 'Em breve'}
+            </span>
           </div>
         </div>
 
@@ -354,6 +357,14 @@ export default function TrilhasPage() {
       if (next.has(id)) next.delete(id); else next.add(id);
       return next;
     });
+  }, []);
+
+  const handleVideoClick = useCallback((video: VideoCard) => {
+    if (video.videoUrl) {
+      window.open(video.videoUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      setSelectedVideo(video);
+    }
   }, []);
 
   const scrollToCategory = (id: string) => {
@@ -547,7 +558,7 @@ export default function TrilhasPage() {
                 videos={videos}
                 savedList={savedList}
                 onSave={handleSave}
-                onVideoClick={setSelectedVideo}
+                onVideoClick={handleVideoClick}
               />
             );
           })}
