@@ -35,6 +35,7 @@ interface HeroSlide {
   label: string;
   gradient: string;
   cta: string;
+  category: string;
 }
 
 // ─── Hero slides ──────────────────────────────────────────────────────────────
@@ -46,6 +47,7 @@ const HERO_SLIDES: HeroSlide[] = [
     subtitle: 'DO ZERO AO PATRIMÔNIO: JORNADA NUVARY',
     gradient: 'from-[#0B1F33] via-[#1e3a5f] to-[#00B8D9]',
     cta: 'Começar Agora',
+    category: 'jornada',
   },
   {
     label: 'MAIS ASSISTIDO',
@@ -53,6 +55,7 @@ const HERO_SLIDES: HeroSlide[] = [
     subtitle: 'RENDA FIXA: CDI, SELIC E IPCA NA PRÁTICA',
     gradient: 'from-[#1e3a5f] via-[#0B1F33] to-[#4f46e5]',
     cta: 'Assistir Agora',
+    category: 'renda_fixa',
   },
   {
     label: 'MASTERCLASS',
@@ -60,6 +63,7 @@ const HERO_SLIDES: HeroSlide[] = [
     subtitle: 'ANÁLISE GRÁFICA COM CANDLESTICKS E INDICADORES',
     gradient: 'from-[#0B1F33] via-[#374151] to-[#1e3a5f]',
     cta: 'Assistir Agora',
+    category: 'populares',
   },
 ];
 
@@ -107,7 +111,6 @@ const VIDEOS: VideoCard[] = [
   // Renda Variável
   { id: 'rv1', title: 'Como Comprar sua Primeira Ação', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '15:30', level: 'Iniciante', gradient: 'from-[#4f46e5] to-[#7c3aed]', icon: TrendingUp, videoUrl: 'https://www.youtube.com/watch?v=rdYo6GR1MuI' },
   { id: 'rv2', title: 'ETFs - Fundos de Índice na Prática', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '12:45', level: 'Iniciante', gradient: 'from-[#6366f1] to-[#4f46e5]', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=dJyJ77GkhBE' },
-  { id: 'rv3', title: 'Dividendos: Renda Passiva com Ações', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '18:20', level: 'Intermediário', gradient: 'from-[#7c3aed] to-[#6366f1]', icon: Star, videoUrl: 'https://www.youtube.com/watch?v=33Tzz6LVdvU' },
 
   // FIIs
   { id: 'fii1', title: 'O que são Fundos Imobiliários?', category: 'fiis', categoryLabel: 'FIIs', duration: '11:20', level: 'Iniciante', gradient: 'from-emerald-800 to-emerald-600', icon: Building, videoUrl: 'https://www.youtube.com/watch?v=4gLDeLA6cz8' },
@@ -149,30 +152,39 @@ const CATEGORY_ACCENT: Record<string, string> = {
 function VideoCardItem({
   video,
   saved,
+  watched,
   onSave,
+  onWatch,
   onClick,
 }: {
   video: VideoCard;
   saved: boolean;
+  watched: boolean;
   onSave: (id: string) => void;
+  onWatch: (id: string) => void;
   onClick: (video: VideoCard) => void;
 }) {
   const Icon = video.icon;
   const accent = CATEGORY_ACCENT[video.category] || 'text-[#00B8D9]';
 
   return (
-    <div
-      className="flex-shrink-0 w-56 group cursor-pointer"
-      onClick={() => onClick(video)}
-    >
+    <div className="flex-shrink-0 w-56 group cursor-pointer" onClick={() => onClick(video)}>
       {/* Thumbnail */}
       <div className="relative rounded-xl overflow-hidden mb-3">
-        <div className={`bg-gradient-to-br ${video.gradient} aspect-video flex items-end p-3`}>
+        <div className={`bg-gradient-to-br ${video.gradient} aspect-video flex items-end p-3 ${watched ? 'brightness-75' : ''}`}>
           <Icon className="absolute top-3 right-3 w-8 h-8 text-white/20" />
           <p className="text-white font-semibold text-sm leading-tight line-clamp-2 z-10">
             {video.title}
           </p>
         </div>
+
+        {/* Concluído badge */}
+        {watched && (
+          <div className="absolute top-2 left-2 flex items-center gap-1 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+            <Check className="w-3 h-3" />
+            Concluído
+          </div>
+        )}
 
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-xl">
@@ -180,7 +192,7 @@ function VideoCardItem({
             <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white flex items-center justify-center">
               <Play className="w-5 h-5 text-white fill-white ml-0.5" />
             </div>
-            <span className="text-white text-xs font-medium">Assistir</span>
+            <span className="text-white text-xs font-medium">{watched ? 'Rever' : 'Assistir'}</span>
           </div>
         </div>
 
@@ -191,12 +203,12 @@ function VideoCardItem({
       </div>
 
       {/* Info */}
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex-1 min-w-0">
           <p className={`text-xs font-semibold mb-1 ${accent}`}>
             {video.categoryLabel}
           </p>
-          <p className="text-sm font-medium text-foreground leading-tight line-clamp-2 group-hover:text-[#00B8D9] transition-colors">
+          <p className={`text-sm font-medium leading-tight line-clamp-2 group-hover:text-[#00B8D9] transition-colors ${watched ? 'text-muted-foreground' : 'text-foreground'}`}>
             {video.title}
           </p>
           <div className="flex items-center gap-2 mt-1.5">
@@ -220,6 +232,19 @@ function VideoCardItem({
           {saved ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
         </button>
       </div>
+
+      {/* Concluído button */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onWatch(video.id); }}
+        className={`w-full flex items-center justify-center gap-1.5 text-[11px] font-semibold py-1.5 rounded-lg border transition-all ${
+          watched
+            ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
+            : 'border-border text-muted-foreground hover:border-emerald-500/50 hover:text-emerald-400 hover:bg-emerald-500/10'
+        }`}
+      >
+        <Check className="w-3 h-3" />
+        {watched ? 'Concluído' : 'Marcar concluído'}
+      </button>
     </div>
   );
 }
@@ -229,14 +254,20 @@ function VideoSection({
   title,
   videos,
   savedList,
+  watchedList,
   onSave,
+  onWatch,
+  onViewAll,
   onVideoClick,
 }: {
   categoryId: string;
   title: string;
   videos: VideoCard[];
   savedList: Set<string>;
+  watchedList: Set<string>;
   onSave: (id: string) => void;
+  onWatch: (id: string) => void;
+  onViewAll: (categoryId: string, title: string) => void;
   onVideoClick: (v: VideoCard) => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -251,9 +282,12 @@ function VideoSection({
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-foreground">{title}</h2>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground font-medium cursor-pointer hover:text-[#00B8D9] transition-colors">
+          <button
+            onClick={() => onViewAll(categoryId, title)}
+            className="text-sm text-muted-foreground font-medium hover:text-[#00B8D9] transition-colors"
+          >
             VER TUDO
-          </span>
+          </button>
           <div className="flex gap-1">
             <button
               onClick={() => scroll('left')}
@@ -281,7 +315,9 @@ function VideoSection({
             key={video.id}
             video={video}
             saved={savedList.has(video.id)}
+            watched={watchedList.has(video.id)}
             onSave={onSave}
+            onWatch={onWatch}
             onClick={onVideoClick}
           />
         ))}
@@ -299,7 +335,9 @@ export default function TrilhasPage() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState('jornada');
   const [savedList, setSavedList] = useState<Set<string>>(new Set());
+  const [watchedList, setWatchedList] = useState<Set<string>>(new Set());
   const [selectedVideo, setSelectedVideo] = useState<VideoCard | null>(null);
+  const [categoryView, setCategoryView] = useState<{ id: string; title: string } | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
 
   // Auto-rotação do hero a cada 5 segundos
@@ -338,8 +376,20 @@ export default function TrilhasPage() {
     });
   }, []);
 
+  const handleWatched = useCallback((id: string) => {
+    setWatchedList((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }, []);
+
   const handleVideoClick = useCallback((video: VideoCard) => {
     setSelectedVideo(video);
+  }, []);
+
+  const handleViewAll = useCallback((id: string, title: string) => {
+    setCategoryView({ id, title });
   }, []);
 
   const scrollToCategory = (id: string) => {
@@ -424,11 +474,76 @@ export default function TrilhasPage() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center gap-4 px-5 py-3 border-t border-white/10">
-                  <span className="text-white/50 text-xs flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5" />{selectedVideo.duration}
-                  </span>
-                  <span className="text-white/30 text-xs">{selectedVideo.categoryLabel}</span>
+                <div className="flex items-center justify-between px-5 py-3 border-t border-white/10">
+                  <div className="flex items-center gap-4">
+                    <span className="text-white/50 text-xs flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5" />{selectedVideo.duration}
+                    </span>
+                    <span className="text-white/30 text-xs">{selectedVideo.categoryLabel}</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleWatched(selectedVideo.id);
+                      setSelectedVideo(null);
+                    }}
+                    className={`flex items-center gap-1.5 text-xs font-semibold px-4 py-1.5 rounded-lg transition-all ${
+                      watchedList.has(selectedVideo.id)
+                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                        : 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                    }`}
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    {watchedList.has(selectedVideo.id) ? 'Desmarcar' : 'Concluído'}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Ver Tudo overlay ── */}
+      <AnimatePresence>
+        {categoryView && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 z-50"
+              onClick={() => setCategoryView(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 32 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6"
+            >
+              <div className="bg-background w-full sm:max-w-5xl sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b border-border flex-shrink-0">
+                  <h2 className="text-lg font-bold text-foreground">{categoryView.title}</h2>
+                  <button
+                    onClick={() => setCategoryView(null)}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                {/* Grid */}
+                <div className="overflow-y-auto p-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {VIDEOS.filter((v) => v.category === categoryView.id).map((video) => (
+                      <VideoCardItem
+                        key={video.id}
+                        video={video}
+                        saved={savedList.has(video.id)}
+                        watched={watchedList.has(video.id)}
+                        onSave={handleSave}
+                        onWatch={handleWatched}
+                        onClick={(v) => { setCategoryView(null); handleVideoClick(v); }}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -456,7 +571,10 @@ export default function TrilhasPage() {
               <h1 className="text-white text-3xl md:text-4xl font-bold leading-tight mb-5 whitespace-pre-line">
                 {slide.title}
               </h1>
-              <button className="bg-[#00B8D9] hover:bg-[#007EA7] text-white font-bold text-sm px-6 py-3 rounded-full transition-colors">
+              <button
+                onClick={() => scrollToCategory(slide.category)}
+                className="bg-[#00B8D9] hover:bg-[#007EA7] text-white font-bold text-sm px-6 py-3 rounded-full transition-colors"
+              >
                 {slide.cta}
               </button>
               <p className="text-white/60 text-xs mt-4 tracking-wider uppercase">
@@ -542,7 +660,10 @@ export default function TrilhasPage() {
                 title={label.charAt(0) + label.slice(1).toLowerCase().replace(/ ([a-z])/g, (_, c) => ` ${c.toUpperCase()}`)}
                 videos={videos}
                 savedList={savedList}
+                watchedList={watchedList}
                 onSave={handleSave}
+                onWatch={handleWatched}
+                onViewAll={handleViewAll}
                 onVideoClick={handleVideoClick}
               />
             );
