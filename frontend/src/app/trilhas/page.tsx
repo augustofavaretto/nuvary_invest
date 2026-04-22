@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Loader2, Play, ChevronLeft, ChevronRight, Plus, Check,
-  GraduationCap, TrendingUp, PiggyBank, Coins, BarChart2,
-  FileText, Star, BookOpen, Building, Landmark, Globe, X,
-  Clock, Signal,
+  GraduationCap, TrendingUp, PiggyBank, BarChart2,
+  FileText, Star, BookOpen, Building, Landmark, X,
+  Clock,
 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
@@ -71,10 +71,15 @@ const CATEGORIES = [
   { id: 'renda_fixa', label: 'RENDA FIXA' },
   { id: 'renda_variavel', label: 'RENDA VARIÁVEL' },
   { id: 'fiis', label: 'FIIs' },
-  { id: 'cripto', label: 'CRIPTOMOEDAS' },
-  { id: 'analise', label: 'ANÁLISE TÉCNICA' },
   { id: 'imposto_renda', label: 'IMPOSTO DE RENDA' },
 ];
+
+// ─── Helper YouTube ───────────────────────────────────────────────────────────
+
+function getYouTubeId(url: string): string | null {
+  const match = url.match(/[?&]v=([^&]+)/);
+  return match ? match[1] : null;
+}
 
 // ─── Base de vídeos ───────────────────────────────────────────────────────────
 
@@ -92,24 +97,17 @@ const VIDEOS: VideoCard[] = [
   { id: 'p2', title: 'Renda Fixa vs Renda Variável', category: 'populares', categoryLabel: 'POPULAR', duration: '14:30', level: 'Iniciante', gradient: 'from-orange-700 to-orange-500', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=rdYo6GR1MuI' },
   { id: 'p3', title: 'Juros Compostos na Prática', category: 'populares', categoryLabel: 'POPULAR', duration: '10:20', level: 'Iniciante', gradient: 'from-amber-800 to-yellow-500', icon: TrendingUp, videoUrl: 'https://www.youtube.com/watch?v=uuciPHqVYVk' },
   { id: 'p4', title: 'Como Declarar Investimentos no IR', category: 'populares', categoryLabel: 'POPULAR', duration: '22:00', level: 'Intermediário', gradient: 'from-orange-800 to-amber-600', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=NcOXbDJFPtY' },
-  { id: 'p5', title: 'Análise Fundamentalista para Iniciantes', category: 'populares', categoryLabel: 'POPULAR', duration: '16:45', level: 'Intermediário', gradient: 'from-amber-900 to-amber-600', icon: BookOpen, videoUrl: 'https://www.youtube.com/@investidorsardinha' },
-  { id: 'p6', title: 'O que são Dividendos?', category: 'populares', categoryLabel: 'POPULAR', duration: '8:10', level: 'Iniciante', gradient: 'from-yellow-700 to-amber-500', icon: Star },
 
   // Renda Fixa
   { id: 'rf1', title: 'CDB, LCI e LCA: Qual Escolher?', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '13:20', level: 'Iniciante', gradient: 'from-[#1e3a5f] to-[#0066CC]', icon: PiggyBank, videoUrl: 'https://www.youtube.com/watch?v=shfYMvEXqm4' },
   { id: 'rf2', title: 'Tesouro Direto: Guia Completo', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '20:15', level: 'Iniciante', gradient: 'from-[#0B1F33] to-[#1e3a5f]', icon: Landmark, videoUrl: 'https://www.youtube.com/watch?v=dJyJ77GkhBE' },
   { id: 'rf3', title: 'Como Funciona o IPCA+', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '11:40', level: 'Intermediário', gradient: 'from-blue-900 to-blue-600', icon: TrendingUp, videoUrl: 'https://www.youtube.com/watch?v=rdYo6GR1MuI' },
-  { id: 'rf4', title: 'Debêntures e CRI/CRA', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '17:55', level: 'Avançado', gradient: 'from-[#0B1F33] to-blue-700', icon: FileText },
   { id: 'rf5', title: 'Tesouro Prefixado ou IPCA+?', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '14:10', level: 'Intermediário', gradient: 'from-blue-800 to-[#00B8D9]', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=uuciPHqVYVk' },
-  { id: 'rf6', title: 'Rentabilidade Líquida: Calculando o IR', category: 'renda_fixa', categoryLabel: 'RENDA FIXA', duration: '10:35', level: 'Intermediário', gradient: 'from-[#1e3a5f] to-sky-600', icon: FileText },
 
   // Renda Variável
   { id: 'rv1', title: 'Como Comprar sua Primeira Ação', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '15:30', level: 'Iniciante', gradient: 'from-[#4f46e5] to-[#7c3aed]', icon: TrendingUp, videoUrl: 'https://www.youtube.com/watch?v=rdYo6GR1MuI' },
   { id: 'rv2', title: 'ETFs - Fundos de Índice na Prática', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '12:45', level: 'Iniciante', gradient: 'from-[#6366f1] to-[#4f46e5]', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=dJyJ77GkhBE' },
-  { id: 'rv3', title: 'Dividendos: Renda Passiva com Ações', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '18:20', level: 'Intermediário', gradient: 'from-[#7c3aed] to-[#6366f1]', icon: Star, videoUrl: 'https://www.youtube.com/watch?v=33Tzz6LVdvU&list=PL5vSn8ej1b0vjMvjb5p2Z_Fr_ISV3cs_s' },
-  { id: 'rv4', title: 'BDRs: Investindo no Exterior pela B3', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '16:00', level: 'Intermediário', gradient: 'from-[#4338ca] to-[#6366f1]', icon: Globe, videoUrl: 'https://www.youtube.com/@BrunoPerini' },
-  { id: 'rv5', title: 'Small Caps vs Blue Chips', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '13:55', level: 'Avançado', gradient: 'from-[#5b21b6] to-[#7c3aed]', icon: TrendingUp, videoUrl: 'https://www.youtube.com/@investidorsardinha' },
-  { id: 'rv6', title: 'P/L, P/VP e EV/EBITDA', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '19:40', level: 'Avançado', gradient: 'from-violet-800 to-purple-600', icon: BookOpen },
+  { id: 'rv3', title: 'Dividendos: Renda Passiva com Ações', category: 'renda_variavel', categoryLabel: 'RENDA VARIÁVEL', duration: '18:20', level: 'Intermediário', gradient: 'from-[#7c3aed] to-[#6366f1]', icon: Star, videoUrl: 'https://www.youtube.com/watch?v=33Tzz6LVdvU' },
 
   // FIIs
   { id: 'fii1', title: 'O que são Fundos Imobiliários?', category: 'fiis', categoryLabel: 'FIIs', duration: '11:20', level: 'Iniciante', gradient: 'from-emerald-800 to-emerald-600', icon: Building, videoUrl: 'https://www.youtube.com/watch?v=4gLDeLA6cz8' },
@@ -119,28 +117,11 @@ const VIDEOS: VideoCard[] = [
   { id: 'fii5', title: 'Carteira de FIIs para Iniciantes', category: 'fiis', categoryLabel: 'FIIs', duration: '16:40', level: 'Iniciante', gradient: 'from-emerald-900 to-teal-700', icon: GraduationCap, videoUrl: 'https://www.youtube.com/watch?v=8yOeM-yc2sU' },
   { id: 'fii6', title: 'Vacância e FFO: Indicadores Chave', category: 'fiis', categoryLabel: 'FIIs', duration: '13:00', level: 'Avançado', gradient: 'from-green-900 to-emerald-700', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=pLRCrKLsf_k' },
 
-  // Criptomoedas
-  { id: 'c1', title: 'Bitcoin para Iniciantes', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '13:10', level: 'Iniciante', gradient: 'from-amber-700 to-yellow-500', icon: Coins, videoUrl: 'https://www.youtube.com/@MePoupe' },
-  { id: 'c2', title: 'Ethereum e Contratos Inteligentes', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '15:25', level: 'Intermediário', gradient: 'from-purple-700 to-violet-600', icon: Coins, videoUrl: 'https://www.youtube.com/@AugustoBackes' },
-  { id: 'c3', title: 'Carteiras Cripto: Hot vs Cold Wallet', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '12:00', level: 'Intermediário', gradient: 'from-orange-700 to-amber-500', icon: Star, videoUrl: 'https://www.youtube.com/@FernandoUlworking' },
-  { id: 'c4', title: 'Riscos das Criptomoedas', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '9:45', level: 'Iniciante', gradient: 'from-red-700 to-orange-600', icon: BookOpen, videoUrl: 'https://www.youtube.com/@investidorsardinha' },
-  { id: 'c5', title: 'DeFi e Staking Explicados', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '17:30', level: 'Avançado', gradient: 'from-purple-800 to-indigo-600', icon: Coins, videoUrl: 'https://www.youtube.com/@OPrimoRico' },
-  { id: 'c6', title: 'NFTs: Entendendo o Hype', category: 'cripto', categoryLabel: 'CRIPTOMOEDAS', duration: '11:15', level: 'Intermediário', gradient: 'from-indigo-700 to-purple-600', icon: Star },
-
-  // Análise Técnica
-  { id: 'at1', title: 'Análise Gráfica para Iniciantes', category: 'analise', categoryLabel: 'ANÁLISE TÉCNICA', duration: '16:00', level: 'Iniciante', gradient: 'from-slate-700 to-slate-500', icon: BarChart2 },
-  { id: 'at2', title: 'Candlesticks: Lendo o Mercado', category: 'analise', categoryLabel: 'ANÁLISE TÉCNICA', duration: '18:45', level: 'Intermediário', gradient: 'from-gray-800 to-gray-600', icon: TrendingUp },
-  { id: 'at3', title: 'Suporte, Resistência e Rompimento', category: 'analise', categoryLabel: 'ANÁLISE TÉCNICA', duration: '14:20', level: 'Intermediário', gradient: 'from-[#0B1F33] to-slate-600', icon: BarChart2 },
-  { id: 'at4', title: 'Médias Móveis na Prática', category: 'analise', categoryLabel: 'ANÁLISE TÉCNICA', duration: '12:35', level: 'Intermediário', gradient: 'from-slate-800 to-[#1e3a5f]', icon: TrendingUp },
-  { id: 'at5', title: 'RSI, MACD e IFR', category: 'analise', categoryLabel: 'ANÁLISE TÉCNICA', duration: '20:50', level: 'Avançado', gradient: 'from-gray-900 to-slate-700', icon: BarChart2 },
-  { id: 'at6', title: 'Ondas de Elliott Simplificadas', category: 'analise', categoryLabel: 'ANÁLISE TÉCNICA', duration: '22:10', level: 'Avançado', gradient: 'from-[#1e3a5f] to-gray-700', icon: TrendingUp },
-
   // Imposto de Renda
   { id: 'ir1', title: 'IR sobre Investimentos: Regras Gerais', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '14:15', level: 'Iniciante', gradient: 'from-[#374151] to-[#6B7280]', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=NcOXbDJFPtY' },
   { id: 'ir2', title: 'Como Declarar Ações no IR', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '22:30', level: 'Intermediário', gradient: 'from-gray-800 to-gray-600', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=v0AZzHEF9Og' },
   { id: 'ir3', title: 'FIIs e a Isenção de Imposto de Renda', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '11:00', level: 'Iniciante', gradient: 'from-[#374151] to-[#4B5563]', icon: Building, videoUrl: 'https://www.youtube.com/watch?v=1LpBOXzgQtA' },
   { id: 'ir4', title: 'Nota de Corretagem Explicada', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '13:40', level: 'Iniciante', gradient: 'from-gray-800 to-gray-600', icon: FileText, videoUrl: 'https://www.youtube.com/watch?v=xOo8UoGuVEA' },
-  { id: 'ir5', title: 'Cripto e Imposto de Renda', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '17:20', level: 'Intermediário', gradient: 'from-slate-700 to-gray-600', icon: Coins, videoUrl: 'https://www.youtube.com/@seudinheiro' },
   { id: 'ir6', title: 'Day Trade: Tributação Específica', category: 'imposto_renda', categoryLabel: 'IMPOSTO DE RENDA', duration: '16:05', level: 'Avançado', gradient: 'from-gray-900 to-slate-700', icon: BarChart2, videoUrl: 'https://www.youtube.com/watch?v=v0AZzHEF9Og' },
 ];
 
@@ -199,9 +180,7 @@ function VideoCardItem({
             <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white flex items-center justify-center">
               <Play className="w-5 h-5 text-white fill-white ml-0.5" />
             </div>
-            <span className="text-white text-xs font-medium">
-              {video.videoUrl ? 'Assistir' : 'Em breve'}
-            </span>
+            <span className="text-white text-xs font-medium">Assistir</span>
           </div>
         </div>
 
@@ -360,11 +339,7 @@ export default function TrilhasPage() {
   }, []);
 
   const handleVideoClick = useCallback((video: VideoCard) => {
-    if (video.videoUrl) {
-      window.open(video.videoUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      setSelectedVideo(video);
-    }
+    setSelectedVideo(video);
   }, []);
 
   const scrollToCategory = (id: string) => {
@@ -384,66 +359,76 @@ export default function TrilhasPage() {
 
   return (
     <DashboardLayout>
-      {/* Modal "Em Breve" */}
+      {/* Modal Player YouTube */}
       <AnimatePresence>
         {selectedVideo && (
           <>
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/70 z-50"
+              className="fixed inset-0 bg-black/80 z-50"
               onClick={() => setSelectedVideo(null)}
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              transition={{ duration: 0.2 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4"
             >
-              <div className="bg-card rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-                <div className={`bg-gradient-to-br ${selectedVideo.gradient} p-8 flex flex-col items-center gap-4`}>
-                  <div className="w-16 h-16 rounded-full bg-white/20 border-2 border-white flex items-center justify-center">
-                    <Play className="w-7 h-7 text-white fill-white ml-1" />
+              <div className="bg-[#0B1F33] rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl">
+                {/* Header */}
+                <div className="flex items-center justify-between px-5 py-3 border-b border-white/10">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className={`flex-shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full text-white ${LEVEL_COLOR[selectedVideo.level]}`}>
+                      {selectedVideo.level}
+                    </span>
+                    <p className="text-white font-semibold text-sm truncate">{selectedVideo.title}</p>
                   </div>
-                  <p className="text-white font-bold text-center text-lg leading-tight">
-                    {selectedVideo.title}
-                  </p>
-                </div>
-                <div className="p-6 text-center">
-                  <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full text-white mb-3 ${LEVEL_COLOR[selectedVideo.level]}`}>
-                    {selectedVideo.level}
-                  </span>
-                  <p className="text-foreground font-semibold text-base mb-1">
-                    Vídeo em produção
-                  </p>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    Este conteúdo estará disponível em breve. Adicione à sua lista para ser notificado!
-                  </p>
-                  <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mb-5">
-                    <Clock className="w-4 h-4" />
-                    <span>Duração estimada: {selectedVideo.duration}</span>
-                  </div>
-                  <div className="flex gap-3">
+                  <div className="flex items-center gap-3 flex-shrink-0 ml-3">
                     <button
                       onClick={() => handleSave(selectedVideo.id)}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm transition-all ${
+                      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all ${
                         savedList.has(selectedVideo.id)
                           ? 'bg-[#00B8D9] text-white'
-                          : 'border-2 border-[#00B8D9] text-[#00B8D9] hover:bg-[#00B8D9]/10'
+                          : 'border border-[#00B8D9] text-[#00B8D9] hover:bg-[#00B8D9]/10'
                       }`}
                     >
-                      {savedList.has(selectedVideo.id) ? (
-                        <><Check className="w-4 h-4" /> Na minha lista</>
-                      ) : (
-                        <><Plus className="w-4 h-4" /> Adicionar à lista</>
-                      )}
+                      {savedList.has(selectedVideo.id)
+                        ? <><Check className="w-3.5 h-3.5" /> Salvo</>
+                        : <><Plus className="w-3.5 h-3.5" /> Minha lista</>}
                     </button>
                     <button
                       onClick={() => setSelectedVideo(null)}
-                      className="px-4 py-2.5 rounded-lg border border-border text-muted-foreground hover:bg-muted text-sm"
+                      className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
+                </div>
+
+                {/* Player 16:9 */}
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  {selectedVideo.videoUrl && getYouTubeId(selectedVideo.videoUrl) ? (
+                    <iframe
+                      className="absolute inset-0 w-full h-full"
+                      src={`https://www.youtube.com/embed/${getYouTubeId(selectedVideo.videoUrl)}?autoplay=1&rel=0`}
+                      title={selectedVideo.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <div className={`absolute inset-0 bg-gradient-to-br ${selectedVideo.gradient} flex items-center justify-center`}>
+                      <p className="text-white/60 text-sm">Vídeo não disponível</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center gap-4 px-5 py-3 border-t border-white/10">
+                  <span className="text-white/50 text-xs flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" />{selectedVideo.duration}
+                  </span>
+                  <span className="text-white/30 text-xs">{selectedVideo.categoryLabel}</span>
                 </div>
               </div>
             </motion.div>
