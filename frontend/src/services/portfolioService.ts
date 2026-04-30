@@ -710,6 +710,16 @@ export async function refreshAllPrices(force = false): Promise<boolean> {
   }
 
   localStorage.setItem(PRICE_CACHE_KEY, now.toString());
+
+  // Verifica alertas de variação após atualizar preços
+  try {
+    const { checkAlertsForAssets } = await import('./alertasService');
+    const fresh = await getAllAssetsFromDB();
+    await checkAlertsForAssets(fresh);
+  } catch (e) {
+    console.error('Erro ao verificar alertas de variação:', e);
+  }
+
   return true;
 }
 

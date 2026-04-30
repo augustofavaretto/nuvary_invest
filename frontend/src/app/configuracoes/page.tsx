@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { getAlertsEnabled, setAlertsEnabled } from '@/services/alertasService';
 import {
   Sun,
   Moon,
@@ -51,6 +52,7 @@ export default function ConfiguracoesPage() {
   const { theme, setTheme } = useTheme();
 
   const [preferencias, setPreferencias] = useState<Preferencias>(defaultPreferencias);
+  const [alertasVariacao, setAlertasVariacaoState] = useState(true);
   const [salvando, setSalvando] = useState(false);
   const [salvo, setSalvo] = useState(false);
 
@@ -68,6 +70,17 @@ export default function ConfiguracoesPage() {
       // usa padrão
     }
   }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    getAlertsEnabled().then(setAlertasVariacaoState);
+  }, [isAuthenticated]);
+
+  const toggleAlertasVariacao = async () => {
+    const next = !alertasVariacao;
+    setAlertasVariacaoState(next);
+    await setAlertsEnabled(next);
+  };
 
   const toggleNotif = (key: NotifKey) => {
     setPreferencias(prev => ({
@@ -177,6 +190,42 @@ export default function ConfiguracoesPage() {
             >
               <Monitor className="w-6 h-6 text-muted-foreground" />
               <span className="text-sm font-medium text-foreground">Sistema</span>
+            </button>
+          </div>
+        </motion.section>
+
+        {/* === ALERTAS DE VARIAÇÃO === */}
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.07 }}
+          className="bg-card rounded-2xl border border-border p-6 shadow-sm"
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/15 flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-5 h-5 text-emerald-400" />
+              </div>
+              <div className="min-w-0">
+                <h2 className="font-semibold text-foreground">Alertas de variação</h2>
+                <p className="text-xs text-muted-foreground">
+                  Notificação quando um ativo variar mais de 5%
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={toggleAlertasVariacao}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none flex-shrink-0 ${
+                alertasVariacao ? 'bg-emerald-500' : 'bg-muted'
+              }`}
+              role="switch"
+              aria-checked={alertasVariacao}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform ${
+                  alertasVariacao ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
             </button>
           </div>
         </motion.section>

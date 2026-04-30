@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doc 13 - Proximos Passos | Nuvary Invest</title>
+    <title>Doc 13 - Proximos Passos | Nuvary Invest v4.4.0</title>
     <style>
         * {
             margin: 0;
@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Abril 2026 - v4.3.0</span>
+            <span class="version-badge">Abril 2026 - v4.4.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,8 +331,8 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🚀</span>
             <div>
-                <strong>v4.3.0 — Relatórios reformulados, IR Estimado real, Menu chat MoreVertical, Fix Cripto/Dashboard refresh!</strong>
-                <p style="margin: 0; opacity: 0.9;">Evolução Patrimonial, exportar PDF/XLS, aba IR reescrita com cost_basis, botão "..." com hover CSS puro na sidebar do chat.</p>
+                <strong>v4.4.0 — Alertas de Variação ≥5% e Trilhas Educativas com YouTube embed!</strong>
+                <p style="margin: 0; opacity: 0.9;">Sistema completo de alertas de variação (sino, toast, Realtime), Trilhas com player inline, vídeos concluídos e botão "Marcar concluído" em cada card.</p>
             </div>
         </div>
 
@@ -342,12 +342,12 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">210</div>
+                    <div class="stat-number">230</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🔥</div>
-                    <div class="stat-number">3</div>
+                    <div class="stat-number">2</div>
                     <div class="stat-label">Críticos</div>
                 </div>
                 <div class="stat-card">
@@ -781,14 +781,46 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">IR calculado sobre lucro realizado: (total_value - cost_basis) × 15% acumulado — não mais sobre lucro não-realizado da carteira atual<span class="task-new">NOVO</span></span></li>
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Requer coluna Supabase: ALTER TABLE portfolio_transactions ADD COLUMN IF NOT EXISTS cost_basis NUMERIC DEFAULT 0<span class="task-new">NOVO</span></span></li>
             </ul>
+
+            <div class="category-header">🎓 Trilhas Educativas — YouTube Embed Inline e Progresso <span class="task-new">NOVO v4.4.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Player de vídeo inline via iframe YouTube embed (16:9 com paddingBottom 56.25%) — sem redirecionar para nova aba<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Helper getYouTubeId(url) extrai ID via regex /[?&]v=([^&]+)/ — autoplay=1&rel=0 nos parâmetros do embed<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Removidos vídeos sem URL real ou que apontavam para canais (@canal) — categorias 'cripto' e 'analise' eliminadas, rv3 (vídeo privado) removido<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Botão "Marcar concluído" em cada card — toggle visual com fundo emerald-500/15 quando assistido<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Indicadores visuais de vídeo concluído: thumbnail com brightness-75, badge "Concluído" verde no topo, hover mostra "Rever" em vez de "Assistir"<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Botão "Concluído" também no rodapé do modal do player — marca + fecha em um clique<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Hero CTA funcional — "Começar Agora" e "Assistir Agora" agora chamam scrollToCategory(slide.category) com mapeamento jornada/renda_fixa/populares<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Botão "VER TUDO" abre modal overlay com grid completo de todos os vídeos da categoria — clicar em qualquer card fecha overlay e abre player<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Removida funcionalidade "Adicionar à lista" (savedList, handleSave, ícone Plus) — simplificou UX focada em concluído<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">VideoCardItem reestruturado com props watched/onWatch — usado em VideoSection (carrossel) e overlay "Ver Tudo"<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🔔 Alertas de Variação — Sistema Completo de Notificações <span class="task-new">NOVO v4.4.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela Supabase alertas_variacao com RLS por auth.uid() — 4 policies (SELECT, INSERT, UPDATE, DELETE) + 3 índices (user_id, created_at, user_id+ticker+direction)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">SQL completo em sql/alertas_variacao.sql: NUMERIC(14,2) variation_pct + NUMERIC(20,8) preços (suporta criptos e variações enormes)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Coluna profiles.alertas_variacao_enabled BOOLEAN DEFAULT TRUE — toggle persistido em /configuracoes<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">alertasService.ts: CRUD completo (listAlerts, countUnread, markAsRead, markAllAsRead, deleteAlert) + checkAlertsForAssets<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Threshold ALERT_THRESHOLD=5%, dedup window 24h por ticker+direction, cap MAX_VARIATION_PCT=999999.99 para não estourar coluna<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração com refreshAllPrices: dynamic import de checkAlertsForAssets após atualizar preços — alertas gerados automaticamente<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">NotificationBell substitui sino estático no DashboardLayout — badge vermelho com contador de não lidos (9+ se >9)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Dropdown do sino: lista últimos 20 alertas com setas ↑↓, nome, % variação, preço atual, tempo relativo + botões "Marcar todas" e "Ver carteira"<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">AlertItem.tsx — item visual com cores emerald (subiu 📈) ou red (caiu 📉), opacidade reduzida quando lido, botão X para deletar individual<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">AlertToastContainer no canto inferior direito — toast 8s com auto-dismiss, clicável (vai para /carteira), animação Framer Motion<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Realtime: subscription via supabase.channel('alertas-variacao-changes') + postgres_changes em INSERT/UPDATE/DELETE<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Triple fallback: CustomEvent NEW_ALERT_EVENT (mesma sessão), Realtime WebSocket, polling 30s — sino sempre atualiza<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Toggle em /configuracoes na seção "Alertas de variação" — persiste em profiles.alertas_variacao_enabled via setAlertsEnabled<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Refresh ao abrir dropdown garante consistência se outra aba marcou como lido<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Realtime habilitado via ALTER PUBLICATION supabase_realtime ADD TABLE alertas_variacao + REPLICA IDENTITY FULL<span class="task-new">NOVO</span></span></li>
+            </ul>
         </section>
 
         <section id="prioridade" class="section-fire">
-            <h2><span class="icon">🔥</span> Críticos — Alta Prioridade (v4.0.0)</h2>
+            <h2><span class="icon">🔥</span> Críticos — Alta Prioridade (v4.4.0)</h2>
 
             <div class="category-header">🟡 Páginas e Funcionalidades Incompletas</div>
             <ul class="task-list">
-                <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Trilhas — integrar vídeos reais</strong> — 48 cards criados mas sem reprodução; integrar YouTube embed ou URLs externas por card</span></li>
                 <li class="task-item"><span class="task-icon">🔥</span><span class="task-text"><strong>Taxa USD/BRL dinâmica</strong> — câmbio hardcoded 5.0 em portfolioService.ts; buscar via BCB SGS série 1 (PTAX) ou Alpha Vantage</span></li>
             </ul>
 
@@ -922,7 +954,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentação Técnica v4.3.0 | Abril 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v4.4.0 | Abril 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>

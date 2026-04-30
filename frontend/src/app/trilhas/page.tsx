@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Loader2, Play, ChevronLeft, ChevronRight, Plus, Check,
+  Loader2, Play, ChevronLeft, ChevronRight, Check,
   GraduationCap, TrendingUp, PiggyBank, BarChart2,
   FileText, Star, BookOpen, Building, Landmark, X,
   Clock,
@@ -151,16 +151,12 @@ const CATEGORY_ACCENT: Record<string, string> = {
 
 function VideoCardItem({
   video,
-  saved,
   watched,
-  onSave,
   onWatch,
   onClick,
 }: {
   video: VideoCard;
-  saved: boolean;
   watched: boolean;
-  onSave: (id: string) => void;
   onWatch: (id: string) => void;
   onClick: (video: VideoCard) => void;
 }) {
@@ -203,34 +199,22 @@ function VideoCardItem({
       </div>
 
       {/* Info */}
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <div className="flex-1 min-w-0">
-          <p className={`text-xs font-semibold mb-1 ${accent}`}>
-            {video.categoryLabel}
-          </p>
-          <p className={`text-sm font-medium leading-tight line-clamp-2 group-hover:text-[#00B8D9] transition-colors ${watched ? 'text-muted-foreground' : 'text-foreground'}`}>
-            {video.title}
-          </p>
-          <div className="flex items-center gap-2 mt-1.5">
-            <span className={`text-white text-[10px] px-1.5 py-0.5 rounded-full font-medium ${LEVEL_COLOR[video.level]}`}>
-              {video.level}
-            </span>
-            <span className="text-muted-foreground text-xs flex items-center gap-0.5">
-              <Clock className="w-3 h-3" />
-              {video.duration}
-            </span>
-          </div>
+      <div className="mb-2">
+        <p className={`text-xs font-semibold mb-1 ${accent}`}>
+          {video.categoryLabel}
+        </p>
+        <p className={`text-sm font-medium leading-tight line-clamp-2 group-hover:text-[#00B8D9] transition-colors ${watched ? 'text-muted-foreground' : 'text-foreground'}`}>
+          {video.title}
+        </p>
+        <div className="flex items-center gap-2 mt-1.5">
+          <span className={`text-white text-[10px] px-1.5 py-0.5 rounded-full font-medium ${LEVEL_COLOR[video.level]}`}>
+            {video.level}
+          </span>
+          <span className="text-muted-foreground text-xs flex items-center gap-0.5">
+            <Clock className="w-3 h-3" />
+            {video.duration}
+          </span>
         </div>
-        <button
-          onClick={(e) => { e.stopPropagation(); onSave(video.id); }}
-          className={`flex-shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all mt-1 ${
-            saved
-              ? 'bg-[#00B8D9] border-[#00B8D9] text-white'
-              : 'border-[#6B7280] text-[#6B7280] hover:border-[#00B8D9] hover:text-[#00B8D9]'
-          }`}
-        >
-          {saved ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-        </button>
       </div>
 
       {/* Concluído button */}
@@ -253,9 +237,7 @@ function VideoSection({
   categoryId,
   title,
   videos,
-  savedList,
   watchedList,
-  onSave,
   onWatch,
   onViewAll,
   onVideoClick,
@@ -263,9 +245,7 @@ function VideoSection({
   categoryId: string;
   title: string;
   videos: VideoCard[];
-  savedList: Set<string>;
   watchedList: Set<string>;
-  onSave: (id: string) => void;
   onWatch: (id: string) => void;
   onViewAll: (categoryId: string, title: string) => void;
   onVideoClick: (v: VideoCard) => void;
@@ -314,9 +294,7 @@ function VideoSection({
           <VideoCardItem
             key={video.id}
             video={video}
-            saved={savedList.has(video.id)}
             watched={watchedList.has(video.id)}
-            onSave={onSave}
             onWatch={onWatch}
             onClick={onVideoClick}
           />
@@ -334,7 +312,6 @@ export default function TrilhasPage() {
 
   const [heroIndex, setHeroIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState('jornada');
-  const [savedList, setSavedList] = useState<Set<string>>(new Set());
   const [watchedList, setWatchedList] = useState<Set<string>>(new Set());
   const [selectedVideo, setSelectedVideo] = useState<VideoCard | null>(null);
   const [categoryView, setCategoryView] = useState<{ id: string; title: string } | null>(null);
@@ -367,14 +344,6 @@ export default function TrilhasPage() {
   useEffect(() => {
     if (!authLoading && !isAuthenticated) router.push('/login');
   }, [authLoading, isAuthenticated, router]);
-
-  const handleSave = useCallback((id: string) => {
-    setSavedList((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
-      return next;
-    });
-  }, []);
 
   const handleWatched = useCallback((id: string) => {
     setWatchedList((prev) => {
@@ -435,18 +404,6 @@ export default function TrilhasPage() {
                     <p className="text-white font-semibold text-sm truncate">{selectedVideo.title}</p>
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0 ml-3">
-                    <button
-                      onClick={() => handleSave(selectedVideo.id)}
-                      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all ${
-                        savedList.has(selectedVideo.id)
-                          ? 'bg-[#00B8D9] text-white'
-                          : 'border border-[#00B8D9] text-[#00B8D9] hover:bg-[#00B8D9]/10'
-                      }`}
-                    >
-                      {savedList.has(selectedVideo.id)
-                        ? <><Check className="w-3.5 h-3.5" /> Salvo</>
-                        : <><Plus className="w-3.5 h-3.5" /> Minha lista</>}
-                    </button>
                     <button
                       onClick={() => setSelectedVideo(null)}
                       className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
@@ -536,9 +493,7 @@ export default function TrilhasPage() {
                       <VideoCardItem
                         key={video.id}
                         video={video}
-                        saved={savedList.has(video.id)}
                         watched={watchedList.has(video.id)}
-                        onSave={handleSave}
                         onWatch={handleWatched}
                         onClick={(v) => { setCategoryView(null); handleVideoClick(v); }}
                       />
@@ -637,20 +592,6 @@ export default function TrilhasPage() {
         {/* ── Conteúdo por categoria ── */}
         <div className="px-6 py-8 max-w-7xl mx-auto">
 
-          {/* Minha Lista badge */}
-          {savedList.size > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 flex items-center gap-3 bg-[#00B8D9]/10 border border-[#00B8D9]/30 rounded-xl px-4 py-3"
-            >
-              <Check className="w-4 h-4 text-[#00B8D9]" />
-              <span className="text-sm text-foreground font-medium">
-                {savedList.size} vídeo{savedList.size > 1 ? 's' : ''} na sua lista
-              </span>
-            </motion.div>
-          )}
-
           {CATEGORIES.map(({ id, label }) => {
             const videos = VIDEOS.filter((v) => v.category === id);
             return (
@@ -659,9 +600,7 @@ export default function TrilhasPage() {
                 categoryId={id}
                 title={label.charAt(0) + label.slice(1).toLowerCase().replace(/ ([a-z])/g, (_, c) => ` ${c.toUpperCase()}`)}
                 videos={videos}
-                savedList={savedList}
                 watchedList={watchedList}
-                onSave={handleSave}
                 onWatch={handleWatched}
                 onViewAll={handleViewAll}
                 onVideoClick={handleVideoClick}

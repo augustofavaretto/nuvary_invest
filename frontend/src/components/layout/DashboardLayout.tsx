@@ -11,9 +11,10 @@ import {
   LogOut,
   Settings,
   ChevronDown,
-  Bell,
 } from 'lucide-react';
 import { STRINGS } from '@/constants/strings';
+import { NotificationBell } from '@/components/dashboard/NotificationBell';
+import { AlertToastContainer } from '@/components/dashboard/AlertToastContainer';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -50,10 +51,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             {/* Right section */}
             <div className="flex items-center gap-4 ml-auto">
               {/* Notifications */}
-              <button className="relative p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-[#00B8D9] rounded-full" />
-              </button>
+              <NotificationBell />
 
               {/* User Menu */}
               <div className="relative">
@@ -121,6 +119,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           {children}
         </main>
       </div>
+      <AlertToastContainer />
     </div>
   );
 }
