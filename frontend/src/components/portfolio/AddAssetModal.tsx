@@ -638,18 +638,26 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                               ) : (
                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">R$</span>
                               )}
-                              <input
-                                type="number"
-                                value={formData.averagePrice || ''}
-                                onChange={(e) => setFormData(prev => ({ ...prev, averagePrice: parseFloat(e.target.value) || 0 }))}
-                                placeholder={priceLoading ? 'Buscando...' : isFixedIncome ? 'Ex: 120' : '0.00'}
-                                min="0"
-                                step="0.01"
-                                disabled={priceLoading}
-                                className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] ${
-                                  errors.averagePrice ? 'border-red-500' : 'border-border'
-                                } ${priceLoading ? 'bg-muted' : ''}`}
-                              />
+                              {(() => {
+                                const priceLocked = !isFixedIncome && !isCustom && !!priceInfo?.price;
+                                const isDisabled = priceLoading || priceLocked;
+                                return (
+                                  <input
+                                    type="number"
+                                    value={formData.averagePrice || ''}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, averagePrice: parseFloat(e.target.value) || 0 }))}
+                                    placeholder={priceLoading ? 'Buscando...' : isFixedIncome ? 'Ex: 120' : '0.00'}
+                                    min="0"
+                                    step="0.01"
+                                    disabled={isDisabled}
+                                    readOnly={priceLocked}
+                                    title={priceLocked ? 'Preço de mercado obtido automaticamente — não editável' : undefined}
+                                    className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] ${
+                                      errors.averagePrice ? 'border-red-500' : 'border-border'
+                                    } ${isDisabled ? 'bg-muted cursor-not-allowed' : ''}`}
+                                  />
+                                );
+                              })()}
                             </div>
                             {errors.averagePrice && (
                               <p className="text-red-500 text-sm mt-1">{errors.averagePrice}</p>
