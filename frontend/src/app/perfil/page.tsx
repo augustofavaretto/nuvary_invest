@@ -121,7 +121,15 @@ export default function PerfilPage() {
       setAvatarUrl(url);
       if (refreshProfile) await refreshProfile();
     } catch (err) {
-      setErroFoto('Erro ao fazer upload. Verifique se o bucket "avatars" existe no Supabase.');
+      const msg = err instanceof Error ? err.message : String(err);
+      const lower = msg.toLowerCase();
+      if (lower.includes('bucket') && (lower.includes('not found') || lower.includes('does not exist'))) {
+        setErroFoto('Bucket "avatars" não existe no Supabase Storage. Rode o script sql/avatars_storage.sql no SQL Editor.');
+      } else if (lower.includes('row-level security') || lower.includes('rls') || lower.includes('policy')) {
+        setErroFoto('Sem permissão no bucket "avatars". Rode o script sql/avatars_storage.sql para criar as policies de Storage.');
+      } else {
+        setErroFoto(`Erro ao fazer upload: ${msg}`);
+      }
       console.error(err);
     } finally {
       setUploadandoFoto(false);
