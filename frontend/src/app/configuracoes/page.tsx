@@ -12,7 +12,6 @@ import {
   Moon,
   Monitor,
   Bell,
-  BellOff,
   Mail,
   TrendingUp,
   MessageSquare,
@@ -25,7 +24,6 @@ import {
 
 type NotifKey =
   | 'email_relatorios'
-  | 'email_alertas'
   | 'dashboard_noticias'
   | 'dashboard_variacao'
   | 'chat_sugestoes';
@@ -39,7 +37,6 @@ const STORAGE_KEY = 'nuvary_preferencias';
 const defaultPreferencias: Preferencias = {
   notificacoes: {
     email_relatorios: true,
-    email_alertas: false,
     dashboard_noticias: true,
     dashboard_variacao: true,
     chat_sugestoes: true,
@@ -258,13 +255,6 @@ export default function ConfiguracoesPage() {
               description="Resumo semanal da sua carteira e desempenho"
               value={preferencias.notificacoes.email_relatorios}
               onToggle={() => toggleNotif('email_relatorios')}
-            />
-            <NotifToggle
-              icon={<TrendingUp className="w-4 h-4" />}
-              label="Alertas de variação"
-              description="Notificação quando um ativo variar mais de 5%"
-              value={preferencias.notificacoes.email_alertas}
-              onToggle={() => toggleNotif('email_alertas')}
             />
 
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 mt-4 px-1">
