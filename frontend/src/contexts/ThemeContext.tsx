@@ -21,9 +21,22 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem('nuvary_theme') as Theme | null;
-    const initial = saved ?? 'dark';
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initial: Theme = saved ?? (systemPrefersDark ? 'dark' : 'light');
     setThemeState(initial);
     applyTheme(initial);
+
+    // Se o usuário ainda não escolheu manualmente, acompanhar mudanças do SO
+    if (!saved) {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      const handler = (e: MediaQueryListEvent) => {
+        const next: Theme = e.matches ? 'dark' : 'light';
+        setThemeState(next);
+        applyTheme(next);
+      };
+      mq.addEventListener('change', handler);
+      return () => mq.removeEventListener('change', handler);
+    }
   }, []);
 
   const applyTheme = (t: Theme) => {

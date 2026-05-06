@@ -10,7 +10,6 @@ import { getAlertsEnabled, setAlertsEnabled } from '@/services/alertasService';
 import {
   Sun,
   Moon,
-  Monitor,
   Bell,
   Mail,
   TrendingUp,
@@ -140,7 +139,7 @@ export default function ConfiguracoesPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {/* Claro */}
             <button
               onClick={() => setTheme('light')}
@@ -175,18 +174,6 @@ export default function ConfiguracoesPage() {
                   <Check className="w-2.5 h-2.5 text-white" />
                 </span>
               )}
-            </button>
-
-            {/* Sistema */}
-            <button
-              onClick={() => {
-                const sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                setTheme(sys);
-              }}
-              className="relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-border hover:border-muted-foreground/40 transition-all"
-            >
-              <Monitor className="w-6 h-6 text-muted-foreground" />
-              <span className="text-sm font-medium text-foreground">Sistema</span>
             </button>
           </div>
         </motion.section>
