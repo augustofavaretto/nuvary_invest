@@ -59,10 +59,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
                 >
-                  <div className="w-9 h-9 bg-gradient-to-br from-[#00B8D9] to-[#007EA7] rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold text-sm">
-                      {profile?.nome?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
-                    </span>
+                  <div className="w-9 h-9 bg-gradient-to-br from-[#00B8D9] to-[#007EA7] rounded-full flex items-center justify-center overflow-hidden">
+                    {profile?.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={profile.avatar_url}
+                        alt="Foto de perfil"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-white font-semibold text-sm">
+                        {profile?.nome?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
+                      </span>
+                    )}
                   </div>
                   <div className="hidden sm:block text-left">
                     <p className="text-sm font-medium text-foreground">

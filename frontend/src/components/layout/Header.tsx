@@ -103,8 +103,17 @@ export function Header() {
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-full nuvary-gradient flex items-center justify-center text-white font-medium text-sm">
-                    {profile?.nome?.charAt(0).toUpperCase() || 'U'}
+                  <div className="w-8 h-8 rounded-full nuvary-gradient flex items-center justify-center text-white font-medium text-sm overflow-hidden">
+                    {profile?.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={profile.avatar_url}
+                        alt="Foto de perfil"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      profile?.nome?.charAt(0).toUpperCase() || 'U'
+                    )}
                   </div>
                   <span className="text-sm font-medium text-[#0B1F33] hidden sm:block max-w-[100px] truncate">
                     {profile?.nome?.split(' ')[0] || 'Usuário'}
