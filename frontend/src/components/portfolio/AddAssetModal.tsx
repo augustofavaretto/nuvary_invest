@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, Plus, Hash, Building2, ChevronLeft,
-  Landmark, TrendingUp, Building, Globe, Coins, PiggyBank,
+  TrendingUp, Building, Globe, Coins, PiggyBank,
   Search, Loader2, AlertCircle, CheckCircle, Percent
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -35,13 +35,6 @@ const CATEGORIES = [
     description: 'CDBs, LCIs, LCAs e Debêntures',
     icon: PiggyBank,
     color: '#1e3a5f',
-  },
-  {
-    id: 'tesouro',
-    name: 'Tesouro Direto',
-    description: 'Títulos públicos federais',
-    icon: Landmark,
-    color: '#047857',
   },
   {
     id: 'renda_variavel',
@@ -86,26 +79,6 @@ const ASSETS_BY_CATEGORY: Record<string, { ticker: string; name: string }[]> = {
     { ticker: 'DEB-VALE', name: 'Debenture Vale' },
     { ticker: 'CRI-CSHG', name: 'CRI CSHG' },
     { ticker: 'CRA-RAIZEN', name: 'CRA Raizen' },
-  ],
-  tesouro: [
-    // Tesouro Selic
-    { ticker: 'SELIC-2026', name: 'Tesouro Selic 2026' },
-    { ticker: 'SELIC-2027', name: 'Tesouro Selic 2027' },
-    { ticker: 'SELIC-2029', name: 'Tesouro Selic 2029' },
-    { ticker: 'SELIC-2031', name: 'Tesouro Selic 2031' },
-    // Tesouro IPCA+
-    { ticker: 'IPCA-2029', name: 'Tesouro IPCA+ 2029' },
-    { ticker: 'IPCA-2035', name: 'Tesouro IPCA+ 2035' },
-    { ticker: 'IPCA-2045', name: 'Tesouro IPCA+ 2045' },
-    // Tesouro Prefixado
-    { ticker: 'PREFIXADO-2026', name: 'Tesouro Prefixado 2026' },
-    { ticker: 'PREFIXADO-2027', name: 'Tesouro Prefixado 2027' },
-    { ticker: 'PREFIXADO-2029', name: 'Tesouro Prefixado 2029' },
-    { ticker: 'PREFIXADO-2031', name: 'Tesouro Prefixado 2031' },
-    // Tesouro Educa+ e RendA+
-    { ticker: 'EDUCA-2031', name: 'Tesouro Educa+ 2031' },
-    { ticker: 'EDUCA-2035', name: 'Tesouro Educa+ 2035' },
-    { ticker: 'RENDA-2030', name: 'Tesouro RendA+ 2030' },
   ],
   renda_variavel: [
     { ticker: 'PETR4', name: 'Petrobras PN' },
@@ -180,7 +153,6 @@ const ASSETS_BY_CATEGORY: Record<string, { ticker: string; name: string }[]> = {
 // Mapeamento de categoria para AssetClass
 const CATEGORY_TO_CLASS: Record<string, AssetClass> = {
   renda_fixa: 'renda_fixa',
-  tesouro: 'renda_fixa',
   renda_variavel: 'renda_variavel',
   fiis: 'fiis',
   internacional: 'internacional',
@@ -355,9 +327,8 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
     }
   };
 
-  // Renda Fixa e Tesouro usam % (taxa) no lugar de R$ (preço médio)
-  const isFixedIncome =
-    selectedCategory === 'renda_fixa' || selectedCategory === 'tesouro';
+  // Renda Fixa usa % (taxa) no lugar de R$ (preço médio)
+  const isFixedIncome = selectedCategory === 'renda_fixa';
 
   // Filtrar ativos pela busca
   const filteredAssets = selectedCategory
