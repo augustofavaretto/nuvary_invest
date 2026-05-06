@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  X, Plus, DollarSign, Hash, Building2, ChevronLeft,
+  X, Plus, Hash, Building2, ChevronLeft,
   Landmark, TrendingUp, Building, Globe, Coins, PiggyBank,
   Search, Loader2, AlertCircle, CheckCircle, Percent
 } from 'lucide-react';
@@ -605,7 +605,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                             </label>
                             <div className="relative">
                               {isFixedIncome ? (
-                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">R$</span>
                               ) : (
                                 <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                               )}
@@ -636,7 +636,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                               ) : isFixedIncome ? (
                                 <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                               ) : (
-                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">R$</span>
                               )}
                               <input
                                 type="number"
