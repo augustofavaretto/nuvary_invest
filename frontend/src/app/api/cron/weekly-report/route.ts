@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { supabaseAdmin } from '@/lib/supabase-admin';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import {
   generateWeeklyReportHtml,
   type WeeklyReportData,
@@ -43,8 +43,9 @@ export async function GET(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const sender = process.env.EMAIL_FROM || 'Nuvary Invest <onboarding@resend.dev>';
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.nuvary.invest';
+  const admin = getSupabaseAdmin();
 
-  const { data: users, error: usersErr } = await supabaseAdmin
+  const { data: users, error: usersErr } = await admin
     .from('profiles')
     .select('id, nome, email, email_relatorios_ultimo_envio')
     .eq('email_relatorios_ativo', true);
@@ -76,7 +77,7 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-      const { data: assets } = await supabaseAdmin
+      const { data: assets } = await admin
         .from('portfolio_assets')
         .select('type, quantity, average_price, total_value')
         .eq('user_id', u.id);
@@ -103,7 +104,7 @@ export async function GET(req: NextRequest) {
         totalInvestido > 0 ? ((totalAtual - totalInvestido) / totalInvestido) * 100 : 0;
 
       const seteDiasAtras = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
-      const { count: numAlertasSemana } = await supabaseAdmin
+      const { count: numAlertasSemana } = await admin
         .from('alertas_variacao')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', u.id)
@@ -133,7 +134,7 @@ export async function GET(req: NextRequest) {
 
       if (sendErr) throw new Error(sendErr.message);
 
-      await supabaseAdmin
+      await admin
         .from('profiles')
         .update({ email_relatorios_ultimo_envio: new Date().toISOString() })
         .eq('id', u.id);
