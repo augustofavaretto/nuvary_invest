@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
 
   const resend = new Resend(process.env.RESEND_API_KEY);
   const sender = process.env.EMAIL_FROM || 'Nuvary Invest <onboarding@resend.dev>';
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.nuvary.invest';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://nuvary-invest.vercel.app';
   const admin = getSupabaseAdmin();
 
   const { data: users, error: usersErr } = await admin
