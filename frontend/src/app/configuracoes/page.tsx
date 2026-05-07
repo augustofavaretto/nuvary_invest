@@ -13,7 +13,6 @@ import {
   Bell,
   Mail,
   TrendingUp,
-  MessageSquare,
   Shield,
   User,
   Check,
@@ -21,11 +20,7 @@ import {
   X,
 } from 'lucide-react';
 
-type NotifKey =
-  | 'email_relatorios'
-  | 'dashboard_noticias'
-  | 'dashboard_variacao'
-  | 'chat_sugestoes';
+type NotifKey = 'email_relatorios';
 
 interface Preferencias {
   notificacoes: Record<NotifKey, boolean>;
@@ -36,9 +31,6 @@ const STORAGE_KEY = 'nuvary_preferencias';
 const defaultPreferencias: Preferencias = {
   notificacoes: {
     email_relatorios: true,
-    dashboard_noticias: true,
-    dashboard_variacao: true,
-    chat_sugestoes: true,
   },
 };
 
@@ -242,32 +234,6 @@ export default function ConfiguracoesPage() {
               description="Resumo semanal da sua carteira e desempenho"
               value={preferencias.notificacoes.email_relatorios}
               onToggle={() => toggleNotif('email_relatorios')}
-            />
-
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 mt-4 px-1">
-              No dashboard
-            </p>
-
-            <NotifToggle
-              icon={<Bell className="w-4 h-4" />}
-              label="Notícias financeiras"
-              description="Exibir widget de notícias no dashboard"
-              value={preferencias.notificacoes.dashboard_noticias}
-              onToggle={() => toggleNotif('dashboard_noticias')}
-            />
-            <NotifToggle
-              icon={<TrendingUp className="w-4 h-4" />}
-              label="Variação do portfólio"
-              description="Exibir variação diária no header"
-              value={preferencias.notificacoes.dashboard_variacao}
-              onToggle={() => toggleNotif('dashboard_variacao')}
-            />
-            <NotifToggle
-              icon={<MessageSquare className="w-4 h-4" />}
-              label="Sugestões do assistente IA"
-              description="Mostrar sugestões personalizadas no dashboard"
-              value={preferencias.notificacoes.chat_sugestoes}
-              onToggle={() => toggleNotif('chat_sugestoes')}
             />
           </div>
         </motion.section>
