@@ -8,6 +8,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getAlertsEnabled, setAlertsEnabled } from '@/services/alertasService';
 import {
+  getEmailRelatoriosAtivo,
+  setEmailRelatoriosAtivo,
+} from '@/services/emailReportService';
+import {
   Sun,
   Moon,
   Bell,
@@ -20,29 +24,13 @@ import {
   X,
 } from 'lucide-react';
 
-type NotifKey = 'email_relatorios';
-
-interface Preferencias {
-  notificacoes: Record<NotifKey, boolean>;
-}
-
-const STORAGE_KEY = 'nuvary_preferencias';
-
-const defaultPreferencias: Preferencias = {
-  notificacoes: {
-    email_relatorios: true,
-  },
-};
-
 export default function ConfiguracoesPage() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { theme, setTheme } = useTheme();
 
-  const [preferencias, setPreferencias] = useState<Preferencias>(defaultPreferencias);
   const [alertasVariacao, setAlertasVariacaoState] = useState(true);
-  const [salvando, setSalvando] = useState(false);
-  const [salvo, setSalvo] = useState(false);
+  const [emailRelatorios, setEmailRelatoriosState] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -51,17 +39,9 @@ export default function ConfiguracoesPage() {
   }, [authLoading, isAuthenticated, router]);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) setPreferencias(JSON.parse(saved));
-    } catch {
-      // usa padrão
-    }
-  }, []);
-
-  useEffect(() => {
     if (!isAuthenticated) return;
     getAlertsEnabled().then(setAlertasVariacaoState);
+    getEmailRelatoriosAtivo().then(setEmailRelatoriosState);
   }, [isAuthenticated]);
 
   const toggleAlertasVariacao = async () => {
@@ -70,21 +50,10 @@ export default function ConfiguracoesPage() {
     await setAlertsEnabled(next);
   };
 
-  const toggleNotif = (key: NotifKey) => {
-    setPreferencias(prev => ({
-      ...prev,
-      notificacoes: { ...prev.notificacoes, [key]: !prev.notificacoes[key] },
-    }));
-  };
-
-  const salvarPreferencias = () => {
-    setSalvando(true);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(preferencias));
-    setTimeout(() => {
-      setSalvando(false);
-      setSalvo(true);
-      setTimeout(() => setSalvo(false), 2500);
-    }, 600);
+  const toggleEmailRelatorios = async () => {
+    const next = !emailRelatorios;
+    setEmailRelatoriosState(next);
+    await setEmailRelatoriosAtivo(next);
   };
 
   if (authLoading) return null;
@@ -231,9 +200,9 @@ export default function ConfiguracoesPage() {
             <NotifToggle
               icon={<Mail className="w-4 h-4" />}
               label="Relatórios semanais"
-              description="Resumo semanal da sua carteira e desempenho"
-              value={preferencias.notificacoes.email_relatorios}
-              onToggle={() => toggleNotif('email_relatorios')}
+              description="Resumo semanal da sua carteira enviado todo domingo"
+              value={emailRelatorios}
+              onToggle={toggleEmailRelatorios}
             />
           </div>
         </motion.section>
@@ -285,31 +254,6 @@ export default function ConfiguracoesPage() {
             </button>
           </div>
         </motion.section>
-
-        {/* Botão salvar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="flex justify-end"
-        >
-          <button
-            onClick={salvarPreferencias}
-            disabled={salvando}
-            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-all disabled:opacity-60"
-          >
-            {salvo ? (
-              <>
-                <Check className="w-4 h-4" />
-                Salvo!
-              </>
-            ) : salvando ? (
-              'Salvando...'
-            ) : (
-              'Salvar preferências'
-            )}
-          </button>
-        </motion.div>
 
       </div>
     </DashboardLayout>
