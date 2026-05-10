@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 30 - UX, Tema e Avatar | Nuvary Invest v4.5.0</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #334155; background: var(--light); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #0B1F33 0%, #007EA7 60%, #00B8D9 100%); color: white; padding: 48px 0; text-align: center; }
+        .version-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 5px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; }
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        header p { font-size: 1.05rem; opacity: 0.92; }
+        nav { background: var(--white); padding: 14px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        nav ul li a { color: var(--gray); text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+        nav ul li a:hover { background: var(--primary); color: white; }
+        main { padding: 40px 0 60px; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; margin-bottom: 28px; font-weight: 500; font-size: 0.9rem; }
+        .back-link:hover { text-decoration: underline; }
+        section { background: var(--white); border-radius: 14px; padding: 32px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        section h2 { font-size: 1.4rem; color: var(--dark); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        h3 { font-size: 1.1rem; color: #1e3a5f; margin: 20px 0 10px; }
+        h4 { font-size: 0.95rem; color: var(--dark); margin: 14px 0 6px; font-weight: 600; }
+        p { color: #475569; margin-bottom: 10px; }
+        ul, ol { margin: 10px 0 14px 20px; color: #475569; }
+        li { margin-bottom: 6px; }
+        code { background: #f1f5f9; color: #0f172a; padding: 2px 7px; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.88rem; }
+        pre { background: var(--code-bg); color: #e2e8f0; padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 14px 0; font-size: 0.85rem; line-height: 1.6; }
+        pre code { background: none; color: inherit; padding: 0; }
+        .warn-box { background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid var(--warning); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #92400e; }
+        .success-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid var(--success); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #166534; }
+        .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #1e40af; }
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+        th { background: #f1f5f9; color: var(--dark); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; color: #475569; }
+        tr:hover td { background: #f8fafc; }
+        footer { background: var(--dark); color: #cbd5e1; padding: 30px 0; text-align: center; font-size: 0.85rem; margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Maio 2026 - v4.5.0</span>
+            <h1>UX, Tema e Avatar</h1>
+            <p>Refinamentos no modal de adicionar ativo, detecção automática do tema e foto de perfil no header</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
+            <li><a href="#add-asset">AddAssetModal</a></li>
+            <li><a href="#tema">Tema do SO</a></li>
+            <li><a href="#avatar">Avatar no Header</a></li>
+            <li><a href="#bucket-storage">Bucket Avatars</a></li>
+            <li><a href="#configuracoes">Configurações</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o índice</a>
+
+        <!-- ============================================ ADD ASSET MODAL ============================================ -->
+        <section id="add-asset">
+            <h2>💼 AddAssetModal — 3 Refinamentos</h2>
+
+            <h3>1. Símbolo R$ no lugar do ícone $</h3>
+            <p>Os campos de moeda exibiam o ícone genérico <code>DollarSign</code> da lucide-react (símbolo $), o que confundia em uma plataforma 100% BRL. Agora aparece o texto <strong>R$</strong> como prefixo nos inputs.</p>
+            <ul>
+                <li>Campo "Valor Investido" (renda fixa) — <code>span</code> com texto "R$"</li>
+                <li>Campo "Preço Médio" (renda variável, FIIs, internacional, cripto) — idem</li>
+                <li>Import de <code>DollarSign</code> removido do <code>AddAssetModal.tsx</code></li>
+            </ul>
+
+            <h3>2. Preço médio bloqueado quando vem da API</h3>
+            <p>O preço de mercado é buscado automaticamente em <code>fetchAssetPrice()</code> ao selecionar o ativo (Brapi, Finnhub, Alpha Vantage). Antes, o usuário podia sobrescrever esse valor manualmente — o que gerava inconsistência entre o preço médio salvo e a realidade da API.</p>
+
+            <pre><code>const priceLocked = !isFixedIncome && !isCustom && !!priceInfo?.price;
+const isDisabled = priceLoading || priceLocked;
+
+&lt;input
+  type="number"
+  value={formData.averagePrice || ''}
+  disabled={isDisabled}
+  readOnly={priceLocked}
+  title={priceLocked ? 'Preço de mercado obtido automaticamente — não editável' : undefined}
+  className={`... ${isDisabled ? 'bg-muted cursor-not-allowed' : ''}`}
+/&gt;</code></pre>
+
+            <table>
+                <tr><th>Cenário</th><th>Editável?</th></tr>
+                <tr><td>Renda variável / FIIs / Internacional / Cripto com preço da API</td><td>❌ Bloqueado (read-only, fundo cinza, cursor not-allowed)</td></tr>
+                <tr><td>Renda fixa / Tesouro</td><td>✅ Editável (campo é "Taxa Contratada %", informada pelo usuário)</td></tr>
+                <tr><td>Ativo personalizado</td><td>✅ Editável (sem fonte de preço automática)</td></tr>
+                <tr><td>API falhou / sem preço</td><td>✅ Editável (fallback manual)</td></tr>
+            </table>
+
+            <h3>3. Categoria "Tesouro Direto" removida</h3>
+            <p>A categoria foi retirada da etapa 1 do modal. Posições de Tesouro existentes na carteira <strong>continuam aparecendo</strong> normalmente porque eram salvas com <code>class: 'renda_fixa'</code> via mapeamento <code>CATEGORY_TO_CLASS.tesouro = 'renda_fixa'</code>. A remoção é apenas do ponto de entrada para novas adições.</p>
+
+            <p>Limpeza de código morto associada:</p>
+            <ul>
+                <li>Entrada <code>tesouro</code> em <code>CATEGORIES</code> (com ícone <code>Landmark</code>)</li>
+                <li>Lista de 14 títulos pré-cadastrados em <code>ASSETS_BY_CATEGORY.tesouro</code></li>
+                <li>Mapeamento <code>CATEGORY_TO_CLASS.tesouro</code></li>
+                <li>Variável <code>isFixedIncome</code> simplificada — deixou de checar <code>'tesouro'</code></li>
+                <li>Import não utilizado <code>Landmark</code> removido</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>Grid resultante:</strong> 5 categorias (Renda Fixa, Renda Variável, Fundos Imobiliários, Internacional, Criptomoedas) — antes eram 6.
+            </div>
+        </section>
+
+        <!-- ============================================ TEMA ============================================ -->
+        <section id="tema">
+            <h2>🌗 Tema — Detecção Automática do SO</h2>
+
+            <h3>O que mudou</h3>
+            <ul>
+                <li>Botão <strong>"Sistema"</strong> removido da seção Aparência em <code>/configuracoes</code> — grid passou de 3 para 2 colunas</li>
+                <li>Quando o usuário ainda não escolheu manualmente Claro ou Escuro, o app passa a seguir <strong>automaticamente</strong> o tema do sistema operacional</li>
+                <li>Acompanha mudanças do SO em tempo real via <code>matchMedia('change')</code></li>
+                <li>Escolha manual sempre vence: ao clicar em Claro ou Escuro, o valor fica salvo no <code>localStorage</code> e a detecção do SO é desligada</li>
+            </ul>
+
+            <h3>ThemeContext.tsx — lógica nova</h3>
+            <pre><code>useEffect(() =&gt; {
+  const saved = localStorage.getItem('nuvary_theme') as Theme | null;
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initial: Theme = saved ?? (systemPrefersDark ? 'dark' : 'light');
+  setThemeState(initial);
+  applyTheme(initial);
+
+  // Se o usuário ainda não escolheu, acompanha mudanças do SO em tempo real
+  if (!saved) {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) =&gt; {
+      const next: Theme = e.matches ? 'dark' : 'light';
+      setThemeState(next);
+      applyTheme(next);
+    };
+    mq.addEventListener('change', handler);
+    return () =&gt; mq.removeEventListener('change', handler);
+  }
+}, []);</code></pre>
+
+            <table>
+                <tr><th>Estado</th><th>Comportamento</th></tr>
+                <tr><td>Sem nada no <code>localStorage</code></td><td>Segue o SO + acompanha trocas em tempo real</td></tr>
+                <tr><td>Usuário clicou em Claro</td><td>Fixo em Claro, ignora o SO</td></tr>
+                <tr><td>Usuário clicou em Escuro</td><td>Fixo em Escuro, ignora o SO</td></tr>
+            </table>
+        </section>
+
+        <!-- ============================================ AVATAR ============================================ -->
+        <section id="avatar">
+            <h2>📸 Avatar no Header</h2>
+
+            <p>O círculo do usuário no canto superior direito (em <code>DashboardLayout.tsx</code> e <code>Header.tsx</code>) sempre exibia apenas a inicial do nome (<code>profile?.nome?.charAt(0)</code>). Mesmo após o upload em <code>/perfil</code>, a foto não aparecia no header.</p>
+
+            <h3>Correção</h3>
+            <p>Os componentes agora leem <code>profile?.avatar_url</code> do <code>AuthContext</code> e renderizam a imagem quando disponível, mantendo a inicial como fallback.</p>
+
+            <pre><code>&lt;div className="w-9 h-9 ... overflow-hidden"&gt;
+  {profile?.avatar_url ? (
+    &lt;img
+      src={profile.avatar_url}
+      alt="Foto de perfil"
+      className="w-full h-full object-cover"
+    /&gt;
+  ) : (
+    &lt;span className="text-white font-semibold text-sm"&gt;
+      {profile?.nome?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
+    &lt;/span&gt;
+  )}
+&lt;/div&gt;</code></pre>
+
+            <p>O <code>AuthContext.refreshProfile()</code> já era chamado dentro de <code>handleFotoChange()</code> em <code>perfil/page.tsx</code> após o upload — então a foto aparece no header imediatamente, sem precisar recarregar a página.</p>
+
+            <div class="info-box">
+                <strong>Por que <code>&lt;img&gt;</code> e não Next <code>&lt;Image&gt;</code>?</strong> A URL vem do Supabase Storage (domínio externo) e usar <code>&lt;Image&gt;</code> exigiria configurar <code>remotePatterns</code> no <code>next.config.ts</code>. Para um avatar de 36px, a otimização do Next não traz ganho real.
+            </div>
+        </section>
+
+        <!-- ============================================ BUCKET STORAGE ============================================ -->
+        <section id="bucket-storage">
+            <h2>🪣 Bucket "avatars" no Supabase Storage</h2>
+
+            <p>O upload do avatar (em <code>authService.uploadAvatar()</code>) escreve em <code>storage.objects</code> do Supabase. Antes, isso falhava silenciosamente porque o bucket nem existia. Foi criado um SQL idempotente em <code>sql/avatars_storage.sql</code> que:</p>
+
+            <ol>
+                <li>Cria o bucket <code>avatars</code> público (necessário para <code>getPublicUrl</code>)</li>
+                <li>Define 4 policies de Storage (SELECT, INSERT, UPDATE, DELETE)</li>
+                <li>Cada usuário só pode escrever em uma pasta <code>&lt;auth.uid()&gt;/</code> dentro do bucket</li>
+                <li>Leitura pública (qualquer pessoa pode visualizar avatares)</li>
+            </ol>
+
+            <h3>Policies — padrão de path</h3>
+            <pre><code>-- Path esperado pelo app: "&lt;auth.uid()&gt;/avatar.&lt;ext&gt;"
+CREATE POLICY "avatars_insert_own"
+  ON storage.objects FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    bucket_id = 'avatars'
+    AND (storage.foldername(name))[1] = auth.uid()::text
+  );</code></pre>
+
+            <h3>Mensagens de erro melhoradas em /perfil</h3>
+            <p>O <code>handleFotoChange()</code> agora identifica o tipo do erro do Supabase e mostra mensagem específica em vez de genérica:</p>
+            <table>
+                <tr><th>Erro original</th><th>Mensagem exibida</th></tr>
+                <tr><td>"bucket not found" / "does not exist"</td><td>Bucket "avatars" não existe — rode <code>sql/avatars_storage.sql</code></td></tr>
+                <tr><td>"row-level security" / "policy"</td><td>Sem permissão — rode <code>sql/avatars_storage.sql</code></td></tr>
+                <tr><td>Outros</td><td>Mensagem real do Supabase (não mais mascarada)</td></tr>
+            </table>
+        </section>
+
+        <!-- ============================================ CONFIGURACOES ============================================ -->
+        <section id="configuracoes">
+            <h2>⚙️ /configuracoes — Limpeza de Toggles Cosméticos</h2>
+
+            <p>A página tinha vários toggles que apenas escreviam em <code>localStorage</code> sem nenhum efeito real (nenhum outro componente lia esses valores). Foram removidos:</p>
+
+            <table>
+                <tr><th>Toggle removido</th><th>Por quê</th></tr>
+                <tr><td>"Alertas de variação" (em "Por e-mail")</td><td>Backend não tem nenhuma lib de envio (verificado: nem nodemailer/sendgrid/resend instalado na época)</td></tr>
+                <tr><td>"Notícias financeiras" (No dashboard)</td><td>Flag <code>dashboard_noticias</code> não consumida em lugar nenhum</td></tr>
+                <tr><td>"Variação do portfólio" (No dashboard)</td><td>Flag <code>dashboard_variacao</code> idem</td></tr>
+                <tr><td>"Sugestões do assistente IA" (No dashboard)</td><td>Flag <code>chat_sugestoes</code> idem</td></tr>
+            </table>
+
+            <p>Mantido: <strong>"Alertas de variação"</strong> da seção topo (toggle verde) — esse de fato está ligado ao Supabase via <code>alertasService</code> e controla o NotificationBell + toasts.</p>
+
+            <div class="warn-box">
+                <strong>Limpeza arquitetural:</strong> com a remoção, o estado <code>preferencias</code>, a chave <code>STORAGE_KEY = 'nuvary_preferencias'</code>, a função <code>salvarPreferencias()</code> e o botão "Salvar preferências" (que era o único motivo do estado dual) foram apagados. Os toggles que sobraram (Tema, Alertas de variação, Relatórios semanais) salvam direto na fonte da verdade ao clicar — UX consistente.
+            </div>
+
+            <h3>"Relatórios semanais" — agora funcional</h3>
+            <p>O único toggle de e-mail que sobrou foi convertido em feature real: persiste em <code>profiles.email_relatorios_ativo</code> e é lido pelo cron semanal do Vercel. Detalhes em <a href="doc31.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">doc31.html — Relatório Semanal por E-mail</a>.</p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentação Técnica v4.5.0 | Maio 2026</p>
+        <p style="margin-top: 8px; opacity: 0.7;">
+            <a href="index.html" style="color: #00B8D9; text-decoration: none;">← Voltar para o índice</a>
+        </p>
+    </footer>
+</body>
+</html>

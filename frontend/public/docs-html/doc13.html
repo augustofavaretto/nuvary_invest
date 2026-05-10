@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doc 13 - Proximos Passos | Nuvary Invest v4.4.0</title>
+    <title>Doc 13 - Proximos Passos | Nuvary Invest v4.5.0</title>
     <style>
         * {
             margin: 0;
@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Abril 2026 - v4.4.0</span>
+            <span class="version-badge">Maio 2026 - v4.5.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,8 +331,8 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🚀</span>
             <div>
-                <strong>v4.4.0 — Alertas de Variação ≥5% e Trilhas Educativas com YouTube embed!</strong>
-                <p style="margin: 0; opacity: 0.9;">Sistema completo de alertas de variação (sino, toast, Realtime), Trilhas com player inline, vídeos concluídos e botão "Marcar concluído" em cada card.</p>
+                <strong>v4.5.0 — Relatório Semanal por E-mail (Resend + Vercel Cron) + Refinamentos de UX!</strong>
+                <p style="margin: 0; opacity: 0.9;">Envio automático aos domingos 8h BRT com resumo da carteira; AddAssetModal com R$ e preço médio bloqueado; detecção automática de tema do SO; foto de perfil no header; bucket avatars no Supabase Storage; limpeza de toggles cosméticos.</p>
             </div>
         </div>
 
@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">230</div>
+                    <div class="stat-number">260</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -796,6 +796,62 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">VideoCardItem reestruturado com props watched/onWatch — usado em VideoSection (carrossel) e overlay "Ver Tudo"<span class="task-new">NOVO</span></span></li>
             </ul>
 
+            <div class="category-header">📧 Relatório Semanal por E-mail (Resend + Vercel Cron) <span class="task-new">NOVO v4.5.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">SQL <code>sql/email_relatorios_setup.sql</code> — colunas <code>email_relatorios_ativo</code> e <code>email_relatorios_ultimo_envio</code> em <code>profiles</code> + índice parcial<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>emailReportService.ts</code> — get/set da preferência ligado direto ao Supabase (toggle em /configuracoes)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>supabase-admin.ts</code> com service-role key — inicialização lazy para não quebrar o build do Next.js<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Template HTML <code>lib/email-templates/weekly-report.ts</code> — inline styles, tabelas para layout, escape HTML, sem fonts externas<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Route handler <code>/api/cron/weekly-report</code> (runtime nodejs, force-dynamic, maxDuration 60s)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Auth do cron via header <code>Authorization: Bearer ${'$'}{CRON_SECRET}</code> — Vercel injeta automaticamente<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Idempotência: skip se <code>email_relatorios_ultimo_envio</code> &lt; 6 dias atrás (impede duplicação por re-execução)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cálculo do resumo: patrimônio total, variação % vs aporte, distribuição por classe, contagem de alertas dos últimos 7 dias<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Integração Resend (free tier 100/dia, 3000/mês) — sender padrão <code>onboarding@resend.dev</code> ou <code>EMAIL_FROM</code> custom<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Toggle "Relatórios semanais" em /configuracoes agora persistente (era cosmético antes)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Resposta JSON do cron: <code>{ok, candidates, sent, skipped, errors, errorDetails?}</code><span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🌐 Vercel Cron + Config — Setup do Cron Semanal <span class="task-new">NOVO v4.5.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>frontend/vercel.json</code> com framework=nextjs e <code>crons</code> declarado (Schedule <code>0 11 * * 0</code> = domingo 8h BRT)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>vercel.json</code> da raiz removido — Vercel ignora quando Root Directory é <code>frontend</code><span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Env vars novas no Vercel: <code>CRON_SECRET</code>, <code>RESEND_API_KEY</code>, <code>SUPABASE_SERVICE_ROLE_KEY</code>, <code>NEXT_PUBLIC_APP_URL</code><span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Cron registrado em Settings → Cron Jobs do Vercel — botão "Run" para disparo manual + "View Logs" para histórico<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Documentação completa em <code>doc31.html</code> com troubleshooting (Get Started fica vazio, build quebra com env, cron retorna 200 sem enviar email, etc.)<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">💼 AddAssetModal — Refinamentos UX <span class="task-new">NOVO v4.5.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Símbolo <strong>R$</strong> (texto) substituiu o ícone <code>DollarSign</code> nos campos de moeda — alinha com plataforma 100% BRL<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><strong>Preço médio bloqueado</strong> (read-only) quando vem da API (renda variável, FIIs, internacional, cripto) — evita inconsistência usuário vs mercado<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Categoria <strong>"Tesouro Direto" removida</strong> do modal — posições existentes continuam aparecendo (eram salvas como <code>renda_fixa</code>)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Limpeza de código morto: <code>ASSETS_BY_CATEGORY.tesouro</code>, mapeamento <code>CATEGORY_TO_CLASS.tesouro</code>, ícone <code>Landmark</code> e variável <code>isFixedIncome</code> simplificada<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🌗 Tema — Detecção Automática do SO <span class="task-new">NOVO v4.5.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Botão "Sistema" removido — Aparência agora exibe só Claro e Escuro (grid 2 colunas)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Detecção automática via <code>matchMedia('(prefers-color-scheme: dark)')</code> quando o usuário ainda não escolheu manualmente<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Listener de mudanças do SO em tempo real — se o usuário trocar tema do sistema, o app acompanha sem reload<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Escolha manual sempre vence: clicar em Claro ou Escuro salva no <code>localStorage</code> e desliga o listener<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">📸 Avatar no Header + Bucket Storage <span class="task-new">NOVO v4.5.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>DashboardLayout</code> e <code>Header</code> agora exibem <code>profile.avatar_url</code> em vez da inicial — fallback mantido<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Bucket <code>avatars</code> criado via <code>sql/avatars_storage.sql</code> — público + 4 policies de Storage (path por <code>auth.uid()</code>)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Mensagens de erro melhoradas em /perfil — distingue "bucket inexistente", "RLS bloqueando" e erro genérico<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Foto aparece no header imediatamente após upload — <code>refreshProfile()</code> já é chamado no <code>handleFotoChange()</code><span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">⚙️ Configurações — Limpeza de Toggles Cosméticos <span class="task-new">NOVO v4.5.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Toggle "Alertas de variação por e-mail" removido — backend não tinha lib de envio na época<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Toggles "Notícias financeiras", "Variação do portfólio", "Sugestões IA" removidos — flags <code>dashboard_*</code> e <code>chat_sugestoes</code> não eram consumidas<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Estado <code>preferencias</code>, chave <code>nuvary_preferencias</code> em localStorage e botão "Salvar preferências" removidos<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Toggles que sobraram (Alertas variação, Relatórios semanais) salvam direto na fonte da verdade ao clicar — sem botão Salvar<span class="task-new">NOVO</span></span></li>
+            </ul>
+
             <div class="category-header">🔔 Alertas de Variação — Sistema Completo de Notificações <span class="task-new">NOVO v4.4.0</span></div>
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Tabela Supabase alertas_variacao com RLS por auth.uid() — 4 policies (SELECT, INSERT, UPDATE, DELETE) + 3 índices (user_id, created_at, user_id+ticker+direction)<span class="task-new">NOVO</span></span></li>
@@ -954,7 +1010,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentação Técnica v4.4.0 | Abril 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v4.5.0 | Maio 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>
