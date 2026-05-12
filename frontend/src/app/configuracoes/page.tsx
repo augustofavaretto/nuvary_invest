@@ -14,7 +14,7 @@ import {
 import {
   Sun,
   Moon,
-  Bell,
+  Sparkles,
   Mail,
   TrendingUp,
   Shield,
@@ -139,64 +139,31 @@ export default function ConfiguracoesPage() {
           </div>
         </motion.section>
 
-        {/* === ALERTAS DE VARIAÇÃO === */}
+        {/* === FUNCIONALIDADES PREMIUM === */}
         <motion.section
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.07 }}
           className="bg-card rounded-2xl border border-border p-6 shadow-sm"
         >
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/15 flex items-center justify-center flex-shrink-0">
-                <TrendingUp className="w-5 h-5 text-emerald-400" />
-              </div>
-              <div className="min-w-0">
-                <h2 className="font-semibold text-foreground">Alertas de variação</h2>
-                <p className="text-xs text-muted-foreground">
-                  Notificação quando um ativo variar mais de 5%
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={toggleAlertasVariacao}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none flex-shrink-0 ${
-                alertasVariacao ? 'bg-emerald-500' : 'bg-muted'
-              }`}
-              role="switch"
-              aria-checked={alertasVariacao}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform ${
-                  alertasVariacao ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-        </motion.section>
-
-        {/* === NOTIFICAÇÕES === */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.10 }}
-          className="bg-card rounded-2xl border border-border p-6 shadow-sm"
-        >
           <div className="flex items-center gap-3 mb-5">
             <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Bell className="w-5 h-5 text-primary" />
+              <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h2 className="font-semibold text-foreground">Preferências de Notificação</h2>
-              <p className="text-xs text-muted-foreground">Escolha o que deseja receber</p>
+              <h2 className="font-semibold text-foreground">Funcionalidades Premium</h2>
+              <p className="text-xs text-muted-foreground">Alertas e relatórios automáticos da sua carteira</p>
             </div>
           </div>
 
           <div className="space-y-1">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 px-1">
-              Por e-mail
-            </p>
-
+            <NotifToggle
+              icon={<TrendingUp className="w-4 h-4" />}
+              label="Alertas de variação"
+              description="Notificação quando um ativo variar mais de 5%"
+              value={alertasVariacao}
+              onToggle={toggleAlertasVariacao}
+            />
             <NotifToggle
               icon={<Mail className="w-4 h-4" />}
               label="Relatórios semanais"
