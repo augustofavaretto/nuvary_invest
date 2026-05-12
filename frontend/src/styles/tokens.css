@@ -1,0 +1,116 @@
+/* ============================================================================
+   NUVARY INVEST — DESIGN TOKENS (Brandbook + Glass + Bento dark-first)
+   Aderente ao manual_marca_nuvaryinvest.md.
+   Inclui modo dark (default no app), light (landing/auth) e queries de a11y.
+   ============================================================================ */
+
+:root {
+  /* === BRAND: NAVY ============================================== */
+  --navy-50:  #E6EAEF;
+  --navy-100: #C2CBD7;
+  --navy-300: #5B7088;
+  --navy-500: #0B1F33;
+  --navy-600: #08172A;
+  --navy-700: #061421;
+  --navy-800: #050E15;
+
+  /* === BRAND: CYAN ============================================== */
+  --cyan-50:  #E0F7FB;
+  --cyan-100: #B3ECF4;
+  --cyan-300: #4FD2E3;
+  --cyan-400: #26C5DE;
+  --cyan-500: #00B8D9;
+  --cyan-600: #009BB5;
+  --cyan-700: #007EA7;
+  --cyan-glow: #4FE3FF;
+
+  /* === SEMANTICOS (brandbook) =================================== */
+  --positive: #00B8D9;
+  --warning:  #F59E0B;
+  --negative: #EF4444;
+  --neutral:  #6B7280;
+  /* Excecao UX universal (R$/%) */
+  --gain: #10B981;
+  --loss: #EF4444;
+
+  /* === GRADIENTES =============================================== */
+  --gradient-brand: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+  --gradient-cta:   linear-gradient(135deg, #00B8D9 0%, #007EA7 100%);
+  --gradient-hero:  linear-gradient(135deg, #0B1F33 0%, #007EA7 50%, #00B8D9 100%);
+  --gradient-glow:  radial-gradient(circle at 50% 0%, rgba(0,184,217,0.22) 0%, transparent 50%);
+
+  /* === SOMBRAS DE TILE/CTA ====================================== */
+  --shadow-tile:
+    0 0 0 1px rgba(0,184,217,0.06),
+    0 2px 20px rgba(0,0,0,0.4),
+    0 0 40px rgba(0,0,0,0.2);
+  --shadow-tile-hover:
+    0 0 0 1px rgba(0,184,217,0.25),
+    0 8px 40px rgba(0,0,0,0.5),
+    0 0 80px rgba(0,184,217,0.15);
+  --shadow-cta:
+    inset 0 1px 0 0 rgba(255,255,255,0.18),
+    0 4px 16px rgba(0,184,217,0.35),
+    0 8px 32px rgba(0,184,217,0.20);
+  --shadow-cta-hover:
+    inset 0 1px 0 0 rgba(255,255,255,0.28),
+    0 6px 24px rgba(0,184,217,0.50),
+    0 12px 48px rgba(0,184,217,0.30);
+
+  /* === SUPERFICIES (LIGHT — landing/auth) ======================= */
+  --bg-base:        #FFFFFF;
+  --bg-elevated:    #F7F9FB;
+  --bg-card:        #FFFFFF;
+  --bg-glass-nav:   rgba(255, 255, 255, 0.65);
+  --bg-glass-hover: rgba(255, 255, 255, 0.78);
+
+  --border-subtle:  rgba(11, 31, 51, 0.06);
+  --border-default: rgba(11, 31, 51, 0.10);
+  --border-strong:  rgba(11, 31, 51, 0.20);
+
+  --text-primary:   #0B1F33;
+  --text-secondary: #6B7280;
+  --text-tertiary:  #9CA3AF;
+  --text-on-cyan:   #FFFFFF;
+  --text-on-glass:  #0B1F33;
+}
+
+/* === SUPERFICIES (DARK — app) =================================== */
+.dark {
+  --bg-base:        #050E15;
+  --bg-elevated:    #081A24;
+  --bg-card:        #0E2330;
+  --bg-glass-nav:   rgba(8, 26, 36, 0.65);
+  --bg-glass-hover: rgba(14, 35, 48, 0.78);
+
+  --border-subtle:  rgba(0, 184, 217, 0.08);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong:  rgba(0, 184, 217, 0.25);
+
+  --text-primary:   #FFFFFF;
+  --text-secondary: #9CA3AF;
+  --text-tertiary:  #6B7280;
+  --text-on-cyan:   #FFFFFF;
+  --text-on-glass:  #FFFFFF;
+}
+
+/* ============================================================================
+   ACESSIBILIDADE — Apple Liquid Glass guidelines
+   ============================================================================ */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --bg-glass-nav:   var(--bg-elevated);
+    --bg-glass-hover: var(--bg-card);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border-default: rgba(11, 31, 51, 0.30);
+    --border-strong:  var(--cyan-700);
+  }
+  .dark {
+    --border-default: rgba(255, 255, 255, 0.25);
+    --border-strong:  var(--cyan-400);
+  }
+}
