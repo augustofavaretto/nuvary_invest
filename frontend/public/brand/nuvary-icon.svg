@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Nuvary Invest</title>
+  <defs>
+    <linearGradient id="nuvaryBrand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#00B8D9"/>
+      <stop offset="1" stop-color="#007EA7"/>
+    </linearGradient>
+  </defs>
+  <!-- Nuvem estilizada (formato suave) -->
+  <path d="M16 36c-4.4 0-8-3.6-8-8s3.6-8 8-8c.7 0 1.4.1 2 .3C19.6 16.7 23.5 14 28 14c5.5 0 10.1 4 11 9.2 4 .4 7 3.7 7 7.8 0 4.4-3.6 8-8 8H16z" fill="#0B1F33"/>
+  <!-- Barras de crescimento (3 colunas ascendentes) -->
+  <rect x="18" y="46" width="6" height="8" rx="1" fill="url(#nuvaryBrand)"/>
+  <rect x="28" y="42" width="6" height="12" rx="1" fill="url(#nuvaryBrand)"/>
+  <rect x="38" y="36" width="6" height="18" rx="1" fill="url(#nuvaryBrand)"/>
+</svg>
