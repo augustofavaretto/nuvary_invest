@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 32 - Foundation Glass + Bento | Nuvary Invest v4.6.0</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #334155; background: var(--light); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #0B1F33 0%, #007EA7 60%, #00B8D9 100%); color: white; padding: 48px 0; text-align: center; }
+        .version-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 5px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; }
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        header p { font-size: 1.05rem; opacity: 0.92; }
+        nav { background: var(--white); padding: 14px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        nav ul li a { color: var(--gray); text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+        nav ul li a:hover { background: var(--primary); color: white; }
+        main { padding: 40px 0 60px; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; margin-bottom: 28px; font-weight: 500; font-size: 0.9rem; }
+        .back-link:hover { text-decoration: underline; }
+        section { background: var(--white); border-radius: 14px; padding: 32px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        section h2 { font-size: 1.4rem; color: var(--dark); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        h3 { font-size: 1.1rem; color: #1e3a5f; margin: 20px 0 10px; }
+        h4 { font-size: 0.95rem; color: var(--dark); margin: 14px 0 6px; font-weight: 600; }
+        p { color: #475569; margin-bottom: 10px; }
+        ul, ol { margin: 10px 0 14px 20px; color: #475569; }
+        li { margin-bottom: 6px; }
+        code { background: #f1f5f9; color: #0f172a; padding: 2px 7px; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.88rem; }
+        pre { background: var(--code-bg); color: #e2e8f0; padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 14px 0; font-size: 0.85rem; line-height: 1.6; }
+        pre code { background: none; color: inherit; padding: 0; }
+        .warn-box { background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid var(--warning); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #92400e; }
+        .success-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid var(--success); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #166534; }
+        .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #1e40af; }
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+        th { background: #f1f5f9; color: var(--dark); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; color: #475569; vertical-align: top; }
+        tr:hover td { background: #f8fafc; }
+        footer { background: var(--dark); color: #cbd5e1; padding: 30px 0; text-align: center; font-size: 0.85rem; margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Maio 2026 - v4.6.0</span>
+            <h1>Foundation Glass + Bento</h1>
+            <p>Tarefas 1-4 do briefing de rebrand: tokens, fonts, logo, glass primitives e Bento Grid</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
+            <li><a href="#contexto">Contexto</a></li>
+            <li><a href="#tarefa-1">T1 · Tokens</a></li>
+            <li><a href="#tarefa-3">T3 · Logo</a></li>
+            <li><a href="#tarefa-2">T2 · Glass</a></li>
+            <li><a href="#tarefa-4">T4 · Bento</a></li>
+            <li><a href="#preview">Preview</a></li>
+            <li><a href="#regras">Regras de ouro</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o índice</a>
+
+        <section id="contexto">
+            <h2>🎯 Contexto do redesign</h2>
+            <p>O briefing <code>rebrand frontend nuvary invest.md</code> propôs um redesign UI/UX completo do app, na direção <strong>"Glass + Bento Grid dark-first"</strong> (estilo Linear / Vercel / Apple), com Liquid Glass na navigation layer e Bento Grid nos dashboards. As 4 primeiras tarefas — todas <strong>aditivas</strong>, sem quebrar telas existentes — formam a foundation desse novo visual.</p>
+
+            <div class="info-box">
+                <strong>Adaptacao a Tailwind v4:</strong> o briefing assumia Tailwind v3 com <code>tailwind.config.ts</code>. O projeto ja usa Tailwind v4 (config inline via <code>@theme</code> em <code>globals.css</code>). Tokens e utilities da paleta brand foram declarados como variaveis CSS + @theme inline em vez de criar um arquivo de config tradicional.
+            </div>
+
+            <h3>Cores oficiais (brandbook)</h3>
+            <table>
+                <tr><th>Token</th><th>Hex</th><th>Uso</th></tr>
+                <tr><td><code>navy-500</code></td><td>#0B1F33</td><td>Texto primario light, fundos dark</td></tr>
+                <tr><td><code>cyan-500</code></td><td>#00B8D9</td><td>Brand / CTAs / icones / destaques</td></tr>
+                <tr><td><code>cyan-700</code></td><td>#007EA7</td><td>Final do gradient brand</td></tr>
+                <tr><td><code>positive</code></td><td>#00B8D9</td><td>Sinal positivo (brandbook)</td></tr>
+                <tr><td><code>warning</code></td><td>#F59E0B</td><td>Atencao</td></tr>
+                <tr><td><code>negative</code></td><td>#EF4444</td><td>Erro / risco</td></tr>
+                <tr><td><code>gain</code></td><td>#10B981</td><td>Excecao UX universal: ganho monetario</td></tr>
+                <tr><td><code>loss</code></td><td>#EF4444</td><td>Excecao UX universal: perda monetaria</td></tr>
+            </table>
+        </section>
+
+        <section id="tarefa-1">
+            <h2>🎨 Tarefa 1 — Design Tokens + Fonts (commit c79427b)</h2>
+
+            <h3>src/styles/tokens.css (novo)</h3>
+            <p>Paleta navy/cyan (escala 50-800/700), gradientes (<code>--gradient-brand</code>, <code>--gradient-cta</code>, <code>--gradient-hero</code>, <code>--gradient-glow</code>), sombras (<code>--shadow-tile</code>, <code>--shadow-cta</code>), superficies light/dark (<code>--bg-base</code>, <code>--bg-elevated</code>, <code>--bg-card</code>, <code>--bg-glass-nav</code>, <code>--bg-glass-hover</code>), bordas (<code>--border-subtle</code>, <code>--border-default</code>, <code>--border-strong</code>) e tokens de texto.</p>
+
+            <h3>A11y queries inclusas</h3>
+            <pre><code>@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --bg-glass-nav:   var(--bg-elevated);
+    --bg-glass-hover: var(--bg-card);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root { --border-strong: var(--cyan-700); }
+  .dark { --border-strong: var(--cyan-400); }
+}</code></pre>
+
+            <h3>globals.css</h3>
+            <p>Importa <code>tokens.css</code> e estende <code>@theme inline</code> com:</p>
+            <ul>
+                <li>Cores brand como utilities Tailwind: <code>bg-navy-500</code>, <code>text-cyan-400</code>, <code>border-cyan-500</code>, etc.</li>
+                <li>Sombras: <code>shadow-tile</code>, <code>shadow-tile-hover</code>, <code>shadow-cta</code>, <code>shadow-cta-hover</code></li>
+                <li>Animacoes: <code>animate-aurora</code>, <code>animate-aurora-slow</code>, <code>animate-pulse-glow</code>, <code>animate-shimmer</code></li>
+                <li>Backgrounds em gradiente: <code>bg-gradient-brand</code>, <code>bg-gradient-cta</code>, <code>bg-gradient-hero</code>, <code>bg-gradient-glow</code></li>
+            </ul>
+
+            <h3>Fonts</h3>
+            <p><code>src/app/layout.tsx</code>:</p>
+            <ul>
+                <li><strong>Inter</strong> — pesos 400, 500, 600, 700, <strong>800</strong> (era so ate 700); <code>display: swap</code></li>
+                <li><strong>JetBrains Mono</strong> substitui Geist Mono — para valores monetarios, %, datas, tickers</li>
+            </ul>
+
+            <h3>src/lib/format.ts (novo)</h3>
+            <p>Helpers pt-BR centralizados: <code>formatBRL</code>, <code>formatBRLCompact</code>, <code>formatPercent</code>, <code>formatDelta</code> (com sinal explicito), <code>formatDateBR</code>. Use em qualquer lugar que exiba numero para garantir BRL + virgula decimal + tabular-nums.</p>
+
+            <div class="warn-box">
+                <strong>ThemeContext preservado:</strong> o briefing pedia migrar para <code>next-themes</code> com <code>enableSystem={false}</code>. O projeto manteve <code>ThemeContext</code> proprio porque a feature de deteccao automatica do tema do SO da v4.5.0 nao se traduz 1:1 (next-themes precisaria de configuracao diferente). Pode ser revisitado em sessao futura.
+            </div>
+        </section>
+
+        <section id="tarefa-3">
+            <h2>🏷️ Tarefa 3 — Logo (commit b7fdc14)</h2>
+
+            <h3>Assets criados</h3>
+            <ul>
+                <li><code>public/brand/nuvary-icon.svg</code> — icone (nuvem navy-500 + 3 barras crescentes em gradient cyan)</li>
+                <li><code>public/brand/nuvary-full.svg</code> — versao horizontal (icon + texto "Nuvary" peso 700 navy + "Invest" peso 500 cyan, Inter)</li>
+            </ul>
+
+            <h3>Componente src/components/shared/Logo.tsx</h3>
+            <p>API: <code>&lt;Logo variant="full"|"icon" size="sm"|"md"|"lg"|"xl" priority?&gt;</code>. Implementa as restricoes do brandbook:</p>
+            <ul>
+                <li>Espacamento minimo ao redor = 70% da altura (largura aproximada da letra "N")</li>
+                <li><code>style=&#123; filter: 'none', transform: 'none' &#125;</code> — protecao contra alguem aplicar sombra/rotacao acidental</li>
+                <li>Usa <code>next/image</code> com SVG (escalavel sem perda)</li>
+            </ul>
+
+            <p>Os 4 PNGs antigos em <code>public/</code> (<code>logo-icon.png</code>, <code>logo-horizontal.png</code> etc.) ficam preservados — esta tarefa nao remove nada; apenas adiciona variantes SVG.</p>
+        </section>
+
+        <section id="tarefa-2">
+            <h2>🪟 Tarefa 2 — Glass Primitives (commit 548c213)</h2>
+
+            <p>4 componentes em <code>src/components/glass/</code>. Todos respeitam a <strong>regra Apple</strong>: glass apenas em navigation layer (sidebar, topbar, modais, chat panel, CTAs). Tiles de dados (Bento) usam <code>bg-bg-card</code> opaco.</p>
+
+            <table>
+                <tr><th>Componente</th><th>Responsabilidade</th><th>Props principais</th></tr>
+                <tr>
+                    <td><code>GlassNav</code></td>
+                    <td>Container glass para sidebar/topbar/bottombar</td>
+                    <td><code>as</code>, <code>side</code> (top/bottom/left/right controla qual borda recebe divider)</td>
+                </tr>
+                <tr>
+                    <td><code>GlassCard</code></td>
+                    <td>Card glass para overlays, tooltips, modais</td>
+                    <td><code>variant</code> (regular/clear/elevated), <code>interactive</code>, <code>enableRefraction</code> (SVG feTurbulence Chromium-only)</td>
+                </tr>
+                <tr>
+                    <td><code>GlassButton</code></td>
+                    <td>CTAs com spring physics + shimmer no hover</td>
+                    <td><code>variant</code> (regular/prominent/ghost), <code>size</code> (sm/md/lg); <strong>prominent</strong> = CTA brand com gradient + shadow-cta</td>
+                </tr>
+                <tr>
+                    <td><code>LiquidGlassEffect</code></td>
+                    <td>Destaque premium (icone chat IA, badge Premium, CTA hero)</td>
+                    <td><code>intensity</code> 1-3 controla blur + glow; implementacao CSS pura (sem dep <code>liquid-glass-react</code>)</td>
+                </tr>
+            </table>
+
+            <h3>Fallbacks de a11y/compatibilidade</h3>
+            <ul>
+                <li>Quando <code>backdrop-filter</code> nao suportado (Firefox antigo): cai para <code>bg-bg-elevated</code> opaco via <code>supports-[not_(backdrop-filter:blur(0))]:</code></li>
+                <li>Focus ring ciano (<code>focus-visible:ring-2 focus-visible:ring-cyan-400</code>) em todos os botoes</li>
+                <li>Spring physics via <code>framer-motion</code> ja existente (briefing pedia <code>motion</code>; mantemos <code>framer-motion@12</code> para nao quebrar ~30 componentes que ja importavam)</li>
+            </ul>
+        </section>
+
+        <section id="tarefa-4">
+            <h2>🍱 Tarefa 4 — Bento Grid + Tiles (commit 1838ce7)</h2>
+
+            <h3>Primitives</h3>
+            <ul>
+                <li><code>BentoGrid</code>: <code>grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12</code>, <code>auto-rows-[180px]</code>, gap 4/6 mobile/desktop.</li>
+                <li><code>BentoTile</code>: prop <code>span</code> aceita classes do grid (ex: <code>"lg:col-span-8 lg:row-span-2"</code>); prop <code>variant</code> default/hero/ghost; prop <code>interactive</code> aplica hover y:-2 com spring.</li>
+            </ul>
+
+            <h3>5 tiles do dashboard (com dados mockados)</h3>
+            <table>
+                <tr><th>Tile</th><th>Conteudo</th><th>Span default</th></tr>
+                <tr>
+                    <td><code>PerformanceTile</code></td>
+                    <td>Hero: patrimonio R$ 47.832,15 + delta +8,40% YTD; AreaChart Recharts com gradient cyan</td>
+                    <td><code>lg:col-span-8 lg:row-span-2</code></td>
+                </tr>
+                <tr>
+                    <td><code>AllocationTile</code></td>
+                    <td>Donut Recharts 4 fatias (Renda Fixa 50%, Acoes Brasil 30%, ETFs 15%, Caixa 5%); legenda lateral</td>
+                    <td><code>lg:col-span-4</code></td>
+                </tr>
+                <tr>
+                    <td><code>NextActionTile</code></td>
+                    <td>Sugestao IA com icone Sparkles; titulo + descricao 3 linhas + CTA chevron</td>
+                    <td><code>lg:col-span-4</code></td>
+                </tr>
+                <tr>
+                    <td><code>TopMoversTile</code></td>
+                    <td>Lista de 4 ativos (ticker mono, nome, preco, delta com ArrowUpRight/Down)</td>
+                    <td><code>lg:col-span-6</code></td>
+                </tr>
+                <tr>
+                    <td><code>NextLessonTile</code></td>
+                    <td>Thumbnail + trilha + titulo + duracao Clock + ProgressRing SVG inline</td>
+                    <td><code>lg:col-span-6</code></td>
+                </tr>
+            </table>
+
+            <div class="info-box">
+                <strong>Recharts em vez de Tremor:</strong> o briefing pedia Tremor mas Recharts ja esta no projeto (usado em <code>/relatorios</code>). Evitamos uma dep extra mantendo qualidade visual equivalente.
+            </div>
+
+            <p>Todos os tiles aceitam props (<code>patrimonio</code>, <code>variacaoPct</code>, <code>data</code>, etc.) para substituir os mocks por dados reais quando integrados ao <code>portfolioService</code>.</p>
+        </section>
+
+        <section id="preview">
+            <h2>🔍 Rota /preview-redesign (commit 527bfce)</h2>
+
+            <p>Pagina publica em <code>app/preview-redesign/page.tsx</code> que monta todos os componentes da foundation lado a lado para validacao visual:</p>
+            <ul>
+                <li><strong>Topbar GlassNav</strong> sticky com Logo + link "Voltar ao app"</li>
+                <li><strong>Bento Dashboard completo</strong> (5 tiles com mock data)</li>
+                <li><strong>Glass primitives</strong> — 3 variantes de GlassCard, 3 de GlassButton, badge Premium com LiquidGlassEffect, ChatFAB flutuante</li>
+                <li><strong>Logo</strong> em 5 tamanhos (sm/md/lg full + lg/xl icon)</li>
+                <li><strong>Tipografia</strong> Inter 400-800 + JetBrains Mono em valores monetarios</li>
+                <li><strong>Swatches</strong> das 4 cores brand (navy-500, cyan-500/700, gain)</li>
+                <li><strong>Aurora background</strong> sutil com cyan + navy</li>
+            </ul>
+
+            <p>URL: <a href="https://nuvary-invest.vercel.app/preview-redesign" style="color: var(--primary);">https://nuvary-invest.vercel.app/preview-redesign</a></p>
+
+            <p>Forca <code>className="dark"</code> no root da pagina — independente do tema atual do usuario, o preview e sempre dark (estilo target do briefing). <strong>Nao afeta nenhuma rota existente.</strong></p>
+        </section>
+
+        <section id="regras">
+            <h2>⚠️ Regras de ouro do redesign</h2>
+
+            <ol>
+                <li><strong>Nenhuma cor fora do brandbook.</strong> Tudo deriva de <code>#0B1F33</code>, <code>#00B8D9</code> ou tokens semanticos.</li>
+                <li><strong>Glass so em navigation layer.</strong> Tiles de dados sao <code>bg-bg-card</code> opaco.</li>
+                <li><strong>Inter + JetBrains Mono.</strong> Sem Geist, sem SF Pro, sem Cal Sans.</li>
+                <li><strong>Dark mode default no app.</strong> Light em landing/auth.</li>
+                <li><strong>Bento Grid e arquitetura de informacao.</strong> Tile maior = mais importante.</li>
+                <li><strong>Mobile-first com fallbacks.</strong> Detectar suporte a backdrop-filter e degradar graciosamente.</li>
+                <li><strong>Compliance:</strong> cards de sugestao precisam do disclaimer no rodape.</li>
+                <li><strong>Nunca animar <code>backdrop-filter</code>.</strong> Anime so <code>opacity</code> e <code>transform</code>.</li>
+                <li><strong>WCAG AA minimo.</strong> Texto sobre glass = contraste verificado.</li>
+                <li><strong>Performance &gt; efeitos.</strong> Se o device nao aguenta glass, mostre solid background.</li>
+            </ol>
+
+            <div class="warn-box">
+                <strong>O que NAO foi feito nesta sessao</strong> (Tarefas 5-12 do briefing — destrutivas):
+                <ul style="margin-top: 4px;">
+                    <li>Tarefa 5: Layout app (substituir DashboardLayout, Sidebar, Topbar)</li>
+                    <li>Tarefa 6: Reescrever <code>/dashboard</code> com Bento</li>
+                    <li>Tarefa 7: Reescrever landing (Hero + Bento Features + Pricing + FAQ)</li>
+                    <li>Tarefa 8: Onboarding gamificado de 8 etapas</li>
+                    <li>Tarefa 9: Reescrever Chat IA com glass bubbles</li>
+                    <li>Tarefa 10: Componentes de marketing (Aurora, Pricing, FAQ)</li>
+                    <li>Tarefa 12: A11y + Performance audit final</li>
+                </ul>
+                Essas tarefas mexem em paginas em producao e foram pausadas para o usuario validar o preview antes de avancar.
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentação Técnica v4.6.0 | Maio 2026</p>
+        <p style="margin-top: 8px; opacity: 0.7;">
+            <a href="index.html" style="color: #00B8D9; text-decoration: none;">← Voltar para o índice</a>
+        </p>
+    </footer>
+</body>
+</html>

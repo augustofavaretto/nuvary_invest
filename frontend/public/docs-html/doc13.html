@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doc 13 - Proximos Passos | Nuvary Invest v4.5.0</title>
+    <title>Doc 13 - Proximos Passos | Nuvary Invest v4.6.0</title>
     <style>
         * {
             margin: 0;
@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Maio 2026 - v4.5.0</span>
+            <span class="version-badge">Maio 2026 - v4.6.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,8 +331,8 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🚀</span>
             <div>
-                <strong>v4.5.0 — Relatório Semanal por E-mail (Resend + Vercel Cron) + Refinamentos de UX!</strong>
-                <p style="margin: 0; opacity: 0.9;">Envio automático aos domingos 8h BRT com resumo da carteira; AddAssetModal com R$ e preço médio bloqueado; detecção automática de tema do SO; foto de perfil no header; bucket avatars no Supabase Storage; limpeza de toggles cosméticos.</p>
+                <strong>v4.6.0 — Foundation do redesign Glass + Bento + Refinamentos UX do Chat IA e fiscais!</strong>
+                <p style="margin: 0; opacity: 0.9;">Tokens + Inter/JetBrains Mono + Logo SVG + 4 Glass primitives + Bento Grid com 5 tiles; rota /preview-redesign para validar visualmente. Chat IA com markdown renderizado, QuickActions como pills, sidebar com botao sempre visivel. "Funcionalidades Premium" em /configuracoes. CPF puxado nos PDFs DARF e Informe de Rendimentos.</p>
             </div>
         </div>
 
@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">260</div>
+                    <div class="stat-number">281</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -796,6 +796,53 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">VideoCardItem reestruturado com props watched/onWatch — usado em VideoSection (carrossel) e overlay "Ver Tudo"<span class="task-new">NOVO</span></span></li>
             </ul>
 
+            <div class="category-header">🎨 Foundation Redesign Glass + Bento (Tarefas 1-4) <span class="task-new">NOVO v4.6.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>src/styles/tokens.css</code> novo — paleta navy/cyan (50-800/700), gradientes brand/cta/hero/glow, sombras tile/cta, superficies light/dark, queries de a11y (<code>prefers-reduced-transparency</code>, <code>prefers-contrast</code>)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>globals.css</code> estendido com <code>@theme inline</code>: utilities Tailwind para cores brand (<code>bg-navy-500</code>, <code>text-cyan-400</code>, <code>border-cyan-500</code>), sombras (<code>shadow-tile</code>, <code>shadow-cta</code>) e animacoes (<code>animate-aurora</code>, <code>animate-pulse-glow</code>, <code>animate-shimmer</code>)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Inter ganha peso 800 + JetBrains Mono substitui Geist Mono em <code>layout.tsx</code> (brandbook)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>src/lib/format.ts</code> novo — formatBRL, formatBRLCompact, formatPercent, formatDelta (com sinal explicito), formatDateBR<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Logo SVG escalavel: <code>public/brand/nuvary-icon.svg</code> (nuvem + 3 barras gradient cyan) e <code>nuvary-full.svg</code> (icon + "Nuvary" 700 + "Invest" 500)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Componente <code>shared/Logo.tsx</code> com variant=full/icon, size=sm/md/lg/xl, espacamento minimo 70% da altura, <code>filter:none + transform:none</code> (protege contra sombra/rotacao acidental)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">4 Glass primitives em <code>components/glass/</code>: <code>GlassNav</code> (sidebar/topbar), <code>GlassCard</code> (3 variantes + enableRefraction SVG), <code>GlassButton</code> (3 variantes + shimmer + spring), <code>LiquidGlassEffect</code> (badge premium, intensity 1-3)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Bento Grid + BentoTile (variants default/hero/ghost, prop span, interactive com spring hover)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">5 tiles do dashboard com mock data: PerformanceTile (AreaChart Recharts), AllocationTile (donut), NextActionTile (sugestao IA), TopMoversTile (lista de ativos), NextLessonTile (thumbnail + ProgressRing SVG)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Rota <code>/preview-redesign</code> publica que monta toda a foundation lado a lado — Bento + Glass + Logo + tipografia + cores brand + aurora background sutil<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">💬 Chat IA — Markdown, Pills e Sidebar (v4.6.0) <span class="task-new">NOVO v4.6.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Respostas da IA renderizadas com <code>ReactMarkdown</code> + <code>remark-gfm</code> — asteriscos viram negrito real, listas numeradas funcionam, links abrem em nova aba, inline code com estilo mono<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">QuickActions transformado de grid 2x4 com icone+label para pills horizontais com flex-wrap (rounded-full, sem icones, hover scale 1.03)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Labels dos pills encurtados: "Meu Perfil"→"Meu perfil", "Notícias do Mercado"→"Mercado hoje", "O que é Renda Fixa?"→"Renda fixa", "Começar em Ações"→"Ações"<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Novo pill <strong>"Insights da carteira"</strong> entre Alocação e Mercado hoje — usa portfolioAssets ja enviado no userContext<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Clicar num pill agora apenas <strong>preenche o input</strong> com setInputValue(prompt) + focus — usuario revisa/edita e envia manualmente (antes enviava direto)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Botao "tres pontos" das conversas (ChatSidebar) agora 100% visivel sempre — antes opacity:0 ate hover, invisivel em mobile/touch<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Fix do truncate dos titulos: <code>[data-slot="scroll-area-viewport"] &gt; div { display: block !important }</code> em globals.css — Radix ScrollArea usa display:table que quebrava flex-1 min-w-0 truncate<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Opcao "Favoritar" removida do menu de opcoes das conversas (era placeholder sem implementacao) — menu fica so com "Mudar o nome" e "Apagar"<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">"Powered by OpenAI" removido do rodape do chat; disclaimer atualizado para "As respostas sao geradas por IA e contem recomendacoes informativas"<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">⚙️ /configuracoes — Funcionalidades Premium <span class="task-new">NOVO v4.6.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Os dois cards separados (Alertas + Preferências de Notificação) unificados num unico card <strong>"Funcionalidades Premium"</strong> com icone Sparkles<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Ambos os toggles (Alertas de variação + Relatórios semanais) agora usam o mesmo componente NotifToggle — consistencia visual<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Switch verde inline customizado dos alertas removido — agora usa o switch primary padrao<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">💼 AddAssetModal — Banner de origem da API removido <span class="task-new">NOVO v4.6.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Banners verdes "Preço obtido via Brapi" / "Taxa obtida via BCB SGS (CDI × %)" removidos — eram ruido visual desnecessario<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Mantida a mensagem amarela com AlertCircle quando a API falha — usuario precisa saber para preencher manualmente<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🪪 CPF nos PDFs fiscais (DARF + Informe) <span class="task-new">NOVO v4.6.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Helper local em <code>gerarDARF()</code> e <code>gerarInformeRendimentos()</code> sanitiza e formata o CPF do <code>profile.cpf</code> (aceita "12345678900" ou "123.456.789-00", retorna XXX.XXX.XXX-XX)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Interface <code>Profile</code> no AuthContext expandida com <code>cpf</code>, <code>data_nascimento</code> e <code>telefone</code> (campos ja eram preenchidos no fetchProfile)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Fallback <code>___.___.___-__</code> preservado quando o usuario nao tem CPF cadastrado<span class="task-new">NOVO</span></span></li>
+            </ul>
+
             <div class="category-header">📧 Relatório Semanal por E-mail (Resend + Vercel Cron) <span class="task-new">NOVO v4.5.0</span></div>
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">SQL <code>sql/email_relatorios_setup.sql</code> — colunas <code>email_relatorios_ativo</code> e <code>email_relatorios_ultimo_envio</code> em <code>profiles</code> + índice parcial<span class="task-new">NOVO</span></span></li>
@@ -1010,7 +1057,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentação Técnica v4.5.0 | Maio 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v4.6.0 | Maio 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>
