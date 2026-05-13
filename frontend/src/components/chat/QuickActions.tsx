@@ -19,6 +19,13 @@ const quickActions: QuickAction[] = [
     category: 'profile',
   },
   {
+    id: 'portfolio-insights',
+    label: 'Insights da carteira',
+    icon: 'wallet',
+    prompt: 'Analise minha carteira atual e me forneça insights práticos: diversificação, concentração de risco, alocação por classe comparada ao meu perfil e oportunidades de rebalanceamento. Cite ativos específicos quando relevante.',
+    category: 'profile',
+  },
+  {
     id: 'news',
     label: 'Mercado hoje',
     icon: 'newspaper',
