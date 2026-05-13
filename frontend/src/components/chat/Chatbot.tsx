@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -81,7 +80,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   const [showQuickActions, setShowQuickActions] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const { user } = useAuth();
 
   // Estados para conversa atual
@@ -91,6 +90,15 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
 
   // Estados para paginação de mensagens antigas
   const [carregandoMais, setCarregandoMais] = useState(false);
+
+  // Auto-resize do textarea conforme o conteudo (padrao Claude/ChatGPT).
+  // Limite max-height: 200px (CSS); acima disso o textarea ganha scroll vertical.
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
+  }, [inputValue]);
 
   // Carrega o perfil do Supabase
   useEffect(() => {
@@ -514,23 +522,34 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
         {/* Input Area */}
         <div className="bg-card border-t border-border p-4">
           <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-            <div className="flex gap-3">
-              <Input
+            <div className="flex gap-3 items-end">
+              <textarea
                 ref={inputRef}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => {
+                  // Enter envia, Shift+Enter quebra linha (padrao Claude/ChatGPT)
+                  if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+                    e.preventDefault();
+                    if (inputValue.trim() && !isLoading) sendMessage(inputValue);
+                  }
+                }}
                 placeholder="Digite sua mensagem..."
                 disabled={isLoading}
+                rows={1}
                 className="
-                  flex-1 border-border bg-background
-                  focus:border-[#00B8D9] focus:ring-[#00B8D9]/20
-                  placeholder:text-muted-foreground h-12
+                  flex-1 resize-none rounded-md border border-border bg-background
+                  px-3 py-3 text-sm leading-relaxed
+                  focus:outline-none focus:border-[#00B8D9] focus:ring-2 focus:ring-[#00B8D9]/20
+                  placeholder:text-muted-foreground
+                  min-h-[48px] max-h-[200px] overflow-y-auto
+                  disabled:opacity-50 disabled:cursor-not-allowed
                 "
               />
               <Button
                 type="submit"
                 disabled={!inputValue.trim() || isLoading}
-                className="nuvary-gradient text-white hover:opacity-90 px-6 h-12"
+                className="nuvary-gradient text-white hover:opacity-90 px-6 h-12 flex-shrink-0"
               >
                 <Send className="w-5 h-5" />
               </Button>
