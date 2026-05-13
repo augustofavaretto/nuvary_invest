@@ -50,4 +50,20 @@ export const config = {
   // JWT Configuration
   jwtSecret: process.env.JWT_SECRET || 'nuvary-invest-jwt-secret-change-in-production',
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'nuvary-invest-refresh-secret-change-in-production',
+
+  // Mercado Pago (plano Premium — Fase 3 da integracao)
+  mercadopago: {
+    accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
+    webhookSecret: process.env.MERCADOPAGO_WEBHOOK_SECRET,
+    // URLs para redirect apos pagamento (frontend)
+    successUrl: process.env.MERCADOPAGO_SUCCESS_URL || 'https://nuvary-invest.vercel.app/premium/sucesso',
+    failureUrl: process.env.MERCADOPAGO_FAILURE_URL || 'https://nuvary-invest.vercel.app/premium/erro',
+    pendingUrl: process.env.MERCADOPAGO_PENDING_URL || 'https://nuvary-invest.vercel.app/premium/pendente',
+  },
+
+  // Supabase (service-role) — usado pelo webhook do MP para atualizar profiles
+  supabase: {
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL,
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  },
 };

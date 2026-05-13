@@ -14,6 +14,7 @@ import brapiRoutes from './routes/brapi.js';
 import anbimaRoutes from './routes/anbima.js';
 import tesouroDiretoRoutes from './routes/tesouroDireto.js';
 import bcbRoutes from './routes/bcb.js';
+import mercadopagoRoutes from './routes/mercadopago.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { rateLimiter } from './middleware/rateLimiter.js';
 
@@ -38,6 +39,7 @@ app.use('/api/brapi', brapiRoutes);
 app.use('/api/anbima', anbimaRoutes);
 app.use('/api/tesouro', tesouroDiretoRoutes);
 app.use('/api/bcb', bcbRoutes);
+app.use('/api/mercadopago', mercadopagoRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({
@@ -50,6 +52,7 @@ app.get('/api/health', (req, res) => {
       anbima: !!config.anbima.clientId,
       newsApi: config.newsApi.apiKeys.length > 0,
       openai: !!config.openai.apiKey,
+      mercadopago: !!config.mercadopago.accessToken,
     },
     modules: { riskProfile: true },
   });
