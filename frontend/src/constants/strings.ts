@@ -101,7 +101,7 @@ export const STRINGS = {
     fazerQuestionario: 'Fazer questionário',
     querRespostasPersonalizadas: 'Quer respostas personalizadas?',
     descobrirPerfil: 'Descubra seu perfil de investidor',
-    respostasIADisclaimer: 'As respostas são geradas por IA e não constituem recomendação de investimento',
+    respostasIADisclaimer: 'As respostas são geradas por IA e contêm recomendações informativas',
     digitarMensagem: 'Digite sua mensagem...',
     hoje: 'Hoje',
     ontem: 'Ontem',
