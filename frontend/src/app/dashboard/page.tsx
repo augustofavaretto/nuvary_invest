@@ -76,9 +76,24 @@ const CLASSE_COLOR: Record<string, string> = {
 };
 
 const SUGESTOES = [
-  { emoji: '📊', titulo: 'Por que minha carteira caiu?' },
-  { emoji: '🎯', titulo: 'Devo rebalancear agora?' },
-  { emoji: '💡', titulo: 'Próximas oportunidades' },
+  {
+    emoji: '📊',
+    titulo: 'Por que minha carteira caiu?',
+    prompt:
+      'Por que minha carteira caiu recentemente? Analise os ativos que mais impactaram negativamente e o que pode estar por trás disso.',
+  },
+  {
+    emoji: '🎯',
+    titulo: 'Devo rebalancear agora?',
+    prompt:
+      'Devo rebalancear minha carteira agora com base no meu perfil e na alocação atual? Aponte movimentos específicos se sim.',
+  },
+  {
+    emoji: '💡',
+    titulo: 'Próximas oportunidades',
+    prompt:
+      'Quais são as próximas oportunidades de investimento para meu perfil e carteira atual? Cite classes ou ativos específicos.',
+  },
 ];
 
 function DashboardContent() {
@@ -365,7 +380,7 @@ function DashboardContent() {
               {SUGESTOES.map((s) => (
                 <li key={s.titulo}>
                   <Link
-                    href="/chat"
+                    href={`/chat?q=${encodeURIComponent(s.prompt)}`}
                     className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 border border-[var(--border-subtle)] text-sm transition-colors group"
                   >
                     <span className="inline-flex items-center gap-2">

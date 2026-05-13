@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { Chatbot } from '@/components/chat';
@@ -33,7 +33,11 @@ export default function ChatPage() {
   return (
     <DashboardLayout>
       <div className="h-full overflow-hidden">
-        <Chatbot />
+        {/* Suspense boundary necessario porque o Chatbot usa useSearchParams
+            (para preencher o input quando vem de /dashboard com ?q=...) */}
+        <Suspense fallback={null}>
+          <Chatbot />
+        </Suspense>
       </div>
     </DashboardLayout>
   );

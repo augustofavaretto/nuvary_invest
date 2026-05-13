@@ -267,7 +267,9 @@ export const dashboardService = {
       });
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
-      return data.content || data.response || 'Não foi possível gerar sugestões no momento.';
+      // Backend (aiController.investmentSuggestion) retorna { suggestion, ... }.
+      // Mantidos data.content e data.response como fallback secundario.
+      return data.suggestion || data.content || data.response || 'Não foi possível gerar sugestões no momento.';
     } catch {
       return 'Não foi possível gerar sugestões no momento. Tente novamente mais tarde.';
     }

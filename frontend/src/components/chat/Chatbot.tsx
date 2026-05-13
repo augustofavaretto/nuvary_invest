@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -99,6 +100,22 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     el.style.height = 'auto';
     el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
   }, [inputValue]);
+
+  // Preenche o input quando vem de outra pagina com ?q=... (ex: dashboard
+  // → /chat?q=Devo rebalancear...). Roda apenas no mount + se o input
+  // estiver vazio, e remove o query param da URL para nao reativar em
+  // navegacoes subsequentes.
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  useEffect(() => {
+    const q = searchParams?.get('q');
+    if (!q || inputValue) return;
+    setInputValue(q);
+    inputRef.current?.focus();
+    router.replace(pathname, { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Carrega o perfil do Supabase
   useEffect(() => {
