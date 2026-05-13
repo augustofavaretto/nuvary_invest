@@ -18,7 +18,6 @@ import {
   ChevronLeft,
   ChevronRight,
   MoreVertical,
-  Star,
 } from 'lucide-react';
 import {
   listarConversas,
@@ -481,7 +480,6 @@ export function ChatSidebar({
               setConversaParaDeletar(menuAberto.conversaId);
               setMenuAberto(null);
             }}
-            onFavoritar={() => setMenuAberto(null)}
             onFechar={() => setMenuAberto(null)}
             menuRef={menuRef}
           />
@@ -630,19 +628,18 @@ function MenuContexto({
   position,
   onRenomear,
   onDeletar,
-  onFavoritar,
   onFechar,
   menuRef,
 }: {
   position: { x: number; y: number };
   onRenomear: () => void;
   onDeletar: () => void;
-  onFavoritar: () => void;
   onFechar: () => void;
   menuRef: React.RefObject<HTMLDivElement | null>;
 }) {
+  void onFechar;
   const MENU_WIDTH = 180;
-  const MENU_HEIGHT = 132; // ~3 itens × 44px
+  const MENU_HEIGHT = 92; // ~2 itens × 44px + padding
 
   const x = Math.min(position.x, window.innerWidth - MENU_WIDTH - 8);
   const y = position.y + MENU_HEIGHT > window.innerHeight
@@ -659,13 +656,6 @@ function MenuContexto({
       style={{ position: 'fixed', left: x, top: y, zIndex: 50 }}
       className="bg-[#2D2D2D] border border-[#3D3D3D] rounded-xl shadow-xl p-1.5 min-w-[200px]"
     >
-      <button
-        onClick={onFavoritar}
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#D1D5DB] hover:bg-[#3D3D3D] cursor-pointer transition-colors w-full text-left"
-      >
-        <Star className="w-4 h-4" />
-        {STRINGS.chat.favoritar}
-      </button>
       <button
         onClick={onRenomear}
         className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#D1D5DB] hover:bg-[#3D3D3D] cursor-pointer transition-colors w-full text-left"
