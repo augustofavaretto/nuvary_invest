@@ -352,7 +352,9 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   };
 
   const handleQuickAction = (prompt: string) => {
-    sendMessage(prompt);
+    // Apenas preenche o input — o usuario revisa/edita e envia manualmente.
+    setInputValue(prompt);
+    inputRef.current?.focus();
   };
 
   const profileColors = {
