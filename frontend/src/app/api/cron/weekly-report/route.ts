@@ -10,7 +10,10 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-const SIX_DAYS_MS = 6 * 24 * 60 * 60 * 1000;
+// Janela de idempotencia para envio diario: 20h. Se o cron disparar duas
+// vezes no mesmo dia (manualmente via "Run" + agendamento), o segundo
+// envio e pulado.
+const IDEMPOTENCY_WINDOW_MS = 20 * 60 * 60 * 1000;
 
 interface ProfileRow {
   id: string;
@@ -70,7 +73,7 @@ export async function GET(req: NextRequest) {
 
     if (
       u.email_relatorios_ultimo_envio &&
-      now - new Date(u.email_relatorios_ultimo_envio).getTime() < SIX_DAYS_MS
+      now - new Date(u.email_relatorios_ultimo_envio).getTime() < IDEMPOTENCY_WINDOW_MS
     ) {
       skipped++;
       continue;
@@ -128,7 +131,7 @@ export async function GET(req: NextRequest) {
       const { error: sendErr } = await resend.emails.send({
         from: sender,
         to: u.email,
-        subject: 'Seu resumo semanal — Nuvary Invest',
+        subject: 'Seu resumo diário — Nuvary Invest',
         html,
       });
 

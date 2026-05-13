@@ -37,7 +37,7 @@ export function generateWeeklyReportHtml(d: WeeklyReportData): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resumo semanal - Nuvary Invest</title>
+  <title>Resumo diário - Nuvary Invest</title>
 </head>
 <body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:32px 16px;">
@@ -48,7 +48,7 @@ export function generateWeeklyReportHtml(d: WeeklyReportData): string {
           <tr>
             <td style="background:linear-gradient(135deg,#0B1F33 0%,#1e3a5f 100%);padding:32px 32px 24px;color:#ffffff;">
               <p style="margin:0 0 4px;font-size:13px;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;">Nuvary Invest</p>
-              <h1 style="margin:0;font-size:24px;font-weight:700;">Seu resumo semanal</h1>
+              <h1 style="margin:0;font-size:24px;font-weight:700;">Seu resumo diário</h1>
               <p style="margin:8px 0 0;font-size:14px;color:#cbd5e1;">Olá, ${escapeHtml(d.nome)} 👋</p>
             </td>
           </tr>
@@ -106,8 +106,8 @@ export function generateWeeklyReportHtml(d: WeeklyReportData): string {
                               d.numAlertasSemana > 1 ? 's' : ''
                             } de variação ≥ 5% disparado${
                               d.numAlertasSemana > 1 ? 's' : ''
-                            } esta semana.`
-                          : 'Nenhum alerta de variação ≥ 5% nesta semana.'
+                            } nos últimos 7 dias.`
+                          : 'Nenhum alerta de variação ≥ 5% nos últimos 7 dias.'
                       }
                     </p>
                   </td>
@@ -129,7 +129,7 @@ export function generateWeeklyReportHtml(d: WeeklyReportData): string {
           <tr>
             <td style="padding:24px 32px;background:#f8fafc;border-top:1px solid #e2e8f0;text-align:center;">
               <p style="margin:0 0 4px;font-size:12px;color:#94a3b8;">
-                Você recebe este e-mail porque ativou os relatórios semanais nas configurações.
+                Você recebe este e-mail porque ativou os relatórios diários nas configurações.
               </p>
               <p style="margin:0;font-size:12px;color:#94a3b8;">
                 <a href="${d.appUrl}/configuracoes" style="color:#00B8D9;text-decoration:none;">Gerenciar preferências</a>

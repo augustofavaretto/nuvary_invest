@@ -166,8 +166,8 @@ export default function ConfiguracoesPage() {
             />
             <NotifToggle
               icon={<Mail className="w-4 h-4" />}
-              label="Relatórios semanais"
-              description="Resumo semanal da sua carteira enviado todo domingo"
+              label="Relatórios diários"
+              description="Resumo diário da sua carteira enviado todos os dias às 8h"
               value={emailRelatorios}
               onToggle={toggleEmailRelatorios}
             />
