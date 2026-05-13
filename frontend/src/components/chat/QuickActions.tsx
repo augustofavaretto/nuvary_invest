@@ -1,69 +1,47 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { QuickAction } from '@/types/chat';
-import {
-  Target,
-  Newspaper,
-  TrendingUp,
-  BookOpen,
-  PieChart,
-  HelpCircle,
-  Wallet,
-  BarChart3,
-} from 'lucide-react';
-
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  target: Target,
-  newspaper: Newspaper,
-  trending: TrendingUp,
-  book: BookOpen,
-  pie: PieChart,
-  help: HelpCircle,
-  wallet: Wallet,
-  chart: BarChart3,
-};
 
 const quickActions: QuickAction[] = [
   {
     id: 'profile',
-    label: 'Meu Perfil',
+    label: 'Meu perfil',
     icon: 'target',
     prompt: 'Com base no meu perfil de investidor, quais são as melhores estratégias para mim?',
     category: 'profile',
   },
   {
     id: 'allocation',
-    label: 'Alocação Ideal',
+    label: 'Alocação',
     icon: 'pie',
     prompt: 'Me mostre a alocação de ativos recomendada para o meu perfil e explique cada categoria.',
     category: 'profile',
   },
   {
     id: 'news',
-    label: 'Notícias do Mercado',
+    label: 'Mercado hoje',
     icon: 'newspaper',
     prompt: 'Quais são as principais notícias do mercado financeiro hoje e como podem impactar meus investimentos?',
     category: 'market',
   },
   {
     id: 'market',
-    label: 'Análise de Mercado',
+    label: 'Análise',
     icon: 'trending',
     prompt: 'Me dê uma análise geral do mercado de ações brasileiro no momento atual.',
     category: 'analysis',
   },
   {
     id: 'learn',
-    label: 'O que é Renda Fixa?',
+    label: 'Renda fixa',
     icon: 'book',
     prompt: 'Explique o que é renda fixa, os principais tipos de investimentos e quando devo investir nessa classe.',
     category: 'education',
   },
   {
     id: 'stocks',
-    label: 'Começar em Ações',
+    label: 'Ações',
     icon: 'chart',
     prompt: 'Como um iniciante deve começar a investir em ações? Quais cuidados devo ter?',
     category: 'education',
@@ -89,19 +67,22 @@ interface QuickActionsProps {
   disabled?: boolean;
 }
 
+// Pills compactos no estilo do mini-chat do dashboard (rounded-full,
+// sem icones, flex-wrap). Padroniza visualmente as sugestoes em todos
+// os pontos do app.
 export function QuickActions({ onAction, disabled }: QuickActionsProps) {
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05,
+        staggerChildren: 0.04,
       },
     },
   };
 
   const item = {
-    hidden: { opacity: 0, y: 10 },
+    hidden: { opacity: 0, y: 8 },
     show: { opacity: 1, y: 0 },
   };
 
@@ -110,33 +91,32 @@ export function QuickActions({ onAction, disabled }: QuickActionsProps) {
       variants={container}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-2 md:grid-cols-4 gap-2"
+      className="flex flex-wrap gap-2 justify-center"
     >
-      {quickActions.map((action) => {
-        const Icon = iconMap[action.icon];
-        return (
-          <motion.div key={action.id} variants={item}>
-            <Button
-              variant="outline"
-              className="
-                w-full h-auto py-3 px-3
-                flex flex-col items-center gap-2
-                border-border hover:border-[#00B8D9] hover:bg-[#00B8D9]/5
-                text-foreground hover:text-[#00B8D9]
-                transition-all duration-200
-                disabled:opacity-50
-              "
-              onClick={() => onAction(action.prompt)}
-              disabled={disabled}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="text-xs font-medium text-center leading-tight">
-                {action.label}
-              </span>
-            </Button>
-          </motion.div>
-        );
-      })}
+      {quickActions.map((action) => (
+        <motion.button
+          key={action.id}
+          variants={item}
+          type="button"
+          onClick={() => onAction(action.prompt)}
+          disabled={disabled}
+          whileHover={{ scale: disabled ? 1 : 1.03 }}
+          whileTap={{ scale: disabled ? 1 : 0.97 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+          className="
+            inline-flex items-center px-4 py-2 rounded-full
+            text-sm font-medium
+            bg-transparent text-foreground
+            border border-border
+            hover:border-[#00B8D9] hover:text-[#00B8D9] hover:bg-[#00B8D9]/5
+            transition-colors duration-150
+            disabled:opacity-50 disabled:pointer-events-none
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00B8D9] focus-visible:ring-offset-2 focus-visible:ring-offset-background
+          "
+        >
+          {action.label}
+        </motion.button>
+      ))}
     </motion.div>
   );
 }
