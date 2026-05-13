@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, Plus, Hash, Building2, ChevronLeft,
   TrendingUp, Building, Globe, Coins, PiggyBank,
-  Search, Loader2, AlertCircle, CheckCircle, Percent
+  Search, Loader2, AlertCircle, Percent
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AssetClass, CategoryId, fetchAssetPrice, PriceResult } from '@/services/portfolioService';
@@ -636,26 +636,14 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                           </div>
                         </div>
 
-                        {/* Status de busca do preço / taxa */}
-                        {!isCustom && priceInfo && (
-                          <div className={`flex items-start gap-2 text-sm p-3 rounded-lg ${
-                            priceInfo.price
-                              ? 'bg-green-50 text-green-700'
-                              : 'bg-amber-50 text-amber-700'
-                          }`}>
-                            {priceInfo.price ? (
-                              <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                            ) : (
-                              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                            )}
+                        {/* Aviso quando a API nao retornou preco/taxa (preenchimento manual) */}
+                        {!isCustom && priceInfo && !priceInfo.price && (
+                          <div className="flex items-start gap-2 text-sm p-3 rounded-lg bg-amber-50 text-amber-700">
+                            <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                             <span>
-                              {priceInfo.price
-                                ? isFixedIncome
-                                  ? `Taxa obtida via ${priceInfo.source}: ${priceInfo.price.toFixed(2)}% a.a. — você pode ajustar conforme contrato.`
-                                  : `${STRINGS.carteira.precoObtidoVia} ${priceInfo.source}`
-                                : priceInfo.error || (isFixedIncome
-                                    ? STRINGS.carteira.taxaNaoDisponivel
-                                    : STRINGS.carteira.precoNaoDisponivel)}
+                              {priceInfo.error || (isFixedIncome
+                                ? STRINGS.carteira.taxaNaoDisponivel
+                                : STRINGS.carteira.precoNaoDisponivel)}
                             </span>
                           </div>
                         )}
