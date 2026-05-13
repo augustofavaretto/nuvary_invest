@@ -536,7 +536,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2 text-center">
-              Powered by OpenAI • {STRINGS.chat.respostasIADisclaimer}
+              {STRINGS.chat.respostasIADisclaimer}
             </p>
           </form>
         </div>
