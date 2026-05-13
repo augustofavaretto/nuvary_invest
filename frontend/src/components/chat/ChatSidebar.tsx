@@ -744,7 +744,7 @@ function ConversaItem({
       className={`
         conversa-item-row
         relative flex items-center gap-2 px-3 py-2 mx-1 rounded-lg cursor-pointer
-        transition-colors
+        transition-colors w-auto overflow-hidden
         ${isAtiva ? 'bg-[#2D2D2D]' : 'hover:bg-[#2D2D2D]/50'}
       `}
       onClick={isRenaming ? undefined : onSelecionar}
@@ -764,7 +764,7 @@ function ConversaItem({
             }}
             onBlur={salvarRename}
             onClick={e => e.stopPropagation()}
-            className="flex-1 bg-transparent text-sm text-white border-b border-[#00B8D9] outline-none min-w-0"
+            className="flex-1 min-w-0 bg-transparent text-sm text-white border-b border-[#00B8D9] outline-none"
           />
           <button
             onMouseDown={e => { e.preventDefault(); salvarRename(); }}
@@ -779,11 +779,12 @@ function ConversaItem({
             {conversa.titulo}
           </span>
 
-          {/* Botão três pontos — aparece no hover */}
+          {/* Botao tres pontos — sempre visivel (controlado por CSS em globals.css) */}
           <button
             onClick={handleMoreVertical}
             className="conversa-dots-btn flex-shrink-0 p-1.5 rounded text-[#6B7280] hover:text-white hover:bg-[#3D3D3D]"
             title="Opções"
+            aria-label="Opções da conversa"
           >
             <MoreVertical className="w-4 h-4" />
           </button>
