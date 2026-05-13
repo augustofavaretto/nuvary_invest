@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 34 - Dashboard Redesign + IA Contextualizada | Nuvary Invest v4.7.0</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #334155; background: var(--light); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #0B1F33 0%, #007EA7 60%, #00B8D9 100%); color: white; padding: 48px 0; text-align: center; }
+        .version-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 5px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; }
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        header p { font-size: 1.05rem; opacity: 0.92; }
+        nav { background: var(--white); padding: 14px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        nav ul li a { color: var(--gray); text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+        nav ul li a:hover { background: var(--primary); color: white; }
+        main { padding: 40px 0 60px; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; margin-bottom: 28px; font-weight: 500; font-size: 0.9rem; }
+        .back-link:hover { text-decoration: underline; }
+        section { background: var(--white); border-radius: 14px; padding: 32px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        section h2 { font-size: 1.4rem; color: var(--dark); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        h3 { font-size: 1.1rem; color: #1e3a5f; margin: 20px 0 10px; }
+        h4 { font-size: 0.95rem; color: var(--dark); margin: 14px 0 6px; font-weight: 600; }
+        p { color: #475569; margin-bottom: 10px; }
+        ul, ol { margin: 10px 0 14px 20px; color: #475569; }
+        li { margin-bottom: 6px; }
+        code { background: #f1f5f9; color: #0f172a; padding: 2px 7px; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.88rem; }
+        pre { background: var(--code-bg); color: #e2e8f0; padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 14px 0; font-size: 0.85rem; line-height: 1.6; }
+        pre code { background: none; color: inherit; padding: 0; }
+        .warn-box { background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid var(--warning); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #92400e; }
+        .success-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid var(--success); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #166534; }
+        .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #1e40af; }
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+        th { background: #f1f5f9; color: var(--dark); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; color: #475569; vertical-align: top; }
+        tr:hover td { background: #f8fafc; }
+        footer { background: var(--dark); color: #cbd5e1; padding: 30px 0; text-align: center; font-size: 0.85rem; margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Maio 2026 - v4.7.0</span>
+            <h1>Dashboard Redesign + IA Contextualizada</h1>
+            <p>Tarefa 6 do briefing rebrand aplicada em /dashboard; sugestões da IA agora usam carteira + extratos; textarea do chat com auto-resize</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
+            <li><a href="#chat-textarea">Chat · Textarea</a></li>
+            <li><a href="#dashboard">Dashboard novo</a></li>
+            <li><a href="#dashboard-secoes">Seções</a></li>
+            <li><a href="#ia-contexto">IA contextual</a></li>
+            <li><a href="#pendencias">Itens com mock</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o índice</a>
+
+        <section id="chat-textarea">
+            <h2>⌨️ Chat IA — Textarea com auto-resize (commit 4b7b0c5)</h2>
+
+            <p>O input do chat era um <code>&lt;Input&gt;</code> shadcn de uma linha. Texto longo (ex: prompt do pill "Insights da carteira") ficava cortado horizontalmente com scroll, sem indicacao visual de quanto faltava.</p>
+
+            <h3>Mudancas em Chatbot.tsx</h3>
+            <ul>
+                <li>Trocado <code>&lt;Input&gt;</code> por <code>&lt;textarea&gt;</code> com <code>rows=1</code> inicial, <code>min-h: 48px</code>, <code>max-h: 200px</code>, <code>resize-none</code></li>
+                <li><code>useEffect</code> ajusta <code>height</code> para <code>scrollHeight</code> a cada mudanca em <code>inputValue</code> — cresce ate o limite, depois ganha scroll vertical interno</li>
+                <li><strong>Enter</strong> envia, <strong>Shift+Enter</strong> quebra linha (padrao Claude/ChatGPT)</li>
+                <li><code>e.nativeEvent.isComposing</code> check — IME (japones/chines etc.) usa Enter para confirmar caracteres; nesse caso nao envia</li>
+                <li><code>inputRef</code> tipado como <code>HTMLTextAreaElement</code> (era <code>HTMLInputElement</code>); import do shadcn <code>Input</code> removido</li>
+            </ul>
+        </section>
+
+        <section id="dashboard">
+            <h2>🏠 /dashboard reescrito com Glass + Bento (commit d8e2aad)</h2>
+
+            <p>Aplicacao da <strong>Tarefa 6</strong> do briefing de rebrand. O conteudo do <code>/dashboard</code> foi substituido por um novo layout dark-first inspirado no <code>/preview-redesign</code>, mantendo:</p>
+            <ul>
+                <li><code>DashboardLayout</code> (sidebar + topbar) — esta tarefa nao mexe na navegacao</li>
+                <li><code>DashboardErrorBoundary</code> ao redor do conteudo</li>
+                <li>Hook <code>useDashboardData</code> (news, aiSuggestion, investorProfile)</li>
+                <li><code>TradingViewTicker</code> da v3.2.0</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>Componentes antigos preservados em <code>@/components/dashboard</code>:</strong>
+                InvestorProfileCard, MarketOverview, StockList, NewsWidget, QuickActionsPanel,
+                AISuggestionsCard, DashboardHeader. Nao sao mais usados no <code>/dashboard</code>,
+                mas ficam disponiveis se precisar reintroduzir alguma tela.
+            </div>
+        </section>
+
+        <section id="dashboard-secoes">
+            <h2>🍱 Estrutura do novo dashboard</h2>
+
+            <h3>Linha 1 — 3 cards horizontais (grid-cols-3)</h3>
+            <table>
+                <tr><th>Card</th><th>Conteudo</th><th>Fonte de dados</th></tr>
+                <tr>
+                    <td><strong>Saudacao</strong></td>
+                    <td>"Olá, [primeiro nome]!" + data por extenso</td>
+                    <td><code>profile.nome</code> / <code>user.email</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Patrimonio Total</strong></td>
+                    <td>R$ valor em mono 3xl/4xl, eye toggle para ocultar, badge delta %, "total"</td>
+                    <td><code>portfolio.summary.totalValue</code> + <code>profitPercentage</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Perfil</strong></td>
+                    <td>Badge âmbar com tipo capitalizado, subtexto "Focando em crescimento de longo prazo"</td>
+                    <td><code>investorProfile.perfil_risco</code></td>
+                </tr>
+            </table>
+
+            <h3>TradingView Ticker</h3>
+            <p>Mantido, agora dentro de card com bordas brand e sombra-tile.</p>
+
+            <h3>Linha 2 — 8+4 cols</h3>
+            <table>
+                <tr><th>Card</th><th>Detalhes</th></tr>
+                <tr>
+                    <td><strong>Evolução Patrimonial</strong> (col-span-8)</td>
+                    <td>
+                        <code>AreaChart</code> Recharts com gradient cyan; filtros 7D/7S/12M/ANOS pill-style;
+                        valor atual em mono + delta colorido (gain/loss).<br>
+                        <strong>Dados:</strong> seed deterministica (mesma estrategia do <code>/relatorios</code>) —
+                        sem snapshots historicos no banco.
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Assistente Nuvary</strong> (col-span-4)</td>
+                    <td>
+                        Badge "IA" cyan; snippet do <code>aiSuggestion</code> em card escuro com
+                        <code>line-clamp-3</code>; 3 botoes de sugestao (Por que minha carteira caiu?,
+                        Devo rebalancear agora?, Proximas oportunidades) com emoji + chevron;
+                        CTA "Abrir chat completo" full-width em ciano.
+                    </td>
+                </tr>
+            </table>
+
+            <h3>Linha 3 — 8+4 cols</h3>
+            <table>
+                <tr><th>Card</th><th>Detalhes</th></tr>
+                <tr>
+                    <td><strong>Alocação atual por classe</strong> (col-span-8)</td>
+                    <td>
+                        Donut Recharts com cores brand (Renda Variavel cyan-500, Renda Fixa navy-500,
+                        FIIs emerald-500, Internacional violet-500, Caixa amber-500). Total no
+                        centro do donut em mono. Legenda lateral com %, valor R$ e cor. Link
+                        "Ver carteira completa" para <code>/carteira</code>.<br>
+                        <strong>Dados:</strong> <code>portfolio.byClass</code> real.
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Notícias Financeiras</strong> (col-span-4)</td>
+                    <td>
+                        Top 3 noticias do <code>useDashboardData.news</code>; cada item com icone
+                        cyan-500/15 e link externo (<code>target=_blank</code>); botao refresh
+                        no header com <code>RefreshCw</code> spinner.
+                    </td>
+                </tr>
+            </table>
+
+            <h3>Linha 4 — Mercado em Tempo Real (full width)</h3>
+            <p>5 cards horizontais (AAPL, MSFT, GOOGL, AMZN, TSLA) com preco em mono + delta colorido. <strong>Mock</strong> determinista por enquanto — precisa endpoint real-time para 5 acoes US.</p>
+
+            <h3>Background</h3>
+            <p>Aurora sutil (cyan + navy) fixo no <code>-z-10</code>, visivel apenas em dark mode (<code>hidden dark:block</code>).</p>
+        </section>
+
+        <section id="ia-contexto">
+            <h2>🤖 Sugestões IA com contexto da carteira (commit 1eb0c0a)</h2>
+
+            <p>Antes, <code>getAISuggestions(perfilRisco)</code> so enviava ao backend o tipo de perfil — sugestoes ficavam genericas, sem considerar ativos reais nem movimentacoes.</p>
+
+            <h3>Nova assinatura</h3>
+            <pre><code>getAISuggestions(
+  perfilRisco: string,
+  contexto?: {
+    totalValue?: number;
+    totalInvested?: number;
+    profitPercentage?: number;
+    byClass?: Array&lt;{ name: string; percentage: number }&gt;;
+    numAtivos?: number;
+    ultimasMovimentacoes?: Array&lt;{
+      tipo: 'compra' | 'venda';
+      ticker: string;
+      quantity: number;
+      price: number;
+      created_at: string;
+    }&gt;;
+  }
+): Promise&lt;string&gt;</code></pre>
+
+            <h3>Prompt resultante</h3>
+            <pre><code>Voce e o assistente Nuvary Invest, consultor financeiro brasileiro.
+Analise o perfil e a carteira do usuario e gere uma sugestao curta
+(maximo 300 caracteres, 2-3 frases). Seja direto, especifico e use
+cifras quando relevante. Nao use markdown nem listas. Portugues
+brasileiro.
+
+PERFIL: arrojado
+
+DADOS DA CARTEIRA:
+- Patrimonio atual: R$ 19.198,52
+- Total investido: R$ 19.564,74 (-1,87%)
+- 12 ativos
+- Alocacao: Renda Variavel 30.7%, Renda Fixa 20.8%, FIIs 11.0%, Internacional 8.0%, Caixa 29.5%
+- Ultimas movimentacoes: 10/05 COMPRA PETR4 (100@R$ 48.66); 08/05 VENDA HGLG11 (50@R$ 168.00); ...</code></pre>
+
+            <h3>useDashboardData.ts</h3>
+            <ul>
+                <li>Helper <code>buildContexto(portfolio, transacoes)</code> converte <code>PortfolioData</code> + <code>Transaction[]</code> para o formato esperado</li>
+                <li><code>portfolioRef</code> e <code>transacoesRef</code> guardam dado fresco entre refreshes</li>
+                <li>Fetch inicial busca <code>getPortfolioData()</code> + <code>getTransactions()</code> em paralelo com market/news</li>
+                <li><code>refreshAI()</code> tambem recarrega esses dados antes de chamar a IA — garante que insights refletem a carteira atual</li>
+                <li>Limite de 5 movimentacoes mais recentes (nao infla o prompt)</li>
+            </ul>
+
+            <div class="warn-box">
+                <strong>Mensagem de fallback ainda aparece</strong> se o backend retornar erro
+                (HTTP nao-200 em <code>/api/ai/suggestion</code>). Causas comuns: <code>OPENAI_API_KEY</code>
+                nao configurada no projeto Vercel do backend, rate limit, ou endpoint fora do ar.
+                Conferir em <code>nuvary-invest-backend.vercel.app</code>.
+            </div>
+        </section>
+
+        <section id="pendencias">
+            <h2>📌 Itens do /dashboard com mock</h2>
+
+            <p>Duas areas ainda usam dado simulado por enquanto:</p>
+            <table>
+                <tr><th>Onde</th><th>Por que mock</th><th>Como ligar a dado real</th></tr>
+                <tr>
+                    <td><strong>Evolucao Patrimonial</strong> (AreaChart)</td>
+                    <td>Nao existe tabela de snapshots diarios do patrimonio no Supabase</td>
+                    <td>Criar <code>portfolio_snapshots(user_id, data, total_value)</code> + cron diario que insere snapshot a partir de <code>portfolio_assets</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Mercado em Tempo Real</strong> (5 acoes US)</td>
+                    <td>Cards exibem preco mock determinista (seed do ticker)</td>
+                    <td>Chamar <code>dashboardService.getWatchlist()</code> que ja busca Finnhub/Brapi e usar <code>watchlist[]</code> filtrando os 5 tickers desejados</td>
+                </tr>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>Nuvary Invest - Documentação Técnica v4.7.0 | Maio 2026</p>
+        <p style="margin-top: 8px; opacity: 0.7;">
+            <a href="index.html" style="color: #00B8D9; text-decoration: none;">← Voltar para o índice</a>
+        </p>
+    </footer>
+</body>
+</html>

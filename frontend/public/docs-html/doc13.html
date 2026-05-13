@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doc 13 - Proximos Passos | Nuvary Invest v4.6.0</title>
+    <title>Doc 13 - Proximos Passos | Nuvary Invest v4.7.0</title>
     <style>
         * {
             margin: 0;
@@ -308,7 +308,7 @@
 <body>
     <header>
         <div class="container">
-            <span class="version-badge">Maio 2026 - v4.6.0</span>
+            <span class="version-badge">Maio 2026 - v4.7.0</span>
             <h1>Próximos Passos</h1>
             <p>Roadmap completo do projeto Nuvary Invest</p>
         </div>
@@ -331,8 +331,8 @@
         <div class="update-notice">
             <span style="font-size: 1.5rem;">🚀</span>
             <div>
-                <strong>v4.6.0 — Foundation do redesign Glass + Bento + Refinamentos UX do Chat IA e fiscais!</strong>
-                <p style="margin: 0; opacity: 0.9;">Tokens + Inter/JetBrains Mono + Logo SVG + 4 Glass primitives + Bento Grid com 5 tiles; rota /preview-redesign para validar visualmente. Chat IA com markdown renderizado, QuickActions como pills, sidebar com botao sempre visivel. "Funcionalidades Premium" em /configuracoes. CPF puxado nos PDFs DARF e Informe de Rendimentos.</p>
+                <strong>v4.7.0 — /dashboard com layout Glass + Bento aplicado + IA contextualizada!</strong>
+                <p style="margin: 0; opacity: 0.9;">Tarefa 6 do briefing rebrand entregue: novo dashboard com 3 cards no topo (saudacao + patrimonio + perfil), TradingView ticker, Evolucao Patrimonial (AreaChart), Alocacao por classe (donut real), Noticias e Mercado em Tempo Real. Sugestoes do Assistente Nuvary agora usam dados reais da carteira + 5 movimentacoes mais recentes. Textarea do chat com auto-resize Claude-style.</p>
             </div>
         </div>
 
@@ -342,7 +342,7 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">281</div>
+                    <div class="stat-number">295</div>
                     <div class="stat-label">Concluídos</div>
                 </div>
                 <div class="stat-card">
@@ -796,6 +796,33 @@
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text">VideoCardItem reestruturado com props watched/onWatch — usado em VideoSection (carrossel) e overlay "Ver Tudo"<span class="task-new">NOVO</span></span></li>
             </ul>
 
+            <div class="category-header">🏠 Dashboard Redesign Glass + Bento (Tarefa 6) <span class="task-new">NOVO v4.7.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Linha 1 com 3 cards: Saudacao "Olá, [nome]!" + data; Patrimonio Total com gradient brand, eye toggle, delta colorido; Perfil com badge ambar (le profile.perfil_risco)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">TradingViewTicker mantido, agora dentro de card com bordas brand e shadow-tile<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Linha 2 (8+4): Evolucao Patrimonial com AreaChart Recharts gradient cyan + filtros 7D/7S/12M/ANOS pill-style; Assistente Nuvary com snippet IA, 3 sugestoes (emoji+chevron), CTA "Abrir chat completo"<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Linha 3 (8+4): Alocacao por classe com donut Recharts (dados reais de portfolio.byClass, cores brand cyan/navy/emerald/violet/amber) + legenda; Noticias Financeiras top 3 com refresh<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Linha 4 (full): Mercado em Tempo Real com 5 cards (AAPL, MSFT, GOOGL, AMZN, TSLA) — mock determinista, pronto para ligar a watchlist real<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Aurora background sutil fixo no -z-10 (cyan + navy), visivel apenas em dark mode<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">DashboardLayout (sidebar + topbar) e DashboardErrorBoundary preservados — esta tarefa nao mexe na navegacao<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Componentes antigos preservados em @/components/dashboard (InvestorProfileCard, MarketOverview, StockList, NewsWidget, QuickActionsPanel, AISuggestionsCard, DashboardHeader) — disponiveis se precisar reintroduzir<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">🤖 IA Contextualizada — Sugestoes baseadas em carteira + extratos <span class="task-new">NOVO v4.7.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">dashboardService.getAISuggestions ganhou parametro opcional contexto com totalValue, totalInvested, profitPercentage, byClass, numAtivos e ultimasMovimentacoes (limite 5)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Prompt reformatado pede resposta curta (max 300 chars, 2-3 frases, sem markdown, com cifras especificas) — adequada ao card do dashboard, nao ao chat completo<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">useDashboardData: helper buildContexto converte PortfolioData + Transaction[] para o formato esperado; portfolioRef + transacoesRef guardam dado fresco<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Fetch inicial busca getPortfolioData() + getTransactions() em paralelo com market/news; refreshAI() tambem recarrega — garante sugestao com snapshot atual da carteira<span class="task-new">NOVO</span></span></li>
+            </ul>
+
+            <div class="category-header">⌨️ Chat IA — Textarea com auto-resize <span class="task-new">NOVO v4.7.0</span></div>
+            <ul class="task-list">
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">&lt;Input&gt; shadcn substituido por &lt;textarea&gt; com rows=1 inicial, min-h 48px, max-h 200px, resize-none<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">useEffect ajusta height para scrollHeight a cada mudanca em inputValue (cresce ate o limite, depois scroll vertical interno)<span class="task-new">NOVO</span></span></li>
+                <li class="task-item"><span class="task-icon">✅</span><span class="task-text">Enter envia, Shift+Enter quebra linha (padrao Claude/ChatGPT); isComposing check para nao enviar durante composicao IME (japones/chines)<span class="task-new">NOVO</span></span></li>
+            </ul>
+
             <div class="category-header">🎨 Foundation Redesign Glass + Bento (Tarefas 1-4) <span class="task-new">NOVO v4.6.0</span></div>
             <ul class="task-list">
                 <li class="task-item"><span class="task-icon">✅</span><span class="task-text"><code>src/styles/tokens.css</code> novo — paleta navy/cyan (50-800/700), gradientes brand/cta/hero/glow, sombras tile/cta, superficies light/dark, queries de a11y (<code>prefers-reduced-transparency</code>, <code>prefers-contrast</code>)<span class="task-new">NOVO</span></span></li>
@@ -1057,7 +1084,7 @@
     </main>
 
     <footer>
-        <p>Nuvary Invest - Documentação Técnica v4.6.0 | Maio 2026</p>
+        <p>Nuvary Invest - Documentação Técnica v4.7.0 | Maio 2026</p>
         <p><a href="index.html">Voltar para o indice</a></p>
     </footer>
 </body>
