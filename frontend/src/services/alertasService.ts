@@ -123,9 +123,16 @@ async function hasRecentAlert(
   return !!data && data.length > 0;
 }
 
-// Limite máximo para caber em NUMERIC(8,2) — variações irreais (cadastro com
-// preço médio errado) seriam recortadas e ainda assim geram alerta
-const MAX_VARIATION_PCT = 999999.99;
+// Limite maximo de variacao plausivel (defesa contra erros de cadastro de
+// averagePrice errado ou preco da API absurdo). Acima disso o snapshot e
+// atualizado mas o alerta NAO e disparado — o usuario nao recebe spam de
+// "BTC subiu 3474%".
+const MAX_PLAUSIBLE_VARIATION_PCT = 50;
+
+interface AssetBaselineRow {
+  id: string;
+  alert_baseline_price: number | null;
+}
 
 export async function checkAlertsForAssets(assets: Asset[]): Promise<Alert[]> {
   const enabled = await getAlertsEnabled();
@@ -134,22 +141,65 @@ export async function checkAlertsForAssets(assets: Asset[]): Promise<Alert[]> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return [];
 
+  const elegiveis = assets.filter((a) => a.id && a.currentPrice);
+  if (elegiveis.length === 0) return [];
+
+  // Busca os baselines atuais de todos os ativos em uma unica query
+  const ids = elegiveis.map((a) => a.id);
+  const { data: rows } = await supabase
+    .from('portfolio_assets')
+    .select('id, alert_baseline_price')
+    .in('id', ids)
+    .eq('user_id', user.id);
+
+  const baselines = new Map<string, number | null>();
+  ((rows ?? []) as AssetBaselineRow[]).forEach((r) => {
+    baselines.set(r.id, r.alert_baseline_price);
+  });
+
   const created: Alert[] = [];
 
-  for (const asset of assets) {
-    if (!asset.averagePrice || !asset.currentPrice) continue;
-    const rawVariation =
-      ((asset.currentPrice - asset.averagePrice) / asset.averagePrice) * 100;
-    if (Math.abs(rawVariation) < ALERT_THRESHOLD) continue;
+  for (const asset of elegiveis) {
+    const baseline = baselines.get(asset.id);
+    const current = Number(asset.currentPrice);
 
-    // Recorta para caber no NUMERIC(8,2) preservando o sinal
-    const variation = Math.sign(rawVariation) *
-      Math.min(Math.abs(rawVariation), MAX_VARIATION_PCT);
+    // Primeira leitura para esse ativo: grava baseline silenciosamente
+    if (baseline === null || baseline === undefined || baseline === 0) {
+      await supabase
+        .from('portfolio_assets')
+        .update({ alert_baseline_price: current })
+        .eq('id', asset.id)
+        .eq('user_id', user.id);
+      continue;
+    }
+
+    const variation = ((current - baseline) / baseline) * 100;
+    if (Math.abs(variation) < ALERT_THRESHOLD) continue;
+
+    // Sanity check: variacao irreal entre duas verificacoes = bug de dado.
+    // Atualiza baseline para nao ficar travado nesse cenario, mas nao alerta.
+    if (Math.abs(variation) > MAX_PLAUSIBLE_VARIATION_PCT) {
+      await supabase
+        .from('portfolio_assets')
+        .update({ alert_baseline_price: current })
+        .eq('id', asset.id)
+        .eq('user_id', user.id);
+      continue;
+    }
 
     const direction: AlertDirection = variation >= 0 ? 'up' : 'down';
 
     const skip = await hasRecentAlert(user.id, asset.ticker, direction);
-    if (skip) continue;
+    if (skip) {
+      // Mesmo pulando por dedup, atualiza o baseline para nao ficar comparando
+      // contra valor muito antigo na proxima verificacao
+      await supabase
+        .from('portfolio_assets')
+        .update({ alert_baseline_price: current })
+        .eq('id', asset.id)
+        .eq('user_id', user.id);
+      continue;
+    }
 
     const { data, error } = await supabase
       .from('alertas_variacao')
@@ -160,8 +210,8 @@ export async function checkAlertsForAssets(assets: Asset[]): Promise<Alert[]> {
         asset_type: asset.type,
         direction,
         variation_pct: Number(variation.toFixed(2)),
-        previous_price: asset.averagePrice,
-        current_price: asset.currentPrice,
+        previous_price: baseline,
+        current_price: current,
       })
       .select()
       .single();
@@ -173,6 +223,12 @@ export async function checkAlertsForAssets(assets: Asset[]): Promise<Alert[]> {
       });
     } else if (data) {
       created.push(data as Alert);
+      // Atualiza baseline para a proxima verificacao comparar a partir daqui
+      await supabase
+        .from('portfolio_assets')
+        .update({ alert_baseline_price: current })
+        .eq('id', asset.id)
+        .eq('user_id', user.id);
     }
   }
 
