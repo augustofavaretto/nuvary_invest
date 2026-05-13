@@ -8,6 +8,31 @@ import {
   WatchlistStock,
 } from '@/services/dashboardService';
 import { buscarPerfilInvestidor, PerfilInvestidor } from '@/services/perfilService';
+import { getPortfolioData, getTransactions, type PortfolioData, type Transaction } from '@/services/portfolioService';
+
+// Monta o objeto de contexto da carteira no formato esperado por getAISuggestions
+function buildContexto(portfolio: PortfolioData | null, transacoes: Transaction[]) {
+  if (!portfolio) return undefined;
+  const numAtivos =
+    portfolio.byProduct.rendaFixa.length +
+    portfolio.byProduct.rendaVariavel.length +
+    portfolio.byProduct.fiis.length +
+    portfolio.byProduct.internacional.length;
+  return {
+    totalValue: portfolio.summary.totalValue,
+    totalInvested: portfolio.summary.totalInvested,
+    profitPercentage: portfolio.summary.profitPercentage,
+    byClass: portfolio.byClass.map((c) => ({ name: c.name, percentage: c.percentage })),
+    numAtivos,
+    ultimasMovimentacoes: transacoes.slice(0, 5).map((t) => ({
+      tipo: t.tipo,
+      ticker: t.ticker,
+      quantity: t.quantity,
+      price: t.price,
+      created_at: t.created_at,
+    })),
+  };
+}
 
 interface DashboardData {
   marketData: MarketQuote[];
@@ -34,6 +59,8 @@ export function useDashboardData(): DashboardData {
   // Ref para controlar se o componente está montado
   const isMountedRef = useRef(true);
   const profileRef = useRef<PerfilInvestidor | null>(null);
+  const portfolioRef = useRef<PortfolioData | null>(null);
+  const transacoesRef = useRef<Transaction[]>([]);
 
   // Buscar dados de mercado
   const refreshMarket = useCallback(async () => {
@@ -71,7 +98,17 @@ export function useDashboardData(): DashboardData {
     const profile = profileRef.current;
     if (!profile?.perfil_risco) return;
     try {
-      const suggestion = await dashboardService.getAISuggestions(profile.perfil_risco);
+      // Recarrega portfolio + transacoes para usar dado fresco
+      const [portfolio, transacoes] = await Promise.all([
+        getPortfolioData().catch(() => null),
+        getTransactions().catch(() => [] as Transaction[]),
+      ]);
+      if (isMountedRef.current) {
+        portfolioRef.current = portfolio;
+        transacoesRef.current = transacoes;
+      }
+      const contexto = buildContexto(portfolio, transacoes);
+      const suggestion = await dashboardService.getAISuggestions(profile.perfil_risco, contexto);
       if (isMountedRef.current) {
         setAiSuggestion(suggestion);
       }
@@ -100,11 +137,13 @@ export function useDashboardData(): DashboardData {
         setInvestorProfile(profile);
         profileRef.current = profile;
 
-        // Buscar dados em paralelo
-        const [market, stocks, newsData] = await Promise.all([
+        // Buscar dados em paralelo (mercado + noticias + carteira + transacoes)
+        const [market, stocks, newsData, portfolio, transacoes] = await Promise.all([
           dashboardService.getMarketOverview(),
           dashboardService.getWatchlist(),
           dashboardService.getFinancialNews(6),
+          getPortfolioData().catch(() => null),
+          getTransactions().catch(() => [] as Transaction[]),
         ]);
 
         if (!isMountedRef.current) return;
@@ -112,10 +151,13 @@ export function useDashboardData(): DashboardData {
         setMarketData(market);
         setWatchlist(stocks);
         setNews(newsData);
+        portfolioRef.current = portfolio;
+        transacoesRef.current = transacoes;
 
-        // Buscar sugestões da IA se tiver perfil
+        // Buscar sugestões da IA se tiver perfil — agora com contexto da carteira
         if (profile?.perfil_risco) {
-          const suggestion = await dashboardService.getAISuggestions(profile.perfil_risco);
+          const contexto = buildContexto(portfolio, transacoes);
+          const suggestion = await dashboardService.getAISuggestions(profile.perfil_risco, contexto);
           if (isMountedRef.current) {
             setAiSuggestion(suggestion);
           }

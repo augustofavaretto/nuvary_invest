@@ -201,16 +201,69 @@ export const dashboardService = {
     return [];
   },
 
-  // Buscar sugestões da IA baseado no perfil
-  async getAISuggestions(perfilRisco: string): Promise<string> {
+  // Buscar sugestões da IA baseado no perfil + carteira + extratos
+  async getAISuggestions(
+    perfilRisco: string,
+    contexto?: {
+      totalValue?: number;
+      totalInvested?: number;
+      profitPercentage?: number;
+      byClass?: Array<{ name: string; percentage: number }>;
+      numAtivos?: number;
+      ultimasMovimentacoes?: Array<{
+        tipo: 'compra' | 'venda';
+        ticker: string;
+        quantity: number;
+        price: number;
+        created_at: string;
+      }>;
+    }
+  ): Promise<string> {
     try {
+      // Monta bloco de contexto da carteira (formato compacto pt-BR)
+      const partes: string[] = [];
+      if (contexto?.totalValue !== undefined) {
+        partes.push(
+          `Patrimonio atual: R$ ${contexto.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+        );
+      }
+      if (contexto?.totalInvested !== undefined && contexto?.profitPercentage !== undefined) {
+        const sinal = contexto.profitPercentage >= 0 ? '+' : '';
+        partes.push(
+          `Total investido: R$ ${contexto.totalInvested.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (${sinal}${contexto.profitPercentage.toFixed(2)}%)`
+        );
+      }
+      if (contexto?.numAtivos) partes.push(`${contexto.numAtivos} ativos`);
+      if (contexto?.byClass && contexto.byClass.length > 0) {
+        partes.push(
+          `Alocacao: ${contexto.byClass.map((c) => `${c.name} ${c.percentage.toFixed(1)}%`).join(', ')}`
+        );
+      }
+      if (contexto?.ultimasMovimentacoes && contexto.ultimasMovimentacoes.length > 0) {
+        const movs = contexto.ultimasMovimentacoes
+          .slice(0, 5)
+          .map((m) => {
+            const data = new Date(m.created_at).toLocaleDateString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+            });
+            return `${data} ${m.tipo.toUpperCase()} ${m.ticker} (${m.quantity}@R$ ${m.price.toFixed(2)})`;
+          })
+          .join('; ');
+        partes.push(`Ultimas movimentacoes: ${movs}`);
+      }
+
+      const contextoTexto = partes.length > 0
+        ? `\n\nDADOS DA CARTEIRA:\n- ${partes.join('\n- ')}`
+        : '';
+
+      const message =
+        `Voce e o assistente Nuvary Invest, consultor financeiro brasileiro. Analise o perfil e a carteira do usuario e gere uma sugestao curta (maximo 300 caracteres, 2-3 frases). Seja direto, especifico e use cifras quando relevante. Nao use markdown nem listas. Portugues brasileiro.\n\nPERFIL: ${perfilRisco}${contextoTexto}`;
+
       const res = await fetch(`${API_URL}/ai/suggestion`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          profileType: perfilRisco,
-          message: `Você é um consultor financeiro. Forneça 3 dicas curtas e práticas de investimento para um investidor com perfil ${perfilRisco}. Seja direto e objetivo. Responda em português brasileiro.`,
-        }),
+        body: JSON.stringify({ profileType: perfilRisco, message }),
       });
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
