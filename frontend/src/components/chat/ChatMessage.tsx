@@ -1,6 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatMessage as ChatMessageType } from '@/types/chat';
 import { Bot, User } from 'lucide-react';
@@ -62,6 +64,38 @@ export function ChatMessage({ message }: ChatMessageProps) {
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
             />
+          </div>
+        ) : isAssistant ? (
+          <div className="text-sm leading-relaxed space-y-2">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                em: ({ children }) => <em className="italic">{children}</em>,
+                ul: ({ children }) => <ul className="list-disc list-outside ml-5 my-2 space-y-1">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-outside ml-5 my-2 space-y-1">{children}</ol>,
+                li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                a: ({ children, href }) => (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#00B8D9] hover:underline"
+                  >
+                    {children}
+                  </a>
+                ),
+                code: ({ children }) => (
+                  <code className="px-1.5 py-0.5 rounded bg-muted text-xs font-mono">{children}</code>
+                ),
+                h1: ({ children }) => <h3 className="text-base font-semibold mt-3 mb-1">{children}</h3>,
+                h2: ({ children }) => <h3 className="text-base font-semibold mt-3 mb-1">{children}</h3>,
+                h3: ({ children }) => <h4 className="text-sm font-semibold mt-2 mb-1">{children}</h4>,
+              }}
+            >
+              {message.content}
+            </ReactMarkdown>
           </div>
         ) : (
           <div className="whitespace-pre-wrap text-sm leading-relaxed">
