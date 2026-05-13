@@ -236,6 +236,12 @@ function RelatoriosContent() {
     const nomeUsuario = profile?.nome || 'Contribuinte';
     const emailUsuario = profile?.email || '';
 
+    // CPF do cadastro formatado como XXX.XXX.XXX-XX (fallback se nao informado)
+    const cpfLimpo = (profile?.cpf || '').replace(/\D/g, '');
+    const cpfFormatado = cpfLimpo.length === 11
+      ? cpfLimpo.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4')
+      : '___.___.___-__';
+
     const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -287,7 +293,7 @@ function RelatoriosContent() {
     </td>
     <td colspan="3">
       <span class="label">02 — NÚMERO DO CPF / CNPJ</span>
-      <span class="valor">___.___.___-__</span>
+      <span class="valor">${cpfFormatado}</span>
     </td>
     <td colspan="4">
       <span class="label">03 — CÓDIGO DA RECEITA</span>
@@ -365,6 +371,13 @@ function RelatoriosContent() {
     const anoBase = agora.getFullYear() - (agora.getMonth() < 2 ? 1 : 0); // ano-calendário
     const nomeUsuario = profile?.nome || 'Investidor';
     const emailUsuario = profile?.email || '';
+
+    // CPF do cadastro: aceita "12345678900" ou "123.456.789-00"; formata para XXX.XXX.XXX-XX.
+    // Fallback para placeholder quando o usuario nao informou.
+    const cpfLimpo = (profile?.cpf || '').replace(/\D/g, '');
+    const cpfFormatado = cpfLimpo.length === 11
+      ? cpfLimpo.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4')
+      : '___.___.___-__';
 
     // Agrupamento por categoria
     const grupos: Record<string, { ativos: Asset[]; totalInvestido: number; totalAtual: number; rendimento: number }> = {};
@@ -459,7 +472,7 @@ function RelatoriosContent() {
     </div>
     <div class="info-cell">
       <div class="info-label">CPF</div>
-      <div class="info-valor">___.___.___-__</div>
+      <div class="info-valor">${cpfFormatado}</div>
     </div>
     <div class="info-cell">
       <div class="info-label">Ano-Calendário</div>

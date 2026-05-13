@@ -17,6 +17,9 @@ interface Profile {
   email: string;
   aceite_termos: boolean;
   avatar_url?: string;
+  cpf?: string | null;
+  data_nascimento?: string | null;
+  telefone?: string | null;
 }
 
 interface AuthContextType {
