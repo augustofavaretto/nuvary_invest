@@ -11,6 +11,7 @@ import {
   getEmailRelatoriosAtivo,
   setEmailRelatoriosAtivo,
 } from '@/services/emailReportService';
+import supabase from '@/lib/supabase';
 import {
   Sun,
   Moon,
@@ -22,6 +23,8 @@ import {
   Check,
   ChevronRight,
   X,
+  Send,
+  Loader2,
 } from 'lucide-react';
 
 export default function ConfiguracoesPage() {
@@ -31,6 +34,8 @@ export default function ConfiguracoesPage() {
 
   const [alertasVariacao, setAlertasVariacaoState] = useState(true);
   const [emailRelatorios, setEmailRelatoriosState] = useState(false);
+  const [enviandoTeste, setEnviandoTeste] = useState(false);
+  const [testeResultado, setTesteResultado] = useState<{ ok: boolean; msg: string } | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -54,6 +59,42 @@ export default function ConfiguracoesPage() {
     const next = !emailRelatorios;
     setEmailRelatoriosState(next);
     await setEmailRelatoriosAtivo(next);
+  };
+
+  const enviarRelatorioTeste = async () => {
+    if (enviandoTeste) return;
+    setEnviandoTeste(true);
+    setTesteResultado(null);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        setTesteResultado({ ok: false, msg: 'Sessao nao encontrada — refaca login' });
+        return;
+      }
+      const res = await fetch('/api/email/send-test', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      const json = await res.json();
+      if (res.ok && json.ok) {
+        setTesteResultado({
+          ok: true,
+          msg: `E-mail enviado para ${json.sentTo} (Resend ID: ${json.resendId ?? '—'}). ${json.observacao ?? ''}`,
+        });
+      } else {
+        setTesteResultado({
+          ok: false,
+          msg: json.error || json.resendError || `Erro ${res.status}`,
+        });
+      }
+    } catch (e) {
+      setTesteResultado({
+        ok: false,
+        msg: e instanceof Error ? e.message : 'Falha no envio',
+      });
+    } finally {
+      setEnviandoTeste(false);
+    }
   };
 
   if (authLoading) return null;
@@ -140,6 +181,54 @@ export default function ConfiguracoesPage() {
             value={emailRelatorios}
             onToggle={toggleEmailRelatorios}
           />
+
+          {/* Botao de teste de envio — valida o pipeline e mostra erro detalhado */}
+          <div
+            className="flex items-center justify-between gap-3 pt-3.5"
+            style={{ borderTop: '1px solid var(--border)' }}
+          >
+            <div className="text-[12px]" style={{ color: 'var(--t2)' }}>
+              Não está recebendo? Dispare um envio de teste agora para validar.
+            </div>
+            <button
+              type="button"
+              onClick={enviarRelatorioTeste}
+              disabled={enviandoTeste}
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-sm)] text-[12.5px] font-semibold transition-colors disabled:opacity-50 shrink-0"
+              style={{
+                background: 'var(--cyan)',
+                color: 'white',
+                boxShadow: '0 4px 14px rgba(0,184,217,0.28)',
+              }}
+            >
+              {enviandoTeste ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Enviando…
+                </>
+              ) : (
+                <>
+                  <Send className="w-3.5 h-3.5" />
+                  Enviar teste agora
+                </>
+              )}
+            </button>
+          </div>
+
+          {testeResultado && (
+            <div
+              className="mt-3 px-3.5 py-3 rounded-[var(--r-md)] text-[12.5px] leading-relaxed"
+              style={{
+                background: testeResultado.ok
+                  ? 'rgba(16,185,129,0.10)'
+                  : 'rgba(239,68,68,0.10)',
+                border: `1px solid ${testeResultado.ok ? 'rgba(16,185,129,0.30)' : 'rgba(239,68,68,0.30)'}`,
+                color: testeResultado.ok ? 'var(--gain)' : 'var(--loss)',
+              }}
+            >
+              {testeResultado.msg}
+            </div>
+          )}
         </SettingSection>
 
         {/* === CONTA E SEGURANCA === */}
