@@ -37,8 +37,17 @@ export function ChatPreviewWidget({ aiSuggestion, sugestoes }: ChatPreviewWidget
         </span>
       </div>
 
-      {/* Snippet IA */}
-      <div className="bg-[var(--glass)] border border-[var(--border)] rounded-[var(--r-md)] p-4 mb-4 text-[13.5px] leading-relaxed text-[var(--t1)] line-clamp-3">
+      {/* Snippet IA — limitado a 3 linhas para preview limpo */}
+      <div
+        className="bg-[var(--glass)] border border-[var(--border)] rounded-[var(--r-md)] p-4 mb-4 text-[13px] text-[var(--t1)] overflow-hidden"
+        style={{
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+          lineHeight: 1.5,
+          maxHeight: 'calc(3 * 1.5em + 2rem)',
+        }}
+      >
         {aiSuggestion ||
           'Olá! Posso analisar sua carteira, sugerir rebalanceamentos ou explicar termos. O que quer saber hoje?'}
       </div>
