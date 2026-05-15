@@ -1,27 +1,34 @@
 /* ============================================================================
-   NUVARY INVEST — DESIGN TOKENS (Brandbook + Glass + Bento dark-first)
+   NUVARY INVEST — DESIGN TOKENS
    Aderente ao manual_marca_nuvaryinvest.md.
-   Inclui modo dark (default no app), light (landing/auth) e queries de a11y.
+   Inclui modo dark (default no app) e light (landing/auth).
+
+   Os tokens "novos" (--surface-1/2/3, --glass, --edge, --ease, etc.) vem do
+   mockup oficial (exemplo frontend.html) e sao usados pelos componentes do
+   redesign por-fase.
    ============================================================================ */
 
 :root {
   /* === BRAND: NAVY ============================================== */
-  --navy-50:  #E6EAEF;
-  --navy-100: #C2CBD7;
-  --navy-300: #5B7088;
-  --navy-500: #0B1F33;
-  --navy-600: #08172A;
-  --navy-700: #061421;
-  --navy-800: #050E15;
+  --navy-50:   #E6EAEF;
+  --navy-100:  #C2CBD7;
+  --navy-300:  #5B7088;
+  --navy-500:  #0B1F33;  /* Marca principal, headings */
+  --navy-600:  #08172A;
+  --navy-700:  #061421;
+  --navy-800:  #050E15;
+  --navy-deep: #081A24;  /* alias do mockup */
+  --navy:      #0B1F33;  /* alias curto do mockup */
 
   /* === BRAND: CYAN ============================================== */
-  --cyan-50:  #E0F7FB;
-  --cyan-100: #B3ECF4;
-  --cyan-300: #4FD2E3;
-  --cyan-400: #26C5DE;
-  --cyan-500: #00B8D9;
-  --cyan-600: #009BB5;
-  --cyan-700: #007EA7;
+  --cyan-50:   #E0F7FB;
+  --cyan-100:  #B3ECF4;
+  --cyan-300:  #4FD2E3;
+  --cyan-400:  #26C5DE;
+  --cyan-500:  #00B8D9;  /* Acoes, destaques, icones */
+  --cyan-600:  #009BB5;
+  --cyan-700:  #007EA7;  /* Gradient bottom */
+  --cyan:      #00B8D9;  /* alias curto do mockup */
   --cyan-glow: #4FE3FF;
 
   /* === SEMANTICOS (brandbook) =================================== */
@@ -29,17 +36,25 @@
   --warning:  #F59E0B;
   --negative: #EF4444;
   --neutral:  #6B7280;
-  /* Excecao UX universal (R$/%) */
+  --warn:     #F59E0B; /* alias mockup */
+
+  /* Excecao UX universal: ganho/perda monetario */
   --gain: #10B981;
   --loss: #EF4444;
+  --gain-soft: rgba(16, 185, 129, 0.12);
+  --loss-soft: rgba(239, 68, 68, 0.12);
+  --warn-soft: rgba(245, 158, 11, 0.12);
 
   /* === GRADIENTES =============================================== */
-  --gradient-brand: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
-  --gradient-cta:   linear-gradient(135deg, #00B8D9 0%, #007EA7 100%);
-  --gradient-hero:  linear-gradient(135deg, #0B1F33 0%, #007EA7 50%, #00B8D9 100%);
-  --gradient-glow:  radial-gradient(circle at 50% 0%, rgba(0,184,217,0.22) 0%, transparent 50%);
+  --gradient-brand:   linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+  --gradient-cta:     linear-gradient(135deg, #00B8D9 0%, #007EA7 100%);
+  --gradient-hero:    linear-gradient(135deg, #0B1F33 0%, #007EA7 50%, #00B8D9 100%);
+  --gradient-glow:    radial-gradient(circle at 50% 0%, rgba(0,184,217,0.22) 0%, transparent 50%);
+  /* aliases do mockup */
+  --grad-brand:   linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
+  --grad-brand-h: linear-gradient(135deg, #00B8D9 0%, #007EA7 100%);
 
-  /* === SOMBRAS DE TILE/CTA ====================================== */
+  /* === SOMBRAS ================================================== */
   --shadow-tile:
     0 0 0 1px rgba(0,184,217,0.06),
     0 2px 20px rgba(0,0,0,0.4),
@@ -56,17 +71,54 @@
     inset 0 1px 0 0 rgba(255,255,255,0.28),
     0 6px 24px rgba(0,184,217,0.50),
     0 12px 48px rgba(0,184,217,0.30);
+  --shadow-brand: 0 4px 20px rgba(0, 184, 217, 0.18);
+  --shadow-glow:  0 6px 18px rgba(0, 184, 217, 0.32);
+  --shadow-cta-soft: 0 4px 14px rgba(0, 184, 217, 0.28);
 
-  /* === SUPERFICIES (LIGHT — landing/auth) ======================= */
+  /* === RAIOS / RHYTHM (mockup) ================================== */
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-xl:   22px;
+  --r-pill: 999px;
+
+  /* === EASING / DURATION (mockup) =============================== */
+  --ease:   cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 0.2s;
+  --t-base: 0.35s;
+
+  /* === LAYOUT (mockup) ========================================== */
+  --sidebar-w: 96px;
+  --topbar-h:  80px;
+
+  /* === SUPERFICIES — LIGHT (landing/auth + tema claro do app) === */
   --bg-base:        #FFFFFF;
   --bg-elevated:    #F7F9FB;
   --bg-card:        #FFFFFF;
   --bg-glass-nav:   rgba(255, 255, 255, 0.65);
   --bg-glass-hover: rgba(255, 255, 255, 0.78);
 
+  /* aliases do mockup (light) */
+  --bg:         #FFFFFF;
+  --surface-1:  #FFFFFF;
+  --surface-2:  #F7F9FB;
+  --surface-3:  #EEF2F6;
+  --surface-hi: #E2E8F0;
+
+  --glass:    rgba(11, 31, 51, 0.04);
+  --glass-2:  rgba(11, 31, 51, 0.06);
+  --border:   rgba(11, 31, 51, 0.08);
+  --border-hi:rgba(0, 184, 217, 0.4);
+  --edge:     rgba(11, 31, 51, 0.10);
+
   --border-subtle:  rgba(11, 31, 51, 0.06);
   --border-default: rgba(11, 31, 51, 0.10);
   --border-strong:  rgba(11, 31, 51, 0.20);
+
+  --t1: #0B1F33;
+  --t2: #6B7280;
+  --t3: #9CA3AF;
+  --t4: rgba(11, 31, 51, 0.45);
 
   --text-primary:   #0B1F33;
   --text-secondary: #6B7280;
@@ -75,17 +127,35 @@
   --text-on-glass:  #0B1F33;
 }
 
-/* === SUPERFICIES (DARK — app) =================================== */
+/* === SUPERFICIES — DARK (default do app) ========================= */
 .dark {
-  --bg-base:        #050E15;
-  --bg-elevated:    #081A24;
-  --bg-card:        #0E2330;
-  --bg-glass-nav:   rgba(8, 26, 36, 0.65);
-  --bg-glass-hover: rgba(14, 35, 48, 0.78);
+  --bg-base:        #050D14;
+  --bg-elevated:    #0B1B26;
+  --bg-card:        #0F2230;
+  --bg-glass-nav:   rgba(11, 27, 38, 0.85);
+  --bg-glass-hover: rgba(15, 34, 48, 0.92);
+
+  /* aliases do mockup (dark) */
+  --bg:         #050D14;
+  --surface-1:  #0B1B26;
+  --surface-2:  #0F2230;
+  --surface-3:  #15293A;
+  --surface-hi: #1B344A;
+
+  --glass:    rgba(255, 255, 255, 0.035);
+  --glass-2:  rgba(255, 255, 255, 0.06);
+  --border:   rgba(255, 255, 255, 0.07);
+  --border-hi:rgba(0, 184, 217, 0.35);
+  --edge:     rgba(255, 255, 255, 0.32);
 
   --border-subtle:  rgba(0, 184, 217, 0.08);
   --border-default: rgba(255, 255, 255, 0.10);
   --border-strong:  rgba(0, 184, 217, 0.25);
+
+  --t1: #FFFFFF;
+  --t2: #9CA3AF;
+  --t3: #6B7280;
+  --t4: rgba(255, 255, 255, 0.32);
 
   --text-primary:   #FFFFFF;
   --text-secondary: #9CA3AF;
@@ -95,10 +165,10 @@
 }
 
 /* ============================================================================
-   ACESSIBILIDADE — Apple Liquid Glass guidelines
+   ACESSIBILIDADE
    ============================================================================ */
 @media (prefers-reduced-transparency: reduce) {
-  :root {
+  :root, .dark {
     --bg-glass-nav:   var(--bg-elevated);
     --bg-glass-hover: var(--bg-card);
   }
@@ -112,5 +182,13 @@
   .dark {
     --border-default: rgba(255, 255, 255, 0.25);
     --border-strong:  var(--cyan-400);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

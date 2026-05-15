@@ -32,8 +32,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Script inline que aplica o tema (dark|light) ANTES da hidratacao,
+  // lendo do localStorage (mesma chave do ThemeContext). Evita o flash
+  // de tela branca quando o usuario tem tema dark.
+  const themeBootScript = `
+    (function() {
+      try {
+        var saved = localStorage.getItem('nuvary_theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        if (theme === 'dark') document.documentElement.classList.add('dark');
+      } catch (e) {}
+    })();
+  `;
+
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
         style={{ fontFamily: "'Inter', sans-serif" }}
