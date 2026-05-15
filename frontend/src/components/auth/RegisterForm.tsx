@@ -338,7 +338,7 @@ export function RegisterForm() {
         <CardHeader className="text-center pb-2">
           <Link href="/" className="inline-block mb-4">
             <Image
-              src="/logo-icon.png"
+              src="/brand/nuvary-icon.png"
               alt="Nuvary Invest"
               width={48}
               height={48}

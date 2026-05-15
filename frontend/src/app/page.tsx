@@ -23,7 +23,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <div className="mb-8">
             <Image
-              src="/logo-vertical.png"
+              src="/brand/nuvary-vertical.png"
               alt="Nuvary Invest"
               width={120}
               height={120}
@@ -188,7 +188,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Image
-                src="/logo-icon.png"
+                src="/brand/nuvary-icon.png"
                 alt="Nuvary Invest"
                 width={32}
                 height={32}

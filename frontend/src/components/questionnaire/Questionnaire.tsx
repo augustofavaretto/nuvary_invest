@@ -183,7 +183,7 @@ export function Questionnaire() {
             </Link>
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src="/logo-icon.png"
+                src="/brand/nuvary-icon.png"
                 alt="Nuvary Invest"
                 width={36}
                 height={36}
