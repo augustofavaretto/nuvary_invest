@@ -5,13 +5,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Loader2, BarChart3, TrendingUp, FileText,
-  Download, FileBarChart, AlertCircle,
-  CheckCircle, ArrowUpRight, ArrowDownRight, DollarSign,
+  Download, FileBarChart, ArrowUpRight, ArrowDownRight,
   Search, ChevronDown, Wallet, TrendingDown,
 } from 'lucide-react';
 import {
   BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Cell, ReferenceLine,
+  ResponsiveContainer,
 } from 'recharts';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
@@ -683,59 +682,82 @@ function RelatoriosContent() {
   // ── Estados de carregamento / vazio ──────────────────────────────────────
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#00B8D9]" />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--cyan)' }} />
       </div>
     );
   }
 
   return (
     <DashboardLayout>
-      <div className="px-6 py-6 max-w-7xl mx-auto">
+      <div className="px-6 lg:px-10 py-6 lg:py-8 max-w-[1400px] mx-auto space-y-4">
 
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <BarChart3 className="w-7 h-7 text-[#00B8D9]" />
+        {/* page-head */}
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-2">
+          <h1
+            className="flex items-center gap-3 text-[26px] font-bold tracking-tight"
+            style={{ color: 'var(--t1)' }}
+          >
+            <BarChart3 className="w-[26px] h-[26px]" style={{ color: 'var(--cyan)' }} />
             Relatórios
           </h1>
-          <p className="text-muted-foreground mt-1">Análises de performance, extratos e imposto de renda</p>
+          <p className="text-[13px] mt-1" style={{ color: 'var(--t2)' }}>
+            Análises de performance, extratos e imposto de renda
+          </p>
         </motion.div>
 
-        {/* Tabs */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
-          className="flex gap-1 bg-muted p-1 rounded-xl mb-6 w-fit">
+        {/* report-tabs — pill com fundo surface-2 + tab ativa cyan solid */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.05 }}
+          className="inline-flex gap-1 p-1 rounded-[var(--r-pill)] mb-2"
+          style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
+        >
           {([
             { id: 'performance', label: 'Performance',      icon: TrendingUp    },
             { id: 'extratos',    label: 'Extratos',         icon: FileText      },
             { id: 'ir',          label: 'Imposto de Renda', icon: FileBarChart  },
-          ] as { id: Aba; label: string; icon: React.ElementType }[]).map(tab => (
-            <button key={tab.id} onClick={() => setAba(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                aba === tab.id
-                  ? 'bg-card text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}>
-              <tab.icon className="w-4 h-4" />
-              {tab.label}
-            </button>
-          ))}
+          ] as { id: Aba; label: string; icon: React.ElementType }[]).map(tab => {
+            const isActive = aba === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setAba(tab.id)}
+                className="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-[var(--r-pill)] text-[13.5px] font-semibold transition-colors"
+                style={
+                  isActive
+                    ? { background: 'var(--cyan)', color: 'white', boxShadow: '0 4px 14px rgba(0,184,217,0.28)' }
+                    : { color: 'var(--t2)', background: 'transparent' }
+                }
+              >
+                <tab.icon className="w-[14px] h-[14px]" />
+                {tab.label}
+              </button>
+            );
+          })}
         </motion.div>
 
         {/* Loading */}
         {loadingData && (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-7 h-7 animate-spin text-[#00B8D9]" />
-            <span className="ml-3 text-muted-foreground text-sm">Carregando dados da carteira…</span>
+            <Loader2 className="w-7 h-7 animate-spin" style={{ color: 'var(--cyan)' }} />
+            <span className="ml-3 text-[13px]" style={{ color: 'var(--t2)' }}>
+              Carregando dados da carteira…
+            </span>
           </div>
         )}
 
         {/* Carteira vazia */}
         {!loadingData && assets.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <Wallet className="w-14 h-14 text-muted-foreground/40 mb-4" />
-            <p className="text-lg font-semibold text-foreground">Sua carteira está vazia</p>
-            <p className="text-sm text-muted-foreground mt-1">Adicione ativos na página <strong>Carteira</strong> para ver os relatórios.</p>
+            <Wallet className="w-14 h-14 mb-4" style={{ color: 'var(--t3)', opacity: 0.4 }} />
+            <p className="text-[16px] font-semibold" style={{ color: 'var(--t1)' }}>
+              Sua carteira está vazia
+            </p>
+            <p className="text-[13px] mt-1" style={{ color: 'var(--t2)' }}>
+              Adicione ativos na página <strong>Carteira</strong> para ver os relatórios.
+            </p>
           </div>
         )}
 
@@ -745,199 +767,249 @@ function RelatoriosContent() {
 
         {/* ── ABA: PERFORMANCE ─────────────────────────────────────────────── */}
         {aba === 'performance' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
 
-            {/* Evolução Patrimonial */}
-            <div className="bg-card border border-border rounded-xl p-6">
-              <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+            {/* perf-chart-card — Evolucao Patrimonial + tabela lateral */}
+            <div
+              className="rounded-[var(--r-lg)] px-6 py-5"
+              style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
                 <div>
-                  <h2 className="text-base font-semibold text-foreground">Evolução Patrimonial</h2>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <h2 className="text-[18px] font-bold" style={{ color: 'var(--t1)' }}>
+                    Evolução Patrimonial
+                  </h2>
+                  <p className="text-[13px] mt-0.5" style={{ color: 'var(--t2)' }}>
                     {new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  {(['7D', '7S', '12M', 'ANOS'] as const).map(p => (
-                    <button key={p} onClick={() => setPeriodoEvolucao(p)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                        periodoEvolucao === p
-                          ? 'bg-[#00B8D9] text-white'
-                          : 'bg-muted text-muted-foreground hover:text-foreground border border-border'
-                      }`}>
-                      {p}
-                    </button>
-                  ))}
-                  <div className="flex bg-muted rounded-lg p-0.5 ml-1 border border-border">
-                    <button onClick={() => setTipoGraficoEvolucao('bar')}
-                      className={`p-1.5 rounded transition-all ${tipoGraficoEvolucao === 'bar' ? 'bg-[#00B8D9] text-white' : 'text-muted-foreground hover:text-foreground'}`}
-                      title="Gráfico de barras">
+                  {(['7D', '7S', '12M', 'ANOS'] as const).map(p => {
+                    const isActive = periodoEvolucao === p;
+                    return (
+                      <button
+                        key={p}
+                        onClick={() => setPeriodoEvolucao(p)}
+                        className="px-3 py-1.5 rounded-[var(--r-pill)] text-[12px] font-semibold transition-colors"
+                        style={
+                          isActive
+                            ? { background: 'var(--cyan)', color: 'white' }
+                            : { background: 'var(--surface-2)', color: 'var(--t2)', border: '1px solid var(--border)' }
+                        }
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                  <div
+                    className="flex rounded-[var(--r-md)] p-0.5 ml-1"
+                    style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
+                  >
+                    <button
+                      onClick={() => setTipoGraficoEvolucao('bar')}
+                      className="p-1.5 rounded transition-colors"
+                      style={
+                        tipoGraficoEvolucao === 'bar'
+                          ? { background: 'var(--cyan)', color: 'white' }
+                          : { color: 'var(--t2)' }
+                      }
+                      title="Gráfico de barras"
+                    >
                       <BarChart3 className="w-3.5 h-3.5" />
                     </button>
-                    <button onClick={() => setTipoGraficoEvolucao('line')}
-                      className={`p-1.5 rounded transition-all ${tipoGraficoEvolucao === 'line' ? 'bg-[#00B8D9] text-white' : 'text-muted-foreground hover:text-foreground'}`}
-                      title="Gráfico de linha">
+                    <button
+                      onClick={() => setTipoGraficoEvolucao('line')}
+                      className="p-1.5 rounded transition-colors"
+                      style={
+                        tipoGraficoEvolucao === 'line'
+                          ? { background: 'var(--cyan)', color: 'white' }
+                          : { color: 'var(--t2)' }
+                      }
+                      title="Gráfico de linha"
+                    >
                       <TrendingUp className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-6">
-                {/* Gráfico */}
-                <div className="flex-1 min-w-0">
-                  <ResponsiveContainer width="100%" height={200}>
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-6">
+                {/* Grafico */}
+                <div className="min-w-0">
+                  <ResponsiveContainer width="100%" height={260}>
                     {tipoGraficoEvolucao === 'line' ? (
                       <AreaChart data={evolucaoData} margin={{ top: 5, right: 10, bottom: 0, left: 10 }}>
                         <defs>
                           <linearGradient id="evolGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#00B8D9" stopOpacity={0.25} />
+                            <stop offset="5%" stopColor="#00B8D9" stopOpacity={0.45} />
                             <stop offset="95%" stopColor="#00B8D9" stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
-                        <XAxis dataKey="data" tick={{ fontSize: 10 }} />
-                        <YAxis tick={{ fontSize: 10 }} tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`} width={60} />
+                        <CartesianGrid strokeDasharray="4 4" stroke="rgba(255,255,255,0.04)" />
+                        <XAxis dataKey="data" tick={{ fontSize: 10, fill: '#6B7280' }} />
+                        <YAxis tick={{ fontSize: 10, fill: '#6B7280' }} tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`} width={60} />
                         <Tooltip
                           formatter={(v: number | undefined) => v != null ? [`R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Patrimônio'] : ''}
-                          contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
+                          contentStyle={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12, color: 'var(--t1)' }}
                         />
-                        <Area type="monotone" dataKey="valor" stroke="#00B8D9" fill="url(#evolGrad)" strokeWidth={2} dot={false} />
+                        <Area type="monotone" dataKey="valor" stroke="#00B8D9" fill="url(#evolGrad)" strokeWidth={2.5} dot={false} />
                       </AreaChart>
                     ) : (
                       <BarChart data={evolucaoData} margin={{ top: 5, right: 10, bottom: 0, left: 10 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
-                        <XAxis dataKey="data" tick={{ fontSize: 10 }} />
-                        <YAxis tick={{ fontSize: 10 }} tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`} width={60} />
+                        <CartesianGrid strokeDasharray="4 4" stroke="rgba(255,255,255,0.04)" />
+                        <XAxis dataKey="data" tick={{ fontSize: 10, fill: '#6B7280' }} />
+                        <YAxis tick={{ fontSize: 10, fill: '#6B7280' }} tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`} width={60} />
                         <Tooltip
                           formatter={(v: number | undefined) => v != null ? [`R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Patrimônio'] : ''}
-                          contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
+                          contentStyle={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12, color: 'var(--t1)' }}
                         />
-                        <Bar dataKey="valor" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="valor" fill="#00B8D9" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     ) as React.ReactElement}
                   </ResponsiveContainer>
                 </div>
 
-                {/* Lista de datas — desktop only */}
-                <div className="hidden lg:flex flex-col justify-between w-52 border-l border-border pl-5">
-                  <div className="space-y-0">
+                {/* perf-table — lista de datas + total */}
+                <div className="hidden lg:flex flex-col">
+                  <div>
                     {[...evolucaoData].slice(-7).reverse().map((d, i) => (
-                      <div key={i} className="flex justify-between items-center py-2 border-b border-border/40 last:border-0">
-                        <span className="text-xs text-muted-foreground">{d.data}</span>
-                        <span className="text-xs font-medium text-foreground">
+                      <div
+                        key={i}
+                        className="flex justify-between items-center py-2 text-[13px]"
+                        style={{ borderBottom: '1px dashed var(--border)' }}
+                      >
+                        <span style={{ color: 'var(--t2)' }}>{d.data}</span>
+                        <span
+                          className="font-medium tabular-nums"
+                          style={{ color: 'var(--t1)' }}
+                        >
                           R$ {d.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </span>
                       </div>
                     ))}
                   </div>
-                  <div className="pt-3 border-t border-border">
-                    <p className="text-xs text-muted-foreground mb-0.5">Total acumulado da carteira</p>
-                    <p className="text-base font-bold text-foreground">
+                  <div
+                    className="mt-3 pt-3"
+                    style={{ borderTop: '1px solid var(--border)' }}
+                  >
+                    <small className="text-[11px]" style={{ color: 'var(--t2)' }}>
+                      Total acumulado da carteira
+                    </small>
+                    <div
+                      className="text-[18px] font-bold tabular-nums mt-0.5"
+                      style={{ color: 'var(--cyan)' }}
+                    >
                       R$ {totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* KPI cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* perf-kpis — 4 KPI cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {[
                 {
                   label: 'Patrimônio Atual',
-                  valor: `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-                  sub: `Aportado: R$ ${totalAport.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-                  cor: '#00B8D9',
+                  valor: `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
+                  sub: `Aportado: R$ ${totalAport.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
+                  tone: 'up' as const,
                   icon: Wallet,
                 },
                 {
                   label: 'Lucro / Prejuízo',
-                  valor: `${lucroTotal >= 0 ? '+' : ''}R$ ${lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+                  valor: `${lucroTotal >= 0 ? '+' : ''}R$ ${lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
                   sub: lucroTotal >= 0 ? 'Rendimento positivo' : 'Resultado negativo',
-                  cor: lucroTotal >= 0 ? '#10b981' : '#ef4444',
+                  tone: (lucroTotal >= 0 ? 'up' : 'dn') as 'up' | 'dn',
                   icon: lucroTotal >= 0 ? TrendingUp : TrendingDown,
                 },
                 {
                   label: 'Rentabilidade Total',
                   valor: `${rentTotal >= 0 ? '+' : ''}${rentTotal.toFixed(2)}%`,
                   sub: 'Desde o primeiro aporte',
-                  cor: rentTotal >= 0 ? '#10b981' : '#ef4444',
+                  tone: (rentTotal >= 0 ? 'up' : 'dn') as 'up' | 'dn',
                   icon: rentTotal >= 0 ? ArrowUpRight : ArrowDownRight,
                 },
                 {
                   label: '% do CDI',
                   valor: vsCDI !== null ? `${vsCDI}%` : '—',
                   sub: cdiAnual ? `CDI atual: ${cdiAnual.toFixed(2)}% a.a.` : 'CDI indisponível',
-                  cor: '#6366f1',
+                  tone: (vsCDI !== null && vsCDI >= 0 ? 'up' : 'dn') as 'up' | 'dn',
                   icon: BarChart3,
                 },
               ].map(c => (
-                <div key={c.label} className="bg-card border border-border rounded-xl p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs text-muted-foreground">{c.label}</p>
-                    <c.icon className="w-4 h-4" style={{ color: c.cor }} />
+                <div
+                  key={c.label}
+                  className="rounded-[var(--r-lg)] px-5 py-4"
+                  style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+                >
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-[12.5px]" style={{ color: 'var(--t2)' }}>{c.label}</span>
+                    <c.icon className="w-4 h-4" style={{ color: 'var(--cyan)' }} />
                   </div>
-                  <p className="text-xl font-bold" style={{ color: c.cor }}>{c.valor}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{c.sub}</p>
+                  <div
+                    className="text-[22px] font-bold tracking-tight tabular-nums"
+                    style={{ color: c.tone === 'up' ? 'var(--cyan)' : 'var(--loss)' }}
+                  >
+                    {c.valor}
+                  </div>
+                  <div className="text-[11.5px] mt-1" style={{ color: 'var(--t2)' }}>
+                    {c.sub}
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Gráficos lado a lado */}
+            {/* perf-bottom — 2 listas lado a lado */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-              {/* Variação % por ativo — lista com barras divergentes */}
+              {/* Variacao % por ativo */}
               {variacaoPorAtivo.length > 0 && (
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <h2 className="text-sm font-semibold text-foreground mb-1">Variação % por Ativo</h2>
-                  <p className="text-xs text-muted-foreground mb-5">Retorno desde o preço médio de compra</p>
+                <div
+                  className="rounded-[var(--r-lg)] px-6 py-5"
+                  style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+                >
+                  <h4 className="text-[16px] font-semibold" style={{ color: 'var(--t1)' }}>
+                    Variação % por Ativo
+                  </h4>
+                  <p className="text-[12px] mb-4" style={{ color: 'var(--t2)' }}>
+                    Retorno desde o preço médio de compra
+                  </p>
 
-                  {/* Cabeçalho */}
-                  <div className="flex items-center gap-3 mb-2 px-1">
-                    <span className="text-[10px] text-muted-foreground w-16 flex-shrink-0">Ativo</span>
-                    <div className="flex-1 flex text-[10px] text-muted-foreground">
-                      <span className="flex-1 text-right pr-2">Queda</span>
-                      <span className="flex-1 pl-2">Alta</span>
-                    </div>
-                    <span className="text-[10px] text-muted-foreground w-14 text-right">Variação</span>
-                  </div>
-
-                  <div className="space-y-3">
+                  <div className="space-y-1">
                     {(() => {
                       const maxAbs = Math.max(...variacaoPorAtivo.map(e => Math.abs(e.variacao)), 0.01);
                       return variacaoPorAtivo.map((entry, i) => {
                         const isPos = entry.variacao >= 0;
-                        const pct = (Math.abs(entry.variacao) / maxAbs) * 48; // max 48% de cada lado
+                        const pct = (Math.abs(entry.variacao) / maxAbs) * 48;
                         return (
-                          <div key={i} className="flex items-center gap-3">
-                            <span className="text-xs font-mono font-semibold text-foreground w-16 flex-shrink-0 truncate">
+                          <div
+                            key={i}
+                            className="grid grid-cols-[60px_1fr_80px] gap-3 items-center py-1.5"
+                          >
+                            <span
+                              className="text-[13px] font-semibold truncate"
+                              style={{ color: 'var(--t1)' }}
+                            >
                               {entry.nome}
                             </span>
-                            {/* Barra divergente centralizada */}
-                            <div className="flex-1 flex items-center h-7 relative">
-                              {/* Linha central */}
-                              <div className="absolute left-1/2 -translate-x-px w-px h-full bg-border z-10" />
-                              {/* Fundo da barra */}
-                              <div className="flex-1 flex h-5 rounded overflow-hidden bg-muted/30">
-                                <div className="w-1/2 flex justify-end">
-                                  {!isPos && (
-                                    <div
-                                      className="h-full rounded-l-sm"
-                                      style={{ width: `${pct}%`, background: '#ef4444' }}
-                                    />
-                                  )}
-                                </div>
-                                <div className="w-1/2 flex justify-start">
-                                  {isPos && (
-                                    <div
-                                      className="h-full rounded-r-sm"
-                                      style={{ width: `${pct}%`, background: '#10b981' }}
-                                    />
-                                  )}
-                                </div>
-                              </div>
+                            <div className="relative h-3 rounded overflow-hidden" style={{ background: 'var(--surface-2)' }}>
+                              {isPos ? (
+                                <div
+                                  className="absolute top-0 bottom-0 rounded"
+                                  style={{ left: '50%', width: `${pct}%`, background: 'var(--gain)' }}
+                                />
+                              ) : (
+                                <div
+                                  className="absolute top-0 bottom-0 rounded"
+                                  style={{ right: '50%', width: `${pct}%`, background: 'var(--loss)' }}
+                                />
+                              )}
                             </div>
-                            <span className={`text-xs font-bold w-14 text-right tabular-nums ${isPos ? 'text-green-500' : 'text-red-500'}`}>
+                            <span
+                              className="text-[13px] font-semibold tabular-nums text-right"
+                              style={{ color: isPos ? 'var(--gain)' : 'var(--loss)' }}
+                            >
                               {isPos ? '+' : ''}{entry.variacao.toFixed(2)}%
                             </span>
                           </div>
@@ -948,61 +1020,84 @@ function RelatoriosContent() {
                 </div>
               )}
 
-              {/* Rentabilidade por categoria — cards com indicador visual */}
+              {/* Rentabilidade por categoria */}
               {rentabilidadePorCategoria.length > 0 && (
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <h2 className="text-sm font-semibold text-foreground mb-1">Rentabilidade por Categoria</h2>
-                  <p className="text-xs text-muted-foreground mb-5">Média ponderada pelo valor alocado em cada classe</p>
+                <div
+                  className="rounded-[var(--r-lg)] px-6 py-5"
+                  style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+                >
+                  <h4 className="text-[16px] font-semibold" style={{ color: 'var(--t1)' }}>
+                    Rentabilidade por Categoria
+                  </h4>
+                  <p className="text-[12px] mb-4" style={{ color: 'var(--t2)' }}>
+                    Média ponderada pelo valor alocado em cada classe
+                  </p>
 
-                  <div className="space-y-4">
+                  <div className="space-y-1">
                     {(() => {
                       const maxAbs = Math.max(...rentabilidadePorCategoria.map(c => Math.abs(c.rentabilidade)), 0.01);
                       return rentabilidadePorCategoria.map((c, i) => {
                         const isPos = c.rentabilidade >= 0;
-                        const barPct = (Math.abs(c.rentabilidade) / maxAbs) * 100;
-                        const cor = isPos ? c.cor : '#ef4444';
+                        const pct = (Math.abs(c.rentabilidade) / maxAbs) * 48;
+                        const cor = isPos ? c.cor : 'var(--loss)';
                         return (
-                          <div key={i}>
-                            <div className="flex items-center justify-between mb-1.5">
-                              <div className="flex items-center gap-2">
-                                <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: cor }} />
-                                <span className="text-sm font-medium text-foreground">{c.categoria}</span>
-                              </div>
-                              <span className="text-sm font-bold tabular-nums" style={{ color: cor }}>
-                                {isPos ? '+' : ''}{c.rentabilidade.toFixed(2)}%
-                              </span>
+                          <div
+                            key={i}
+                            className="grid grid-cols-[80px_1fr_80px] gap-3 items-center py-1.5"
+                          >
+                            <span
+                              className="text-[12px] font-medium truncate"
+                              style={{ color: 'var(--t1)' }}
+                            >
+                              {c.categoria}
+                            </span>
+                            <div className="relative h-3 rounded overflow-hidden" style={{ background: 'var(--surface-2)' }}>
+                              {isPos ? (
+                                <div
+                                  className="absolute top-0 bottom-0 rounded"
+                                  style={{ left: '50%', width: `${pct}%`, background: cor }}
+                                />
+                              ) : (
+                                <div
+                                  className="absolute top-0 bottom-0 rounded"
+                                  style={{ right: '50%', width: `${pct}%`, background: 'var(--loss)' }}
+                                />
+                              )}
                             </div>
-                            {/* Barra de progresso */}
-                            <div className="h-2 bg-muted rounded-full overflow-hidden">
-                              <div
-                                className="h-full rounded-full transition-all duration-500"
-                                style={{ width: `${barPct}%`, background: cor }}
-                              />
-                            </div>
-                            <p className="text-[10px] text-muted-foreground mt-1">
-                              {isPos ? 'Acima do preço médio' : 'Abaixo do preço médio'}
-                            </p>
+                            <span
+                              className="text-[13px] font-semibold tabular-nums text-right"
+                              style={{ color: cor }}
+                            >
+                              {isPos ? '+' : ''}{c.rentabilidade.toFixed(2)}%
+                            </span>
                           </div>
                         );
                       });
                     })()}
-                  </div>
 
-                  {/* Comparativo CDI */}
-                  {cdiAnual && (
-                    <div className="mt-5 pt-4 border-t border-border">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/50 flex-shrink-0" />
-                          <span className="text-sm font-medium text-muted-foreground">CDI (referência)</span>
+                    {cdiAnual && (
+                      <div
+                        className="grid grid-cols-[80px_1fr_80px] gap-3 items-center py-1.5 mt-2 pt-2"
+                        style={{ borderTop: '1px solid var(--border)' }}
+                      >
+                        <span className="text-[12px]" style={{ color: 'var(--t2)' }}>
+                          CDI (ref.)
+                        </span>
+                        <div className="relative h-3 rounded overflow-hidden" style={{ background: 'var(--surface-2)' }}>
+                          <div
+                            className="absolute top-0 bottom-0 rounded"
+                            style={{ left: '50%', width: `14%`, background: 'var(--t3)' }}
+                          />
                         </div>
-                        <span className="text-sm font-bold text-muted-foreground">{cdiAnual.toFixed(2)}% a.a.</span>
+                        <span
+                          className="text-[13px] font-semibold tabular-nums text-right"
+                          style={{ color: 'var(--t2)' }}
+                        >
+                          {cdiAnual.toFixed(2)}% a.a.
+                        </span>
                       </div>
-                      <div className="h-2 bg-muted rounded-full">
-                        <div className="h-full w-full rounded-full bg-muted-foreground/20" />
-                      </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -1014,155 +1109,219 @@ function RelatoriosContent() {
         {aba === 'extratos' && (
           <div className="space-y-4">
 
-            {/* Filtros */}
-            <div className="bg-card border border-border rounded-xl p-4">
-              <div className="flex flex-wrap gap-3 items-center">
-                <div className="relative flex-1 min-w-[180px]">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <input
-                    type="text"
-                    placeholder="Buscar ativo..."
-                    value={busca}
-                    onChange={e => setBusca(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 text-sm bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#00B8D9]"
-                  />
-                </div>
+            {/* extracts-filters */}
+            <div
+              className="rounded-[var(--r-lg)] p-3.5 flex flex-wrap gap-3 items-center"
+              style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+            >
+              {/* search-box */}
+              <div
+                className="flex items-center gap-2 flex-1 min-w-[200px] px-3.5 py-2.5 rounded-[var(--r-md)]"
+                style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
+              >
+                <Search className="w-4 h-4 shrink-0" style={{ color: 'var(--t3)' }} />
+                <input
+                  type="text"
+                  placeholder="Buscar ativo..."
+                  value={busca}
+                  onChange={e => setBusca(e.target.value)}
+                  className="flex-1 bg-transparent text-[13px] outline-none placeholder:opacity-100"
+                  style={{ color: 'var(--t1)' }}
+                />
+              </div>
 
-                <div className="relative">
-                  <select
-                    value={filtroTipo}
-                    onChange={e => setFiltroTipo(e.target.value)}
-                    className="pl-3 pr-8 py-2 text-sm bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-[#00B8D9] appearance-none cursor-pointer"
+              {/* select-box: tipo */}
+              <div
+                className="relative flex items-center gap-2 px-3.5 py-2.5 rounded-[var(--r-md)] min-w-[140px]"
+                style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
+              >
+                <select
+                  value={filtroTipo}
+                  onChange={e => setFiltroTipo(e.target.value)}
+                  className="flex-1 bg-transparent text-[13px] outline-none appearance-none cursor-pointer pr-5"
+                  style={{ color: 'var(--t1)' }}
+                >
+                  {['Todos', 'Compra', 'Venda'].map(t => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 w-3.5 h-3.5 pointer-events-none" style={{ color: 'var(--t2)' }} />
+              </div>
+
+              {/* select-box: categoria */}
+              <div
+                className="relative flex items-center gap-2 px-3.5 py-2.5 rounded-[var(--r-md)] min-w-[140px]"
+                style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
+              >
+                <select
+                  value={filtroCategoria}
+                  onChange={e => setFiltroCategoria(e.target.value)}
+                  className="flex-1 bg-transparent text-[13px] outline-none appearance-none cursor-pointer pr-5"
+                  style={{ color: 'var(--t1)' }}
+                >
+                  {['Todas', 'Renda Fixa', 'Ações B3', 'FIIs', 'Internac.'].map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 w-3.5 h-3.5 pointer-events-none" style={{ color: 'var(--t2)' }} />
+              </div>
+
+              {/* select-box: corretora */}
+              <div
+                className="relative flex items-center gap-2 px-3.5 py-2.5 rounded-[var(--r-md)] min-w-[140px]"
+                style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
+              >
+                <select
+                  value={filtroCorretora}
+                  onChange={e => setFiltroCorretora(e.target.value)}
+                  className="flex-1 bg-transparent text-[13px] outline-none appearance-none cursor-pointer pr-5"
+                  style={{ color: 'var(--t1)' }}
+                >
+                  {corretoras.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 w-3.5 h-3.5 pointer-events-none" style={{ color: 'var(--t2)' }} />
+              </div>
+
+              {/* Exportar (primary) com dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowExportMenu(v => !v)}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13.5px] font-semibold text-white transition-colors"
+                  style={{ background: 'var(--cyan)', boxShadow: '0 4px 14px rgba(0,184,217,0.28)' }}
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Exportar
+                  <ChevronDown className="w-3 h-3" />
+                </button>
+                {showExportMenu && (
+                  <div
+                    className="absolute right-0 top-full mt-1 rounded-[var(--r-md)] z-30 min-w-[160px] p-1 overflow-hidden"
+                    style={{
+                      background: 'var(--surface-2)',
+                      border: '1px solid var(--border)',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+                    }}
                   >
-                    {['Todos', 'Compra', 'Venda'].map(t => (
-                      <option key={t} value={t}>{t}</option>
+                    {[
+                      { label: 'Excel (XLS)', onClick: () => { exportarXLS(); setShowExportMenu(false); } },
+                      { label: 'PDF',         onClick: () => { exportarPDF(); setShowExportMenu(false); } },
+                    ].map(item => (
+                      <button
+                        key={item.label}
+                        onClick={item.onClick}
+                        className="w-full text-left px-3 py-2.5 rounded-[var(--r-sm)] text-[13px] font-medium transition-colors hover:bg-[var(--surface-3)]"
+                        style={{ color: 'var(--t1)' }}
+                      >
+                        {item.label}
+                      </button>
                     ))}
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                </div>
-
-                <div className="relative">
-                  <select
-                    value={filtroCategoria}
-                    onChange={e => setFiltroCategoria(e.target.value)}
-                    className="pl-3 pr-8 py-2 text-sm bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-[#00B8D9] appearance-none cursor-pointer"
-                  >
-                    {['Todas', 'Renda Fixa', 'Ações B3', 'FIIs', 'Internac.'].map(c => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                </div>
-
-                <div className="relative">
-                  <select
-                    value={filtroCorretora}
-                    onChange={e => setFiltroCorretora(e.target.value)}
-                    className="pl-3 pr-8 py-2 text-sm bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-[#00B8D9] appearance-none cursor-pointer"
-                  >
-                    {corretoras.map(c => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                </div>
-
-                {/* Dropdown exportar */}
-                <div className="ml-auto relative">
-                  <button
-                    onClick={() => setShowExportMenu(v => !v)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#00B8D9] hover:bg-[#007EA7] text-white rounded-lg transition-colors"
-                  >
-                    <Download className="w-4 h-4" />
-                    Exportar
-                    <ChevronDown className="w-3.5 h-3.5" />
-                  </button>
-                  {showExportMenu && (
-                    <div className="absolute right-0 top-full mt-1 bg-card border border-border rounded-xl shadow-xl z-30 min-w-[160px] p-1 overflow-hidden">
-                      {[
-                        { label: 'Excel (XLS)', onClick: () => { exportarXLS(); setShowExportMenu(false); } },
-                        { label: 'PDF',         onClick: () => { exportarPDF(); setShowExportMenu(false); } },
-                      ].map(item => (
-                        <button
-                          key={item.label}
-                          onClick={item.onClick}
-                          className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-muted text-sm font-medium text-foreground transition-colors"
-                        >
-                          {item.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Tabela */}
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            {/* extracts-table */}
+            <div
+              className="rounded-[var(--r-lg)] overflow-hidden"
+              style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+            >
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full border-collapse">
                   <thead>
-                    <tr className="border-b border-border bg-muted/50">
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Data</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Tipo</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Ticker</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Nome</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Categoria</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground">Qtd / R$</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground">Preço / Taxa</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground">Total</th>
+                    <tr>
+                      {['Data', 'Tipo', 'Ticker', 'Nome', 'Categoria', 'Qtd / R$', 'Preço / Taxa', 'Total'].map((h, i) => (
+                        <th
+                          key={h}
+                          className="text-[11.5px] font-medium uppercase tracking-wider px-[18px] py-4"
+                          style={{
+                            color: 'var(--t2)',
+                            background: 'var(--surface-2)',
+                            borderBottom: '1px solid var(--border)',
+                            textAlign: i >= 5 ? 'right' : 'left',
+                          }}
+                        >
+                          {h}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
                     {transacoesFiltradas.length === 0 ? (
                       <tr>
-                        <td colSpan={8} className="text-center py-12 text-muted-foreground">
+                        <td colSpan={8} className="text-center py-12 text-[13px]" style={{ color: 'var(--t2)' }}>
                           Nenhuma transação encontrada
                         </td>
                       </tr>
-                    ) : transacoesFiltradas.map((t, i) => (
-                      <tr key={t.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? '' : 'bg-muted/20'}`}>
-                        <td className="px-4 py-3 text-muted-foreground">
+                    ) : transacoesFiltradas.map((t) => (
+                      <tr
+                        key={t.id}
+                        className="transition-colors hover:bg-[var(--glass)]"
+                      >
+                        <td className="px-[18px] py-3.5 text-[13.5px] tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
                           {new Date(t.data).toLocaleDateString('pt-BR')}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-[18px] py-3.5" style={{ borderBottom: '1px solid var(--border)' }}>
                           {t.tipo === 'Compra' ? (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                              <ArrowUpRight className="w-3 h-3 mr-1" />
+                            <span
+                              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-[12px] font-semibold"
+                              style={{ background: 'var(--gain-soft)', color: 'var(--gain)' }}
+                            >
+                              <ArrowUpRight className="w-3 h-3" />
                               Compra
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                              <ArrowDownRight className="w-3 h-3 mr-1" />
+                            <span
+                              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-[12px] font-semibold"
+                              style={{ background: 'var(--loss-soft)', color: 'var(--loss)' }}
+                            >
+                              <ArrowDownRight className="w-3 h-3" />
                               Venda
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-3 font-semibold text-foreground">{t.ativo}</td>
-                        <td className="px-4 py-3 text-muted-foreground text-xs max-w-[160px] truncate">{t.nome}</td>
-                        <td className="px-4 py-3 text-muted-foreground">{t.categoria}</td>
-                        <td className="px-4 py-3 text-right text-foreground">
+                        <td className="px-[18px] py-3.5 text-[13.5px] font-bold" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
+                          {t.ativo}
+                        </td>
+                        <td className="px-[18px] py-3.5 text-[13px] max-w-[180px] truncate" style={{ color: 'var(--t2)', borderBottom: '1px solid var(--border)' }}>
+                          {t.nome}
+                        </td>
+                        <td className="px-[18px] py-3.5 text-[13px]" style={{ color: 'var(--t2)', borderBottom: '1px solid var(--border)' }}>
+                          {t.categoria}
+                        </td>
+                        <td className="px-[18px] py-3.5 text-[13.5px] text-right tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
                           {t.type === 'renda_fixa'
                             ? `R$ ${t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
                             : t.qtd}
                         </td>
-                        <td className="px-4 py-3 text-right text-foreground">
+                        <td className="px-[18px] py-3.5 text-[13.5px] text-right tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
                           {t.type === 'renda_fixa'
                             ? `${t.preco.toFixed(2)}% a.a.`
                             : `R$ ${t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
                         </td>
-                        <td className="px-4 py-3 text-right font-semibold text-foreground">
-                          R$ {t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        <td className="px-[18px] py-3.5 text-right" style={{ borderBottom: '1px solid var(--border)' }}>
+                          <strong className="text-[13.5px] tabular-nums" style={{ color: 'var(--t1)' }}>
+                            R$ {t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          </strong>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <div className="px-4 py-3 border-t border-border flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">{transacoesFiltradas.length} registro(s)</span>
-                <span className="text-xs text-muted-foreground">
-                  Total: R$ {transacoesFiltradas.reduce((s, t) => s + t.total, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              <div
+                className="px-[18px] py-3 flex items-center justify-between"
+                style={{ borderTop: '1px solid var(--border)' }}
+              >
+                <span className="text-[12px]" style={{ color: 'var(--t2)' }}>
+                  {transacoesFiltradas.length} registro(s)
+                </span>
+                <span className="text-[12px]" style={{ color: 'var(--t2)' }}>
+                  Total:{' '}
+                  <strong className="tabular-nums" style={{ color: 'var(--cyan)' }}>
+                    R$ {transacoesFiltradas.reduce((s, t) => s + t.total, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  </strong>
                 </span>
               </div>
             </div>
@@ -1171,9 +1330,9 @@ function RelatoriosContent() {
 
         {/* ── ABA: IMPOSTO DE RENDA ─────────────────────────────────────────── */}
         {aba === 'ir' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
 
-            {/* KPI cards — baseados em vendas reais */}
+            {/* tax-summary — 2 cards (primary cyan + neutral) */}
             {(() => {
               const totalVendas = sellTransactions.reduce((s, t) => s + t.total_value, 0);
               const lucroRealizado = sellTransactions.reduce((s, t) => {
@@ -1183,117 +1342,185 @@ function RelatoriosContent() {
               const irEstimadoIR = lucroRealizado > 0 ? lucroRealizado * 0.15 : 0;
               return (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    {
-                      label: 'Total em Vendas',
-                      valor: `R$ ${totalVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-                      cor: '#00B8D9',
-                      icon: TrendingUp,
-                      desc: 'Soma do valor recebido nas operações de venda',
-                    },
-                    {
-                      label: 'IR Estimado (15%)',
-                      valor: `R$ ${irEstimadoIR.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-                      cor: irEstimadoIR > 0 ? '#ef4444' : '#6b7280',
-                      icon: FileBarChart,
-                      desc: 'Estimativa sobre lucro realizado (swing trade)',
-                    },
-                  ].map(c => (
-                    <div key={c.label} className="bg-card border border-border rounded-xl p-5">
-                      <div className="flex items-start justify-between mb-3">
-                        <p className="text-sm text-muted-foreground">{c.label}</p>
-                        <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `${c.cor}20` }}>
-                          <c.icon className="w-5 h-5" style={{ color: c.cor }} />
-                        </div>
+                  {/* Primary (ciano gradient) */}
+                  <div
+                    className="rounded-[var(--r-lg)] px-6 py-5 relative overflow-hidden"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(0,184,217,0.10), transparent 60%), var(--surface-1)',
+                      border: '1px solid rgba(0,184,217,0.25)',
+                    }}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-[13.5px]" style={{ color: 'var(--t2)' }}>
+                        Total em Vendas
+                      </span>
+                      <div
+                        className="w-9 h-9 rounded-[var(--r-md)] grid place-items-center"
+                        style={{ background: 'rgba(0,184,217,0.15)', color: 'var(--cyan)' }}
+                      >
+                        <TrendingUp className="w-[18px] h-[18px]" />
                       </div>
-                      <p className="text-2xl font-bold" style={{ color: c.cor }}>{c.valor}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{c.desc}</p>
                     </div>
-                  ))}
+                    <div
+                      className="text-[32px] font-extrabold tracking-tight tabular-nums mb-1.5"
+                      style={{ color: 'var(--cyan)' }}
+                    >
+                      R$ {totalVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </div>
+                    <p className="text-[12px]" style={{ color: 'var(--t2)' }}>
+                      Soma do valor recebido nas operações de venda
+                    </p>
+                  </div>
+
+                  {/* Neutral */}
+                  <div
+                    className="rounded-[var(--r-lg)] px-6 py-5"
+                    style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-[13.5px]" style={{ color: 'var(--t2)' }}>
+                        IR Estimado (15%)
+                      </span>
+                      <div
+                        className="w-9 h-9 rounded-[var(--r-md)] grid place-items-center"
+                        style={{ background: 'var(--surface-2)', color: 'var(--cyan)' }}
+                      >
+                        <FileBarChart className="w-[18px] h-[18px]" />
+                      </div>
+                    </div>
+                    <div
+                      className="text-[32px] font-extrabold tracking-tight tabular-nums mb-1.5"
+                      style={{ color: irEstimadoIR > 0 ? 'var(--loss)' : 'var(--t3)' }}
+                    >
+                      R$ {irEstimadoIR.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </div>
+                    <p className="text-[12px]" style={{ color: 'var(--t2)' }}>
+                      Estimativa sobre lucro realizado (swing trade)
+                    </p>
+                  </div>
                 </div>
               );
             })()}
 
-            {/* Informe de Rendimentos */}
-            <div className="bg-card border border-border rounded-xl p-5">
-              <div className="flex items-start gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
-                  <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground">Informe de Rendimentos</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Posição completa da carteira com rendimentos, isenções e base para declaração do IR.
-                  </p>
-                </div>
+            {/* informe-banner */}
+            <div
+              className="flex items-center gap-4 px-6 py-5 rounded-[var(--r-lg)]"
+              style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+            >
+              <div
+                className="w-[52px] h-[52px] rounded-[var(--r-md)] grid place-items-center shrink-0"
+                style={{ background: 'rgba(0,184,217,0.12)', color: 'var(--cyan)' }}
+              >
+                <FileText className="w-[26px] h-[26px]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-[15px] font-semibold mb-0.5" style={{ color: 'var(--t1)' }}>
+                  Informe de Rendimentos
+                </h4>
+                <p className="text-[12.5px]" style={{ color: 'var(--t2)' }}>
+                  Posição completa da carteira com rendimentos, isenções e base para declaração do IR.
+                </p>
               </div>
               <button
                 onClick={gerarInformeRendimentos}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-sm)] text-[13.5px] font-semibold text-white transition-colors shrink-0"
+                style={{ background: 'var(--cyan)', boxShadow: '0 4px 14px rgba(0,184,217,0.28)' }}
               >
                 <Download className="w-4 h-4" />
-                Baixar Informe de Rendimentos (PDF)
+                Baixar Informe (PDF)
               </button>
             </div>
 
-            {/* Relatório de Vendas */}
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
-              <div className="px-5 py-4 border-b border-border">
-                <h2 className="text-sm font-semibold text-foreground">Relatório de Vendas</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">Histórico de operações de venda registradas na plataforma</p>
+            {/* Relatório de Vendas (extracts-table) */}
+            <div
+              className="rounded-[var(--r-lg)] overflow-hidden"
+              style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+            >
+              <div
+                className="px-[22px] py-[18px]"
+                style={{ borderBottom: '1px solid var(--border)' }}
+              >
+                <h4 className="text-[15px] font-semibold" style={{ color: 'var(--t1)' }}>
+                  Relatório de Vendas
+                </h4>
+                <p className="text-[12px] mt-0.5" style={{ color: 'var(--t2)' }}>
+                  Histórico de operações de venda registradas na plataforma
+                </p>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full border-collapse">
                   <thead>
-                    <tr className="border-b border-border bg-muted/50">
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Data</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Ticker</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Nome</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">Categoria</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground">Qtd / R$</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground">Preço de Venda</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground">Total Recebido</th>
+                    <tr>
+                      {['Data', 'Ticker', 'Nome', 'Categoria', 'Qtd / R$', 'Preço de Venda', 'Total Recebido'].map((h, i) => (
+                        <th
+                          key={h}
+                          className="text-[11.5px] font-medium uppercase tracking-wider px-[18px] py-4"
+                          style={{
+                            color: 'var(--t2)',
+                            background: 'var(--surface-2)',
+                            borderBottom: '1px solid var(--border)',
+                            textAlign: i >= 4 ? 'right' : 'left',
+                          }}
+                        >
+                          {h}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
                     {sellTransactions.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="text-center py-12 text-muted-foreground">
+                        <td colSpan={7} className="text-center py-12 text-[13px]" style={{ color: 'var(--t2)' }}>
                           Nenhuma venda registrada ainda
                         </td>
                       </tr>
-                    ) : sellTransactions.map((t, i) => (
-                      <tr key={t.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? '' : 'bg-muted/20'}`}>
-                        <td className="px-4 py-3 text-muted-foreground">
+                    ) : sellTransactions.map((t) => (
+                      <tr
+                        key={t.id}
+                        className="transition-colors hover:bg-[var(--glass)]"
+                      >
+                        <td className="px-[18px] py-3.5 text-[13.5px] tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
                           {new Date(t.created_at).toLocaleDateString('pt-BR')}
                         </td>
-                        <td className="px-4 py-3 font-bold text-foreground">{t.ticker}</td>
-                        <td className="px-4 py-3 text-muted-foreground max-w-[160px] truncate">{t.name}</td>
-                        <td className="px-4 py-3">
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                        <td className="px-[18px] py-3.5 text-[13.5px] font-bold" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
+                          {t.ticker}
+                        </td>
+                        <td className="px-[18px] py-3.5 text-[13px] max-w-[180px] truncate" style={{ color: 'var(--t2)', borderBottom: '1px solid var(--border)' }}>
+                          {t.name}
+                        </td>
+                        <td className="px-[18px] py-3.5" style={{ borderBottom: '1px solid var(--border)' }}>
+                          <span
+                            className="inline-flex items-center px-2.5 py-0.5 rounded-[var(--r-pill)] text-[11.5px] font-medium"
+                            style={{ background: 'var(--surface-2)', color: 'var(--t2)' }}
+                          >
                             {TYPE_LABEL[t.asset_type] ?? t.asset_type}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-right text-foreground">
+                        <td className="px-[18px] py-3.5 text-[13.5px] text-right tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
                           {t.quantity.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </td>
-                        <td className="px-4 py-3 text-right text-foreground">
+                        <td className="px-[18px] py-3.5 text-[13.5px] text-right tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
                           R$ {t.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </td>
-                        <td className="px-4 py-3 text-right font-semibold text-foreground">
-                          R$ {t.total_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        <td className="px-[18px] py-3.5 text-right" style={{ borderBottom: '1px solid var(--border)' }}>
+                          <strong className="text-[13.5px] tabular-nums" style={{ color: 'var(--t1)' }}>
+                            R$ {t.total_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          </strong>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                   {sellTransactions.length > 0 && (
                     <tfoot>
-                      <tr className="border-t border-border bg-muted/50">
-                        <td colSpan={6} className="px-4 py-3 text-xs font-semibold text-muted-foreground">
+                      <tr style={{ background: 'var(--surface-2)' }}>
+                        <td colSpan={6} className="px-[18px] py-3.5 text-[12.5px]" style={{ color: 'var(--t2)' }}>
                           {sellTransactions.length} operaç{sellTransactions.length === 1 ? 'ão' : 'ões'}
                         </td>
-                        <td className="px-4 py-3 text-right text-sm font-bold text-foreground">
-                          R$ {sellTransactions.reduce((s, t) => s + t.total_value, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        <td className="px-[18px] py-3.5 text-right">
+                          <strong className="text-[13.5px] font-bold tabular-nums" style={{ color: 'var(--cyan)' }}>
+                            R$ {sellTransactions.reduce((s, t) => s + t.total_value, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          </strong>
                         </td>
                       </tr>
                     </tfoot>
