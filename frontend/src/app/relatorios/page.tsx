@@ -338,7 +338,7 @@ function RelatoriosContent() {
       <span class="label">INFORMAÇÕES COMPLEMENTARES</span>
       <span style="font-size:10px;">
         Contribuinte: ${nomeUsuario} ${emailUsuario ? '| E-mail: ' + emailUsuario : ''}<br/>
-        Lucro estimado no período: R$ ${lucroTotal > 0 ? lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '0,00'}<br/>
+        Lucro estimado no período: R$ ${lucroTotal > 0 ? lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0,00'}<br/>
         Alíquota: 15% — Swing Trade / Renda Variável (Art. 2º da Lei 11.033/2004)<br/>
         Base de cálculo: Resultado positivo entre patrimônio atual e valor total aportado
       </span>
@@ -396,9 +396,9 @@ function RelatoriosContent() {
         <td>${a.ticker}</td>
         <td>${a.name.length > 40 ? a.name.substring(0, 40) + '...' : a.name}</td>
         <td>${TYPE_LABEL[a.type] ?? a.type}</td>
-        <td style="text-align:right">R$ ${custo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-        <td style="text-align:right">R$ ${a.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-        <td style="text-align:right;color:${result >= 0 ? '#166534' : '#991b1b'}">${result >= 0 ? '+' : ''}R$ ${result.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:right">R$ ${custo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align:right">R$ ${a.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align:right;color:${result >= 0 ? '#166534' : '#991b1b'}">${result >= 0 ? '+' : ''}R$ ${result.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         <td style="text-align:center">${isento ? '✓ Isento' : '15%'}</td>
       </tr>`;
     }).join('');
@@ -485,19 +485,19 @@ function RelatoriosContent() {
   <div class="resumo-grid" style="margin-top:0;border:1px solid #ccc;display:grid;">
     <div style="border-right:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px">
       <div class="resumo-label">Total Investido (Custo)</div>
-      <div class="resumo-valor azul">R$ ${totalCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+      <div class="resumo-valor azul">R$ ${totalCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
     </div>
     <div style="border-right:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px">
       <div class="resumo-label">Patrimônio Atual</div>
-      <div class="resumo-valor azul">R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+      <div class="resumo-valor azul">R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
     </div>
     <div style="border-right:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px">
       <div class="resumo-label">Lucro / Prejuízo Estimado</div>
-      <div class="resumo-valor ${lucroTotal >= 0 ? 'verde' : 'vermelho'}">${lucroTotal >= 0 ? '+' : ''}R$ ${lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+      <div class="resumo-valor ${lucroTotal >= 0 ? 'verde' : 'vermelho'}">${lucroTotal >= 0 ? '+' : ''}R$ ${lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
     </div>
     <div style="border-bottom:1px solid #ccc;padding:10px">
       <div class="resumo-label">IR Estimado (15%)</div>
-      <div class="resumo-valor ${irEstimado > 0 ? 'vermelho' : ''}">R$ ${irEstimado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+      <div class="resumo-valor ${irEstimado > 0 ? 'vermelho' : ''}">R$ ${irEstimado.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
     </div>
   </div>
 </div>
@@ -522,9 +522,9 @@ function RelatoriosContent() {
     <tfoot>
       <tr style="font-weight:bold;background:#e8edf5">
         <td colspan="3">TOTAL</td>
-        <td style="text-align:right">R$ ${totalCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-        <td style="text-align:right">R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-        <td style="text-align:right;color:${lucroTotal >= 0 ? '#166534' : '#991b1b'}">${lucroTotal >= 0 ? '+' : ''}R$ ${lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:right">R$ ${totalCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align:right">R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align:right;color:${lucroTotal >= 0 ? '#166534' : '#991b1b'}">${lucroTotal >= 0 ? '+' : ''}R$ ${lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         <td style="text-align:center">—</td>
       </tr>
     </tfoot>
@@ -552,7 +552,7 @@ function RelatoriosContent() {
       <tr>
         <td>26</td>
         <td>Rendimentos de FIIs — ${assets.filter(a => a.type === 'fiis').length} ativo(s) cadastrado(s)</td>
-        <td style="text-align:right">R$ ${grupos['fiis'] ? grupos['fiis'].rendimento.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '0,00'}</td>
+        <td style="text-align:right">R$ ${grupos['fiis'] ? grupos['fiis'].rendimento.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0,00'}</td>
         <td>Art. 3º, Lei 11.033/2004</td>
       </tr>
       <tr>
@@ -595,12 +595,12 @@ function RelatoriosContent() {
       t.ativo,
       t.nome,
       t.categoria,
-      t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
-      t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
-      t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
     ].join('\t'));
     const totalGeral = transacoesFiltradas.reduce((s, t) => s + t.total, 0);
-    const totalRow = ['Total', '', '', '', '', '', '', `R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`].join('\t');
+    const totalRow = ['Total', '', '', '', '', '', '', `R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`].join('\t');
     // \uFEFF = BOM UTF-8 para Excel reconhecer acentos corretamente
     const conteudo = '\uFEFF' + [cabecalho.join('\t'), ...linhas, totalRow].join('\n');
     const blob = new Blob([conteudo], { type: 'application/vnd.ms-excel;charset=utf-8;' });
@@ -623,9 +623,9 @@ function RelatoriosContent() {
         <td style="font-weight:700">${t.ativo}</td>
         <td>${t.nome.length > 30 ? t.nome.substring(0, 30) + '…' : t.nome}</td>
         <td>${t.categoria}</td>
-        <td style="text-align:right">${t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-        <td style="text-align:right">R$ ${t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-        <td style="text-align:right;font-weight:600">R$ ${t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td style="text-align:right">${t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align:right">R$ ${t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align:right;font-weight:600">R$ ${t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
       </tr>`).join('');
 
     const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>
@@ -665,7 +665,7 @@ function RelatoriosContent() {
   <tbody>${linhas}</tbody>
   <tfoot><tr class="total-row">
     <td colspan="7">Total geral</td>
-    <td style="text-align:right">R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+    <td style="text-align:right">R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
   </tr></tfoot>
 </table>
 <div class="footer">Gerado pela plataforma Nuvary Invest. Documento com fins informativos.</div>
@@ -849,7 +849,7 @@ function RelatoriosContent() {
                         <XAxis dataKey="data" tick={{ fontSize: 10, fill: '#6B7280' }} />
                         <YAxis tick={{ fontSize: 10, fill: '#6B7280' }} tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`} width={60} />
                         <Tooltip
-                          formatter={(v: number | undefined) => v != null ? [`R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Patrimônio'] : ''}
+                          formatter={(v: number | undefined) => v != null ? [`R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 'Patrimônio'] : ''}
                           contentStyle={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12, color: 'var(--t1)' }}
                         />
                         <Area type="monotone" dataKey="valor" stroke="#00B8D9" fill="url(#evolGrad)" strokeWidth={2.5} dot={false} />
@@ -860,7 +860,7 @@ function RelatoriosContent() {
                         <XAxis dataKey="data" tick={{ fontSize: 10, fill: '#6B7280' }} />
                         <YAxis tick={{ fontSize: 10, fill: '#6B7280' }} tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`} width={60} />
                         <Tooltip
-                          formatter={(v: number | undefined) => v != null ? [`R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Patrimônio'] : ''}
+                          formatter={(v: number | undefined) => v != null ? [`R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 'Patrimônio'] : ''}
                           contentStyle={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12, color: 'var(--t1)' }}
                         />
                         <Bar dataKey="valor" fill="#00B8D9" radius={[4, 4, 0, 0]} />
@@ -883,7 +883,7 @@ function RelatoriosContent() {
                           className="font-medium tabular-nums"
                           style={{ color: 'var(--t1)' }}
                         >
-                          R$ {d.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          R$ {d.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
                       </div>
                     ))}
@@ -899,7 +899,7 @@ function RelatoriosContent() {
                       className="text-[18px] font-bold tabular-nums mt-0.5"
                       style={{ color: 'var(--cyan)' }}
                     >
-                      R$ {totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      R$ {totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                   </div>
                 </div>
@@ -1292,17 +1292,17 @@ function RelatoriosContent() {
                         </td>
                         <td className="px-[18px] py-3.5 text-[13.5px] text-right tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
                           {t.type === 'renda_fixa'
-                            ? `R$ ${t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                            ? `R$ ${t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                             : t.qtd}
                         </td>
                         <td className="px-[18px] py-3.5 text-[13.5px] text-right tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
                           {t.type === 'renda_fixa'
                             ? `${t.preco.toFixed(2)}% a.a.`
-                            : `R$ ${t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
+                            : `R$ ${t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                         </td>
                         <td className="px-[18px] py-3.5 text-right" style={{ borderBottom: '1px solid var(--border)' }}>
                           <strong className="text-[13.5px] tabular-nums" style={{ color: 'var(--t1)' }}>
-                            R$ {t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            R$ {t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </strong>
                         </td>
                       </tr>
@@ -1320,7 +1320,7 @@ function RelatoriosContent() {
                 <span className="text-[12px]" style={{ color: 'var(--t2)' }}>
                   Total:{' '}
                   <strong className="tabular-nums" style={{ color: 'var(--cyan)' }}>
-                    R$ {transacoesFiltradas.reduce((s, t) => s + t.total, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    R$ {transacoesFiltradas.reduce((s, t) => s + t.total, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </strong>
                 </span>
               </div>
@@ -1366,7 +1366,7 @@ function RelatoriosContent() {
                       className="text-[32px] font-extrabold tracking-tight tabular-nums mb-1.5"
                       style={{ color: 'var(--cyan)' }}
                     >
-                      R$ {totalVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      R$ {totalVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                     <p className="text-[12px]" style={{ color: 'var(--t2)' }}>
                       Soma do valor recebido nas operações de venda
@@ -1393,7 +1393,7 @@ function RelatoriosContent() {
                       className="text-[32px] font-extrabold tracking-tight tabular-nums mb-1.5"
                       style={{ color: irEstimadoIR > 0 ? 'var(--loss)' : 'var(--t3)' }}
                     >
-                      R$ {irEstimadoIR.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      R$ {irEstimadoIR.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                     <p className="text-[12px]" style={{ color: 'var(--t2)' }}>
                       Estimativa sobre lucro realizado (swing trade)
@@ -1498,14 +1498,14 @@ function RelatoriosContent() {
                           </span>
                         </td>
                         <td className="px-[18px] py-3.5 text-[13.5px] text-right tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
-                          {t.quantity.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          {t.quantity.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
                         <td className="px-[18px] py-3.5 text-[13.5px] text-right tabular-nums" style={{ color: 'var(--t1)', borderBottom: '1px solid var(--border)' }}>
-                          R$ {t.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          R$ {t.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
                         <td className="px-[18px] py-3.5 text-right" style={{ borderBottom: '1px solid var(--border)' }}>
                           <strong className="text-[13.5px] tabular-nums" style={{ color: 'var(--t1)' }}>
-                            R$ {t.total_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            R$ {t.total_value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </strong>
                         </td>
                       </tr>
@@ -1519,7 +1519,7 @@ function RelatoriosContent() {
                         </td>
                         <td className="px-[18px] py-3.5 text-right">
                           <strong className="text-[13.5px] font-bold tabular-nums" style={{ color: 'var(--cyan)' }}>
-                            R$ {sellTransactions.reduce((s, t) => s + t.total_value, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            R$ {sellTransactions.reduce((s, t) => s + t.total_value, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </strong>
                         </td>
                       </tr>

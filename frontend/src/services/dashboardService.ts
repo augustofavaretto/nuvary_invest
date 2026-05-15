@@ -224,13 +224,13 @@ export const dashboardService = {
       const partes: string[] = [];
       if (contexto?.totalValue !== undefined) {
         partes.push(
-          `Patrimonio atual: R$ ${contexto.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+          `Patrimonio atual: R$ ${contexto.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         );
       }
       if (contexto?.totalInvested !== undefined && contexto?.profitPercentage !== undefined) {
         const sinal = contexto.profitPercentage >= 0 ? '+' : '';
         partes.push(
-          `Total investido: R$ ${contexto.totalInvested.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (${sinal}${contexto.profitPercentage.toFixed(2)}%)`
+          `Total investido: R$ ${contexto.totalInvested.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${sinal}${contexto.profitPercentage.toFixed(2)}%)`
         );
       }
       if (contexto?.numAtivos) partes.push(`${contexto.numAtivos} ativos`);

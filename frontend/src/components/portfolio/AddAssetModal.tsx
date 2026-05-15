@@ -676,7 +676,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                               <>
                                 <p className="text-sm text-white/70">{STRINGS.carteira.valorTotalAplicado}</p>
                                 <p className="text-2xl font-bold">
-                                  R$ {formData.quantity.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                  R$ {formData.quantity.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </p>
                                 <p className="text-sm text-white/60 mt-1">
                                   Taxa contratada: {formData.averagePrice.toFixed(2)}% a.a.
@@ -686,7 +686,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                               <>
                                 <p className="text-sm text-white/70">Valor Total Investido</p>
                                 <p className="text-2xl font-bold">
-                                  R$ {(formData.quantity * formData.averagePrice).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                  R$ {(formData.quantity * formData.averagePrice).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </p>
                               </>
                             )}
