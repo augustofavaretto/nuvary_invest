@@ -147,12 +147,10 @@ const LEVEL_STYLE: Record<Level, { background: string; color: string }> = {
 function LessonCard({
   video,
   watched,
-  onWatch,
   onClick,
 }: {
   video: VideoCard;
   watched: boolean;
-  onWatch: (id: string) => void;
   onClick: (video: VideoCard) => void;
 }) {
   const Icon = video.icon;
@@ -215,7 +213,7 @@ function LessonCard({
         >
           {video.title}
         </div>
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2">
           <span
             className="px-2.5 py-0.5 rounded-[var(--r-pill)] text-[10.5px] font-bold"
             style={LEVEL_STYLE[video.level]}
@@ -230,32 +228,6 @@ function LessonCard({
             {video.duration}
           </span>
         </div>
-
-        {/* lesson-action — surface-2 padrao, hover ciano */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onWatch(video.id);
-          }}
-          className="w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-[var(--r-sm)] text-[12px] font-semibold transition-colors group-hover:bg-[var(--cyan)] group-hover:text-white group-hover:border-[var(--cyan)]"
-          style={
-            watched
-              ? {
-                  background: 'rgba(16,185,129,0.12)',
-                  color: 'var(--gain)',
-                  border: '1px solid rgba(16,185,129,0.4)',
-                }
-              : {
-                  background: 'var(--surface-2)',
-                  color: 'var(--t2)',
-                  border: '1px solid var(--border)',
-                }
-          }
-        >
-          <Check className="w-3 h-3" />
-          {watched ? 'Concluído' : 'Marcar concluído'}
-        </button>
       </div>
     </article>
   );
@@ -266,7 +238,6 @@ function VideoSection({
   title,
   videos,
   watchedList,
-  onWatch,
   onViewAll,
   onVideoClick,
 }: {
@@ -274,7 +245,6 @@ function VideoSection({
   title: string;
   videos: VideoCard[];
   watchedList: Set<string>;
-  onWatch: (id: string) => void;
   onViewAll: (categoryId: string, title: string) => void;
   onVideoClick: (v: VideoCard) => void;
 }) {
@@ -335,7 +305,6 @@ function VideoSection({
             <LessonCard
               video={video}
               watched={watchedList.has(video.id)}
-              onWatch={onWatch}
               onClick={onVideoClick}
             />
           </div>
@@ -573,7 +542,6 @@ export default function TrilhasPage() {
                         key={video.id}
                         video={video}
                         watched={watchedList.has(video.id)}
-                        onWatch={handleWatched}
                         onClick={(v) => { setCategoryView(null); handleVideoClick(v); }}
                       />
                     ))}
@@ -703,7 +671,6 @@ export default function TrilhasPage() {
               title={display}
               videos={videos}
               watchedList={watchedList}
-              onWatch={handleWatched}
               onViewAll={handleViewAll}
               onVideoClick={handleVideoClick}
             />
