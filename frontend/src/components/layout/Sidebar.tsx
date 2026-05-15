@@ -55,8 +55,8 @@ function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
         </div>
       </Link>
 
-      {/* Nav */}
-      <nav className="w-full px-3 flex-1">
+      {/* Nav — paddings reduzidos para "Configurações" caber dentro do botao ativo */}
+      <nav className="w-full px-2 flex-1">
         <ul className="flex flex-col gap-1.5">
           {menuItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
@@ -66,15 +66,11 @@ function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
                   href={item.href}
                   onClick={onItemClick}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`
-                    relative flex flex-col items-center justify-center gap-1
-                    py-2.5 px-1 rounded-[var(--r-md)] text-center
-                    text-[11px] font-medium leading-[1.15] tracking-[-0.005em]
-                    transition-colors duration-200 ease-[var(--ease)]
-                    ${isActive
+                  className={`relative flex flex-col items-center justify-center gap-1 py-2.5 px-0 rounded-[var(--r-md)] text-center text-[10.5px] font-medium leading-[1.15] tracking-[-0.005em] transition-colors duration-200 ease-[var(--ease)] ${
+                    isActive
                       ? 'bg-[var(--cyan)] text-[var(--navy-deep)] shadow-[var(--shadow-glow)]'
-                      : 'text-[var(--t2)] hover:text-[var(--t1)] hover:bg-[var(--glass)]'}
-                  `}
+                      : 'text-[var(--t2)] hover:text-[var(--t1)] hover:bg-[var(--glass)]'
+                  }`}
                 >
                   <span className="shrink-0">{item.icon}</span>
                   <span>
