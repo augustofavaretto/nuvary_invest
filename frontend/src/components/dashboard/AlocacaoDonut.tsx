@@ -65,16 +65,16 @@ export function AlocacaoDonut({ byClass, total }: AlocacaoDonutProps) {
       </div>
 
       {/* Content */}
-      <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-6 items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-6 items-center">
         {/* Donut */}
-        <div className="relative w-[180px] h-[180px] mx-auto sm:mx-0">
+        <div className="relative w-[200px] h-[200px] mx-auto sm:mx-0">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data}
                 dataKey="value"
-                innerRadius={55}
-                outerRadius={85}
+                innerRadius={68}
+                outerRadius={95}
                 stroke="none"
                 isAnimationActive={false}
               >
@@ -84,11 +84,11 @@ export function AlocacaoDonut({ byClass, total }: AlocacaoDonutProps) {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span data-mono className="font-mono text-[18px] font-semibold text-[var(--t1)]">
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-4">
+            <span data-mono className="font-mono text-[14px] font-semibold text-[var(--t1)] whitespace-nowrap">
               {formatBRL(total)}
             </span>
-            <span className="text-[10px] text-[var(--t3)] uppercase tracking-wider mt-0.5">
+            <span className="text-[9px] text-[var(--t3)] uppercase tracking-wider mt-0.5">
               Total
             </span>
           </div>
