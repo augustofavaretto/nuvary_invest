@@ -78,9 +78,6 @@ export function TickerTape({ quotes }: TickerTapeProps) {
         })}
       </div>
 
-      <div className="text-center text-[11px] text-[var(--t3)] pt-1.5">
-        Fita de cotações <span className="text-[var(--cyan)]">por TradingView</span>
-      </div>
     </div>
   );
 }
