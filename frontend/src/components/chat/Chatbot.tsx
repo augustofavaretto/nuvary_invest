@@ -423,15 +423,15 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
               )}
 
               <div
-                className="w-12 h-12 rounded-[var(--r-md)] grid place-items-center shrink-0"
-                style={{ background: 'var(--grad-brand-h)' }}
+                className="w-12 h-12 rounded-[var(--r-md)] grid place-items-center shrink-0 overflow-hidden"
+                style={{ background: 'white' }}
               >
                 <Image
                   src="/brand/nuvary-icon.png"
                   alt="Nuvary"
-                  width={30}
-                  height={30}
-                  className="object-contain invert brightness-200"
+                  width={44}
+                  height={44}
+                  className="object-contain"
                 />
               </div>
 

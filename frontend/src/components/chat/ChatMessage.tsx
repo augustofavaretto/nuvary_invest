@@ -24,12 +24,12 @@ export function ChatMessage({ message }: ChatMessageProps) {
       transition={{ duration: 0.3 }}
       className={`flex gap-3 ${isAssistant ? 'flex-row' : 'flex-row-reverse'}`}
     >
-      {/* Avatar quadradinho — gradient cyan para bot, navy para user */}
+      {/* Avatar quadradinho — branco com logo natural para bot, surface para user */}
       <div
-        className="w-10 h-10 rounded-[var(--r-md)] grid place-items-center shrink-0"
+        className="w-10 h-10 rounded-[var(--r-md)] grid place-items-center shrink-0 overflow-hidden"
         style={
           isAssistant
-            ? { background: 'var(--grad-brand-h)' }
+            ? { background: 'white' }
             : { background: 'var(--surface-2)', border: '1px solid var(--border)' }
         }
       >
@@ -37,9 +37,9 @@ export function ChatMessage({ message }: ChatMessageProps) {
           <Image
             src="/brand/nuvary-icon.png"
             alt="Nuvary"
-            width={26}
-            height={26}
-            className="object-contain invert brightness-200"
+            width={38}
+            height={38}
+            className="object-contain"
           />
         ) : (
           <User className="w-5 h-5 text-[var(--t1)]" />

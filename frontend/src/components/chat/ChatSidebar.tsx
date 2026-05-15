@@ -221,15 +221,15 @@ export function ChatSidebar({
         <div className="p-3 border-b" style={{ borderColor: 'var(--border)' }}>
           <Link href="/" className="flex items-center justify-center">
             <div
-              className="w-10 h-10 rounded-[10px] grid place-items-center"
-              style={{ background: 'var(--grad-brand-h)', boxShadow: '0 4px 12px rgba(0, 184, 217, 0.25)' }}
+              className="w-10 h-10 rounded-[10px] grid place-items-center overflow-hidden"
+              style={{ background: 'white', boxShadow: '0 4px 12px rgba(0, 184, 217, 0.25)' }}
             >
               <Image
                 src="/brand/nuvary-icon.png"
                 alt="Nuvary"
-                width={22}
-                height={22}
-                className="object-contain invert brightness-200"
+                width={36}
+                height={36}
+                className="object-contain"
               />
             </div>
           </Link>
@@ -274,15 +274,15 @@ export function ChatSidebar({
           {/* Brand pill — logo gradient + Nuvary + collapse */}
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--r-md)] mb-3.5">
             <div
-              className="w-9 h-9 rounded-[10px] grid place-items-center shrink-0"
-              style={{ background: 'var(--grad-brand-h)', boxShadow: '0 4px 12px rgba(0, 184, 217, 0.25)' }}
+              className="w-9 h-9 rounded-[10px] grid place-items-center shrink-0 overflow-hidden"
+              style={{ background: 'white', boxShadow: '0 4px 12px rgba(0, 184, 217, 0.25)' }}
             >
               <Image
                 src="/brand/nuvary-icon.png"
                 alt="Nuvary"
-                width={22}
-                height={22}
-                className="object-contain invert brightness-200"
+                width={32}
+                height={32}
+                className="object-contain"
               />
             </div>
             <div className="flex items-center justify-between flex-1">
