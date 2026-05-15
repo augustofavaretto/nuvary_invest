@@ -60,210 +60,299 @@ export default function ConfiguracoesPage() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+      {/* settings-wrap — max 760px centralizado, fiel ao mockup */}
+      <div className="max-w-[760px] mx-auto px-6 py-8">
 
-        {/* Header */}
+        {/* settings-head */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-start justify-between"
+          className="flex items-start justify-between mb-7"
         >
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Configurações</h1>
-            <p className="text-muted-foreground text-sm mt-1">
+            <h1
+              className="text-[26px] font-bold tracking-tight"
+              style={{ color: 'var(--t1)' }}
+            >
+              Configurações
+            </h1>
+            <p className="text-[13.5px] mt-1" style={{ color: 'var(--t2)' }}>
               Personalize sua experiência na plataforma
             </p>
           </div>
           <button
+            type="button"
             onClick={() => router.push('/dashboard')}
-            className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+            className="w-9 h-9 grid place-items-center rounded-full transition-colors hover:bg-[var(--glass)]"
+            style={{ color: 'var(--t2)' }}
             title="Voltar ao Dashboard"
+            aria-label="Fechar"
           >
             <X className="w-5 h-5" />
           </button>
         </motion.div>
 
-        {/* === APARÊNCIA === */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="bg-card rounded-2xl border border-border p-6 shadow-sm"
+        {/* === APARENCIA === */}
+        <SettingSection
+          delay={0.05}
+          icon={theme === 'light' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          title="Aparência"
+          description="Escolha o tema da interface"
         >
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Sun className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-foreground">Aparência</h2>
-              <p className="text-xs text-muted-foreground">Escolha o tema da interface</p>
-            </div>
-          </div>
-
+          {/* theme-grid */}
           <div className="grid grid-cols-2 gap-3">
-            {/* Claro */}
-            <button
+            <ThemeOption
+              kind="claro"
+              label="Claro"
+              icon={<Sun />}
+              active={theme === 'light'}
               onClick={() => setTheme('light')}
-              className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
-                theme === 'light'
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border hover:border-muted-foreground/40'
-              }`}
-            >
-              <Sun className="w-6 h-6 text-amber-500" />
-              <span className="text-sm font-medium text-foreground">Claro</span>
-              {theme === 'light' && (
-                <span className="absolute top-2 right-2 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                  <Check className="w-2.5 h-2.5 text-white" />
-                </span>
-              )}
-            </button>
-
-            {/* Escuro */}
-            <button
+            />
+            <ThemeOption
+              kind="escuro"
+              label="Escuro"
+              icon={<Moon />}
+              active={theme === 'dark'}
               onClick={() => setTheme('dark')}
-              className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
-                theme === 'dark'
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border hover:border-muted-foreground/40'
-              }`}
-            >
-              <Moon className="w-6 h-6 text-indigo-400" />
-              <span className="text-sm font-medium text-foreground">Escuro</span>
-              {theme === 'dark' && (
-                <span className="absolute top-2 right-2 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                  <Check className="w-2.5 h-2.5 text-white" />
-                </span>
-              )}
-            </button>
+            />
           </div>
-        </motion.section>
+        </SettingSection>
 
         {/* === FUNCIONALIDADES PREMIUM === */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.07 }}
-          className="bg-card rounded-2xl border border-border p-6 shadow-sm"
+        <SettingSection
+          delay={0.07}
+          icon={<Sparkles className="w-5 h-5" />}
+          title="Funcionalidades Premium"
+          description="Alertas e relatórios automáticos da sua carteira"
         >
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-foreground">Funcionalidades Premium</h2>
-              <p className="text-xs text-muted-foreground">Alertas e relatórios automáticos da sua carteira</p>
-            </div>
-          </div>
+          <ToggleRow
+            icon={<TrendingUp className="w-4 h-4" />}
+            label="Alertas de variação"
+            description="Notificação quando um ativo variar mais de 5%"
+            value={alertasVariacao}
+            onToggle={toggleAlertasVariacao}
+            first
+          />
+          <ToggleRow
+            icon={<Mail className="w-4 h-4" />}
+            label="Relatórios diários"
+            description="Resumo diário da sua carteira enviado todos os dias às 8h"
+            value={emailRelatorios}
+            onToggle={toggleEmailRelatorios}
+          />
+        </SettingSection>
 
-          <div className="space-y-1">
-            <NotifToggle
-              icon={<TrendingUp className="w-4 h-4" />}
-              label="Alertas de variação"
-              description="Notificação quando um ativo variar mais de 5%"
-              value={alertasVariacao}
-              onToggle={toggleAlertasVariacao}
-            />
-            <NotifToggle
-              icon={<Mail className="w-4 h-4" />}
-              label="Relatórios diários"
-              description="Resumo diário da sua carteira enviado todos os dias às 8h"
-              value={emailRelatorios}
-              onToggle={toggleEmailRelatorios}
-            />
-          </div>
-        </motion.section>
-
-        {/* === CONTA === */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="bg-card rounded-2xl border border-border p-6 shadow-sm"
+        {/* === CONTA E SEGURANCA === */}
+        <SettingSection
+          delay={0.1}
+          icon={<Shield className="w-5 h-5" />}
+          title="Conta e Segurança"
+          description="Gerencie seus dados pessoais"
         >
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-foreground">Conta e Segurança</h2>
-              <p className="text-xs text-muted-foreground">Gerencie seus dados pessoais</p>
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <button
-              onClick={() => router.push('/perfil')}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-muted/50 transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <User className="w-4 h-4 text-muted-foreground" />
-                <div className="text-left">
-                  <p className="text-sm font-medium text-foreground">Dados pessoais</p>
-                  <p className="text-xs text-muted-foreground">Nome, email e foto de perfil</p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-            </button>
-
-            <button
-              onClick={() => router.push('/perfil')}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-muted/50 transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <Shield className="w-4 h-4 text-muted-foreground" />
-                <div className="text-left">
-                  <p className="text-sm font-medium text-foreground">Segurança</p>
-                  <p className="text-xs text-muted-foreground">Alterar senha</p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-            </button>
-          </div>
-        </motion.section>
+          <RowLink
+            icon={<User className="w-4 h-4" />}
+            label="Dados pessoais"
+            description="Nome, email e foto de perfil"
+            onClick={() => router.push('/perfil')}
+            first
+          />
+          <RowLink
+            icon={<Shield className="w-4 h-4" />}
+            label="Segurança"
+            description="Alterar senha"
+            onClick={() => router.push('/perfil')}
+          />
+        </SettingSection>
 
       </div>
     </DashboardLayout>
   );
 }
 
-// ── Componente auxiliar de toggle de notificação ──────────────────────────────
-function NotifToggle({
+// ── Section card ───────────────────────────────────────────────────────────────
+
+function SettingSection({
+  icon,
+  title,
+  description,
+  children,
+  delay = 0,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+  delay?: number;
+}) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      className="rounded-[var(--r-lg)] px-6 py-5 mb-4"
+      style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+    >
+      <div className="flex items-start gap-3.5 mb-[18px]">
+        <div
+          className="w-10 h-10 rounded-[var(--r-md)] grid place-items-center shrink-0"
+          style={{ background: 'rgba(0,184,217,0.12)', color: 'var(--cyan)' }}
+        >
+          {icon}
+        </div>
+        <div>
+          <h3 className="text-[16px] font-semibold" style={{ color: 'var(--t1)' }}>
+            {title}
+          </h3>
+          <p className="text-[12.5px] mt-0.5" style={{ color: 'var(--t2)' }}>
+            {description}
+          </p>
+        </div>
+      </div>
+      {children}
+    </motion.section>
+  );
+}
+
+// ── Theme option (Claro / Escuro) ─────────────────────────────────────────────
+
+function ThemeOption({
+  kind,
+  label,
+  icon,
+  active,
+  onClick,
+}: {
+  kind: 'claro' | 'escuro';
+  label: string;
+  icon: React.ReactNode;
+  active: boolean;
+  onClick: () => void;
+}) {
+  const iconColor = kind === 'claro' ? 'var(--warn)' : '#818CF8';
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="relative flex flex-col items-center gap-2.5 px-6 py-[22px] rounded-[var(--r-md)] transition-all text-[14px] font-semibold"
+      style={{
+        background: 'var(--surface-2)',
+        border: active ? '1px solid var(--cyan)' : '1px solid var(--border)',
+        boxShadow: active ? '0 0 0 1px var(--cyan)' : 'none',
+        color: 'var(--t1)',
+      }}
+    >
+      <span className="w-6 h-6 grid place-items-center" style={{ color: iconColor }}>
+        {icon}
+      </span>
+      {label}
+      {active && (
+        <span
+          className="absolute top-2 right-2 w-5 h-5 rounded-full grid place-items-center"
+          style={{ background: 'var(--cyan)' }}
+        >
+          <Check className="w-3 h-3 text-white" strokeWidth={3} />
+        </span>
+      )}
+    </button>
+  );
+}
+
+// ── Toggle row ────────────────────────────────────────────────────────────────
+
+function ToggleRow({
   icon,
   label,
   description,
   value,
   onToggle,
+  first,
 }: {
   icon: React.ReactNode;
   label: string;
   description: string;
   value: boolean;
   onToggle: () => void;
+  first?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-      <div className="flex items-center gap-3">
-        <span className={value ? 'text-primary' : 'text-muted-foreground'}>{icon}</span>
-        <div>
-          <p className="text-sm font-medium text-foreground">{label}</p>
-          <p className="text-xs text-muted-foreground">{description}</p>
-        </div>
+    <div
+      className="flex items-center gap-3.5 py-3.5"
+      style={{
+        borderTop: first ? 'none' : '1px solid var(--border)',
+        paddingTop: first ? 0 : undefined,
+      }}
+    >
+      <div
+        className="w-8 h-8 rounded-[var(--r-sm)] grid place-items-center shrink-0"
+        style={{ background: 'var(--surface-2)', color: 'var(--cyan)' }}
+      >
+        {icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <strong className="text-[14px] font-semibold block" style={{ color: 'var(--t1)' }}>
+          {label}
+        </strong>
+        <span className="text-[12px]" style={{ color: 'var(--t2)' }}>
+          {description}
+        </span>
       </div>
       <button
+        type="button"
         onClick={onToggle}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-          value ? 'bg-primary' : 'bg-muted'
-        }`}
         role="switch"
         aria-checked={value}
+        className="relative w-11 h-6 rounded-[var(--r-pill)] transition-colors shrink-0"
+        style={{ background: value ? 'var(--cyan)' : 'var(--surface-3)' }}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform ${
-            value ? 'translate-x-6' : 'translate-x-1'
-          }`}
+          className="absolute top-[3px] w-[18px] h-[18px] rounded-full bg-white transition-all"
+          style={{ left: value ? '23px' : '3px' }}
         />
       </button>
     </div>
+  );
+}
+
+// ── Row link (Conta / Seguranca) ──────────────────────────────────────────────
+
+function RowLink({
+  icon,
+  label,
+  description,
+  onClick,
+  first,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  description: string;
+  onClick: () => void;
+  first?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full flex items-center gap-3.5 py-3.5 transition-opacity hover:opacity-80 text-left"
+      style={{
+        borderTop: first ? 'none' : '1px solid var(--border)',
+        paddingTop: first ? 0 : undefined,
+      }}
+    >
+      <div
+        className="w-8 h-8 rounded-[var(--r-sm)] grid place-items-center shrink-0"
+        style={{ background: 'var(--surface-2)', color: 'var(--cyan)' }}
+      >
+        {icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <strong className="text-[14px] font-semibold block" style={{ color: 'var(--t1)' }}>
+          {label}
+        </strong>
+        <span className="text-[12px]" style={{ color: 'var(--t2)' }}>
+          {description}
+        </span>
+      </div>
+      <ChevronRight className="w-4 h-4 shrink-0" style={{ color: 'var(--t2)' }} />
+    </button>
   );
 }
