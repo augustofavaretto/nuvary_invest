@@ -403,6 +403,15 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Ticker tape — scroll horizontal infinito (consumido por TickerTape.tsx) */
+.nv-ticker-track {
+  animation: nvTickerSlide 60s linear infinite;
+}
+@keyframes nvTickerSlide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* Selecao de texto com cor da marca */
 ::selection {
   background: var(--cyan);

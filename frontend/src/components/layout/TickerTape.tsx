@@ -42,15 +42,7 @@ export function TickerTape({ quotes }: TickerTapeProps) {
   const doubled = [...list, ...list];
 
   return (
-    <div
-      className="
-        relative overflow-hidden
-        bg-[var(--surface-1)]
-        border border-[var(--border)]
-        rounded-[var(--r-md)]
-        py-3 pb-2
-      "
-    >
+    <div className="relative overflow-hidden bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--r-md)] py-3 pb-2">
       {/* Mascaras de fade nas extremidades */}
       <span
         aria-hidden
@@ -63,7 +55,7 @@ export function TickerTape({ quotes }: TickerTapeProps) {
         style={{ background: 'linear-gradient(-90deg, var(--surface-1), transparent)' }}
       />
 
-      <div className="ticker-track flex gap-9 whitespace-nowrap pl-6">
+      <div className="nv-ticker-track flex gap-9 whitespace-nowrap pl-6">
         {doubled.map((q, i) => {
           const up = q.changePercent >= 0;
           return (
@@ -89,17 +81,6 @@ export function TickerTape({ quotes }: TickerTapeProps) {
       <div className="text-center text-[11px] text-[var(--t3)] pt-1.5">
         Fita de cotações <span className="text-[var(--cyan)]">por TradingView</span>
       </div>
-
-      {/* Animacao do scroll horizontal */}
-      <style jsx>{`
-        .ticker-track {
-          animation: tickerSlide 60s linear infinite;
-        }
-        @keyframes tickerSlide {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-      `}</style>
     </div>
   );
 }
