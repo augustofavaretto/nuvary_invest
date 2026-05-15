@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Bell, CheckCheck } from 'lucide-react';
+import { Bell, CheckCheck, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import supabase from '@/lib/supabase';
 import {
@@ -14,30 +14,61 @@ import {
   markAllAsRead,
   markAsRead,
 } from '@/services/alertasService';
+import { refreshAllPrices } from '@/services/portfolioService';
 import { AlertItem } from './AlertItem';
+
+// Periodicidade do check global de variacao (5 min). O refreshAllPrices ja
+// tem cache interno de 15min, mas chamamos com force=true neste fluxo para
+// garantir que a verificacao acontece independente da pagina aberta.
+const GLOBAL_CHECK_INTERVAL_MS = 5 * 60 * 1000;
 
 export function NotificationBell() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [unread, setUnread] = useState(0);
+  const [checking, setChecking] = useState(false);
 
   const refresh = useCallback(async () => {
     const [list, count] = await Promise.all([listAlerts(20), countUnread()]);
-    console.log('[NotificationBell] refresh →', { listLen: list.length, count });
     setAlerts(list);
     setUnread(count);
   }, []);
 
+  // Dispara refreshAllPrices que internamente chama checkAlertsForAssets.
+  // Cache de 15min ja protege contra chamadas demais. Roda em paralelo
+  // com a UI; falhas sao toleradas em silencio.
+  const verificarVariacoes = useCallback(async (force = false) => {
+    try {
+      await refreshAllPrices(force);
+      // Apos refresh, recarrega a lista local (o realtime tambem dispara,
+      // mas garantimos atualizacao mesmo se o Realtime estiver desligado)
+      await refresh();
+    } catch (e) {
+      console.error('[NotificationBell] falha ao verificar variacoes:', e);
+    }
+  }, [refresh]);
+
+  const handleManualCheck = async () => {
+    if (checking) return;
+    setChecking(true);
+    try {
+      await verificarVariacoes(true);
+    } finally {
+      setChecking(false);
+    }
+  };
+
   useEffect(() => {
-    console.log('[NotificationBell] mount — iniciando refresh + Realtime');
     refresh();
+    // Verificacao global na montagem (respeita cache de 15min)
+    verificarVariacoes(false);
 
     // Atualiza ao receber evento custom (alertas criados via refreshAllPrices)
     const onNew = () => { refresh(); };
     window.addEventListener(NEW_ALERT_EVENT, onNew);
 
-    // Subscrição Realtime — não depende de getUser pronto
+    // Subscricao Realtime do Supabase
     const channel = supabase
       .channel('alertas-variacao-changes')
       .on(
@@ -47,27 +78,25 @@ export function NotificationBell() {
           schema: 'public',
           table: 'alertas_variacao',
         },
-        (payload) => {
-          console.log('[NotificationBell] Realtime evento recebido:', payload);
-          refresh();
-        },
+        () => { refresh(); },
       )
-      .subscribe((status) => {
-        console.log('[NotificationBell] Realtime status:', status);
-      });
+      .subscribe();
 
-    // Fallback: polling a cada 30s
-    const interval = setInterval(() => {
-      console.log('[NotificationBell] polling 30s');
-      refresh();
-    }, 30_000);
+    // Polling de alertas (cheap, so consulta o banco)
+    const pollAlerts = setInterval(() => { refresh(); }, 30_000);
+
+    // Check global de variacoes — 5 min, respeitando cache interno de 15min
+    const pollCheck = setInterval(() => {
+      verificarVariacoes(false);
+    }, GLOBAL_CHECK_INTERVAL_MS);
 
     return () => {
       window.removeEventListener(NEW_ALERT_EVENT, onNew);
       supabase.removeChannel(channel);
-      clearInterval(interval);
+      clearInterval(pollAlerts);
+      clearInterval(pollCheck);
     };
-  }, [refresh]);
+  }, [refresh, verificarVariacoes]);
 
   // Refresh ao abrir o dropdown (caso outro tab tenha marcado como lido)
   useEffect(() => {
@@ -123,22 +152,33 @@ export function NotificationBell() {
               className="absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-card rounded-xl shadow-xl border border-border z-40 overflow-hidden"
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                <div>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border gap-3">
+                <div className="min-w-0">
                   <p className="text-sm font-semibold text-foreground">Alertas de variação</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground truncate">
                     {unread > 0 ? `${unread} não lido${unread > 1 ? 's' : ''}` : 'Tudo em dia'}
                   </p>
                 </div>
-                {unread > 0 && (
+                <div className="flex items-center gap-1 shrink-0">
                   <button
-                    onClick={handleMarkAll}
-                    className="flex items-center gap-1 text-xs text-[#00B8D9] hover:text-[#007EA7] font-medium px-2 py-1 rounded-md hover:bg-muted transition-colors"
+                    onClick={handleManualCheck}
+                    disabled={checking}
+                    className="flex items-center gap-1 text-xs text-[#00B8D9] hover:text-[#007EA7] font-medium px-2 py-1 rounded-md hover:bg-muted transition-colors disabled:opacity-50"
+                    title="Verificar variações agora"
                   >
-                    <CheckCheck className="w-3.5 h-3.5" />
-                    Marcar todas
+                    <RefreshCw className={`w-3.5 h-3.5 ${checking ? 'animate-spin' : ''}`} />
+                    {checking ? 'Verificando' : 'Verificar'}
                   </button>
-                )}
+                  {unread > 0 && (
+                    <button
+                      onClick={handleMarkAll}
+                      className="flex items-center gap-1 text-xs text-[#00B8D9] hover:text-[#007EA7] font-medium px-2 py-1 rounded-md hover:bg-muted transition-colors"
+                    >
+                      <CheckCheck className="w-3.5 h-3.5" />
+                      Marcar todas
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* List */}
