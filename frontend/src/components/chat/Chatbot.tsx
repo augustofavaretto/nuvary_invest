@@ -423,14 +423,14 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
               )}
 
               <div
-                className="w-12 h-12 rounded-[var(--r-md)] grid place-items-center shrink-0 overflow-hidden"
+                className="w-12 h-12 rounded-full grid place-items-center shrink-0 overflow-hidden"
                 style={{ background: 'white' }}
               >
                 <Image
                   src="/brand/nuvary-icon.png"
                   alt="Nuvary"
-                  width={44}
-                  height={44}
+                  width={42}
+                  height={42}
                   className="object-contain"
                 />
               </div>
@@ -599,10 +599,10 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
               <button
                 type="submit"
                 disabled={!inputValue.trim() || isLoading}
-                className="w-12 h-12 grid place-items-center rounded-[var(--r-md)] text-white shrink-0 disabled:opacity-40 disabled:cursor-not-allowed transition-transform hover:-translate-y-[1px]"
+                className="w-12 h-12 grid place-items-center rounded-full text-white shrink-0 disabled:opacity-40 disabled:cursor-not-allowed transition-transform hover:-translate-y-[1px]"
                 style={{
                   background: 'var(--cyan)',
-                  boxShadow: 'var(--shadow-cta-soft)',
+                  boxShadow: '0 4px 14px rgba(0,184,217,0.28)',
                 }}
                 aria-label="Enviar mensagem"
               >
