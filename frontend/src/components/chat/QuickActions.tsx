@@ -110,16 +110,7 @@ export function QuickActions({ onAction, disabled }: QuickActionsProps) {
           whileHover={{ scale: disabled ? 1 : 1.03 }}
           whileTap={{ scale: disabled ? 1 : 0.97 }}
           transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-          className="
-            inline-flex items-center px-4 py-2 rounded-full
-            text-sm font-medium
-            bg-transparent text-foreground
-            border border-border
-            hover:border-[#00B8D9] hover:text-[#00B8D9] hover:bg-[#00B8D9]/5
-            transition-colors duration-150
-            disabled:opacity-50 disabled:pointer-events-none
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00B8D9] focus-visible:ring-offset-2 focus-visible:ring-offset-background
-          "
+          className="inline-flex items-center px-4 py-2 rounded-[var(--r-pill)] text-[13px] font-medium bg-[var(--surface-1)] text-[var(--t1)] border border-[var(--border)] hover:border-[var(--border-hi)] hover:text-[var(--cyan)] hover:bg-[var(--glass)] transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
         >
           {action.label}
         </motion.button>

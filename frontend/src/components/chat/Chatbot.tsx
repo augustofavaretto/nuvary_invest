@@ -390,8 +390,8 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   };
 
   return (
-    <div className="flex h-full bg-background">
-      {/* Sidebar */}
+    <div className="flex h-full bg-[var(--bg)]">
+      {/* Sidebar de conversas */}
       {user && (
         <ChatSidebar
           key={sidebarKey}
@@ -405,58 +405,60 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       )}
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <div className="bg-card border-b border-border px-4 py-3">
-          <div className="flex items-center justify-between max-w-4xl mx-auto">
-            <div className="flex items-center gap-3">
+      <div className="flex-1 flex flex-col min-w-0 bg-[var(--bg)]">
+        {/* Header — avatar gradient + titulo + badge perfil ambar */}
+        <div className="bg-[var(--surface-1)] border-b border-[var(--border)] px-6 py-4">
+          <div className="flex items-center justify-between max-w-4xl mx-auto gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               {/* Mobile menu toggle */}
               {user && (
-                <Button
-                  variant="ghost"
-                  size="icon"
+                <button
+                  type="button"
                   onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                  className="lg:hidden text-muted-foreground"
+                  className="lg:hidden w-9 h-9 grid place-items-center rounded-[var(--r-pill)] text-[var(--t2)] hover:text-[var(--cyan)] hover:bg-[rgba(0,184,217,0.08)] transition-colors"
+                  aria-label="Abrir histórico"
                 >
                   <Menu className="w-5 h-5" />
-                </Button>
+                </button>
               )}
 
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="w-10 h-10 rounded-full nuvary-gradient flex items-center justify-center">
-                    <Image
-                      src="/logo-icon.png"
-                      alt="Nuvary"
-                      width={24}
-                      height={24}
-                      className="object-contain"
-                    />
-                  </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 rounded-full border-2 border-card flex items-center justify-center">
-                    <Sparkles className="w-2 h-2 text-white" />
-                  </div>
-                </div>
-                <div>
-                  <h1 className="text-base font-semibold text-foreground">
-                    Assistente Nuvary
-                  </h1>
-                  <p className="text-xs text-muted-foreground">
-                    Seu consultor de investimentos com IA
-                  </p>
-                </div>
+              <div
+                className="w-12 h-12 rounded-[var(--r-md)] grid place-items-center shrink-0"
+                style={{ background: 'var(--grad-brand-h)' }}
+              >
+                <Image
+                  src="/brand/nuvary-icon.png"
+                  alt="Nuvary"
+                  width={30}
+                  height={30}
+                  className="object-contain invert brightness-200"
+                />
+              </div>
+
+              <div className="min-w-0">
+                <h1 className="text-[16px] font-semibold text-[var(--t1)]">
+                  Assistente Nuvary
+                </h1>
+                <p className="text-[12.5px] text-[var(--t2)] truncate">
+                  Seu consultor de investimentos com IA
+                </p>
               </div>
             </div>
 
-            {/* Profile Badge */}
-            <div className="flex items-center gap-3">
+            {/* Profile pill */}
+            <div className="flex items-center gap-3 shrink-0">
               {profile && (
-                <Badge
-                  className={`${profileColors[profile.type as keyof typeof profileColors] || 'bg-gray-500'} text-white px-2 py-0.5 text-xs`}
+                <span
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-pill)] text-[13px] font-bold border"
+                  style={{
+                    background: 'rgba(245, 158, 11, 0.15)',
+                    borderColor: 'rgba(245, 158, 11, 0.25)',
+                    color: 'var(--warn)',
+                  }}
                 >
-                  <User className="w-3 h-3 mr-1" />
+                  <User className="w-3.5 h-3.5" />
                   {profile.name}
-                </Badge>
+                </span>
               )}
 
               {!user && (
@@ -473,12 +475,26 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
         {/* Messages Area */}
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-full" ref={scrollRef}>
-            <div className="max-w-4xl mx-auto px-4 py-6">
-              {/* Status indicator */}
-              <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mb-6">
-                <Bot className="w-4 h-4 text-[#00B8D9]" />
+            <div className="max-w-4xl mx-auto px-6 py-8">
+              {/* Status indicator pill */}
+              <div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-[var(--r-pill)] text-[12.5px] font-medium mx-auto mb-8"
+                style={{
+                  background: 'var(--surface-1)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--t2)',
+                  display: 'flex',
+                  width: 'fit-content',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+              >
+                <Bot className="w-4 h-4 text-[var(--cyan)]" />
                 <span>Chat ativo</span>
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ background: 'var(--gain)' }}
+                />
               </div>
 
               {/* Messages */}
@@ -496,9 +512,9 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
-                  className="mt-8"
+                  className="mt-10"
                 >
-                  <p className="text-sm text-muted-foreground mb-4 text-center">
+                  <p className="text-[13px] text-[var(--t2)] mb-4 text-center">
                     {STRINGS.chat.escolhaOpcao}
                   </p>
                   <QuickActions onAction={handleQuickAction} disabled={isLoading} />
@@ -513,23 +529,30 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                   transition={{ delay: 0.8 }}
                   className="mt-8"
                 >
-                  <Card className="border-[#00B8D9]/30 bg-[#00B8D9]/5">
-                    <CardContent className="p-4 flex items-center justify-between">
-                      <div>
-                        <p className="font-medium text-foreground">
-                          Quer respostas personalizadas?
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          Descubra seu perfil de investidor
-                        </p>
-                      </div>
-                      <Link href="/questionario">
-                        <Button className="nuvary-gradient text-white">
-                          {STRINGS.chat.fazerQuestionario}
-                        </Button>
-                      </Link>
-                    </CardContent>
-                  </Card>
+                  <div
+                    className="rounded-[var(--r-lg)] p-4 flex items-center justify-between gap-4"
+                    style={{
+                      background: 'rgba(0,184,217,0.06)',
+                      border: '1px solid rgba(0,184,217,0.25)',
+                    }}
+                  >
+                    <div>
+                      <p className="text-[14px] font-semibold text-[var(--t1)]">
+                        Quer respostas personalizadas?
+                      </p>
+                      <p className="text-[12.5px] text-[var(--t2)]">
+                        Descubra seu perfil de investidor
+                      </p>
+                    </div>
+                    <Link href="/questionario">
+                      <Button
+                        className="text-white px-5"
+                        style={{ background: 'var(--cyan)' }}
+                      >
+                        {STRINGS.chat.fazerQuestionario}
+                      </Button>
+                    </Link>
+                  </div>
                 </motion.div>
               )}
             </div>
@@ -537,41 +560,56 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
         </div>
 
         {/* Input Area */}
-        <div className="bg-card border-t border-border p-4">
+        <div
+          className="border-t px-6 py-4"
+          style={{
+            background: 'var(--surface-1)',
+            borderColor: 'var(--border)',
+          }}
+        >
           <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
             <div className="flex gap-3 items-end">
-              <textarea
-                ref={inputRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => {
-                  // Enter envia, Shift+Enter quebra linha (padrao Claude/ChatGPT)
-                  if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
-                    e.preventDefault();
-                    if (inputValue.trim() && !isLoading) sendMessage(inputValue);
-                  }
+              <div
+                className="flex-1 rounded-[var(--r-md)] flex items-end"
+                style={{
+                  background: 'var(--surface-2)',
+                  border: '1px solid var(--border)',
                 }}
-                placeholder="Digite sua mensagem..."
-                disabled={isLoading}
-                rows={1}
-                className="
-                  flex-1 resize-none rounded-md border border-border bg-background
-                  px-3 py-3 text-sm leading-relaxed
-                  focus:outline-none focus:border-[#00B8D9] focus:ring-2 focus:ring-[#00B8D9]/20
-                  placeholder:text-muted-foreground
-                  min-h-[48px] max-h-[200px] overflow-y-auto
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                "
-              />
-              <Button
+              >
+                <textarea
+                  ref={inputRef}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (
+                      e.key === 'Enter' &&
+                      !e.shiftKey &&
+                      !e.nativeEvent.isComposing
+                    ) {
+                      e.preventDefault();
+                      if (inputValue.trim() && !isLoading) sendMessage(inputValue);
+                    }
+                  }}
+                  placeholder="Digite sua mensagem..."
+                  disabled={isLoading}
+                  rows={1}
+                  className="flex-1 resize-none bg-transparent px-4 py-3 text-[14px] leading-relaxed text-[var(--t1)] placeholder:text-[var(--t3)] focus:outline-none min-h-[48px] max-h-[200px] overflow-y-auto disabled:opacity-50"
+                />
+              </div>
+              <button
                 type="submit"
                 disabled={!inputValue.trim() || isLoading}
-                className="nuvary-gradient text-white hover:opacity-90 px-6 h-12 flex-shrink-0"
+                className="w-12 h-12 grid place-items-center rounded-[var(--r-md)] text-white shrink-0 disabled:opacity-40 disabled:cursor-not-allowed transition-transform hover:-translate-y-[1px]"
+                style={{
+                  background: 'var(--cyan)',
+                  boxShadow: 'var(--shadow-cta-soft)',
+                }}
+                aria-label="Enviar mensagem"
               >
                 <Send className="w-5 h-5" />
-              </Button>
+              </button>
             </div>
-            <p className="text-xs text-muted-foreground mt-2 text-center">
+            <p className="text-[11.5px] text-[var(--t3)] mt-3 text-center">
               {STRINGS.chat.respostasIADisclaimer}
             </p>
           </form>
