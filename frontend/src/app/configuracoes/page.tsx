@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { usePremium } from '@/hooks/usePremium';
 import { getAlertsEnabled, setAlertsEnabled } from '@/services/alertasService';
 import {
   getEmailRelatoriosAtivo,
@@ -25,12 +26,14 @@ import {
   X,
   Send,
   Loader2,
+  Lock,
 } from 'lucide-react';
 
 export default function ConfiguracoesPage() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { isPremium, loading: premiumLoading } = usePremium();
 
   const [alertasVariacao, setAlertasVariacaoState] = useState(true);
   const [emailRelatorios, setEmailRelatoriosState] = useState(false);
@@ -49,13 +52,25 @@ export default function ConfiguracoesPage() {
     getEmailRelatoriosAtivo().then(setEmailRelatoriosState);
   }, [isAuthenticated]);
 
+  // Gate Premium — usuario free tentando ativar funcionalidade premium
+  // e redirecionado para /premium em vez de toggle.
+  const tentarAtivarPremium = (): boolean => {
+    if (!isPremium && !premiumLoading) {
+      router.push('/premium');
+      return true;
+    }
+    return false;
+  };
+
   const toggleAlertasVariacao = async () => {
+    if (tentarAtivarPremium()) return;
     const next = !alertasVariacao;
     setAlertasVariacaoState(next);
     await setAlertsEnabled(next);
   };
 
   const toggleEmailRelatorios = async () => {
+    if (tentarAtivarPremium()) return;
     const next = !emailRelatorios;
     setEmailRelatoriosState(next);
     await setEmailRelatoriosAtivo(next);
@@ -166,68 +181,112 @@ export default function ConfiguracoesPage() {
           title="Funcionalidades Premium"
           description="Alertas e relatórios automáticos da sua carteira"
         >
+          {/* Banner free — convida upgrade quando usuario nao e Premium */}
+          {!premiumLoading && !isPremium && (
+            <button
+              type="button"
+              onClick={() => router.push('/premium')}
+              className="w-full flex items-center justify-between gap-3 px-4 py-3 mb-4 rounded-[var(--r-md)] transition-colors hover:opacity-90 text-left"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(0,184,217,0.10), transparent 60%), var(--surface-2)',
+                border: '1px solid rgba(0,184,217,0.30)',
+              }}
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div
+                  className="w-9 h-9 rounded-[var(--r-md)] grid place-items-center shrink-0"
+                  style={{ background: 'rgba(0,184,217,0.15)', color: 'var(--cyan)' }}
+                >
+                  <Lock className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <strong className="text-[13.5px] font-semibold block" style={{ color: 'var(--t1)' }}>
+                    Disponível no plano Premium
+                  </strong>
+                  <span className="text-[12px]" style={{ color: 'var(--t2)' }}>
+                    Ative alertas em tempo real e o relatório diário por e-mail.
+                  </span>
+                </div>
+              </div>
+              <span
+                className="inline-flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-[var(--r-pill)] shrink-0"
+                style={{ background: 'var(--cyan)', color: 'white' }}
+              >
+                Fazer upgrade
+                <ChevronRight className="w-3 h-3" />
+              </span>
+            </button>
+          )}
+
           <ToggleRow
             icon={<TrendingUp className="w-4 h-4" />}
             label="Alertas de variação"
             description="Notificação quando um ativo variar mais de 5%"
-            value={alertasVariacao}
+            value={isPremium && alertasVariacao}
             onToggle={toggleAlertasVariacao}
+            locked={!isPremium}
             first
           />
           <ToggleRow
             icon={<Mail className="w-4 h-4" />}
             label="Relatórios diários"
             description="Resumo diário da sua carteira enviado todos os dias às 8h"
-            value={emailRelatorios}
+            value={isPremium && emailRelatorios}
             onToggle={toggleEmailRelatorios}
+            locked={!isPremium}
           />
 
-          {/* Botao de teste de envio — valida o pipeline e mostra erro detalhado */}
-          <div
-            className="flex items-center justify-between gap-3 pt-3.5"
-            style={{ borderTop: '1px solid var(--border)' }}
-          >
-            <div className="text-[12px]" style={{ color: 'var(--t2)' }}>
-              Não está recebendo? Dispare um envio de teste agora para validar.
-            </div>
-            <button
-              type="button"
-              onClick={enviarRelatorioTeste}
-              disabled={enviandoTeste}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-sm)] text-[12.5px] font-semibold transition-colors disabled:opacity-50 shrink-0"
-              style={{
-                background: 'var(--cyan)',
-                color: 'white',
-                boxShadow: '0 4px 14px rgba(0,184,217,0.28)',
-              }}
-            >
-              {enviandoTeste ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Enviando…
-                </>
-              ) : (
-                <>
-                  <Send className="w-3.5 h-3.5" />
-                  Enviar teste agora
-                </>
-              )}
-            </button>
-          </div>
+          {/* Botao de teste de envio — apenas para Premium */}
+          {isPremium && (
+            <>
+              <div
+                className="flex items-center justify-between gap-3 pt-3.5"
+                style={{ borderTop: '1px solid var(--border)' }}
+              >
+                <div className="text-[12px]" style={{ color: 'var(--t2)' }}>
+                  Não está recebendo? Dispare um envio de teste agora para validar.
+                </div>
+                <button
+                  type="button"
+                  onClick={enviarRelatorioTeste}
+                  disabled={enviandoTeste}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-sm)] text-[12.5px] font-semibold transition-colors disabled:opacity-50 shrink-0"
+                  style={{
+                    background: 'var(--cyan)',
+                    color: 'white',
+                    boxShadow: '0 4px 14px rgba(0,184,217,0.28)',
+                  }}
+                >
+                  {enviandoTeste ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Enviando…
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-3.5 h-3.5" />
+                      Enviar teste agora
+                    </>
+                  )}
+                </button>
+              </div>
 
-          {testeResultado && (
-            <div
-              className="mt-3 px-3.5 py-3 rounded-[var(--r-md)] text-[12.5px] leading-relaxed"
-              style={{
-                background: testeResultado.ok
-                  ? 'rgba(16,185,129,0.10)'
-                  : 'rgba(239,68,68,0.10)',
-                border: `1px solid ${testeResultado.ok ? 'rgba(16,185,129,0.30)' : 'rgba(239,68,68,0.30)'}`,
-                color: testeResultado.ok ? 'var(--gain)' : 'var(--loss)',
-              }}
-            >
-              {testeResultado.msg}
-            </div>
+              {testeResultado && (
+                <div
+                  className="mt-3 px-3.5 py-3 rounded-[var(--r-md)] text-[12.5px] leading-relaxed"
+                  style={{
+                    background: testeResultado.ok
+                      ? 'rgba(16,185,129,0.10)'
+                      : 'rgba(239,68,68,0.10)',
+                    border: `1px solid ${testeResultado.ok ? 'rgba(16,185,129,0.30)' : 'rgba(239,68,68,0.30)'}`,
+                    color: testeResultado.ok ? 'var(--gain)' : 'var(--loss)',
+                  }}
+                >
+                  {testeResultado.msg}
+                </div>
+              )}
+            </>
           )}
         </SettingSection>
 
@@ -355,6 +414,7 @@ function ToggleRow({
   value,
   onToggle,
   first,
+  locked,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -362,6 +422,8 @@ function ToggleRow({
   value: boolean;
   onToggle: () => void;
   first?: boolean;
+  /** Quando true, mostra badge Premium ao inves do switch e estado mutado. */
+  locked?: boolean;
 }) {
   return (
     <div
@@ -369,6 +431,7 @@ function ToggleRow({
       style={{
         borderTop: first ? 'none' : '1px solid var(--border)',
         paddingTop: first ? 0 : undefined,
+        opacity: locked ? 0.65 : 1,
       }}
     >
       <div
@@ -378,8 +441,20 @@ function ToggleRow({
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <strong className="text-[14px] font-semibold block" style={{ color: 'var(--t1)' }}>
+        <strong
+          className="text-[14px] font-semibold flex items-center gap-2"
+          style={{ color: 'var(--t1)' }}
+        >
           {label}
+          {locked && (
+            <span
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold uppercase tracking-wider"
+              style={{ background: 'rgba(0,184,217,0.15)', color: 'var(--cyan)' }}
+            >
+              <Lock className="w-2.5 h-2.5" />
+              Premium
+            </span>
+          )}
         </strong>
         <span className="text-[12px]" style={{ color: 'var(--t2)' }}>
           {description}
@@ -390,6 +465,7 @@ function ToggleRow({
         onClick={onToggle}
         role="switch"
         aria-checked={value}
+        aria-label={locked ? `${label} (recurso premium)` : label}
         className="relative w-11 h-6 rounded-[var(--r-pill)] transition-colors shrink-0"
         style={{ background: value ? 'var(--cyan)' : 'var(--surface-3)' }}
       >
