@@ -32,7 +32,12 @@ export default function ChatPage() {
 
   return (
     <DashboardLayout>
-      <div className="h-full overflow-hidden">
+      {/* Altura fixa = viewport - topbar (80px). overflow-hidden garante que
+          o scroll fique no chat-stream interno, nao na pagina inteira. */}
+      <div
+        className="overflow-hidden"
+        style={{ height: 'calc(100vh - var(--topbar-h, 80px))' }}
+      >
         {/* Suspense boundary necessario porque o Chatbot usa useSearchParams
             (para preencher o input quando vem de /dashboard com ?q=...) */}
         <Suspense fallback={null}>
