@@ -157,8 +157,14 @@ function LessonCard({
 
   return (
     <article
-      className="rounded-[var(--r-lg)] overflow-hidden cursor-pointer transition-all hover:-translate-y-1 group"
-      style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+      className="rounded-[var(--r-lg)] overflow-hidden cursor-pointer transition-all hover:-translate-y-1 group relative"
+      style={{
+        background: 'var(--surface-1)',
+        border: watched
+          ? '1px solid rgba(16,185,129,0.45)'
+          : '1px solid var(--border)',
+        boxShadow: watched ? '0 0 0 1px rgba(16,185,129,0.15)' : 'none',
+      }}
       onClick={() => onClick(video)}
     >
       {/* lesson-thumb (130px gradient) */}
@@ -168,27 +174,41 @@ function LessonCard({
       >
         <Icon className="w-[80px] h-[80px]" style={{ color: 'rgba(255,255,255,0.18)' }} />
 
+        {/* Dim overlay quando concluido */}
         {watched && (
           <div
-            className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold text-white"
-            style={{ background: 'var(--gain)' }}
+            aria-hidden
+            className="absolute inset-0"
+            style={{ background: 'rgba(0,0,0,0.45)' }}
+          />
+        )}
+
+        {/* Check grande centralizado — visual principal de "concluido" */}
+        {watched && (
+          <div
+            className="absolute w-14 h-14 rounded-full grid place-items-center"
+            style={{
+              background: 'var(--gain)',
+              boxShadow: '0 6px 20px rgba(16,185,129,0.45), 0 0 0 4px rgba(16,185,129,0.18)',
+            }}
           >
-            <Check className="w-3 h-3" />
-            Concluído
+            <Check className="w-7 h-7 text-white" strokeWidth={3} />
           </div>
         )}
 
-        {/* play-overlay */}
-        <div
-          className="absolute w-11 h-11 rounded-full grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity"
-          style={{
-            background: 'rgba(0,0,0,0.4)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.3)',
-          }}
-        >
-          <Play className="w-[18px] h-[18px] text-white fill-white" />
-        </div>
+        {/* play-overlay (apenas quando NAO concluido) */}
+        {!watched && (
+          <div
+            className="absolute w-11 h-11 rounded-full grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{
+              background: 'rgba(0,0,0,0.4)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255,255,255,0.3)',
+            }}
+          >
+            <Play className="w-[18px] h-[18px] text-white fill-white" />
+          </div>
+        )}
 
         {/* lesson-duration */}
         <span
@@ -197,19 +217,30 @@ function LessonCard({
         >
           {video.duration}
         </span>
+
+        {/* Pill "Concluido" no topo esquerdo — reforco textual */}
+        {watched && (
+          <div
+            className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold text-white"
+            style={{ background: 'var(--gain)', boxShadow: '0 2px 6px rgba(0,0,0,0.3)' }}
+          >
+            <Check className="w-3 h-3" strokeWidth={3} />
+            Concluído
+          </div>
+        )}
       </div>
 
       {/* lesson-body */}
       <div className="px-4 pt-3.5 pb-4">
         <div
           className="text-[10.5px] font-bold uppercase tracking-[0.08em] mb-1.5"
-          style={{ color: 'var(--cyan)' }}
+          style={{ color: watched ? 'var(--gain)' : 'var(--cyan)' }}
         >
           {video.categoryLabel}
         </div>
         <div
           className="text-[14px] font-semibold leading-[1.35] mb-2.5 line-clamp-2 min-h-[38px]"
-          style={{ color: 'var(--t1)' }}
+          style={{ color: watched ? 'var(--t2)' : 'var(--t1)' }}
         >
           {video.title}
         </div>
