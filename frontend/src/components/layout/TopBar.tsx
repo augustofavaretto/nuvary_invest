@@ -50,18 +50,6 @@ export function TopBar({ notificationSlot }: TopBarProps) {
         px-4 lg:px-8
       "
     >
-      {/* Cloud icon discreto a esquerda (decorativo) */}
-      <div className="w-11 h-11 grid place-items-center opacity-40 ml-12 lg:ml-0">
-        <Image
-          src="/brand/nuvary-icon.png"
-          alt=""
-          width={28}
-          height={28}
-          className="object-contain"
-          aria-hidden
-        />
-      </div>
-
       {/* Spacer */}
       <div className="flex-1" />
 
