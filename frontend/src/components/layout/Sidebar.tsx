@@ -19,63 +19,83 @@ import {
 interface MenuItem {
   id: string;
   label: string;
+  // duas linhas opcionais para itens com label longo (ex: "Minha Carteira")
+  labelLine2?: string;
   icon: React.ReactNode;
   href: string;
   badge?: string;
 }
 
 const menuItems: MenuItem[] = [
-  { id: 'dashboard',     label: 'Dashboard',        icon: <LayoutDashboard className="w-5 h-5" />, href: '/dashboard' },
-  { id: 'chat',          label: 'Chat IA',           icon: <MessageSquare className="w-5 h-5" />,  href: '/chat',          badge: 'IA' },
-  { id: 'carteira',      label: 'Minha Carteira',    icon: <Wallet className="w-5 h-5" />,         href: '/carteira' },
-  { id: 'relatorios',    label: 'Relatórios',        icon: <BarChart3 className="w-5 h-5" />,      href: '/relatorios' },
-  { id: 'trilhas',       label: 'Trilhas Educativas',icon: <GraduationCap className="w-5 h-5" />,  href: '/trilhas' },
-  { id: 'configuracoes', label: 'Configurações',     icon: <Settings className="w-5 h-5" />,       href: '/configuracoes' },
+  { id: 'dashboard',     label: 'Dashboard',                                  icon: <LayoutDashboard className="w-[22px] h-[22px]" />, href: '/dashboard' },
+  { id: 'chat',          label: 'Chat IA',                                    icon: <MessageSquare className="w-[22px] h-[22px]" />,   href: '/chat',          badge: 'IA' },
+  { id: 'carteira',      label: 'Minha',           labelLine2: 'Carteira',    icon: <Wallet className="w-[22px] h-[22px]" />,          href: '/carteira' },
+  { id: 'relatorios',    label: 'Relatórios',                                 icon: <BarChart3 className="w-[22px] h-[22px]" />,       href: '/relatorios' },
+  { id: 'trilhas',       label: 'Trilhas',         labelLine2: 'Educativas',  icon: <GraduationCap className="w-[22px] h-[22px]" />,   href: '/trilhas' },
+  { id: 'configuracoes', label: 'Configurações',                              icon: <Settings className="w-[22px] h-[22px]" />,        href: '/configuracoes' },
 ];
 
-// ── Desktop Sidebar (fixo, ícone acima do texto) ─────────────────────────────
-export function Sidebar() {
+// ── Conteudo compartilhado entre Desktop e Mobile ───────────────────────────
+function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[80px] bg-[#0B1F33] flex flex-col z-50">
-      {/* Logo */}
-      <div className="flex items-center justify-center py-4 border-b border-[#1a3a5c]">
-        <Link href="/dashboard">
-          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center overflow-hidden">
-            <Image
-              src="/logo-icon.png"
-              alt="Nuvary Invest"
-              width={44}
-              height={44}
-              className="object-contain"
-            />
-          </div>
-        </Link>
-      </div>
+    <>
+      {/* Brand mark — quadrado branco com logo nuvary */}
+      <Link href="/dashboard" onClick={onItemClick} className="block">
+        <div className="w-14 h-14 bg-white rounded-[14px] grid place-items-center mb-6 shadow-[var(--shadow-brand)]">
+          <Image
+            src="/brand/nuvary-icon.png"
+            alt="Nuvary Invest"
+            width={40}
+            height={40}
+            className="object-contain"
+            priority
+          />
+        </div>
+      </Link>
 
-      {/* Menu Items */}
-      <nav className="flex-1 py-4 overflow-y-auto">
-        <ul className="flex flex-col items-center gap-1 px-2">
+      {/* Nav */}
+      <nav className="w-full px-3 flex-1">
+        <ul className="flex flex-col gap-1.5">
           {menuItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             return (
-              <li key={item.id} className="w-full">
+              <li key={item.id}>
                 <Link
                   href={item.href}
+                  onClick={onItemClick}
+                  aria-current={isActive ? 'page' : undefined}
                   className={`
-                    relative flex flex-col items-center gap-1 py-3 px-1 rounded-xl transition-all duration-200
+                    relative flex flex-col items-center justify-center gap-1
+                    py-2.5 px-1 rounded-[var(--r-md)] text-center
+                    text-[11px] font-medium leading-[1.15] tracking-[-0.005em]
+                    transition-colors duration-200 ease-[var(--ease)]
                     ${isActive
-                      ? 'bg-[#00B8D9] text-white'
-                      : 'text-[#8BA3C1] hover:bg-[#1a3a5c] hover:text-white'}
+                      ? 'bg-[var(--cyan)] text-[var(--navy-deep)] shadow-[var(--shadow-glow)]'
+                      : 'text-[var(--t2)] hover:text-[var(--t1)] hover:bg-[var(--glass)]'}
                   `}
                 >
-                  <span className="flex-shrink-0">{item.icon}</span>
-                  <span className="text-[10px] font-medium text-center leading-tight">
+                  <span className="shrink-0">{item.icon}</span>
+                  <span>
                     {item.label}
+                    {item.labelLine2 && (
+                      <>
+                        <br />
+                        {item.labelLine2}
+                      </>
+                    )}
                   </span>
                   {item.badge && (
-                    <span className="absolute top-1.5 right-1.5 bg-white/20 text-white text-[9px] px-1 py-0.5 rounded-full font-semibold leading-none">
+                    <span
+                      className={`
+                        absolute top-1 right-3.5 px-1.5 py-[1px] rounded-lg
+                        text-[9px] font-bold tracking-wider
+                        ${isActive
+                          ? 'bg-[var(--navy)] text-[var(--cyan)]'
+                          : 'bg-[var(--cyan-700)] text-white'}
+                      `}
+                    >
                       {item.badge}
                     </span>
                   )}
@@ -85,21 +105,41 @@ export function Sidebar() {
           })}
         </ul>
       </nav>
+    </>
+  );
+}
+
+// ── Desktop Sidebar (fixo, 96px, sempre visivel em lg+) ─────────────────────
+export function Sidebar() {
+  return (
+    <aside
+      className="
+        fixed top-0 left-0 bottom-0 z-40
+        w-[var(--sidebar-w)]
+        bg-[var(--navy-deep)]
+        border-r border-[var(--border)]
+        flex flex-col items-center
+        py-[18px]
+        hidden lg:flex
+      "
+    >
+      <SidebarContent />
     </aside>
   );
 }
 
-// ── Mobile Sidebar (drawer, abre/fecha) ──────────────────────────────────────
+// ── Mobile Sidebar (drawer com hamburger) ───────────────────────────────────
 export function MobileSidebar() {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
 
   return (
     <>
       {/* Hamburger */}
       <button
+        type="button"
         onClick={() => setIsOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-40 p-2 bg-[#0B1F33] rounded-lg text-white"
+        className="lg:hidden fixed top-4 left-4 z-40 p-2 bg-[var(--navy-deep)] rounded-lg text-white"
+        aria-label="Abrir menu"
       >
         <Menu className="w-6 h-6" />
       </button>
@@ -112,7 +152,8 @@ export function MobileSidebar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="lg:hidden fixed inset-0 bg-black/50 z-40"
+            className="lg:hidden fixed inset-0 bg-black/60 z-40"
+            aria-hidden="true"
           />
         )}
       </AnimatePresence>
@@ -121,58 +162,28 @@ export function MobileSidebar() {
       <AnimatePresence>
         {isOpen && (
           <motion.aside
-            initial={{ x: -280 }}
+            initial={{ x: -120 }}
             animate={{ x: 0 }}
-            exit={{ x: -280 }}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
-            className="lg:hidden fixed left-0 top-0 h-screen w-[80px] bg-[#0B1F33] flex flex-col z-50"
+            exit={{ x: -120 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="
+              lg:hidden fixed top-0 left-0 bottom-0 z-50
+              w-[var(--sidebar-w)]
+              bg-[var(--navy-deep)]
+              border-r border-[var(--border)]
+              flex flex-col items-center
+              py-[18px]
+            "
           >
-            <div className="flex items-center justify-center py-4 border-b border-[#1a3a5c] relative">
-              <Link href="/dashboard" onClick={() => setIsOpen(false)}>
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center overflow-hidden">
-                  <Image
-                    src="/logo-icon.png"
-                    alt="Nuvary Invest"
-                    width={44}
-                    height={44}
-                    className="object-contain"
-                  />
-                </div>
-              </Link>
-              <button onClick={() => setIsOpen(false)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#8BA3C1] hover:text-white">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <nav className="flex-1 py-4 overflow-y-auto">
-              <ul className="flex flex-col items-center gap-1 px-2">
-                {menuItems.map((item) => {
-                  const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-                  return (
-                    <li key={item.id} className="w-full">
-                      <Link
-                        href={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className={`
-                          relative flex flex-col items-center gap-1 py-3 px-1 rounded-xl transition-all duration-200
-                          ${isActive
-                            ? 'bg-[#00B8D9] text-white'
-                            : 'text-[#8BA3C1] hover:bg-[#1a3a5c] hover:text-white'}
-                        `}
-                      >
-                        <span>{item.icon}</span>
-                        <span className="text-[10px] font-medium text-center leading-tight">{item.label}</span>
-                        {item.badge && (
-                          <span className="absolute top-1.5 right-1.5 bg-white/20 text-white text-[9px] px-1 py-0.5 rounded-full font-semibold leading-none">
-                            {item.badge}
-                          </span>
-                        )}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="absolute top-2 right-2 p-1 text-[var(--t2)] hover:text-white"
+              aria-label="Fechar menu"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <SidebarContent onItemClick={() => setIsOpen(false)} />
           </motion.aside>
         )}
       </AnimatePresence>

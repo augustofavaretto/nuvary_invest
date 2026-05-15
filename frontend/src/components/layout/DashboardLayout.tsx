@@ -1,133 +1,46 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { Sidebar, MobileSidebar } from './Sidebar';
-import { useAuth } from '@/contexts/AuthContext';
-import {
-  User,
-  LogOut,
-  Settings,
-  ChevronDown,
-} from 'lucide-react';
-import { STRINGS } from '@/constants/strings';
+import { TopBar } from './TopBar';
 import { NotificationBell } from '@/components/dashboard/NotificationBell';
 import { AlertToastContainer } from '@/components/dashboard/AlertToastContainer';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  /** Quando true, oculta o TopBar (telas que tem header proprio, ex: Chat full-screen) */
+  hideTopBar?: boolean;
 }
 
-export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const { user, profile, logout } = useAuth();
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await logout();
-    window.location.href = '/';
-  };
-
+// ── DashboardLayout (AppShell) ──────────────────────────────────────────────
+// Estrutura padrao do redesign:
+//   ┌─────────┬──────────────────────────────────────┐
+//   │         │  TopBar (80px, sticky)               │
+//   │ Sidebar ├──────────────────────────────────────┤
+//   │  96px   │  Main (children)                     │
+//   │ (fixa)  │                                      │
+//   └─────────┴──────────────────────────────────────┘
+// Tela inteira em dark, com ambient gradient sutil de fundo.
+export function DashboardLayout({ children, hideTopBar = false }: DashboardLayoutProps) {
   return (
-    <div className="h-screen overflow-hidden bg-background">
-      {/* Desktop Sidebar — fixo, sempre expandido */}
-      <div className="hidden lg:block">
-        <Sidebar />
-      </div>
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--t1)]">
+      {/* Ambient — gradient radial sutil de fundo */}
+      <div className="nv-ambient" />
 
-      {/* Mobile Sidebar */}
+      {/* Sidebar desktop (fixa) + mobile (drawer) */}
+      <Sidebar />
       <MobileSidebar />
 
-      {/* Main Content — margem fixa de 80px no desktop */}
-      <div className="h-screen flex flex-col lg:ml-[80px]">
-        {/* Top Header */}
-        <header className="sticky top-0 z-30 bg-card border-b border-border">
-          <div className="flex items-center justify-between px-6 py-4">
-            {/* Espaço para botão mobile */}
-            <div className="lg:hidden w-10" />
+      {/* Area principal — desloca conforme largura da sidebar em lg+ */}
+      <div className="relative z-[1] lg:ml-[var(--sidebar-w)] min-h-screen flex flex-col">
+        {!hideTopBar && (
+          <TopBar notificationSlot={<NotificationBell />} />
+        )}
 
-            {/* Right section */}
-            <div className="flex items-center gap-4 ml-auto">
-              {/* Notifications */}
-              <NotificationBell />
-
-              {/* User Menu */}
-              <div className="relative">
-                <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
-                >
-                  <div className="w-9 h-9 bg-gradient-to-br from-[#00B8D9] to-[#007EA7] rounded-full flex items-center justify-center overflow-hidden">
-                    {profile?.avatar_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={profile.avatar_url}
-                        alt="Foto de perfil"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-white font-semibold text-sm">
-                        {profile?.nome?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
-                      </span>
-                    )}
-                  </div>
-                  <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium text-foreground">
-                      {profile?.nome || user?.email?.split('@')[0] || STRINGS.nav.usuario}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{user?.email}</p>
-                  </div>
-                  <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
-
-                {/* Dropdown */}
-                {userMenuOpen && (
-                  <>
-                    <div className="fixed inset-0 z-10" onClick={() => setUserMenuOpen(false)} />
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="absolute right-0 top-full mt-2 w-56 bg-card rounded-xl shadow-lg border border-border py-2 z-20"
-                    >
-                      <Link
-                        href="/perfil"
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
-                      >
-                        <User className="w-4 h-4" />
-                        Meu Perfil
-                      </Link>
-                      <Link
-                        href="/configuracoes"
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
-                      >
-                        <Settings className="w-4 h-4" />
-                        {STRINGS.nav.configuracoes}
-                      </Link>
-                      <div className="border-t border-border my-2" />
-                      <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Sair
-                      </button>
-                    </motion.div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Page Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 nv-view-in">
           {children}
         </main>
       </div>
+
       <AlertToastContainer />
     </div>
   );
