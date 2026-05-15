@@ -2,6 +2,7 @@
 
 import { Sidebar, MobileSidebar } from './Sidebar';
 import { TopBar } from './TopBar';
+import { PremiumUpgradeBanner } from './PremiumUpgradeBanner';
 import { NotificationBell } from '@/components/dashboard/NotificationBell';
 import { AlertToastContainer } from '@/components/dashboard/AlertToastContainer';
 
@@ -35,6 +36,9 @@ export function DashboardLayout({ children, hideTopBar = false }: DashboardLayou
         {!hideTopBar && (
           <TopBar notificationSlot={<NotificationBell />} />
         )}
+
+        {/* Banner global de upsell — so aparece para usuario free */}
+        <PremiumUpgradeBanner />
 
         <main className="flex-1 nv-view-in">
           {children}
