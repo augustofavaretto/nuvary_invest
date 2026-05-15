@@ -85,7 +85,7 @@ export function AlocacaoDonut({ byClass, total }: AlocacaoDonutProps) {
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-4">
-            <span data-mono className="font-mono text-[14px] font-semibold text-[var(--t1)] whitespace-nowrap">
+            <span className="text-[14px] font-semibold text-[var(--t1)] whitespace-nowrap tabular-nums">
               {formatBRL(total)}
             </span>
             <span className="text-[9px] text-[var(--t3)] uppercase tracking-wider mt-0.5">
@@ -113,8 +113,7 @@ export function AlocacaoDonut({ byClass, total }: AlocacaoDonutProps) {
                   <span className="text-[var(--t1)] truncate">{label}</span>
                   <span className="text-[var(--t1)] font-semibold">{c.percentage.toFixed(1)}%</span>
                   <span
-                    data-mono
-                    className="font-mono text-[var(--t2)] min-w-[80px] text-right text-[13px]"
+                    className="text-[var(--t2)] min-w-[80px] text-right text-[13px] tabular-nums"
                   >
                     {formatBRL(c.value)}
                   </span>

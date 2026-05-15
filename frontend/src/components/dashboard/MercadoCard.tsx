@@ -51,8 +51,7 @@ export function MercadoCard({ acoes, onRefresh, loading = false }: MercadoCardPr
             >
               <p className="text-[12px] text-[var(--t2)]">{a.label}</p>
               <p
-                data-mono
-                className="font-mono text-[18px] font-semibold text-[var(--t1)] mt-1"
+                className="text-[18px] font-semibold text-[var(--t1)] mt-1 tabular-nums"
               >
                 ${a.price.toFixed(2)}
               </p>

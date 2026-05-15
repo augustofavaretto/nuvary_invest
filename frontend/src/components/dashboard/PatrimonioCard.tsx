@@ -67,8 +67,7 @@ export function PatrimonioCard({
         <div className="h-9 w-44 bg-[var(--glass)] rounded animate-pulse" />
       ) : (
         <div
-          data-mono
-          className="relative z-10 text-[36px] font-extrabold text-[var(--t1)] leading-none tracking-[-0.025em] font-mono"
+          className="relative z-10 text-[36px] font-extrabold text-[var(--t1)] leading-none tracking-[-0.025em] tabular-nums"
         >
           {mostrarSaldo ? (
             <>

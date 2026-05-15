@@ -73,8 +73,7 @@ export function EvolucaoChart({
       {/* Stats */}
       <div className="flex items-baseline gap-4 px-6 mb-3">
         <span
-          data-mono
-          className="text-[24px] font-bold text-[var(--t1)] tracking-[-0.02em] font-mono"
+          className="text-[24px] font-bold text-[var(--t1)] tracking-[-0.02em] tabular-nums"
         >
           {formatBRL(valor)}
         </span>
