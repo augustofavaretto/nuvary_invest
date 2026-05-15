@@ -167,7 +167,7 @@ function DashboardContent() {
       <div className="px-6 lg:px-10 py-6 lg:py-8 max-w-[1400px] mx-auto space-y-4">
         {/* ============ Linha 1: Saudacao + Patrimonio + Perfil ============ */}
         <section className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr_0.7fr] gap-4">
-          <GreetingCard nome={`${nomeUsuario}!`} dataHoje={dataHoje} />
+          <GreetingCard nome={nomeUsuario} dataHoje={dataHoje} />
 
           <PatrimonioCard
             valor={valorFinal}
