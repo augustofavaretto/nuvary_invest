@@ -4,12 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
-  Loader2, Wallet, Calendar, RefreshCw, Plus, Trash2,
+  Loader2, Wallet, Calendar, RefreshCw, Plus,
   PiggyBank, Landmark, TrendingUp, Building, Globe, Coins, ChevronRight,
 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
 import {
   PortfolioSummaryCard,
   PortfolioByClassCard,
@@ -64,11 +63,12 @@ export default function CarteiraPage() {
     if (isAuthenticated) {
       loadData(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await loadData(false, true); // força refresh de preços
+    await loadData(false, true);
     setRefreshing(false);
   };
 
@@ -117,93 +117,96 @@ export default function CarteiraPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-[#00B8D9]" />
-          <p className="text-muted-foreground">Carregando...</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--cyan)' }} />
+          <p className="text-[13px]" style={{ color: 'var(--t2)' }}>Carregando...</p>
         </div>
       </div>
     );
   }
 
   const hasAssets = portfolioData && portfolioData.summary.totalValue > 0;
+  const dataHoje = new Date().toLocaleDateString('pt-BR');
 
   return (
     <DashboardLayout>
-      <div className="px-6 py-6 max-w-7xl mx-auto">
-        {/* Header */}
+      <div className="px-6 lg:px-10 py-6 lg:py-8 max-w-[1400px] mx-auto space-y-4">
+        {/* page-head — Minha Carteira + acoes (atualizar/adicionar) */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6"
+          className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-2"
         >
           <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-              <Wallet className="w-7 h-7 text-[#00B8D9]" />
+            <h1
+              className="flex items-center gap-3 text-[26px] font-bold tracking-tight"
+              style={{ color: 'var(--t1)' }}
+            >
+              <Wallet className="w-[26px] h-[26px]" style={{ color: 'var(--cyan)' }} />
               Minha Carteira
             </h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-[13px] mt-1" style={{ color: 'var(--t2)' }}>
               Visão geral dos seus investimentos
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="w-4 h-4" />
-              <span>Valores até {new Date().toLocaleDateString('pt-BR')}</span>
-            </div>
-            <Button
+          <div className="flex items-center gap-3 flex-wrap">
+            <span
+              className="inline-flex items-center gap-1.5 text-[13px]"
+              style={{ color: 'var(--t2)' }}
+            >
+              <Calendar className="w-[14px] h-[14px]" style={{ color: 'var(--cyan)' }} />
+              Valores até {dataHoje}
+            </span>
+            <button
               onClick={handleRefresh}
               disabled={refreshing}
-              variant="outline"
-              size="sm"
-              className="border-[#00B8D9] text-[#00B8D9] hover:bg-[#00B8D9] hover:text-white"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13.5px] font-semibold transition-colors disabled:opacity-50"
+              style={{
+                background: 'var(--glass)',
+                color: 'var(--t1)',
+                border: '1px solid var(--border)',
+              }}
             >
-              <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
               Atualizar
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => {
                 setSelectedModalCategory(null);
                 setIsAddModalOpen(true);
               }}
-              size="sm"
-              className="bg-[#00B8D9] hover:bg-[#007EA7]"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13.5px] font-semibold text-white transition-colors"
+              style={{
+                background: 'var(--cyan)',
+                boxShadow: '0 4px 14px rgba(0, 184, 217, 0.28)',
+              }}
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="w-3.5 h-3.5" />
               Adicionar Ativo
-            </Button>
+            </button>
           </div>
         </motion.div>
 
         {loading ? (
-          // Loading skeleton
-          <div className="space-y-6">
-            <div className="bg-[#0B1F33] rounded-xl p-6 animate-pulse">
-              <div className="h-8 bg-white/10 rounded w-1/4 mb-4" />
-              <div className="h-12 bg-white/10 rounded w-1/2 mb-6" />
-              <div className="grid grid-cols-3 gap-4">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="h-20 bg-white/10 rounded" />
-                ))}
-              </div>
-            </div>
+          <div className="space-y-4">
+            <div
+              className="rounded-[var(--r-lg)] p-6 animate-pulse h-[220px]"
+              style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+            />
             {[1, 2, 3].map(i => (
-              <div key={i} className="bg-card rounded-xl p-6 border border-border animate-pulse">
-                <div className="h-6 bg-muted rounded w-1/4 mb-4" />
-                <div className="h-40 bg-muted rounded" />
-              </div>
+              <div
+                key={i}
+                className="rounded-[var(--r-lg)] p-6 animate-pulse h-[200px]"
+                style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+              />
             ))}
           </div>
         ) : hasAssets && portfolioData ? (
-          <div className="space-y-6">
-            {/* Portfolio Summary */}
+          <div className="space-y-4">
             <PortfolioSummaryCard summary={portfolioData.summary} />
-
-            {/* Portfolio by Class */}
             <PortfolioByClassCard data={portfolioData.byClass} />
-
-            {/* Portfolio by Product */}
             <PortfolioByProductCard
               rendaFixa={portfolioData.byProduct.rendaFixa}
               rendaVariavel={portfolioData.byProduct.rendaVariavel}
@@ -212,28 +215,29 @@ export default function CarteiraPage() {
               onRemoveAsset={handleRemoveAsset}
               onSellAsset={(asset) => setAssetToSell(asset)}
             />
-
-            {/* Portfolio by Broker */}
             <PortfolioByBrokerCard data={portfolioData.byBroker} />
-
           </div>
         ) : (
-          // Empty state - lista de categorias
-          <div className="space-y-4">
+          // Empty state — categorias para 1o ativo
+          <div className="space-y-3">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-card rounded-xl border border-border p-6"
+              className="rounded-[var(--r-lg)] p-6"
+              style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
             >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-[#00B8D9]/10 rounded-full flex items-center justify-center">
-                  <Wallet className="w-5 h-5 text-[#00B8D9]" />
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-10 h-10 rounded-full grid place-items-center"
+                  style={{ background: 'rgba(0,184,217,0.1)', color: 'var(--cyan)' }}
+                >
+                  <Wallet className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-foreground">
+                  <h2 className="text-[16px] font-semibold" style={{ color: 'var(--t1)' }}>
                     Sua carteira está vazia
                   </h2>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-[13px]" style={{ color: 'var(--t2)' }}>
                     Selecione uma categoria para adicionar seu primeiro ativo
                   </p>
                 </div>
@@ -241,12 +245,12 @@ export default function CarteiraPage() {
             </motion.div>
 
             {[
-              { id: 'renda_fixa', name: 'Renda Fixa', description: 'CDBs, LCIs, LCAs e Debêntures', icon: PiggyBank, color: '#1e3a5f' },
+              { id: 'renda_fixa', name: 'Renda Fixa', description: 'CDBs, LCIs, LCAs e Debêntures', icon: PiggyBank, color: '#1E3A5F' },
               { id: 'tesouro', name: 'Tesouro Direto', description: 'Títulos públicos federais', icon: Landmark, color: '#047857' },
-              { id: 'renda_variavel', name: 'Renda Variável', description: 'Ações, ETFs e BDRs', icon: TrendingUp, color: '#6366f1' },
-              { id: 'fiis', name: 'Fundos Imobiliários', description: 'FIIs listados na B3', icon: Building, color: '#10b981' },
-              { id: 'internacional', name: 'Internacional', description: 'BDRs e ETFs globais', icon: Globe, color: '#00B8D9' },
-              { id: 'cripto', name: 'Criptomoedas', description: 'Bitcoin, Ethereum e altcoins', icon: Coins, color: '#f59e0b' },
+              { id: 'renda_variavel', name: 'Renda Variável', description: 'Ações, ETFs e BDRs', icon: TrendingUp, color: '#00B8D9' },
+              { id: 'fiis', name: 'Fundos Imobiliários', description: 'FIIs listados na B3', icon: Building, color: '#10B981' },
+              { id: 'internacional', name: 'Internacional', description: 'BDRs e ETFs globais', icon: Globe, color: '#7C3AED' },
+              { id: 'cripto', name: 'Criptomoedas', description: 'Bitcoin, Ethereum e altcoins', icon: Coins, color: '#F59E0B' },
             ].map((category, index) => {
               const Icon = category.icon;
               return (
@@ -259,24 +263,31 @@ export default function CarteiraPage() {
                     setSelectedModalCategory(category.id);
                     setIsAddModalOpen(true);
                   }}
-                  className="w-full bg-card rounded-xl border border-border p-5 flex items-center gap-4 hover:shadow-md hover:border-[#00B8D9]/30 transition-all group text-left"
+                  className="w-full rounded-[var(--r-lg)] p-5 flex items-center gap-4 transition-colors text-left group"
+                  style={{
+                    background: 'var(--surface-1)',
+                    border: '1px solid var(--border)',
+                  }}
                 >
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: `${category.color}15` }}
+                    className="w-12 h-12 rounded-[var(--r-md)] grid place-items-center flex-shrink-0"
+                    style={{ background: `${category.color}1F`, color: category.color }}
                   >
-                    <Icon className="w-6 h-6" style={{ color: category.color }} />
+                    <Icon className="w-6 h-6" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-foreground text-base">
+                    <h3 className="text-[15px] font-semibold" style={{ color: 'var(--t1)' }}>
                       {category.name}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-[13px]" style={{ color: 'var(--t2)' }}>
                       {category.description}
                     </p>
                   </div>
-                  <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center group-hover:bg-[#00B8D9] group-hover:border-[#00B8D9] transition-colors flex-shrink-0">
-                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-white transition-colors" />
+                  <div
+                    className="w-8 h-8 rounded-full grid place-items-center transition-colors group-hover:bg-[var(--cyan)]"
+                    style={{ border: '1px solid var(--border)', color: 'var(--t3)' }}
+                  >
+                    <ChevronRight className="w-4 h-4 group-hover:text-white transition-colors" />
                   </div>
                 </motion.button>
               );
@@ -285,14 +296,12 @@ export default function CarteiraPage() {
         )}
       </div>
 
-      {/* Sell Asset Modal */}
       <SellAssetModal
         asset={assetToSell}
         onClose={() => setAssetToSell(null)}
         onSell={handleSellAsset}
       />
 
-      {/* Add Asset Modal */}
       <AddAssetModal
         isOpen={isAddModalOpen}
         onClose={() => {

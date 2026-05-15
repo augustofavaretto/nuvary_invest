@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, TrendingUp, TrendingDown, Trash2, TrendingDown as SellIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Trash2, TrendingDown as SellIcon } from 'lucide-react';
 import { DonutChart } from './DonutChart';
 import { Asset, formatCurrency, formatPercentage } from '@/services/portfolioService';
 
@@ -17,11 +17,13 @@ interface PortfolioByProductCardProps {
 
 const TABS = [
   { id: 'rendaFixa', label: 'Renda Fixa', color: '#1e3a5f' },
-  { id: 'rendaVariavel', label: 'Renda Variavel', color: '#00B8D9' },
+  { id: 'rendaVariavel', label: 'Renda Variável', color: '#00B8D9' },
   { id: 'fiis', label: 'FIIs', color: '#10b981' },
-  { id: 'internacional', label: 'Internacional', color: '#6366f1' },
+  { id: 'internacional', label: 'Internacional', color: '#7C3AED' },
 ];
 
+// Sua carteira por produto — visual fiel ao mockup
+// (.classe-filter + .product-row + .row-actions)
 export function PortfolioByProductCard({
   rendaFixa,
   rendaVariavel,
@@ -40,10 +42,9 @@ export function PortfolioByProductCard({
   };
 
   const currentData = dataMap[activeTab] || [];
-  const currentTab = TABS.find(t => t.id === activeTab);
+  const currentTab = TABS.find((t) => t.id === activeTab);
   const totalValue = currentData.reduce((sum, item) => sum + item.totalValue, 0);
 
-  // Prepare chart data
   const chartData = currentData.map((item, index) => ({
     name: item.ticker,
     value: item.totalValue,
@@ -56,35 +57,45 @@ export function PortfolioByProductCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="bg-card rounded-xl border border-border p-6"
+      className="rounded-[var(--r-lg)] px-6 py-5"
+      style={{
+        background: 'var(--surface-1)',
+        border: '1px solid var(--border)',
+      }}
     >
-      <h3 className="text-lg font-semibold text-foreground mb-4">
+      <h3 className="text-[16px] font-semibold mb-4" style={{ color: 'var(--t1)' }}>
         Sua carteira por produto
       </h3>
 
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6 flex-wrap">
+      {/* Tabs — classe-pill do mockup */}
+      <div className="flex gap-2 mb-5 flex-wrap">
         {TABS.map((tab) => {
           const tabData = dataMap[tab.id] || [];
           const hasData = tabData.length > 0;
+          const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => hasData && setActiveTab(tab.id)}
               disabled={!hasData}
-              className={`
-                flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all
-                ${activeTab === tab.id
-                  ? 'bg-[#00B8D9] text-white'
-                  : hasData
-                    ? 'bg-muted text-muted-foreground hover:bg-muted/80'
-                    : 'bg-muted text-muted-foreground/40 cursor-not-allowed'
-                }
-              `}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] text-[13px] font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              style={
+                isActive
+                  ? {
+                      background: 'var(--cyan)',
+                      color: 'white',
+                      border: '1px solid var(--cyan)',
+                    }
+                  : {
+                      background: 'var(--surface-2)',
+                      color: 'var(--t2)',
+                      border: '1px solid var(--border)',
+                    }
+              }
             >
               <span
-                className={`w-3 h-3 rounded-full ${activeTab === tab.id ? 'bg-white' : ''}`}
-                style={{ backgroundColor: activeTab === tab.id ? undefined : tab.color }}
+                className="w-2 h-2 rounded-full"
+                style={{ background: isActive ? 'white' : tab.color }}
               />
               {tab.label}
             </button>
@@ -93,9 +104,8 @@ export function PortfolioByProductCard({
       </div>
 
       {currentData.length > 0 ? (
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Chart */}
-          <div className="flex-shrink-0 flex justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-6 items-start">
+          <div className="flex justify-center lg:justify-start">
             <DonutChart
               data={chartData}
               size="md"
@@ -104,66 +114,96 @@ export function PortfolioByProductCard({
             />
           </div>
 
-          {/* Asset List */}
-          <div className="flex-1 space-y-2">
+          <div className="w-full">
             {currentData.map((asset, index) => (
               <motion.div
                 key={asset.id}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group cursor-pointer"
+                className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-4 py-3.5"
+                style={{
+                  borderTop: index === 0 ? 'none' : '1px solid var(--border)',
+                }}
               >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
+                {/* Nome + ticker */}
+                <div className="min-w-0">
                   <div
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: chartData[index]?.color }}
-                  />
-                  <div className="min-w-0">
-                    <p className="font-medium text-foreground truncate">{asset.name}</p>
-                    <p className="text-sm text-muted-foreground">{asset.ticker}</p>
+                    className="text-[14px] font-semibold truncate"
+                    style={{ color: 'var(--t1)' }}
+                  >
+                    {asset.name}
+                  </div>
+                  <div className="text-[11.5px] mt-0.5" style={{ color: 'var(--t2)' }}>
+                    {asset.ticker}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="font-semibold text-foreground">{formatCurrency(asset.totalValue)}</p>
-                    <div className="flex items-center justify-end gap-1">
-                      {asset.variation >= 0 ? (
-                        <TrendingUp className="w-3 h-3 text-green-500" />
-                      ) : (
-                        <TrendingDown className="w-3 h-3 text-red-500" />
-                      )}
-                      <span className={`text-sm ${asset.variation >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {asset.variation >= 0 ? '+' : ''}{asset.variation.toFixed(2)}%
-                      </span>
-                    </div>
+                {/* Valor + variacao */}
+                <div className="text-right tabular-nums">
+                  <div
+                    className="text-[14px] font-semibold"
+                    style={{ color: 'var(--t1)' }}
+                  >
+                    {formatCurrency(asset.totalValue)}
                   </div>
-                  <div className="text-right hidden sm:block">
-                    <p className="text-sm text-muted-foreground">
-                      {formatPercentage(asset.percentageOfProduct)} do produto
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatPercentage(asset.percentageOfPortfolio)} da carteira
-                    </p>
+                  <div
+                    className="text-[11.5px]"
+                    style={{ color: asset.variation >= 0 ? 'var(--gain)' : 'var(--loss)' }}
+                  >
+                    {asset.variation >= 0 ? '▴ +' : '▾ '}
+                    {asset.variation.toFixed(2)}%
                   </div>
+                </div>
+
+                {/* Share — % do produto / % da carteira */}
+                <div
+                  className="text-right text-[12px] leading-tight hidden md:block"
+                  style={{ color: 'var(--t2)' }}
+                >
+                  <strong
+                    className="block text-[13px] font-semibold"
+                    style={{ color: 'var(--t1)' }}
+                  >
+                    {formatPercentage(asset.percentageOfProduct)}
+                  </strong>
+                  do produto
+                  <br />
+                  {formatPercentage(asset.percentageOfPortfolio)} da carteira
+                </div>
+
+                {/* Acoes — vender + remover */}
+                <div className="flex items-center gap-2">
                   {onSellAsset && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); onSellAsset(asset); }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-500/15 text-amber-500 border border-amber-500/30 hover:bg-amber-500 hover:text-white hover:border-amber-500 transition-all"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSellAsset(asset);
+                      }}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-[11.5px] font-semibold transition-colors"
+                      style={{
+                        background: 'rgba(245, 158, 11, 0.15)',
+                        color: 'var(--warn)',
+                        border: '1px solid rgba(245, 158, 11, 0.3)',
+                      }}
                       title="Vender ativo"
                     >
-                      <SellIcon className="w-3.5 h-3.5" />
+                      <SellIcon className="w-3 h-3" />
                       Vender
                     </button>
                   )}
                   {onRemoveAsset && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); onRemoveAsset(asset.id); }}
-                      className="p-2 text-muted-foreground/60 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemoveAsset(asset.id);
+                      }}
+                      className="w-7 h-7 grid place-items-center rounded-md transition-colors"
+                      style={{ color: 'var(--t3)' }}
                       title="Remover ativo"
+                      aria-label="Remover ativo"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
@@ -172,7 +212,7 @@ export function PortfolioByProductCard({
           </div>
         </div>
       ) : (
-        <div className="text-center py-8 text-muted-foreground">
+        <div className="text-center py-8 text-[13px]" style={{ color: 'var(--t2)' }}>
           Nenhum ativo nesta categoria
         </div>
       )}
