@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import {
   Loader2, BarChart3, TrendingUp, FileText,
   Download, FileBarChart, ArrowUpRight, ArrowDownRight,
-  Search, ChevronDown, Wallet, TrendingDown,
+  Search, ChevronDown, Wallet, TrendingDown, Lock,
 } from 'lucide-react';
 import {
   BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePremium } from '@/hooks/usePremium';
 import { getAllAssets, getPortfolioData, getTransactions, refreshAllPrices, Asset, PortfolioData, Transaction } from '@/services/portfolioService';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
@@ -40,6 +41,17 @@ function RelatoriosContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { loading: authLoading, isAuthenticated, profile } = useAuth();
+  const { isPremium, loading: premiumLoading } = usePremium();
+
+  // Gate: redireciona para /premium se usuario free clicar em
+  // export/informe (ambos sao recursos Premium).
+  const exigirPremium = (): boolean => {
+    if (!isPremium && !premiumLoading) {
+      router.push('/premium');
+      return true;
+    }
+    return false;
+  };
 
   const [aba, setAba] = useState<Aba>((searchParams.get('aba') as Aba) || 'performance');
   const [filtroTipo, setFiltroTipo] = useState('Todos');
@@ -1184,18 +1196,35 @@ function RelatoriosContent() {
                 <ChevronDown className="absolute right-3 w-3.5 h-3.5 pointer-events-none" style={{ color: 'var(--t2)' }} />
               </div>
 
-              {/* Exportar (primary) com dropdown */}
+              {/* Exportar (primary) com dropdown — gated em Premium */}
               <div className="relative">
                 <button
-                  onClick={() => setShowExportMenu(v => !v)}
+                  onClick={() => {
+                    if (exigirPremium()) return;
+                    setShowExportMenu(v => !v);
+                  }}
+                  title={isPremium ? 'Exportar extratos' : 'Recurso Premium — clique para fazer upgrade'}
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13.5px] font-semibold text-white transition-colors"
                   style={{ background: 'var(--cyan)', boxShadow: '0 4px 14px rgba(0,184,217,0.28)' }}
                 >
-                  <Download className="w-3.5 h-3.5" />
+                  {!isPremium ? (
+                    <Lock className="w-3.5 h-3.5" />
+                  ) : (
+                    <Download className="w-3.5 h-3.5" />
+                  )}
                   Exportar
-                  <ChevronDown className="w-3 h-3" />
+                  {!isPremium ? (
+                    <span
+                      className="ml-1 px-1.5 py-0.5 rounded-[var(--r-pill)] text-[9.5px] font-bold uppercase tracking-wider"
+                      style={{ background: 'rgba(255,255,255,0.25)', color: 'white' }}
+                    >
+                      Premium
+                    </span>
+                  ) : (
+                    <ChevronDown className="w-3 h-3" />
+                  )}
                 </button>
-                {showExportMenu && (
+                {showExportMenu && isPremium && (
                   <div
                     className="absolute right-0 top-full mt-1 rounded-[var(--r-md)] z-30 min-w-[160px] p-1 overflow-hidden"
                     style={{
@@ -1423,12 +1452,28 @@ function RelatoriosContent() {
                 </p>
               </div>
               <button
-                onClick={gerarInformeRendimentos}
+                onClick={() => {
+                  if (exigirPremium()) return;
+                  gerarInformeRendimentos();
+                }}
+                title={isPremium ? 'Baixar Informe (PDF)' : 'Recurso Premium — clique para fazer upgrade'}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-sm)] text-[13.5px] font-semibold text-white transition-colors shrink-0"
                 style={{ background: 'var(--cyan)', boxShadow: '0 4px 14px rgba(0,184,217,0.28)' }}
               >
-                <Download className="w-4 h-4" />
+                {isPremium ? (
+                  <Download className="w-4 h-4" />
+                ) : (
+                  <Lock className="w-4 h-4" />
+                )}
                 Baixar Informe (PDF)
+                {!isPremium && (
+                  <span
+                    className="ml-1 px-1.5 py-0.5 rounded-[var(--r-pill)] text-[9.5px] font-bold uppercase tracking-wider"
+                    style={{ background: 'rgba(255,255,255,0.25)', color: 'white' }}
+                  >
+                    Premium
+                  </span>
+                )}
               </button>
             </div>
 
