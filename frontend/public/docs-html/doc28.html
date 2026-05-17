@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 28 - Operacoes da Carteira e Calculos | Nuvary Invest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00B8D9;
+            --primary-dark: #007EA7;
+            --dark: #0B1F33;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #ffffff;
+            --code-bg: #1e293b;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #334155; background: var(--light); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #0B1F33 0%, #007EA7 60%, #00B8D9 100%); color: white; padding: 48px 0; text-align: center; }
+        .version-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 5px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; }
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        header p { font-size: 1.05rem; opacity: 0.92; }
+        nav { background: var(--white); padding: 14px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        nav ul li a { color: var(--gray); text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+        nav ul li a:hover { background: var(--primary); color: white; }
+        main { padding: 40px 0 60px; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; margin-bottom: 28px; font-weight: 500; font-size: 0.9rem; }
+        .back-link:hover { text-decoration: underline; }
+        section { background: var(--white); border-radius: 14px; padding: 32px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        section h2 { font-size: 1.4rem; color: var(--dark); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        h3 { font-size: 1.1rem; color: #1e3a5f; margin: 20px 0 10px; }
+        h4 { font-size: 0.95rem; color: var(--dark); margin: 14px 0 6px; font-weight: 600; }
+        p { color: #475569; margin-bottom: 10px; }
+        ul, ol { margin: 10px 0 14px 20px; color: #475569; }
+        li { margin-bottom: 6px; }
+        code { background: #f1f5f9; color: #0f172a; padding: 2px 7px; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.88rem; }
+        pre { background: var(--code-bg); color: #e2e8f0; padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 14px 0; font-size: 0.88rem; line-height: 1.7; }
+        pre code { background: none; color: inherit; padding: 0; }
+        .formula-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1.5px solid #bae6fd; border-radius: 10px; padding: 18px 22px; margin: 14px 0; }
+        .formula-box .formula { font-family: 'Courier New', monospace; font-size: 1rem; color: #0369a1; font-weight: 600; margin-bottom: 6px; }
+        .formula-box .formula-note { font-size: 0.85rem; color: #0284c7; }
+        .example-box { background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid var(--primary); border-radius: 8px; padding: 16px 20px; margin: 12px 0; }
+        .example-box .example-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin-bottom: 10px; }
+        .warn-box { background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid var(--warning); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #92400e; }
+        .success-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid var(--success); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.9rem; color: #166534; }
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+        th { background: #f1f5f9; color: var(--dark); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; color: #475569; }
+        tr:hover td { background: #f8fafc; }
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-amber { background: #fef9c3; color: #854d0e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 16px 0; }
+        .kpi-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; }
+        .kpi-label { font-size: 0.78rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .kpi-value { font-size: 1.3rem; font-weight: 700; color: var(--dark); }
+        .kpi-sub { font-size: 0.78rem; color: var(--gray); margin-top: 2px; }
+        .flow-step { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+        .flow-num { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: white; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .flow-content { flex: 1; }
+        .flow-content strong { display: block; color: var(--dark); margin-bottom: 3px; }
+        footer { text-align: center; padding: 30px 0; color: var(--gray); font-size: 0.85rem; }
+        footer a { color: var(--primary); text-decoration: none; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <span class="version-badge">Abril 2026 - v4.3.0</span>
+        <h1>Operacoes da Carteira</h1>
+        <p>Calculos de rentabilidade, lucro/prejuizo e todas as operacoes disponíveis em Minha Carteira</p>
+    </div>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="index.html" style="color: #00B8D9; font-weight: 700;">Indice</a></li>
+        <li><a href="#armazenamento">Armazenamento</a></li>
+        <li><a href="#calculos">Calculos</a></li>
+        <li><a href="#adicionar">Adicionar Ativo</a></li>
+        <li><a href="#vender">Vender Ativo</a></li>
+        <li><a href="#remover">Remover</a></li>
+        <li><a href="#refresh">Refresh Precos</a></li>
+        <li><a href="#extratos">Extratos</a></li>
+        <li><a href="#fluxo">Fluxo Completo</a></li>
+    </ul>
+</nav>
+
+<main class="container">
+    <a href="index.html" class="back-link">&#8592; Voltar para o indice</a>
+
+    <!-- VISAO GERAL -->
+    <section>
+        <h2>&#128196; Visao Geral</h2>
+        <p>A pagina <strong>Minha Carteira</strong> gerencia todos os investimentos do usuario. Os dados sao persistidos no <strong>Supabase PostgreSQL</strong> (tabela <code>portfolio_assets</code>) com Row Level Security — cada usuario so acessa os proprios ativos.</p>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Patrimonio Total</div>
+                <div class="kpi-value" style="color: #00B8D9;">totalValue</div>
+                <div class="kpi-sub">soma do valor atual de todos os ativos</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Investido</div>
+                <div class="kpi-value" style="color: #1e3a5f;">totalInvested</div>
+                <div class="kpi-sub">custo de aquisicao total</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Lucro / Prejuizo</div>
+                <div class="kpi-value" style="color: #10b981;">totalProfit</div>
+                <div class="kpi-sub">Patrimonio - Investido</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Rentabilidade</div>
+                <div class="kpi-value" style="color: #6366f1;">profitPct</div>
+                <div class="kpi-sub">(Lucro / Investido) x 100</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARMAZENAMENTO POR TIPO -->
+    <section id="armazenamento">
+        <h2>&#128190; Padrao de Armazenamento por Tipo de Ativo</h2>
+        <p>O campo <code>quantity</code> e <code>averagePrice</code> tem significados diferentes dependendo do tipo de ativo. Essa convencao e critica para os calculos corretos.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>quantity</th>
+                    <th>averagePrice</th>
+                    <th>currentPrice</th>
+                    <th>totalValue</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-blue">renda_fixa</span><br><span class="badge badge-blue">tesouro</span></td>
+                    <td>R$ aplicado<br><small>(ex: R$5.000)</small></td>
+                    <td>Taxa contratada % a.a.<br><small>(ex: 17.88)</small></td>
+                    <td>Igual ao averagePrice<br><small>(sem cotacao de mercado)</small></td>
+                    <td>Igual ao quantity<br><small>(face value)</small></td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-green">renda_variavel</span><br><span class="badge badge-green">fiis</span><br><span class="badge badge-green">internacional</span></td>
+                    <td>Numero de cotas/acoes<br><small>(ex: 100)</small></td>
+                    <td>Preco medio de compra<br><small>(ex: R$156,03)</small></td>
+                    <td>Preco atual de mercado<br><small>(buscado via Brapi/Finnhub)</small></td>
+                    <td>quantity x currentPrice<br><small>(valor de mercado)</small></td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-amber">cripto</span></td>
+                    <td>Quantidade de moeda<br><small>(ex: 0.1 BTC)</small></td>
+                    <td>Preco medio de compra (BRL)<br><small>(ex: R$355.568)</small></td>
+                    <td>Cotacao atual via Alpha Vantage (USD x 5.0)<br><small>(convertido para BRL)</small></td>
+                    <td>quantity x currentPrice</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="warn-box">
+            <strong>Atencao:</strong> Para renda fixa, <strong>nunca</strong> calcular <code>quantity x averagePrice</code> (resultaria em valor absurdo, ex: 5.000 x 17.88 = R$89.400). O campo <code>totalValue</code> ja esta correto no Supabase — usar diretamente.
+        </div>
+    </section>
+
+    <!-- CALCULOS -->
+    <section id="calculos">
+        <h2>&#128200; Calculos de Rentabilidade e Lucro/Prejuizo</h2>
+
+        <h3>1. Patrimonio Total (totalValue)</h3>
+        <div class="formula-box">
+            <div class="formula">totalValue = SUM(asset.totalValue) para todos os ativos</div>
+            <div class="formula-note">Soma simples de todos os valores atuais. Nao envolve multiplicacao.</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Exemplo</div>
+            <p>CDB Inter R$5.000 + HGLG11 R$15.603 + BTC R$39.089 = <strong>R$59.692</strong></p>
+        </div>
+
+        <h3>2. Total Investido (totalInvested)</h3>
+        <p>O custo de aquisicao difere por tipo de ativo:</p>
+        <div class="formula-box">
+            <div class="formula">// Renda Fixa e Tesouro<br>investido = asset.quantity  // o proprio R$ aplicado</div>
+            <div class="formula-note">quantity JA e o valor em reais — nao multiplicar pela taxa.</div>
+        </div>
+        <div class="formula-box">
+            <div class="formula">// Renda Variavel, FIIs, Internacional, Cripto<br>investido = asset.quantity x asset.averagePrice</div>
+            <div class="formula-note">cotas x preco medio de compra.</div>
+        </div>
+        <pre><code>// portfolioService.ts — calculatePortfolioData()
+const totalInvested = assets.reduce((sum, a) =>
+  sum + (a.type === 'renda_fixa' ? a.quantity : a.quantity * a.averagePrice), 0);</code></pre>
+
+        <div class="example-box">
+            <div class="example-title">Exemplo com carteira mista</div>
+            <table>
+                <thead><tr><th>Ativo</th><th>Tipo</th><th>Qty</th><th>Preco Medio</th><th>Investido</th></tr></thead>
+                <tbody>
+                    <tr><td>CDB-INTER</td><td>renda_fixa</td><td>R$5.000</td><td>17.88% a.a.</td><td><strong>R$5.000</strong> (= qty)</td></tr>
+                    <tr><td>HGLG11</td><td>fiis</td><td>100 cotas</td><td>R$156,03</td><td><strong>R$15.603</strong> (= 100 x 156,03)</td></tr>
+                    <tr><td>BTC</td><td>renda_variavel</td><td>0.1</td><td>R$355.568</td><td><strong>R$35.556</strong> (= 0.1 x 355.568)</td></tr>
+                    <tr><td colspan="4"><strong>Total Investido</strong></td><td><strong>R$56.159</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>3. Lucro / Prejuizo (totalProfit)</h3>
+        <div class="formula-box">
+            <div class="formula">totalProfit = totalValue - totalInvested</div>
+            <div class="formula-note">Positivo = lucro | Negativo = prejuizo</div>
+        </div>
+
+        <h3>4. Rentabilidade % (profitPercentage)</h3>
+        <div class="formula-box">
+            <div class="formula">profitPercentage = (totalProfit / totalInvested) x 100</div>
+            <div class="formula-note">Se totalInvested = 0, retorna 0 para evitar divisao por zero.</div>
+        </div>
+
+        <h3>5. Variacao % por Ativo (variation)</h3>
+        <div class="formula-box">
+            <div class="formula">// Renda Fixa: sempre 0% (sem cotacao de mercado)<br>variation = 0<br><br>// Renda Variavel, FIIs, Internacional, Cripto:<br>variation = ((currentPrice - averagePrice) / averagePrice) x 100</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Exemplo — HGLG11</div>
+            <p>Preco medio: R$156,03 | Preco atual: R$170,00</p>
+            <p>Variacao = ((170 - 156,03) / 156,03) x 100 = <strong>+8,95%</strong></p>
+        </div>
+
+        <h3>6. Percentual da Carteira e do Produto</h3>
+        <div class="formula-box">
+            <div class="formula">percentageOfPortfolio = (asset.totalValue / totalValue) x 100<br>percentageOfProduct  = (asset.totalValue / productTotal) x 100</div>
+            <div class="formula-note">productTotal = soma dos ativos da mesma categoria (Renda Fixa, FIIs, etc.)</div>
+        </div>
+    </section>
+
+    <!-- ADICIONAR ATIVO -->
+    <section id="adicionar">
+        <h2>&#43; Adicionar Ativo</h2>
+        <p>Fluxo do modal <code>AddAssetModal.tsx</code> com 3 steps:</p>
+
+        <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-content">
+                <strong>Selecionar Categoria</strong>
+                Renda Fixa, Tesouro Direto, Renda Variavel, FIIs, Internacional, Criptomoedas
+            </div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-content">
+                <strong>Selecionar Ativo</strong>
+                Lista pre-definida de 100+ ativos com busca. Opcao de ativo personalizado.
+            </div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-content">
+                <strong>Preencher Detalhes e Confirmar</strong>
+                Quantidade, preco medio (ou taxa % a.a. para renda fixa), corretora. Sistema busca preco atual automaticamente ao confirmar.
+            </div>
+        </div>
+
+        <h4>Busca automatica de preco ao adicionar</h4>
+        <pre><code>// portfolioService.ts — fetchAssetPrice()
+// Renda Fixa: busca CDI do BCB se nome contiver "X% CDI"
+// Tesouro: busca taxa de compra via /api/tesouro/rates
+// B3 / FIIs: busca via Brapi /api/brapi/quote/:ticker
+// BDRs: busca preco US via Finnhub e converte para BRL
+// Cripto: busca via Alpha Vantage (USD) x USD_TO_BRL (5.0)
+// Internacional ETFs: busca SPY como proxy para IVVB11/SPXI11</code></pre>
+
+        <h4>Calculo CDI automatico</h4>
+        <pre><code>// Se o nome do ativo contiver "120% CDI":
+// regex: /(\d+(?:[.,]\d+)?)\s*%\s*(?:do\s+)?CDI/i
+// Busca CDI atual do BCB (ex: 14.90% a.a.)
+// Taxa efetiva = CDI x percentual / 100
+// Ex: "CDB Inter 120% CDI" → 14.90 x 1.20 = 17.88% a.a.</code></pre>
+
+        <h4>Persistencia no Supabase</h4>
+        <pre><code>// addAsset() → INSERT em portfolio_assets
+{
+  id, user_id, name, ticker, type,
+  quantity, average_price, current_price,
+  total_value, variation, broker, created_at
+}</code></pre>
+    </section>
+
+    <!-- VENDER ATIVO -->
+    <section id="vender">
+        <h2>&#8595; Vender Ativo</h2>
+        <p>Operacao disponivel no card <strong>Sua Carteira por Produto</strong>. O botao <strong>Vender</strong> abre o <code>SellAssetModal.tsx</code>.</p>
+
+        <h3>Tipos de Venda</h3>
+        <table>
+            <thead>
+                <tr><th>Tipo</th><th>Acao no Banco</th><th>Resultado</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Venda Total</strong><br><small>Clique em "Venda Total" ou qtd = max</small></td>
+                    <td><code>removeAsset(assetId)</code><br>DELETE em portfolio_assets</td>
+                    <td>Ativo removido da carteira</td>
+                </tr>
+                <tr>
+                    <td><strong>Venda Parcial</strong><br><small>Informar quantidade menor que o total</small></td>
+                    <td><code>updateAsset(assetId, ...)</code><br>UPDATE em portfolio_assets</td>
+                    <td>Ativo permanece com quantidade reduzida</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Calculo da Venda Parcial</h3>
+        <div class="formula-box">
+            <div class="formula">// Renda Fixa (baseado em valor R$)<br>novaQuantidade = asset.quantity - valorResgatado<br>novoTotalValue = novaQuantidade<br><br>// Renda Variavel / FIIs / Internacional (baseado em cotas)<br>novaQuantidade = asset.quantity - cotasVendidas<br>novoTotalValue = novaQuantidade x asset.currentPrice</div>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Exemplo — Venda parcial FII HGLG11</div>
+            <p>Posicao: 100 cotas | Preco atual: R$170,00 | Vende: 30 cotas</p>
+            <p>Nova quantidade: 70 cotas | Novo total: 70 x R$170 = <strong>R$11.900</strong></p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Exemplo — Resgate parcial CDB</div>
+            <p>Posicao: R$5.000 | Resgata: R$2.000</p>
+            <p>Nova quantidade: R$3.000 | Novo total: <strong>R$3.000</strong></p>
+        </div>
+
+        <h3>Registro em Extratos</h3>
+        <p>Toda venda e automaticamente salva na tabela <code>portfolio_transactions</code> do Supabase:</p>
+        <pre><code>// saveTransaction() — chamado antes de removeAsset() ou updateAsset()
+{
+  user_id, tipo: 'venda', ticker, name, asset_type,
+  quantity: qtdVendida,
+  price: precoAtual,           // currentPrice para variavel; qtdVendida para renda_fixa
+  total_value: valorDaVenda,
+  cost_basis: custoBase,       // qty × averagePrice (variavel) | total_value (renda_fixa)
+  created_at: now()
+}</code></pre>
+        <p>As vendas aparecem na aba <strong>Extratos</strong> de Relatorios com badge vermelha "Venda" e podem ser filtradas pelo dropdown <strong>Tipo</strong>.</p>
+        <p>O campo <code>cost_basis</code> armazena o custo de aquisição no momento da venda — necessário para calcular o <strong>IR Estimado</strong> na aba Imposto de Renda. Requer coluna no Supabase: <code>ALTER TABLE portfolio_transactions ADD COLUMN IF NOT EXISTS cost_basis NUMERIC DEFAULT 0;</code></p>
+    </section>
+
+    <!-- REMOVER ATIVO -->
+    <section id="remover">
+        <h2>&#128465; Remover Ativo</h2>
+        <p>O botao lixeira remove o ativo diretamente sem registrar em extratos (diferente da venda). Use para corriger erros de cadastro.</p>
+        <pre><code>// removeAsset(assetId)
+DELETE FROM portfolio_assets WHERE id = assetId AND user_id = currentUser</code></pre>
+        <div class="warn-box">
+            <strong>Diferenca:</strong> "Remover" e para correcoes de cadastro — nao aparece nos extratos. "Vender" registra a operacao em <code>portfolio_transactions</code> e aparece nos relatorios.
+        </div>
+    </section>
+
+    <!-- REFRESH DE PRECOS -->
+    <section id="refresh">
+        <h2>&#128260; Refresh de Precos (Cache 15 min)</h2>
+        <p>Implementado em <code>refreshAllPrices()</code> no <code>portfolioService.ts</code>. Atualiza precos de mercado dos ativos de renda variavel, FIIs e internacional.</p>
+
+        <h3>Quando e chamado</h3>
+        <table>
+            <thead><tr><th>Situacao</th><th>Comportamento</th></tr></thead>
+            <tbody>
+                <tr><td>Abre /carteira</td><td>Chama <code>refreshAllPrices(false)</code> — respeita cache 15 min</td></tr>
+                <tr><td>Clica "Atualizar"</td><td>Chama <code>refreshAllPrices(true)</code> — ignora cache, busca forcado</td></tr>
+                <tr><td>Cache valido (&lt;15 min)</td><td>Retorna <code>false</code> imediatamente — nenhuma chamada a APIs externas</td></tr>
+            </tbody>
+        </table>
+
+        <h3>O que e atualizado</h3>
+        <div class="success-box">
+            Renda Variavel, FIIs, Internacional — preco atualizado via Brapi (B3) ou Finnhub (EUA)
+        </div>
+        <div class="warn-box">
+            Renda Fixa e Tesouro — <strong>nao atualiza</strong>. A taxa e contratada e fixa; nao existe cotacao de mercado.
+        </div>
+
+        <h3>Fluxo do refresh</h3>
+        <pre><code>refreshAllPrices(force = false):
+  1. Verifica localStorage['nuvary_price_cache_ts']
+  2. Se cache valido e !force → retorna false (sem chamada de API)
+  3. Busca todos os ativos do Supabase (getAllAssetsFromDB)
+  4. Filtra: apenas ['renda_variavel', 'fiis', 'internacional']
+  5. Para cada ativo:
+     a. fetchAssetPrice(ticker, type) → preco atual
+     b. variation = ((currentPrice - averagePrice) / averagePrice) x 100
+     c. totalValue = quantity x currentPrice
+     d. UPDATE portfolio_assets SET current_price, total_value, variation
+  6. Atualiza localStorage timestamp
+  7. Frontend relê os dados atualizados do Supabase</code></pre>
+
+        <h3>Fontes de dados por tipo</h3>
+        <table>
+            <thead><tr><th>Tipo</th><th>Fonte Primaria</th><th>Fallback</th></tr></thead>
+            <tbody>
+                <tr><td>Acoes B3 / FIIs</td><td>Brapi <code>/api/brapi/quote/:ticker</code></td><td>Sem fallback (erro silencioso)</td></tr>
+                <tr><td>BDRs (AAPL34, etc.)</td><td>Brapi</td><td>Finnhub (symbol US) x 5.0</td></tr>
+                <tr><td>ETFs Internacionais</td><td>Brapi</td><td>Finnhub SPY como proxy</td></tr>
+                <tr><td>Criptomoedas</td><td>Alpha Vantage USD</td><td>Sem fallback</td></tr>
+                <tr><td>Tesouro Direto</td><td>Portal Tesouro JSON</td><td>CSV STN Tesouro Transparente</td></tr>
+                <tr><td>CDI / Selic</td><td>BCB SGS <code>/api/bcb/rates</code></td><td>Brapi prime-rate</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- EXTRATOS -->
+    <section id="extratos">
+        <h2>&#128203; Extratos — Historico de Transacoes</h2>
+        <p>A aba <strong>Extratos</strong> em Relatorios consolida dois tipos de dados:</p>
+
+        <table>
+            <thead><tr><th>Tipo</th><th>Fonte</th><th>Badge</th><th>Quando aparece</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><strong>Compra</strong></td>
+                    <td>Tabela <code>portfolio_assets</code> (cada ativo = uma compra)</td>
+                    <td><span class="badge badge-green">Compra</span></td>
+                    <td>Sempre que o ativo existir na carteira</td>
+                </tr>
+                <tr>
+                    <td><strong>Venda</strong></td>
+                    <td>Tabela <code>portfolio_transactions</code> (tipo = 'venda')</td>
+                    <td><span class="badge badge-red">Venda</span></td>
+                    <td>Apos cada operacao de venda (total ou parcial)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Filtros Disponíveis</h3>
+        <ul>
+            <li><strong>Busca por ticker/nome</strong> — campo de texto livre</li>
+            <li><strong>Tipo</strong> — Todos | Compra | Venda</li>
+            <li><strong>Categoria</strong> — Todas | Renda Fixa | Acoes B3 | FIIs | Internac.</li>
+            <li><strong>Corretora</strong> — Todas | lista dinamica das corretoras cadastradas</li>
+        </ul>
+
+        <h3>Navegacao direta da Carteira para Extratos</h3>
+        <ul>
+            <li><strong>Carteira por Classe</strong> — seta redireciona para Extratos ja filtrado pela categoria clicada</li>
+            <li><strong>Carteira por Corretora</strong> — seta redireciona para Extratos ja filtrado pela corretora clicada</li>
+        </ul>
+        <p>URL gerada: <code>/relatorios?aba=extratos&amp;categoria=FIIs</code> ou <code>/relatorios?aba=extratos&amp;corretora=XP+Investimentos</code></p>
+    </section>
+
+    <!-- FLUXO COMPLETO -->
+    <section id="fluxo">
+        <h2>&#128260; Fluxo Completo de Dados</h2>
+        <pre><code>ADICIONAR ATIVO
+  Usuario preenche modal
+    → fetchAssetPrice() — busca preco/taxa atual
+    → addAsset() → INSERT portfolio_assets (Supabase)
+    → loadData() → getPortfolioData() → calcula KPIs
+    → UI atualizada
+
+ATUALIZAR PRECOS (botao "Atualizar")
+  handleRefresh()
+    → refreshAllPrices(force=true)
+       → para cada ativo de renda variavel/FIIs/internacional:
+         → fetchAssetPrice() → UPDATE portfolio_assets
+    → getPortfolioData() → recalcula tudo
+    → UI atualizada
+
+VENDER ATIVO (parcial)
+  Usuario informa quantidade no SellAssetModal
+    → saveTransaction('venda') → INSERT portfolio_transactions
+    → updateAsset() → UPDATE portfolio_assets (nova qty, totalValue)
+    → loadData() → getPortfolioData() → recalcula KPIs
+    → UI atualizada
+
+VENDER ATIVO (total)
+  Usuario clica "Venda Total"
+    → saveTransaction('venda') → INSERT portfolio_transactions
+    → removeAsset() → DELETE portfolio_assets
+    → loadData() → getPortfolioData() → recalcula KPIs
+    → UI atualizada
+
+REMOVER ATIVO (lixeira)
+  Confirmacao do usuario
+    → removeAsset() → DELETE portfolio_assets
+    → handleRefresh() → UI atualizada
+    (SEM registro em portfolio_transactions)</code></pre>
+
+        <h3>Tabelas Supabase envolvidas</h3>
+        <table>
+            <thead><tr><th>Tabela</th><th>Finalidade</th><th>RLS</th></tr></thead>
+            <tbody>
+                <tr><td><code>portfolio_assets</code></td><td>Posicao atual de cada ativo</td><td>Por user_id</td></tr>
+                <tr><td><code>portfolio_transactions</code></td><td>Historico de vendas (extratos)</td><td>Por user_id</td></tr>
+                <tr><td><code>profiles</code></td><td>Dados do usuario (nome, email)</td><td>Por id = auth.uid()</td></tr>
+                <tr><td><code>perfil_investidor</code></td><td>Perfil de risco (Conservador etc.)</td><td>Por user_id</td></tr>
+                <tr><td><code>chat_historico</code></td><td>Mensagens do Chat IA</td><td>Por user_id</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <p>Nuvary Invest &mdash; Doc 28 | Versao v4.3.0 &mdash; Abril 2026</p>
+        <p style="margin-top:6px;"><a href="index.html">Voltar ao Indice</a></p>
+    </div>
+</footer>
+</body>
+</html>
