@@ -11,6 +11,8 @@ import {
 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePremium } from '@/hooks/usePremium';
+import { FREE_LIMITS } from '@/lib/freeLimits';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -350,25 +352,42 @@ function VideoSection({
 export default function TrilhasPage() {
   const router = useRouter();
   const { loading: authLoading, isAuthenticated } = useAuth();
+  const { isPremium, loading: premiumLoading } = usePremium();
 
   const [heroIndex, setHeroIndex] = useState(0);
-  const [activeCategory, setActiveCategory] = useState('jornada');
+  const [activeCategory, setActiveCategory] = useState('populares');
   const [watchedList, setWatchedList] = useState<Set<string>>(new Set());
   const [selectedVideo, setSelectedVideo] = useState<VideoCard | null>(null);
   const [categoryView, setCategoryView] = useState<{ id: string; title: string } | null>(null);
 
-  // Auto-rotacao do hero a cada 6 segundos
+  // Gate Free: usuario nao-Premium so ve categorias liberadas
+  const isFreeUser = !isPremium && !premiumLoading;
+  const categoriasVisiveis = isFreeUser
+    ? CATEGORIES.filter((c) =>
+        (FREE_LIMITS.TRILHAS_LIBERADAS as readonly string[]).includes(c.id),
+      )
+    : CATEGORIES;
+
+  // Slides de hero filtrados — Free so ve hero apontando para categoria liberada
+  const heroSlidesVisiveis = isFreeUser
+    ? HERO_SLIDES.filter((s) =>
+        (FREE_LIMITS.TRILHAS_LIBERADAS as readonly string[]).includes(s.category),
+      )
+    : HERO_SLIDES;
+
+  // Auto-rotacao do hero a cada 6 segundos (usa slides ja filtrados)
   useEffect(() => {
+    if (heroSlidesVisiveis.length <= 1) return;
     const interval = setInterval(() => {
-      setHeroIndex((i) => (i + 1) % HERO_SLIDES.length);
+      setHeroIndex((i) => (i + 1) % heroSlidesVisiveis.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [heroSlidesVisiveis.length]);
 
   // Detecta secao ativa no scroll
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
-    CATEGORIES.forEach(({ id }) => {
+    categoriasVisiveis.forEach(({ id }) => {
       const el = document.getElementById(id);
       if (!el) return;
       const obs = new IntersectionObserver(
@@ -379,7 +398,7 @@ export default function TrilhasPage() {
       observers.push(obs);
     });
     return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  }, [categoriasVisiveis]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) router.push('/login');
@@ -394,8 +413,16 @@ export default function TrilhasPage() {
   }, []);
 
   const handleVideoClick = useCallback((video: VideoCard) => {
+    // Gate Free: video fora das categorias liberadas redireciona para /premium
+    if (
+      isFreeUser &&
+      !(FREE_LIMITS.TRILHAS_LIBERADAS as readonly string[]).includes(video.category)
+    ) {
+      router.push('/premium');
+      return;
+    }
     setSelectedVideo(video);
-  }, []);
+  }, [isFreeUser, router]);
 
   const handleViewAll = useCallback((id: string, title: string) => {
     setCategoryView({ id, title });
@@ -414,7 +441,7 @@ export default function TrilhasPage() {
     );
   }
 
-  const slide = HERO_SLIDES[heroIndex];
+  const slide = heroSlidesVisiveis[heroIndex] ?? heroSlidesVisiveis[0];
 
   return (
     <DashboardLayout>
@@ -646,30 +673,32 @@ export default function TrilhasPage() {
               </p>
 
               {/* dots */}
-              <div className="flex gap-1.5 mt-3">
-                {HERO_SLIDES.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setHeroIndex(i)}
-                    aria-label={`Slide ${i + 1}`}
-                    className="block w-7 h-1 rounded-sm transition-colors"
-                    style={{
-                      background:
-                        i === heroIndex ? 'white' : 'rgba(255,255,255,0.3)',
-                    }}
-                  />
-                ))}
-              </div>
+              {heroSlidesVisiveis.length > 1 && (
+                <div className="flex gap-1.5 mt-3">
+                  {heroSlidesVisiveis.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setHeroIndex(i)}
+                      aria-label={`Slide ${i + 1}`}
+                      className="block w-7 h-1 rounded-sm transition-colors"
+                      style={{
+                        background:
+                          i === heroIndex ? 'white' : 'rgba(255,255,255,0.3)',
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* trilhas-cats — abas underline */}
+        {/* trilhas-cats — abas underline (Free ve so categorias liberadas) */}
         <div
-          className="flex gap-7 px-1 mb-6 overflow-x-auto"
+          className="flex gap-7 px-1 mb-6 overflow-x-auto items-center"
           style={{ borderBottom: '1px solid var(--border)', scrollbarWidth: 'none' }}
         >
-          {CATEGORIES.map(({ id, display }) => {
+          {categoriasVisiveis.map(({ id, display }) => {
             const isActive = activeCategory === id;
             return (
               <button
@@ -689,10 +718,23 @@ export default function TrilhasPage() {
               </button>
             );
           })}
+          {/* Atalho upgrade para liberar trilhas bloqueadas */}
+          {isFreeUser && (
+            <button
+              onClick={() => router.push('/premium')}
+              className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-[11.5px] font-semibold text-white"
+              style={{
+                background: 'var(--cyan)',
+                boxShadow: '0 4px 14px rgba(0,184,217,0.28)',
+              }}
+            >
+              Desbloquear trilhas Premium
+            </button>
+          )}
         </div>
 
-        {/* Conteudo por categoria */}
-        {CATEGORIES.map(({ id, display }) => {
+        {/* Conteudo por categoria — Free ve so categoriasVisiveis */}
+        {categoriasVisiveis.map(({ id, display }) => {
           const videos = VIDEOS.filter((v) => v.category === id);
           if (videos.length === 0) return null;
           return (

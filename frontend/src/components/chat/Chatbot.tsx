@@ -19,8 +19,11 @@ import {
   buscarMensagensPorConversa,
   gerarConversaId,
   contarMensagens,
+  listarConversas,
 } from '@/services/chatService';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePremium } from '@/hooks/usePremium';
+import { FREE_LIMITS } from '@/lib/freeLimits';
 import {
   Send,
   Bot,
@@ -91,6 +94,10 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
 
   // Estados para paginação de mensagens antigas
   const [carregandoMais, setCarregandoMais] = useState(false);
+
+  // Gate Premium: total de conversas para limitar plano Free
+  const { isPremium, loading: premiumLoading } = usePremium();
+  const [totalConversas, setTotalConversas] = useState<number>(0);
 
   // Auto-resize do textarea conforme o conteudo (padrao Claude/ChatGPT).
   // Limite max-height: 200px (CSS); acima disso o textarea ganha scroll vertical.
@@ -163,14 +170,16 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     }).catch(() => {});
   }, [user]);
 
-  // Inicializa com mensagem de boas-vindas
+  // Inicializa com mensagem de boas-vindas (sempre ignora gate — apenas
+  // recria a tela inicial, nao adiciona conversa permanente ate a primeira
+  // mensagem ser enviada).
   useEffect(() => {
     if (!isInitialized && user) {
       setIsInitialized(true);
-      iniciarNovaConversa();
+      iniciarNovaConversa({ ignorarGate: true });
     } else if (!user) {
       setIsInitialized(true);
-      iniciarNovaConversa();
+      iniciarNovaConversa({ ignorarGate: true });
     }
   }, [user, isInitialized]);
 
@@ -181,8 +190,30 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     }
   }, [messages]);
 
-  // Inicia nova conversa
-  const iniciarNovaConversa = () => {
+  // Conta conversas do usuario (para o gate Free de 10)
+  const recarregarTotalConversas = useCallback(async () => {
+    if (!user) return;
+    try {
+      const lista = await listarConversas();
+      setTotalConversas(lista.length);
+    } catch {
+      // silencioso — gate usa 0 e nao bloqueia
+    }
+  }, [user]);
+
+  useEffect(() => {
+    recarregarTotalConversas();
+  }, [recarregarTotalConversas, sidebarKey]);
+
+  const limiteConversasAtingido =
+    !isPremium && !premiumLoading && totalConversas >= FREE_LIMITS.MAX_CONVERSAS;
+
+  // Inicia nova conversa — com gate Free de MAX_CONVERSAS
+  const iniciarNovaConversa = (opts?: { ignorarGate?: boolean }) => {
+    if (!opts?.ignorarGate && limiteConversasAtingido) {
+      router.push('/premium');
+      return;
+    }
     const novoId = gerarConversaId();
     setConversaAtual(novoId);
     setMessages([]);
@@ -231,9 +262,9 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     }
   };
 
-  // Handler para limpar histórico
+  // Handler para limpar histórico — historico foi zerado, pode criar sem gate
   const handleHistoricoLimpo = () => {
-    iniciarNovaConversa();
+    iniciarNovaConversa({ ignorarGate: true });
     setSidebarKey(prev => prev + 1); // Força re-render da sidebar
   };
 
@@ -241,6 +272,14 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
 
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isLoading) return;
+
+    // Gate Free: se vai iniciar uma nova conversa (so tem mensagem de
+    // boas-vindas) e ja atingiu o limite, redireciona para /premium.
+    const ehNovaConversa = messages.length <= 1 && messages[0]?.id === 'welcome';
+    if (ehNovaConversa && limiteConversasAtingido) {
+      router.push('/premium');
+      return;
+    }
 
     setShowQuickActions(false);
     setInputValue('');
@@ -369,7 +408,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       setIsLoading(false);
       inputRef.current?.focus();
     }
-  }, [isLoading, messages, profile, user, conversaAtual]);
+  }, [isLoading, messages, profile, user, conversaAtual, limiteConversasAtingido, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -396,7 +435,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
         <ChatSidebar
           key={sidebarKey}
           conversaAtual={conversaAtual}
-          onNovaConversa={iniciarNovaConversa}
+          onNovaConversa={() => iniciarNovaConversa()}
           onSelecionarConversa={carregarConversa}
           onLimparHistorico={handleHistoricoLimpo}
           isCollapsed={sidebarCollapsed}
@@ -476,6 +515,37 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-full" ref={scrollRef}>
             <div className="max-w-4xl mx-auto px-6 py-8">
+              {/* Aviso de limite Free atingido */}
+              {!isPremium && !premiumLoading && totalConversas > 0 && (
+                <div
+                  className="flex items-center justify-between gap-3 px-4 py-3 rounded-[var(--r-md)] mb-6"
+                  style={{
+                    background: limiteConversasAtingido
+                      ? 'linear-gradient(135deg, rgba(239,68,68,0.10), transparent 60%), var(--surface-1)'
+                      : 'var(--surface-1)',
+                    border: `1px solid ${limiteConversasAtingido ? 'rgba(239,68,68,0.30)' : 'var(--border)'}`,
+                  }}
+                >
+                  <span className="text-[12.5px]" style={{ color: 'var(--t2)' }}>
+                    Plano Free:{' '}
+                    <strong style={{ color: 'var(--t1)' }}>
+                      {totalConversas} de {FREE_LIMITS.MAX_CONVERSAS}
+                    </strong>{' '}
+                    conversas.
+                    {limiteConversasAtingido
+                      ? ' Faça upgrade para conversas ilimitadas.'
+                      : ` Restam ${FREE_LIMITS.MAX_CONVERSAS - totalConversas}.`}
+                  </span>
+                  <button
+                    onClick={() => router.push('/premium')}
+                    className="text-[11.5px] font-semibold px-2.5 py-1.5 rounded-[var(--r-pill)] text-white shrink-0"
+                    style={{ background: 'var(--cyan)' }}
+                  >
+                    Fazer upgrade
+                  </button>
+                </div>
+              )}
+
               {/* Status indicator pill */}
               <div
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-[var(--r-pill)] text-[12.5px] font-medium mx-auto mb-8"

@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Loader2, Wallet, Calendar, RefreshCw, Plus,
-  PiggyBank, Landmark, TrendingUp, Building, Globe, Coins, ChevronRight,
+  PiggyBank, Landmark, TrendingUp, Building, Globe, Coins, ChevronRight, Lock,
 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePremium } from '@/hooks/usePremium';
+import { FREE_LIMITS } from '@/lib/freeLimits';
 import {
   PortfolioSummaryCard,
   PortfolioByClassCard,
@@ -33,12 +35,31 @@ import {
 export default function CarteiraPage() {
   const router = useRouter();
   const { loading: authLoading, isAuthenticated } = useAuth();
+  const { isPremium, loading: premiumLoading } = usePremium();
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedModalCategory, setSelectedModalCategory] = useState<string | null>(null);
   const [assetToSell, setAssetToSell] = useState<Asset | null>(null);
+
+  // Conta total de ativos para o gate de 10 do plano free
+  const totalAtivos = portfolioData
+    ? portfolioData.byProduct.rendaFixa.length +
+      portfolioData.byProduct.rendaVariavel.length +
+      portfolioData.byProduct.fiis.length +
+      portfolioData.byProduct.internacional.length
+    : 0;
+  const limiteAtingido = !isPremium && !premiumLoading && totalAtivos >= FREE_LIMITS.MAX_ATIVOS;
+
+  const tentarAdicionarAtivo = (categoryId: string | null) => {
+    if (limiteAtingido) {
+      router.push('/premium');
+      return;
+    }
+    setSelectedModalCategory(categoryId);
+    setIsAddModalOpen(true);
+  };
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -173,21 +194,64 @@ export default function CarteiraPage() {
               Atualizar
             </button>
             <button
-              onClick={() => {
-                setSelectedModalCategory(null);
-                setIsAddModalOpen(true);
-              }}
+              onClick={() => tentarAdicionarAtivo(null)}
+              title={
+                limiteAtingido
+                  ? `Limite de ${FREE_LIMITS.MAX_ATIVOS} ativos do plano Free — clique para fazer upgrade`
+                  : 'Adicionar novo ativo'
+              }
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13.5px] font-semibold text-white transition-colors"
               style={{
                 background: 'var(--cyan)',
                 boxShadow: '0 4px 14px rgba(0, 184, 217, 0.28)',
               }}
             >
-              <Plus className="w-3.5 h-3.5" />
+              {limiteAtingido ? <Lock className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
               Adicionar Ativo
+              {limiteAtingido && (
+                <span
+                  className="ml-1 px-1.5 py-0.5 rounded-[var(--r-pill)] text-[9.5px] font-bold uppercase tracking-wider"
+                  style={{ background: 'rgba(255,255,255,0.25)', color: 'white' }}
+                >
+                  Premium
+                </span>
+              )}
             </button>
           </div>
         </motion.div>
+
+        {/* Aviso de limite Free atingido */}
+        {!isPremium && !premiumLoading && portfolioData && totalAtivos > 0 && (
+          <div
+            className="flex items-center justify-between gap-3 px-4 py-3 rounded-[var(--r-md)]"
+            style={{
+              background: limiteAtingido
+                ? 'linear-gradient(135deg, rgba(239,68,68,0.10), transparent 60%), var(--surface-1)'
+                : 'var(--surface-1)',
+              border: `1px solid ${limiteAtingido ? 'rgba(239,68,68,0.30)' : 'var(--border)'}`,
+            }}
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Lock
+                className="w-4 h-4 shrink-0"
+                style={{ color: limiteAtingido ? 'var(--loss)' : 'var(--cyan)' }}
+              />
+              <span className="text-[13px]" style={{ color: 'var(--t2)' }}>
+                Plano Free: <strong style={{ color: 'var(--t1)' }}>{totalAtivos} de {FREE_LIMITS.MAX_ATIVOS}</strong> ativos.
+                {limiteAtingido
+                  ? ' Faça upgrade para ativos ilimitados.'
+                  : ` Restam ${FREE_LIMITS.MAX_ATIVOS - totalAtivos}.`}
+              </span>
+            </div>
+            <button
+              onClick={() => router.push('/premium')}
+              className="text-[12px] font-semibold px-3 py-1.5 rounded-[var(--r-pill)] transition-colors shrink-0"
+              style={{ background: 'var(--cyan)', color: 'white' }}
+            >
+              Fazer upgrade
+            </button>
+          </div>
+        )}
 
         {loading ? (
           <div className="space-y-4">
@@ -259,10 +323,7 @@ export default function CarteiraPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 * (index + 1) }}
-                  onClick={() => {
-                    setSelectedModalCategory(category.id);
-                    setIsAddModalOpen(true);
-                  }}
+                  onClick={() => tentarAdicionarAtivo(category.id)}
                   className="w-full rounded-[var(--r-lg)] p-5 flex items-center gap-4 transition-colors text-left group"
                   style={{
                     background: 'var(--surface-1)',
