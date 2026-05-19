@@ -598,7 +598,7 @@ export default function LandingPage() {
               <div className="text-sm font-semibold text-cyan-300">Premium</div>
               <div className="mt-3 flex items-baseline gap-1">
                 <span className="font-extrabold text-5xl" style={manrope}>
-                  R$ 49,90
+                  R$ 79,99
                 </span>
                 <span className="text-slate-400 text-sm">/mês</span>
               </div>
