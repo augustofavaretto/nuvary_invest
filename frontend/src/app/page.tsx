@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Brain,
   ChartPie,
@@ -697,22 +698,20 @@ export default function LandingPage() {
 
 function LogoMark({ small = false }: { small?: boolean }) {
   const size = small ? 22 : 28;
+  const box = size + 8;
   return (
     <div
-      className="rounded-md bg-white flex items-center justify-center"
-      style={{ width: size + 8, height: size + 8 }}
+      className="rounded-md bg-white flex items-center justify-center overflow-hidden"
+      style={{ width: box, height: box }}
     >
-      <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-        <path
-          d="M7 19c-2.2 0-4-1.8-4-4s1.8-4 4-4c.3-2.8 2.7-5 5.5-5 2.1 0 4 1.2 4.9 3 .6-.2 1.2-.3 1.8-.3 3 0 5.4 2.4 5.4 5.3 1.9.4 3.4 2.1 3.4 4.1 0 2.3-1.9 4.2-4.2 4.2"
-          stroke="#0e7490"
-          strokeWidth="1.5"
-          fill="#ecfeff"
-        />
-        <rect x="9" y="15" width="2.8" height="6" fill="#06b6d4" rx="0.5" />
-        <rect x="13.5" y="12" width="2.8" height="9" fill="#06b6d4" rx="0.5" />
-        <rect x="18" y="14" width="2.8" height="7" fill="#06b6d4" rx="0.5" />
-      </svg>
+      <Image
+        src="/brand/nuvary-icon.png"
+        alt="Nuvary Invest"
+        width={size + 4}
+        height={size + 4}
+        priority
+        className="object-contain"
+      />
     </div>
   );
 }
