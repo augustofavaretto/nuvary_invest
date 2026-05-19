@@ -61,11 +61,6 @@ const BENEFITS = [
     text: 'Assistente virtual 24/7 para tirar dúvidas sobre investimentos, conceitos e análises de mercado em tempo real.',
   },
   {
-    icon: TrendingUp,
-    title: 'Rebalanceamento Automático',
-    text: 'Robo-advisor que mantém sua carteira alinhada ao alvo conforme oscilações do mercado e mudanças no seu perfil.',
-  },
-  {
     icon: Bell,
     title: 'Monitoramento em Tempo Real',
     text: 'Alertas de variação, eventos e risco direto no painel — sem precisar acompanhar manualmente toda hora.',
@@ -86,7 +81,7 @@ const STEPS = [
   {
     n: '03',
     title: 'Receba sua carteira',
-    text: 'Alocação recomendada, rebalanceamento automático e trilhas educacionais sob medida.',
+    text: 'Alocação recomendada, monitoramento em tempo real e trilhas educacionais sob medida.',
   },
 ];
 
@@ -103,7 +98,7 @@ const TESTIMONIALS = [
     name: 'Rafael Bonato',
     role: 'Engenheiro de Software, 34 anos · São Paulo',
     text:
-      'Migrei da XP para acompanhar tudo num lugar só. O rebalanceamento automático sozinho já paga o Premium — economizo umas 4h por mês que gastava planilhando carteira.',
+      'Migrei da XP para acompanhar tudo num lugar só. Os alertas em tempo real e o chat IA contextualizado já pagam o Premium — economizo umas 4h por mês que gastava planilhando carteira.',
     rating: 5,
     initials: 'RB',
   },
@@ -617,7 +612,6 @@ export default function LandingPage() {
                 {[
                   'Tudo do plano Free',
                   'Recomendações personalizadas por IA',
-                  'Rebalanceamento automático de carteira',
                   'Monitoramento em tempo real e alertas',
                   'Trilhas educacionais completas + webinars',
                   'Chatbot ilimitado com contexto da carteira',
