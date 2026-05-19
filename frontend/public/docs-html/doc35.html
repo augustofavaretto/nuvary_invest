@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 35 - Frontend Publico Reescrito | Nuvary Invest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #06b6d4; --primary-dark: #0e7490; --secondary: #10b981; --dark: #0f172a; --gray: #6B7280; --light: #F3F4F6; --white: #ffffff; --code-bg: #1e293b; --border: #E5E7EB; }
+        body { font-family: 'Inter', 'Segoe UI', sans-serif; line-height: 1.6; color: #334155; background: var(--light); }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #020817 0%, #0a1428 60%, #06b6d4 100%); color: white; padding: 40px 0; text-align: center; }
+        .version-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; }
+        header h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        header p { font-size: 1.1rem; opacity: 0.95; }
+        nav { background: var(--white); padding: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; }
+        nav a { color: var(--gray); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        nav a:hover { color: var(--primary); }
+        main { padding: 40px 0; }
+        section { background: var(--white); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        h2 { color: var(--dark); font-size: 1.5rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid var(--primary); display: flex; align-items: center; gap: 10px; }
+        h3 { color: var(--dark); font-size: 1.1rem; margin: 20px 0 12px; font-weight: 600; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; margin-bottom: 20px; font-weight: 500; }
+        .update-notice { background: linear-gradient(135deg, #06b6d4 0%, #0e7490 100%); color: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; }
+        .update-notice strong { font-size: 1.1rem; }
+        code { background: var(--code-bg); color: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; font-family: 'Fira Code', monospace; }
+        pre { background: var(--code-bg); color: #e2e8f0; padding: 20px; border-radius: 8px; margin: 15px 0; overflow-x: auto; font-size: 0.85rem; line-height: 1.8; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .info-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+        .info-card .label { font-size: 0.8rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .info-card .value { font-size: 1rem; font-weight: 600; color: var(--dark); }
+        .step-list { list-style: none; }
+        .step-item { display: flex; align-items: flex-start; gap: 15px; padding: 15px; margin-bottom: 10px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--primary); }
+        .step-num { background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; }
+        .step-text { color: #475569; font-size: 0.95rem; }
+        .step-text strong { color: var(--dark); }
+        .change-list { list-style: none; }
+        .change-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 15px; margin-bottom: 8px; background: #f8fafc; border-radius: 8px; }
+        .change-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .change-text { color: #475569; font-size: 0.95rem; }
+        .arch-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 15px 0; }
+        .arch-box .arch-title { font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+        .arch-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+        .arch-row:last-child { border-bottom: none; }
+        .arch-label { font-weight: 600; color: var(--dark); min-width: 160px; font-size: 0.9rem; }
+        .arch-value { color: #475569; font-size: 0.9rem; }
+        footer { text-align: center; padding: 30px 0; color: var(--gray); }
+        footer a { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Maio 2026 - v4.8.0</span>
+            <h1>Frontend Publico Reescrito</h1>
+            <p>Landing, autenticacao e paginas legais com novo design dark + ciano e fontes Manrope + Inter</p>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
+            <li><a href="#visao">Visao Geral</a></li>
+            <li><a href="#paginas">Paginas</a></li>
+            <li><a href="#fontes">Fontes</a></li>
+            <li><a href="#logos">Logos PNG</a></li>
+            <li><a href="#arquivos">Arquivos</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o indice</a>
+
+        <div class="update-notice">
+            <span style="font-size: 1.5rem;">🎨</span>
+            <div>
+                <strong>v4.8.0 — Reescrita completa do frontend publico</strong>
+                <p style="margin: 0; opacity: 0.9;">Landing, Login, Cadastro, Recuperar Senha, Termos e Privacidade ganharam novo visual dark navy + ciano, com fontes Manrope (display) + Inter (body) e logos PNG oficiais. 100% compativel com o backend Supabase.</p>
+            </div>
+        </div>
+
+        <section id="visao">
+            <h2>📋 Visao Geral</h2>
+            <div class="info-grid">
+                <div class="info-card"><div class="label">Versao</div><div class="value">v4.8.0</div></div>
+                <div class="info-card"><div class="label">Data</div><div class="value">Maio 2026</div></div>
+                <div class="info-card"><div class="label">Paginas</div><div class="value">6 + Redefinir Senha</div></div>
+                <div class="info-card"><div class="label">Compatibilidade</div><div class="value">100% backend</div></div>
+            </div>
+
+            <h3>Principios da reescrita</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🎯</span><span class="change-text"><strong>Backend intacto</strong> — mesmo payload de cadastro (cpf/telefone sem mascara, data DD/MM/AAAA, aceiteTermos boolean), mesmas funcoes em <code>authService.ts</code></span></li>
+                <li class="change-item"><span class="change-icon">🌑</span><span class="change-text"><strong>Visual dark navy + ciano</strong> — bg <code>#020817</code> + atmospherics radiais com <code>rgba(6,182,212,*)</code></span></li>
+                <li class="change-item"><span class="change-icon">🅰️</span><span class="change-text"><strong>Tipografia dual</strong> — Manrope (titulos, valores grandes) + Inter (paragrafos, labels)</span></li>
+                <li class="change-item"><span class="change-icon">🖼️</span><span class="change-text"><strong>Logo PNG oficial</strong> — substitui SVG manual em todas as paginas publicas</span></li>
+                <li class="change-item"><span class="change-icon">♻️</span><span class="change-text"><strong>Cleanup</strong> — <code>components/auth/*</code> (5 arquivos) e <code>Header.tsx</code> removidos; novos em <code>components/public/{AuthLayout, LegalLayout, AuthFields}.tsx</code></span></li>
+            </ul>
+        </section>
+
+        <section id="paginas">
+            <h2>📄 6 Paginas Reescritas</h2>
+
+            <h3>1. Landing page (/)</h3>
+            <ul class="step-list">
+                <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Hero</strong> com h1 gradient ciano + portfolio mock a direita</span></li>
+                <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Beneficios</strong> — 6 cards (IA, Perfil, Educacao, Chatbot, Rebalanceamento, Monitoramento)</span></li>
+                <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Como funciona</strong> — 3 steps com numeros gigantes em gradient ciano</span></li>
+                <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Planos</strong> — Free vs Premium com badge "Mais escolhido"</span></li>
+                <li class="step-item"><span class="step-num">5</span><span class="step-text"><strong>Depoimentos</strong> — 4 testimonials com avatar gradient + estrelas</span></li>
+                <li class="step-item"><span class="step-num">6</span><span class="step-text"><strong>FAQ accordion</strong> — 5 perguntas frequentes</span></li>
+                <li class="step-item"><span class="step-num">7</span><span class="step-text"><strong>CTA gigante</strong> + footer com links Termos/Privacidade</span></li>
+            </ul>
+
+            <h3>2. Login (/login)</h3>
+            <p>Email + senha, link "Esqueci minha senha", flag <code>?registered=true</code> exibe mensagem pos-cadastro. Apos login, redireciona para <code>/dashboard</code> ou <code>/questionario</code> conforme <code>verificarSeTemPerfil()</code>.</p>
+
+            <h3>3. Cadastro (/cadastro)</h3>
+            <p>Form com Nome + CPF + Data + Telefone + Email + Senha (com strength meter) + Confirmar + checkbox de aceite.</p>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🎭</span><span class="change-text">Mascaras visuais de CPF, Data e Telefone (apenas display)</span></li>
+                <li class="change-item"><span class="change-icon">📨</span><span class="change-text">Backend recebe <code>cpf.replace(/\D/g,'')</code> e <code>telefone.replace(/\D/g,'')</code> sem mascara</span></li>
+                <li class="change-item"><span class="change-icon">💪</span><span class="change-text">Senha calcula forca em tempo real (Fraca / Media / Forte)</span></li>
+            </ul>
+
+            <h3>4. Recuperar Senha (/recuperar-senha)</h3>
+            <p>Input de email + <code>Enviar instrucoes</code>. Apos sucesso, mostra confirmacao com instrucoes para verificar a caixa de entrada.</p>
+
+            <h3>5. Termos (/termos) e Privacidade (/privacidade)</h3>
+            <p><code>LegalLayout</code> com helpers <code>LegalSection</code>, <code>LegalCallout</code>, <code>LegalBullets</code>. 13 secoes cada documento, com eyebrow + h1 grande Manrope + ultima atualizacao + versao.</p>
+
+            <h3>6. Redefinir Senha (/redefinir-senha)</h3>
+            <p>Refeito no mesmo padrao. Apos sucesso, hard redirect via <code>window.location.href = '/login'</code>.</p>
+        </section>
+
+        <section id="fontes">
+            <h2>🅰️ Tipografia Manrope + Inter</h2>
+            <div class="arch-box">
+                <div class="arch-title">📝 Hierarquia de fontes</div>
+                <div class="arch-row"><span class="arch-label">Display (titulos)</span><span class="arch-value">Manrope 700/800</span></div>
+                <div class="arch-row"><span class="arch-label">Body (texto)</span><span class="arch-value">Inter 400/500/600</span></div>
+                <div class="arch-row"><span class="arch-label">Mono</span><span class="arch-value">JetBrains Mono (apenas tickers)</span></div>
+            </div>
+
+            <h3>Configuracao</h3>
+            <pre>// frontend/src/app/layout.tsx
+import { Inter, JetBrains_Mono, Manrope } from "next/font/google";
+
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  weight: ["500", "700", "800"],
+});
+
+&lt;body className={`${inter.variable} ${manrope.variable} ${jetbrainsMono.variable}`}&gt;</pre>
+            <p>Uso via inline style: <code>style={{ fontFamily: 'var(--font-manrope)' }}</code></p>
+        </section>
+
+        <section id="logos">
+            <h2>🖼️ Logos PNG Oficiais</h2>
+            <div class="arch-box">
+                <div class="arch-title">📁 /brand/</div>
+                <div class="arch-row"><span class="arch-label">nuvary-icon.png</span><span class="arch-value">elemento logo — usado em LandingPage e AuthLayout</span></div>
+                <div class="arch-row"><span class="arch-label">nuvary-horizontal.png</span><span class="arch-value">logo + texto — usado em LegalLayout</span></div>
+                <div class="arch-row"><span class="arch-label">nuvary-vertical.png</span><span class="arch-value">disponivel para uso futuro</span></div>
+            </div>
+        </section>
+
+        <section id="arquivos">
+            <h2>📁 Arquivos</h2>
+            <pre>frontend/src/
+├── app/
+│   ├── layout.tsx           (+ Manrope via next/font)
+│   ├── page.tsx             (Landing reescrita)
+│   ├── login/page.tsx
+│   ├── cadastro/page.tsx    (+ mascaras)
+│   ├── recuperar-senha/page.tsx
+│   ├── redefinir-senha/page.tsx
+│   ├── termos/page.tsx      (LegalLayout)
+│   └── privacidade/page.tsx (LegalLayout)
+└── components/public/        (NOVO)
+    ├── AuthLayout.tsx
+    ├── LegalLayout.tsx
+    └── AuthFields.tsx
+
+DELETADOS:
+- components/auth/*           (5 arquivos)
+- components/layout/Header.tsx
+- _new-frontend/              (scaffold descartado)</pre>
+        </section>
+    </main>
+    <footer><p>Nuvary Invest © 2026 — <a href="index.html">Voltar ao indice</a></p></footer>
+</body>
+</html>

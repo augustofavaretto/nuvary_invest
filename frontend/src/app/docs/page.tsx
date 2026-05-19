@@ -13,6 +13,116 @@ interface DocItem {
 
 const docs: DocItem[] = [
   {
+    number: '37',
+    title: 'Animações Landing + Chat IA Preview',
+    description: '4 efeitos no scroll (reveal, hero animado, CTA pulse, parallax) + seção dedicada com mock animado do Chat IA em loop',
+    date: 'Maio 2026',
+    version: '4.10.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #4c1d95 0%, #06b6d4 100%)',
+    href: '/docs-html/doc37.html'
+  },
+  {
+    number: '36',
+    title: 'Premium Gates, Limites Free e Whitelist',
+    description: 'Banner global, gates em /configurações e /relatórios, limites do plano free (10 ativos, 10 conversas, só trilhas populares) + whitelist de e-mails com Premium vitalício',
+    date: 'Maio 2026',
+    version: '4.9.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #1e3a5f 0%, #06b6d4 100%)',
+    href: '/docs-html/doc36.html'
+  },
+  {
+    number: '35',
+    title: 'Frontend Público Reescrito',
+    description: 'Landing, autenticação e páginas legais com novo design dark + ciano, fontes Manrope + Inter e logos PNG oficiais',
+    date: 'Maio 2026',
+    version: '4.8.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #020817 0%, #0a1428 60%, #06b6d4 100%)',
+    href: '/docs-html/doc35.html'
+  },
+  {
+    number: '34',
+    title: 'Dashboard Redesign + IA Contextualizada',
+    description: 'Tarefa 6 do briefing rebrand no /dashboard; sugestões da IA usam carteira + extratos; textarea do chat com auto-resize',
+    date: 'Maio 2026',
+    version: '4.7.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #06b6d4 100%)',
+    href: '/docs-html/doc34.html'
+  },
+  {
+    number: '33',
+    title: 'Refinamentos UX',
+    description: 'Chat IA renovado, configurações simplificadas, AddAssetModal limpo e CPF nos PDFs fiscais',
+    date: 'Maio 2026',
+    version: '4.6.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%)',
+    href: '/docs-html/doc33.html'
+  },
+  {
+    number: '32',
+    title: 'Foundation Glass + Bento',
+    description: 'Tarefas 1-4 do briefing de rebrand: tokens, fonts, logo, glass primitives e Bento Grid',
+    date: 'Maio 2026',
+    version: '4.6.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #0e7490 0%, #06b6d4 100%)',
+    href: '/docs-html/doc32.html'
+  },
+  {
+    number: '31',
+    title: 'Relatório Semanal por E-mail',
+    description: 'Cron Vercel + Resend para envio automático, idempotência 20h e opt-in via profiles.email_relatorios_ativo',
+    date: 'Maio 2026',
+    version: '4.5.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #0d9488 0%, #14b8a6 100%)',
+    href: '/docs-html/doc31.html'
+  },
+  {
+    number: '30',
+    title: 'UX, Tema e Avatar',
+    description: 'Refinamentos no modal de adicionar ativo, detecção automática do tema e foto de perfil no header',
+    date: 'Maio 2026',
+    version: '4.5.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #4338ca 0%, #6366f1 100%)',
+    href: '/docs-html/doc30.html'
+  },
+  {
+    number: '29',
+    title: 'Alertas de Variação & Trilhas Educativas',
+    description: 'Tabela alertas_variacao com RLS, baseline_price para evitar falsos alertas, NotificationBell global + 48 vídeos em 8 categorias',
+    date: 'Abril 2026',
+    version: '4.4.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+    href: '/docs-html/doc29.html'
+  },
+  {
+    number: '28',
+    title: 'Operações da Carteira',
+    description: 'Cálculos de rentabilidade, lucro/prejuízo e todas as operações disponíveis em Minha Carteira',
+    date: 'Abril 2026',
+    version: '4.3.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #047857 0%, #10b981 100%)',
+    href: '/docs-html/doc28.html'
+  },
+  {
+    number: '27',
+    title: 'Prompt Engineering — Chat IA',
+    description: 'Arquitetura completa do sistema de prompts: camadas, dados em tempo real, personalização e parâmetros da API OpenAI',
+    date: 'Março 2026',
+    version: '4.1.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
+    href: '/docs-html/doc27.html'
+  },
+  {
     number: '26',
     title: 'Deploy Vercel e Autenticação',
     description: 'Migração Railway → Vercel, remoção Google OAuth, correção reset de senha com hard redirect',
