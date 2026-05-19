@@ -7,6 +7,8 @@ import supabase from '@/lib/supabase';
 // ============================================================
 export const PREMIUM_WHITELIST: readonly string[] = [
   'investnet123@gmail.com',
+  'luciano.cruz@atitus.edu.br',
+  'vitorbgirardi13@gmail.com',
 ];
 
 export function isWhitelistedPremium(email: string | null | undefined): boolean {
