@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
+  AnimatePresence,
   motion,
   useReducedMotion,
   useMotionValue,
@@ -474,6 +475,56 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* CHAT IA EM ACAO */}
+      <section id="assistente" className="py-20 sm:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(6,182,212,0.06),transparent_60%)] pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 relative grid lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-center">
+          {/* Texto */}
+          <div>
+            <p className="text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">
+              Assistente IA
+            </p>
+            <h2
+              className="font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight"
+              style={manrope}
+            >
+              Conversa, contexto e <span className="text-cyan-400">decisão</span>.
+            </h2>
+            <p className="mt-5 text-slate-400 text-lg leading-relaxed">
+              Pergunte qualquer coisa sobre sua carteira, mercado ou conceitos
+              de investimento. A IA usa seu perfil de risco, alocação atual e
+              últimas movimentações para dar respostas que fazem sentido pra você.
+            </p>
+
+            <ul className="mt-7 space-y-3 text-sm text-slate-300">
+              {[
+                'Sugestões de rebalanceamento com base na sua carteira real',
+                'Análise instantânea de impacto de cada decisão',
+                'Histórico de conversas salvo automaticamente',
+              ].map((x) => (
+                <li key={x} className="flex items-start gap-2.5">
+                  <span className="mt-1 w-5 h-5 rounded-full bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center shrink-0">
+                    <Check size={11} strokeWidth={3} className="text-cyan-400" />
+                  </span>
+                  {x}
+                </li>
+              ))}
+            </ul>
+
+            <Link
+              href="/cadastro"
+              className="group mt-8 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-cyan-500 text-slate-950 font-semibold hover:bg-cyan-400 transition-colors shadow-[0_0_30px_-10px_rgba(6,182,212,0.6)]"
+            >
+              Experimentar o assistente
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Mock animado */}
+          <ChatPreviewMock />
+        </div>
+      </section>
+
       {/* PRICING */}
       <section id="planos" className="py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -923,3 +974,272 @@ function HeroPortfolioMock() {
     </div>
   );
 }
+
+// ─── ChatPreviewMock ───────────────────────────────────────────────────────
+// Demonstracao animada do Chat IA em loop. Sequencia:
+//   1. Welcome bubble do bot
+//   2. Quick prompts aparecem
+//   3. User envia uma das perguntas
+//   4. 3 dots animados (bot pensando)
+//   5. Resposta da IA com efeito typewriter + cursor piscando
+//   6. Pausa e reinicia
+// Respeita prefers-reduced-motion: mostra a conversa completa estatica.
+
+type ChatStep = 'idle' | 'welcome' | 'prompts' | 'user' | 'thinking' | 'response' | 'complete';
+
+const QUICK_PROMPTS = [
+  'Devo rebalancear?',
+  'Próximas oportunidades',
+  'Análise da carteira',
+];
+const USER_MSG = 'Devo rebalancear minha carteira agora?';
+const BOT_WELCOME =
+  'Olá! Sou o assistente da Nuvary Invest. Como posso ajudar você hoje?';
+const BOT_RESPONSE =
+  'Sua exposição em Renda Variável está em 65%, acima da meta de 50% para seu perfil moderado. Sugiro reduzir 8% em ações e aportar em Renda Fixa.';
+
+function ChatPreviewMock() {
+  const reduced = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: '-80px' });
+  const [step, setStep] = useState<ChatStep>('idle');
+  const [typed, setTyped] = useState('');
+
+  useEffect(() => {
+    // Reduced motion: pula direto para a conversa completa estatica
+    if (reduced) {
+      setStep('complete');
+      setTyped(BOT_RESPONSE);
+      return;
+    }
+    if (!inView) return;
+
+    let cancelled = false;
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+    const after = (ms: number, fn: () => void) => {
+      const t = setTimeout(() => {
+        if (!cancelled) fn();
+      }, ms);
+      timeouts.push(t);
+    };
+
+    const cycle = () => {
+      if (cancelled) return;
+      setStep('idle');
+      setTyped('');
+
+      after(400, () => setStep('welcome'));
+      after(1500, () => setStep('prompts'));
+      after(3000, () => setStep('user'));
+      after(3900, () => setStep('thinking'));
+      after(5200, () => {
+        setStep('response');
+        // Typewriter
+        let i = 0;
+        const tick = () => {
+          if (cancelled) return;
+          if (i <= BOT_RESPONSE.length) {
+            setTyped(BOT_RESPONSE.slice(0, i));
+            i += 1;
+            const t = setTimeout(tick, 22);
+            timeouts.push(t);
+          } else {
+            setStep('complete');
+            after(5500, cycle); // reinicia
+          }
+        };
+        tick();
+      });
+    };
+    cycle();
+
+    return () => {
+      cancelled = true;
+      timeouts.forEach(clearTimeout);
+    };
+  }, [inView, reduced]);
+
+  const showWelcome = step !== 'idle';
+  const showPrompts = step === 'prompts' || step === 'user' || step === 'thinking' || step === 'response' || step === 'complete';
+  const showUser = step === 'user' || step === 'thinking' || step === 'response' || step === 'complete';
+  const showThinking = step === 'thinking';
+  const showResponse = step === 'response' || step === 'complete';
+
+  return (
+    <div ref={ref} className="relative">
+      {/* glow ciano de fundo do mock */}
+      <div className="absolute -inset-8 bg-cyan-500/10 blur-3xl rounded-full pointer-events-none" />
+
+      <div className="relative rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#0a1428] to-[#0f1c33] shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-white grid place-items-center overflow-hidden shrink-0">
+              <Image
+                src="/brand/nuvary-icon.png"
+                alt="Nuvary"
+                width={28}
+                height={28}
+                className="object-contain"
+              />
+            </div>
+            <div>
+              <p className="text-sm font-semibold" style={{ fontFamily: 'var(--font-manrope)' }}>
+                Assistente Nuvary
+              </p>
+              <p className="text-[11px] text-slate-400">Seu consultor de investimentos com IA</p>
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10.5px] font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            Chat ativo
+          </span>
+        </div>
+
+        {/* Messages */}
+        <div className="p-5 min-h-[420px] flex flex-col gap-4">
+          {/* Bot welcome */}
+          <AnimatePresence>
+            {showWelcome && (
+              <motion.div
+                key="welcome"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="flex items-start gap-2.5 max-w-[85%]"
+              >
+                <BotAvatar />
+                <div className="rounded-2xl rounded-tl-sm bg-white/[0.04] border border-white/[0.06] px-3.5 py-2.5 text-[13px] leading-relaxed text-slate-200">
+                  {BOT_WELCOME}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Quick prompts pills */}
+          <AnimatePresence>
+            {showPrompts && (
+              <motion.div
+                key="prompts"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="flex flex-wrap gap-2 pl-11"
+              >
+                {QUICK_PROMPTS.map((p, i) => (
+                  <motion.button
+                    key={p}
+                    type="button"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.08, duration: 0.25 }}
+                    className={`px-3 py-1.5 rounded-full text-[11.5px] font-medium border transition-colors ${
+                      i === 0 && (step === 'user' || step === 'thinking' || step === 'response' || step === 'complete')
+                        ? 'bg-cyan-500/20 border-cyan-500/40 text-cyan-200'
+                        : 'bg-white/[0.03] border-white/[0.08] text-slate-300'
+                    }`}
+                  >
+                    {p}
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* User message */}
+          <AnimatePresence>
+            {showUser && (
+              <motion.div
+                key="user"
+                initial={{ opacity: 0, y: 8, x: 12 }}
+                animate={{ opacity: 1, y: 0, x: 0 }}
+                transition={{ duration: 0.35 }}
+                className="flex justify-end"
+              >
+                <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-cyan-500 text-slate-950 px-3.5 py-2.5 text-[13px] font-medium leading-relaxed">
+                  {USER_MSG}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Thinking dots */}
+          <AnimatePresence>
+            {showThinking && (
+              <motion.div
+                key="thinking"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="flex items-start gap-2.5"
+              >
+                <BotAvatar />
+                <div className="rounded-2xl rounded-tl-sm bg-white/[0.04] border border-white/[0.06] px-4 py-3 flex items-center gap-1.5">
+                  {[0, 0.15, 0.3].map((d) => (
+                    <motion.span
+                      key={d}
+                      className="w-1.5 h-1.5 rounded-full bg-cyan-400"
+                      animate={{ opacity: [0.3, 1, 0.3], y: [0, -2, 0] }}
+                      transition={{ duration: 0.9, repeat: Infinity, delay: d }}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Bot response (typewriter) */}
+          <AnimatePresence>
+            {showResponse && (
+              <motion.div
+                key="response"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="flex items-start gap-2.5 max-w-[88%]"
+              >
+                <BotAvatar />
+                <div className="rounded-2xl rounded-tl-sm bg-white/[0.04] border border-white/[0.06] px-3.5 py-2.5 text-[13px] leading-relaxed text-slate-200">
+                  {typed}
+                  {step === 'response' && !reduced && (
+                    <motion.span
+                      className="inline-block w-[2px] h-[14px] bg-cyan-400 align-middle ml-0.5"
+                      animate={{ opacity: [1, 0, 1] }}
+                      transition={{ duration: 0.8, repeat: Infinity }}
+                    />
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Input bar (visual apenas) */}
+        <div className="px-5 pb-5 pt-2 border-t border-white/[0.06]">
+          <div className="flex items-center gap-2 rounded-xl bg-white/[0.03] border border-white/[0.08] px-3 py-2.5">
+            <span className="flex-1 text-[12.5px] text-slate-500">Digite sua mensagem...</span>
+            <div className="w-7 h-7 rounded-full bg-cyan-500 grid place-items-center text-slate-950">
+              <ArrowRight size={14} strokeWidth={2.5} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BotAvatar() {
+  return (
+    <div className="w-7 h-7 rounded-full bg-white grid place-items-center overflow-hidden shrink-0 mt-0.5">
+      <Image
+        src="/brand/nuvary-icon.png"
+        alt="Nuvary"
+        width={22}
+        height={22}
+        className="object-contain"
+      />
+    </div>
+  );
+}
+
