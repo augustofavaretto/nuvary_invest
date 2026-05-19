@@ -82,7 +82,10 @@ export default function PremiumPage() {
 
   return (
     <DashboardLayout>
-      <div className="dark min-h-full bg-bg-base text-text-primary">
+      <div
+        className="dark min-h-full bg-bg-base text-text-primary"
+        style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif' }}
+      >
         {/* Aurora de fundo */}
         <div className="fixed inset-0 -z-10 pointer-events-none">
           <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-cyan-500/8 blur-[140px]" />
@@ -190,7 +193,7 @@ export default function PremiumPage() {
                   }`}
                 >
                   <p className="text-xs uppercase tracking-wider text-text-secondary">Mensal</p>
-                  <p data-mono className="font-mono text-lg font-semibold mt-0.5">
+                  <p className="text-lg font-semibold mt-0.5 tabular-nums">
                     {formatBRL(PRICE.mensal)}
                   </p>
                   <p className="text-[10px] text-text-tertiary mt-1">por mês</p>
@@ -208,10 +211,10 @@ export default function PremiumPage() {
                     Economize {formatBRL(economiaAnual)}
                   </span>
                   <p className="text-xs uppercase tracking-wider text-text-secondary">Anual</p>
-                  <p data-mono className="font-mono text-lg font-semibold mt-0.5">
+                  <p className="text-lg font-semibold mt-0.5 tabular-nums">
                     {formatBRL(PRICE.anual)}
                   </p>
-                  <p className="text-[10px] text-text-tertiary mt-1">
+                  <p className="text-[10px] text-text-tertiary mt-1 tabular-nums">
                     {formatBRL(PRICE.anual / 12)} / mês
                   </p>
                 </button>
