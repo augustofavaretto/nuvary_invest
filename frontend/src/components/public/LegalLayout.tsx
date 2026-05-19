@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
 
 interface LegalLayoutProps {
@@ -34,12 +35,15 @@ export function LegalLayout({
 
       <header className="sticky top-0 z-30 bg-[#020817]/80 backdrop-blur-xl border-b border-white/[0.06]">
         <div className="max-w-4xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="font-extrabold tracking-tight text-lg"
-            style={{ fontFamily: 'var(--font-manrope)' }}
-          >
-            Nuvary <span className="text-cyan-400">Invest</span>
+          <Link href="/" className="flex items-center" aria-label="Nuvary Invest">
+            <Image
+              src="/brand/nuvary-horizontal.png"
+              alt="Nuvary Invest"
+              width={160}
+              height={36}
+              priority
+              className="h-9 w-auto object-contain"
+            />
           </Link>
           <Link
             href={backHref}
