@@ -4,6 +4,16 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
+  motion,
+  useReducedMotion,
+  useMotionValue,
+  useTransform,
+  useScroll,
+  animate,
+  useInView,
+} from 'framer-motion';
+import { useRef } from 'react';
+import {
   Brain,
   ChartPie,
   GraduationCap,
@@ -141,6 +151,12 @@ export default function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number>(0);
   const [scrolled, setScrolled] = useState(false);
+  const reducedMotion = useReducedMotion();
+
+  // Parallax sutil dos glows do fundo
+  const { scrollY } = useScroll();
+  const glowTopY = useTransform(scrollY, [0, 800], ['0%', '20%']);
+  const glowBottomY = useTransform(scrollY, [0, 800], ['0%', '-15%']);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -155,10 +171,16 @@ export default function LandingPage() {
       className="min-h-screen bg-[#020817] text-slate-100 antialiased overflow-x-hidden"
       style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
     >
-      {/* Background atmospherics */}
+      {/* Background atmospherics — parallax sutil nos glows ciano */}
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(6,182,212,0.12),transparent_55%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(14,165,233,0.08),transparent_50%)]" />
+        <motion.div
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(6,182,212,0.12),transparent_55%)]"
+          style={reducedMotion ? undefined : { y: glowTopY }}
+        />
+        <motion.div
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(14,165,233,0.08),transparent_50%)]"
+          style={reducedMotion ? undefined : { y: glowBottomY }}
+        />
         <div
           className="absolute inset-0 opacity-[0.025]"
           style={{
@@ -284,16 +306,32 @@ export default function LandingPage() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                href="/cadastro"
-                className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-cyan-500 text-slate-950 font-semibold hover:bg-cyan-400 transition-all shadow-[0_0_40px_-10px_rgba(6,182,212,0.7)]"
+              <motion.div
+                animate={
+                  reducedMotion
+                    ? undefined
+                    : {
+                        boxShadow: [
+                          '0 0 30px -8px rgba(6,182,212,0.4)',
+                          '0 0 50px -6px rgba(6,182,212,0.7)',
+                          '0 0 30px -8px rgba(6,182,212,0.4)',
+                        ],
+                      }
+                }
+                transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+                className="rounded-xl"
               >
-                Começar grátis
-                <ArrowRight
-                  size={18}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
+                <Link
+                  href="/cadastro"
+                  className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-cyan-500 text-slate-950 font-semibold hover:bg-cyan-400 transition-all"
+                >
+                  Começar grátis
+                  <ArrowRight
+                    size={18}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
+              </motion.div>
               <Link
                 href="/login"
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-white/10 text-slate-200 hover:bg-white/5 transition-colors"
@@ -361,9 +399,13 @@ export default function LandingPage() {
           </div>
 
           <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {BENEFITS.map((b) => (
-              <div
+            {BENEFITS.map((b, i) => (
+              <motion.div
                 key={b.title}
+                initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
                 className="group relative p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-cyan-500/20 transition-all"
               >
                 <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(6,182,212,0.08),transparent_60%)]" />
@@ -376,7 +418,7 @@ export default function LandingPage() {
                   </h3>
                   <p className="text-sm text-slate-400 leading-relaxed">{b.text}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -403,7 +445,14 @@ export default function LandingPage() {
 
           <div className="mt-14 grid md:grid-cols-3 gap-6">
             {STEPS.map((s, i) => (
-              <div key={s.n} className="relative">
+              <motion.div
+                key={s.n}
+                initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                className="relative"
+              >
                 <div className="p-7 rounded-2xl border border-white/[0.06] bg-white/[0.02] h-full">
                   <div
                     className="font-extrabold text-5xl bg-gradient-to-br from-cyan-300 to-sky-500 bg-clip-text text-transparent"
@@ -419,7 +468,7 @@ export default function LandingPage() {
                 {i < STEPS.length - 1 && (
                   <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-px bg-gradient-to-r from-cyan-500/50 to-transparent" />
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -445,7 +494,12 @@ export default function LandingPage() {
 
           <div className="mt-14 grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
             {/* FREE */}
-            <div className="p-8 rounded-2xl border border-white/[0.06] bg-white/[0.02]">
+            <motion.div
+              initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="p-8 rounded-2xl border border-white/[0.06] bg-white/[0.02]">
               <div className="text-sm font-semibold text-slate-300">Free</div>
               <div className="mt-3 flex items-baseline gap-1">
                 <span className="font-extrabold text-5xl" style={manrope}>
@@ -478,10 +532,15 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
 
             {/* PREMIUM */}
-            <div className="relative p-8 rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/[0.08] to-sky-500/[0.04] shadow-[0_0_60px_-20px_rgba(6,182,212,0.4)]">
+            <motion.div
+              initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="relative p-8 rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/[0.08] to-sky-500/[0.04] shadow-[0_0_60px_-20px_rgba(6,182,212,0.4)]">
               <div className="absolute -top-3 left-8 px-3 py-1 rounded-full bg-cyan-500 text-slate-950 text-xs font-bold">
                 Mais escolhido
               </div>
@@ -520,7 +579,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -541,9 +600,13 @@ export default function LandingPage() {
           </div>
 
           <div className="mt-14 grid md:grid-cols-2 gap-5">
-            {TESTIMONIALS.map((t) => (
-              <figure
+            {TESTIMONIALS.map((t, i) => (
+              <motion.figure
                 key={t.name}
+                initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
                 className="p-7 rounded-2xl border border-white/[0.06] bg-white/[0.02] flex flex-col"
               >
                 <div className="flex items-center gap-1 text-cyan-400 mb-4">
@@ -566,7 +629,7 @@ export default function LandingPage() {
                     <div className="text-xs text-slate-400">{t.role}</div>
                   </div>
                 </figcaption>
-              </figure>
+              </motion.figure>
             ))}
           </div>
         </div>
@@ -589,8 +652,12 @@ export default function LandingPage() {
 
           <div className="mt-12 space-y-3">
             {FAQS.map((f, i) => (
-              <div
+              <motion.div
                 key={f.q}
+                initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
                 className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden"
               >
                 <button
@@ -610,7 +677,7 @@ export default function LandingPage() {
                     {f.a}
                   </div>
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -716,10 +783,58 @@ function LogoMark({ small = false }: { small?: boolean }) {
   );
 }
 
+// Contador animado de 0 ate o target. Usa useMotionValue + useTransform
+// para evitar re-render a cada frame.
+function CountUp({
+  target,
+  decimals = 1,
+  duration = 1.4,
+  active = true,
+}: {
+  target: number;
+  decimals?: number;
+  duration?: number;
+  active?: boolean;
+}) {
+  const mv = useMotionValue(0);
+  const rounded = useTransform(mv, (v) =>
+    v.toLocaleString('pt-BR', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }),
+  );
+
+  useEffect(() => {
+    if (!active) return;
+    const controls = animate(mv, target, {
+      duration,
+      ease: [0.16, 1, 0.3, 1],
+    });
+    return controls.stop;
+  }, [active, target, duration, mv]);
+
+  return <motion.span>{rounded}</motion.span>;
+}
+
 function HeroPortfolioMock() {
+  const reduced = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const allocations = [
+    { name: 'Renda Fixa', pct: 50, color: 'bg-cyan-400' },
+    { name: 'Ações Brasil', pct: 30, color: 'bg-sky-400' },
+    { name: 'ETFs Globais', pct: 15, color: 'bg-indigo-400' },
+    { name: 'Caixa', pct: 5, color: 'bg-slate-400' },
+  ];
+
   return (
-    <div className="relative">
-      <div className="absolute -inset-8 bg-cyan-500/10 blur-3xl rounded-full" />
+    <div ref={ref} className="relative">
+      {/* glow pulsante de fundo */}
+      <motion.div
+        className="absolute -inset-8 bg-cyan-500/10 blur-3xl rounded-full"
+        animate={reduced ? undefined : { opacity: [0.7, 1, 0.7], scale: [1, 1.04, 1] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+      />
 
       <div className="relative rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#0a1428] to-[#0f1c33] p-5 sm:p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-5">
@@ -732,9 +847,9 @@ function HeroPortfolioMock() {
               R$ 47.382,<span className="text-slate-400">10</span>
             </div>
           </div>
-          <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+          <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold tabular-nums">
             <TrendingUp size={12} />
-            +12,4%
+            +<CountUp target={12.4} decimals={1} active={inView || reduced === true} />%
           </div>
         </div>
 
@@ -746,50 +861,64 @@ function HeroPortfolioMock() {
                 <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
               </linearGradient>
             </defs>
-            <path
+            {/* preenchimento — aparece junto da linha */}
+            <motion.path
               d="M0,70 L20,65 L40,68 L60,55 L80,58 L100,45 L120,48 L140,38 L160,40 L180,28 L200,32 L220,22 L240,25 L260,15 L280,18 L300,10 L300,90 L0,90 Z"
               fill="url(#chartGrad)"
+              initial={reduced ? false : { opacity: 0 }}
+              animate={inView ? { opacity: 1 } : undefined}
+              transition={{ duration: 0.6, delay: 1.2 }}
             />
-            <path
+            {/* linha — desenha de 0 a 1 (pathLength) */}
+            <motion.path
               d="M0,70 L20,65 L40,68 L60,55 L80,58 L100,45 L120,48 L140,38 L160,40 L180,28 L200,32 L220,22 L240,25 L260,15 L280,18 L300,10"
               fill="none"
               stroke="#22d3ee"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
+              initial={reduced ? false : { pathLength: 0 }}
+              animate={inView ? { pathLength: 1 } : undefined}
+              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
             />
           </svg>
         </div>
 
         <div className="space-y-2.5">
-          {[
-            { name: 'Renda Fixa', pct: 50, color: 'bg-cyan-400' },
-            { name: 'Ações Brasil', pct: 30, color: 'bg-sky-400' },
-            { name: 'ETFs Globais', pct: 15, color: 'bg-indigo-400' },
-            { name: 'Caixa', pct: 5, color: 'bg-slate-400' },
-          ].map((a) => (
+          {allocations.map((a, i) => (
             <div key={a.name}>
               <div className="flex items-center justify-between text-xs mb-1">
                 <span className="text-slate-300">{a.name}</span>
-                <span className="text-slate-400 font-mono">{a.pct}%</span>
+                <span className="text-slate-400 tabular-nums">{a.pct}%</span>
               </div>
               <div className="h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
-                <div
+                <motion.div
                   className={`h-full ${a.color} rounded-full`}
-                  style={{ width: `${a.pct}%` }}
+                  initial={reduced ? false : { width: 0 }}
+                  animate={inView ? { width: `${a.pct}%` } : undefined}
+                  transition={{
+                    duration: 0.9,
+                    delay: 0.4 + i * 0.12,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
                 />
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-5 flex items-center gap-2 px-3 py-2.5 rounded-lg bg-cyan-500/5 border border-cyan-500/15">
+        <motion.div
+          className="mt-5 flex items-center gap-2 px-3 py-2.5 rounded-lg bg-cyan-500/5 border border-cyan-500/15"
+          initial={reduced ? false : { opacity: 0, y: 8 }}
+          animate={inView ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.5, delay: 1.5 }}
+        >
           <Sparkles size={14} className="text-cyan-400" />
           <div className="text-xs text-slate-300">
             IA sugeriu rebalancear{' '}
             <span className="text-cyan-300 font-semibold">+2% em ETFs</span>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
