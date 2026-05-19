@@ -1,5 +1,19 @@
 import supabase from '@/lib/supabase';
 
+// ============================================================
+// Whitelist Premium — emails que tem acesso vitalicio sem pagamento.
+// Util para conta do dono, testes internos e contas de demo.
+// Comparacao e case-insensitive.
+// ============================================================
+export const PREMIUM_WHITELIST: readonly string[] = [
+  'investnet123@gmail.com',
+];
+
+export function isWhitelistedPremium(email: string | null | undefined): boolean {
+  if (!email) return false;
+  return PREMIUM_WHITELIST.includes(email.toLowerCase());
+}
+
 export type SubscriptionStatus =
   | 'free'
   | 'active'
@@ -19,11 +33,24 @@ export interface SubscriptionState {
   startedAt: string | null;
 }
 
-// Le o estado atual da assinatura do usuario logado
+// Le o estado atual da assinatura do usuario logado.
+// Usuarios na PREMIUM_WHITELIST recebem status 'active' sem expiracao,
+// independente do estado real em profiles.
 export async function getSubscriptionState(): Promise<SubscriptionState> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { status: 'free', plan: null, paymentMethod: null, expiresAt: null, startedAt: null };
+  }
+
+  // Bypass total para emails da whitelist
+  if (isWhitelistedPremium(user.email)) {
+    return {
+      status: 'active',
+      plan: 'anual',
+      paymentMethod: null,
+      expiresAt: null, // sem expiracao = vitalicio
+      startedAt: user.created_at ?? null,
+    };
   }
 
   const { data } = await supabase
@@ -46,7 +73,7 @@ export async function getSubscriptionState(): Promise<SubscriptionState> {
 // True se o usuario tem acesso Premium ATIVO no momento
 export function isPremiumActive(state: SubscriptionState): boolean {
   if (state.status !== 'active') return false;
-  if (!state.expiresAt) return true; // assinatura ativa sem expiracao definida (raro)
+  if (!state.expiresAt) return true; // assinatura ativa sem expiracao = vitalicio (whitelist)
   return new Date(state.expiresAt).getTime() > Date.now();
 }
 
