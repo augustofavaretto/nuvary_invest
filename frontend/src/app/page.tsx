@@ -48,7 +48,7 @@ const BENEFITS = [
   {
     icon: ChartPie,
     title: 'Análise de Perfil',
-    text: 'Questionário objetivo de 10 perguntas que define em 2 minutos seu perfil entre conservador, moderado, arrojado ou agressivo.',
+    text: 'Questionário objetivo de 11 perguntas que define em 2 minutos seu perfil entre conservador, moderado, arrojado ou agressivo.',
   },
   {
     icon: GraduationCap,
@@ -76,7 +76,7 @@ const STEPS = [
   {
     n: '02',
     title: 'Descubra seu perfil',
-    text: 'Responda 10 perguntas objetivas em 2 minutos. A IA classifica seu perfil de investidor e horizonte.',
+    text: 'Responda 11 perguntas objetivas em 2 minutos. A IA classifica seu perfil de investidor e horizonte.',
   },
   {
     n: '03',
@@ -357,7 +357,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06] rounded-2xl overflow-hidden border border-white/[0.06]">
             {[
               { k: '4', l: 'Perfis de Investidor' },
-              { k: '10', l: 'Perguntas Objetivas' },
+              { k: '11', l: 'Perguntas Objetivas' },
               { k: '2min', l: 'Tempo Médio' },
               { k: '100%', l: 'Gratuito para começar' },
             ].map((s) => (
@@ -394,7 +394,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-6 gap-4">
             {BENEFITS.map((b, i) => (
               <motion.div
                 key={b.title}
@@ -402,7 +402,9 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-cyan-500/20 transition-all"
+                className={`group relative p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-cyan-500/20 transition-all lg:col-span-2${
+                  i === 3 ? ' lg:col-start-2' : ''
+                }`}
               >
                 <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(6,182,212,0.08),transparent_60%)]" />
                 <div className="relative">
@@ -567,7 +569,7 @@ export default function LandingPage() {
               <ul className="mt-6 space-y-3 text-sm">
                 {[
                   'Análise de perfil de investidor',
-                  '10 perguntas objetivas em 2 minutos',
+                  '11 perguntas objetivas em 2 minutos',
                   'Alocação recomendada inicial',
                   'Conteúdo educacional básico',
                   'Acesso ao chatbot (limitado)',
@@ -757,7 +759,7 @@ export default function LandingPage() {
 
               <ul className="mt-6 space-y-2.5 text-white/90">
                 {[
-                  '10 perguntas objetivas',
+                  '11 perguntas objetivas',
                   'Resultado instantâneo',
                   'Alocação recomendada',
                 ].map((x) => (
