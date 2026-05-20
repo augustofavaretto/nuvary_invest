@@ -21,9 +21,6 @@ import {
   EyeOff,
   AlertTriangle,
   Shield,
-  Target,
-  Clock,
-  PiggyBank,
   Camera,
 } from 'lucide-react';
 
@@ -409,40 +406,6 @@ export default function PerfilPage() {
                 <p className="text-sm text-muted-foreground">
                   {perfilInvestidor.perfil_risco ? perfilDescricoes[perfilInvestidor.perfil_risco.toLowerCase()] || '' : ''}
                 </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
-                {perfilInvestidor.objetivo_principal && (
-                  <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-xl border border-border">
-                    <Target className="w-4 h-4 text-[#00B8D9] mt-0.5 flex-shrink-0" />
-                    <div><p className="text-xs text-muted-foreground">Objetivo</p><p className="text-sm text-foreground font-medium">{perfilInvestidor.objetivo_principal}</p></div>
-                  </div>
-                )}
-                {perfilInvestidor.horizonte_investimento && (
-                  <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-xl border border-border">
-                    <Clock className="w-4 h-4 text-[#00B8D9] mt-0.5 flex-shrink-0" />
-                    <div><p className="text-xs text-muted-foreground">Horizonte</p><p className="text-sm text-foreground font-medium">{perfilInvestidor.horizonte_investimento}</p></div>
-                  </div>
-                )}
-                {perfilInvestidor.renda_mensal && (
-                  <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-xl border border-border">
-                    <PiggyBank className="w-4 h-4 text-[#00B8D9] mt-0.5 flex-shrink-0" />
-                    <div><p className="text-xs text-muted-foreground">Renda Mensal</p><p className="text-sm text-foreground font-medium">{perfilInvestidor.renda_mensal}</p></div>
-                  </div>
-                )}
-                {perfilInvestidor.nivel_conhecimento !== undefined && (
-                  <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-xl border border-border">
-                    <TrendingUp className="w-4 h-4 text-[#00B8D9] mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Nível de Conhecimento</p>
-                      <p className="text-sm text-foreground font-medium">
-                        {perfilInvestidor.nivel_conhecimento <= 2 && 'Iniciante'}
-                        {perfilInvestidor.nivel_conhecimento === 3 && 'Intermediário'}
-                        {perfilInvestidor.nivel_conhecimento >= 4 && 'Avançado'}
-                      </p>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {perfilInvestidor.updated_at && (
