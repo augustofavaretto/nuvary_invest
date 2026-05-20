@@ -394,17 +394,41 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-6 gap-4">
-            {BENEFITS.map((b, i) => (
+          {/* Linha 1: 3 cards principais */}
+          <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {BENEFITS.slice(0, 3).map((b, i) => (
               <motion.div
                 key={b.title}
                 initial={reducedMotion ? false : { opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                className={`group relative p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-cyan-500/20 transition-all lg:col-span-2${
-                  i === 3 ? ' lg:col-start-2' : ''
-                }`}
+                className="group relative p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-cyan-500/20 transition-all"
+              >
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(6,182,212,0.08),transparent_60%)]" />
+                <div className="relative">
+                  <div className="w-11 h-11 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-5">
+                    <b.icon size={20} strokeWidth={2} />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2" style={manrope}>
+                    {b.title}
+                  </h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{b.text}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Linha 2: 2 cards centralizados (Chatbot + Monitoramento) */}
+          <div className="mt-4 grid sm:grid-cols-2 gap-4 lg:w-2/3 lg:mx-auto">
+            {BENEFITS.slice(3).map((b, i) => (
+              <motion.div
+                key={b.title}
+                initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: (i + 3) * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                className="group relative p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-cyan-500/20 transition-all"
               >
                 <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(6,182,212,0.08),transparent_60%)]" />
                 <div className="relative">
