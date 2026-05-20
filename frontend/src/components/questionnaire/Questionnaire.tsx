@@ -88,9 +88,6 @@ export function Questionnaire() {
   const currentQuestion = questions[currentIndex];
   const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
   const totalQuestions = questions.length;
-  const progressPct = totalQuestions > 0
-    ? Math.round(((currentIndex + 1) / totalQuestions) * 100)
-    : 0;
   const isLastQuestion = currentIndex === totalQuestions - 1;
 
   const handleStart = () => {
@@ -224,8 +221,6 @@ export function Questionnaire() {
     }
   }, [screen, currentIndex]);
 
-  const showProgress = screen === 'questions' && totalQuestions > 0;
-
   return (
     <div className={styles.shell}>
       {/* TOPBAR */}
@@ -249,25 +244,6 @@ export function Questionnaire() {
           </div>
         </div>
       </header>
-
-      {/* PROGRESS */}
-      {showProgress && (
-        <div className={styles.progressWrap}>
-          <div className={styles.progressMeta}>
-            <span className={styles.progressStep}>
-              Pergunta {currentIndex + 1}{' '}
-              <span className={styles.progressTotal}>de {totalQuestions}</span>
-            </span>
-            <span className={styles.progressPct}>{progressPct}%</span>
-          </div>
-          <div className={styles.progressBar}>
-            <div
-              className={styles.progressFill}
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-        </div>
-      )}
 
       <main className={styles.main}>
         {error && <div className={styles.errorBanner}>{error}</div>}
