@@ -12,7 +12,7 @@
 .topbar {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 18px 32px;
+  padding: 12px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -79,7 +79,7 @@
 .main {
   max-width: 880px;
   margin: 0 auto;
-  padding: 8px 32px 32px;
+  padding: 4px 32px 16px;
 }
 
 .state {
@@ -543,11 +543,11 @@
   position: relative;
   border-radius: var(--r-2xl);
   overflow: hidden;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   border: 1px solid var(--border);
 }
 .resultHeroInner {
-  padding: 26px 40px 28px;
+  padding: 16px 40px 18px;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -580,9 +580,9 @@
   background: linear-gradient(135deg, var(--p-agressivo) 0%, var(--p-agressivo-d) 100%);
 }
 .resultIcon {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 12px;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 8px;
   background: rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -593,31 +593,31 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 .resultIcon svg {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   color: white;
 }
 .resultLabel {
-  font-size: 12.5px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: 2px;
   letter-spacing: 0.02em;
 }
 .resultName {
-  font-size: clamp(26px, 3.4vw, 36px);
+  font-size: clamp(22px, 2.8vw, 30px);
   font-weight: 800;
   color: white;
   letter-spacing: -0.03em;
   line-height: 1;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
 }
 .resultDesc {
-  font-size: 13.5px;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.92);
-  max-width: 600px;
+  max-width: 620px;
   margin: 0 auto;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 /* ALLOCATION */
@@ -625,14 +625,14 @@
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: var(--r-2xl);
-  padding: 18px 28px 20px;
-  margin-bottom: 14px;
+  padding: 12px 24px 14px;
+  margin-bottom: 10px;
 }
 .allocationHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   gap: 12px;
 }
 .allocationHead h2 {
@@ -661,16 +661,16 @@
 }
 .allocationGrid {
   display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 28px;
+  grid-template-columns: 120px 1fr;
+  gap: 24px;
   align-items: center;
 }
 
 /* DONUT */
 .allocationDonut {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   margin: 0 auto;
 }
 .allocationDonut svg {
@@ -704,7 +704,7 @@
   font-weight: 600;
 }
 .donutVal {
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-top: 2px;
@@ -713,10 +713,10 @@
 /* STACKED BAR */
 .allocationBar {
   display: flex;
-  height: 36px;
+  height: 30px;
   border-radius: var(--r-md);
   overflow: hidden;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 .barSeg {
@@ -742,7 +742,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 0;
+  padding: 3px 0;
   border-bottom: 1px solid var(--border);
 }
 .legendRow:last-child,
@@ -780,14 +780,14 @@
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: var(--r-2xl);
-  padding: 16px 24px 18px;
-  margin-bottom: 14px;
+  padding: 10px 22px 12px;
+  margin-bottom: 10px;
 }
 .profileTips h3 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.015em;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -809,16 +809,16 @@
 .tip {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 12px 14px;
+  gap: 2px;
+  padding: 10px 12px;
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
 }
 .tipIc {
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
   background: var(--cyan-soft);
   display: grid;
   place-items: center;
@@ -826,18 +826,18 @@
   margin-bottom: 2px;
 }
 .tipIc svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 .tipTitle {
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--t1);
   font-weight: 600;
 }
 .tipDesc {
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--t2);
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 /* RESULT ACTIONS */
@@ -851,9 +851,9 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 12px 22px;
+  padding: 10px 22px;
   border-radius: var(--r-md);
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
