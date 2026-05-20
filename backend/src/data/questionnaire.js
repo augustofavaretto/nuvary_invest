@@ -1,9 +1,9 @@
-// Questionário de Perfil de Investidor - 10 Perguntas Objetivas
+// Questionário de Perfil de Investidor - 11 Perguntas Objetivas
 // Categorias: Tolerância a Risco, Horizonte de Investimento, Objetivos Financeiros
 
 export const questionnaire = {
   title: 'Questionário de Perfil de Investidor',
-  description: 'Responda às 10 perguntas abaixo para descobrir seu perfil de investidor',
+  description: 'Responda às 11 perguntas abaixo para descobrir seu perfil de investidor',
   questions: [
     {
       id: 1,
