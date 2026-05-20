@@ -79,8 +79,25 @@
   --r-sm:   8px;
   --r-md:   12px;
   --r-lg:   16px;
-  --r-xl:   22px;
+  --r-xl:   20px;
+  --r-2xl:  28px;
   --r-pill: 999px;
+
+  /* === QUESTIONARIO — Cores por perfil ========================== */
+  --p-conservador:    #10B981;
+  --p-conservador-d:  #047857;
+  --p-moderado:       #00B8D9;
+  --p-moderado-d:     #007EA7;
+  --p-arrojado:       #F59E0B;
+  --p-arrojado-d:     #D97706;
+  --p-agressivo:      #EF4444;
+  --p-agressivo-d:    #B91C1C;
+
+  /* Aliases que combinam com o mockup do questionario */
+  --cyan-700:    #007EA7;
+  --cyan-soft:   rgba(0, 184, 217, 0.12);
+  --cyan-border: rgba(0, 184, 217, 0.35);
+  --grad-cyan-h: linear-gradient(135deg, #00B8D9 0%, #007EA7 100%);
 
   /* === EASING / DURATION (mockup) =============================== */
   --ease:   cubic-bezier(0.16, 1, 0.3, 1);

@@ -1,37 +1,48 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { QuestionCard } from './QuestionCard';
-import { ResultCard } from './ResultCard';
+import {
+  ArrowLeft,
+  ArrowRight,
+  BarChart3,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  HelpCircle,
+  Loader2,
+  PieChart,
+  RefreshCw,
+  Target,
+  Wallet,
+} from 'lucide-react';
+
 import { salvarPerfilInvestidor, verificarSeTemPerfil } from '@/services/perfilService';
 import { useAuth } from '@/contexts/AuthContext';
+import { STRINGS } from '@/constants/strings';
 import {
   Question,
   QuestionnaireResult,
   Answers,
 } from '@/types/questionnaire';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Target,
-  Clock,
-  BarChart3,
-  Loader2,
-  ArrowLeft,
-} from 'lucide-react';
-import { STRINGS } from '@/constants/strings';
+import { PROFILES, normalizePerfilTipo, type PerfilTipo } from '@/lib/perfis';
+
+import styles from './Questionnaire.module.css';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 type Screen = 'intro' | 'questions' | 'loading' | 'result';
 
+const LETTERS = ['A', 'B', 'C', 'D'] as const;
+const KPI_ICONS = [Target, Clock, BarChart3];
+
 export function Questionnaire() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user } = useAuth();
+
   const [screen, setScreen] = useState<Screen>('intro');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -39,28 +50,8 @@ export function Questionnaire() {
   const [result, setResult] = useState<QuestionnaireResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(true);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const { user } = useAuth();
 
-  useEffect(() => {
-    const refazer = searchParams.get('refazer') === '1';
-    if (refazer) {
-      fetchQuestionnaire();
-      return;
-    }
-    // Redireciona para o dashboard se o usuário já completou o questionário
-    verificarSeTemPerfil().then((temPerfil) => {
-      if (temPerfil) {
-        router.replace('/dashboard');
-      } else {
-        fetchQuestionnaire();
-      }
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchQuestionnaire = async () => {
+  const fetchQuestionnaire = useCallback(async () => {
     setIsLoadingQuestions(true);
     try {
       const response = await fetch(`${API_URL}/profile/questionnaire`);
@@ -76,42 +67,49 @@ export function Questionnaire() {
     } finally {
       setIsLoadingQuestions(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const refazer = searchParams.get('refazer') === '1';
+    if (refazer) {
+      fetchQuestionnaire();
+      return;
+    }
+    verificarSeTemPerfil().then((temPerfil) => {
+      if (temPerfil) {
+        router.replace('/dashboard');
+      } else {
+        fetchQuestionnaire();
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const currentQuestion = questions[currentIndex];
+  const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
+  const totalQuestions = questions.length;
+  const progressPct = totalQuestions > 0
+    ? Math.round(((currentIndex + 1) / totalQuestions) * 100)
+    : 0;
+  const isLastQuestion = currentIndex === totalQuestions - 1;
 
   const handleStart = () => {
-    if (questions.length > 0) {
+    if (totalQuestions > 0) {
+      setError(null);
       setScreen('questions');
     }
   };
 
-  const handleAnswerSelect = (value: string) => {
-    const questionId = questions[currentIndex].id;
-    setAnswers((prev) => ({ ...prev, [questionId]: value }));
-  };
+  const handleAnswerSelect = useCallback(
+    (value: string) => {
+      if (!currentQuestion) return;
+      setAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }));
+    },
+    [currentQuestion]
+  );
 
-  const handleNext = async () => {
-    // Validação: não permite avançar se não tiver perguntas ou respostas
-    if (questions.length === 0) return;
-
-    const answeredCount = Object.keys(answers).length;
-
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    } else if (answeredCount === questions.length) {
-      // Só submete se todas as perguntas foram respondidas
-      await submitAnswers();
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    }
-  };
-
-  const submitAnswers = async () => {
+  const submitAnswers = useCallback(async () => {
     setScreen('loading');
-
     try {
       const userId = user?.id || `user_${Date.now()}`;
       const response = await fetch(`${API_URL}/profile/submit`, {
@@ -119,28 +117,26 @@ export function Questionnaire() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, answers }),
       });
-
       const data = await response.json();
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       if (data.success) {
-        // Salvar perfil no Supabase
         try {
+          const tipoPerfil = data.profile?.type || data.profile;
           await salvarPerfilInvestidor({
-            perfilRisco: data.profile?.type || data.profile,
+            perfilRisco: tipoPerfil,
             idade: answers[1],
             objetivo_principal: answers[2],
             renda_mensal: answers[3],
-            nivel_conhecimento: answers[4] ? Number(answers[4] === 'A' ? 1 : answers[4] === 'B' ? 2 : answers[4] === 'C' ? 3 : 4) : undefined,
+            nivel_conhecimento: answers[4]
+              ? Number(answers[4] === 'A' ? 1 : answers[4] === 'B' ? 2 : answers[4] === 'C' ? 3 : 4)
+              : undefined,
             horizonte_investimento: answers[5],
-            respostas_completas: { ...answers, perfilRisco: data.profile?.type || data.profile },
+            respostas_completas: { ...answers, perfilRisco: tipoPerfil },
           });
-          console.log('Perfil salvo no Supabase com sucesso!');
         } catch (saveError) {
           console.error('Erro ao salvar perfil no Supabase:', saveError);
-          // Não bloqueia o fluxo, apenas loga o erro
         }
-
         setResult(data);
         setScreen('result');
       } else {
@@ -152,211 +148,512 @@ export function Questionnaire() {
       setScreen('questions');
       console.error('Erro ao enviar respostas:', err);
     }
+  }, [answers, user]);
+
+  const handleNext = useCallback(() => {
+    if (totalQuestions === 0) return;
+    const answeredCount = Object.keys(answers).length;
+    if (currentIndex < totalQuestions - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    } else if (answeredCount === totalQuestions) {
+      void submitAnswers();
+    }
+  }, [answers, currentIndex, totalQuestions, submitAnswers]);
+
+  const handlePrev = useCallback(() => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1);
+    }
+  }, [currentIndex]);
+
+  const handleBack = () => {
+    if (screen === 'questions') {
+      if (currentIndex === 0) setScreen('intro');
+      else handlePrev();
+    } else if (screen === 'result') {
+      router.push('/dashboard');
+    } else {
+      router.push('/');
+    }
   };
 
   const handleRestart = () => {
     setCurrentIndex(0);
     setAnswers({});
     setResult(null);
+    setError(null);
     setScreen('intro');
   };
 
+  // Keyboard shortcuts: A/B/C/D + arrows + Enter (only while answering)
+  useEffect(() => {
+    if (screen !== 'questions' || !currentQuestion) return;
 
-  const currentQuestion = questions[currentIndex];
-  const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
-  const progress = questions.length > 0 ? ((currentIndex + 1) / questions.length) * 100 : 0;
-  const isLastQuestion = currentIndex === questions.length - 1;
+    const onKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+      const key = e.key.toLowerCase();
+      if (['a', 'b', 'c', 'd'].includes(key)) {
+        const idx = key.charCodeAt(0) - 97;
+        if (idx < currentQuestion.options.length) {
+          handleAnswerSelect(currentQuestion.options[idx].value);
+          e.preventDefault();
+        }
+      } else if (e.key === 'ArrowLeft') {
+        if (currentIndex > 0) {
+          handlePrev();
+          e.preventDefault();
+        }
+      } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
+        if (currentAnswer) {
+          handleNext();
+          e.preventDefault();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [screen, currentQuestion, currentAnswer, currentIndex, handleAnswerSelect, handleNext, handlePrev]);
+
+  // Scroll to top on screen / question change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [screen, currentIndex]);
+
+  const showProgress = screen === 'questions' && totalQuestions > 0;
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        {/* Header com Logo */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm">Voltar</span>
-            </Link>
-            <Link href="/" className="flex items-center gap-2">
-              <Image
-                src="/brand/nuvary-icon.png"
-                alt="Nuvary Invest"
-                width={36}
-                height={36}
-                className="h-9 w-auto"
-              />
-              <div className="flex flex-col leading-none">
-                <span className="text-base font-bold text-foreground">Nuvary</span>
-                <span className="text-xs font-medium text-[#00B8D9]">INVEST</span>
-              </div>
-            </Link>
+    <div className={styles.shell}>
+      {/* TOPBAR */}
+      <header className={styles.topbar}>
+        <button type="button" className={styles.backBtn} onClick={handleBack}>
+          <ArrowLeft />
+          Voltar
+        </button>
+        <div className={styles.topbarBrand}>
+          <div className={styles.brandMark}>
+            <Image
+              src="/brand/nuvary-icon.png"
+              alt="Nuvary Invest"
+              width={36}
+              height={36}
+            />
           </div>
-        </motion.div>
+          <div>
+            <div className={styles.brandName}>Nuvary</div>
+            <div className={styles.brandSub}>INVEST</div>
+          </div>
+        </div>
+      </header>
 
-        {/* Error Message */}
-        {error && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-[#EF4444]/10 text-[#EF4444] p-4 rounded-lg mb-6 text-center text-sm"
-          >
-            {error}
-          </motion.div>
+      {/* PROGRESS */}
+      {showProgress && (
+        <div className={styles.progressWrap}>
+          <div className={styles.progressMeta}>
+            <span className={styles.progressStep}>
+              Pergunta {currentIndex + 1}{' '}
+              <span className={styles.progressTotal}>de {totalQuestions}</span>
+            </span>
+            <span className={styles.progressPct}>{progressPct}%</span>
+          </div>
+          <div className={styles.progressBar}>
+            <div
+              className={styles.progressFill}
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      <main className={styles.main}>
+        {error && <div className={styles.errorBanner}>{error}</div>}
+
+        {screen === 'intro' && (
+          <IntroState
+            isLoading={isLoadingQuestions}
+            disabled={isLoadingQuestions || totalQuestions === 0}
+            onStart={handleStart}
+          />
         )}
 
-        <AnimatePresence mode="wait">
-          {/* Intro Screen */}
-          {screen === 'intro' && (
-            <motion.div
-              key="intro"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-            >
-              <Card className="border border-border shadow-lg">
-                <CardContent className="p-8 text-center">
-                  <div className="w-20 h-20 nuvary-gradient rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <BarChart3 className="w-10 h-10 text-white" />
-                  </div>
+        {screen === 'questions' && currentQuestion && (
+          <QuestionState
+            question={currentQuestion}
+            index={currentIndex}
+            total={totalQuestions}
+            selected={currentAnswer}
+            isLast={isLastQuestion}
+            onSelect={handleAnswerSelect}
+            onPrev={handlePrev}
+            onNext={handleNext}
+          />
+        )}
 
-                  <h2 className="text-2xl font-bold mb-3 text-foreground">
-                    {STRINGS.perfil.questionarioDePerfil}
-                  </h2>
-                  <p className="text-muted-foreground mb-8 leading-relaxed">
-                    Responda 11 perguntas rápidas e descubra qual é o seu perfil
-                    de investidor. O resultado vai te ajudar a tomar melhores
-                    decisões de investimento.
-                  </p>
+        {screen === 'loading' && <LoadingState />}
 
-                  <div className="grid grid-cols-3 gap-4 mb-8">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-[#00B8D9]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
-                        <Target className="w-6 h-6 text-[#00B8D9]" />
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        11 perguntas
-                      </span>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-[#00B8D9]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
-                        <Clock className="w-6 h-6 text-[#00B8D9]" />
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        2 minutos
-                      </span>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-[#00B8D9]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
-                        <BarChart3 className="w-6 h-6 text-[#00B8D9]" />
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        Resultado instantâneo
-                      </span>
-                    </div>
-                  </div>
+        {screen === 'result' && result && (
+          <ResultState
+            result={result}
+            onWallet={() => router.push('/carteira')}
+            onRestart={handleRestart}
+          />
+        )}
+      </main>
+    </div>
+  );
+}
 
-                  <Button
-                    onClick={handleStart}
-                    size="lg"
-                    className="w-full nuvary-gradient border-0 font-semibold"
-                    disabled={isLoadingQuestions || questions.length === 0}
-                  >
-                    {isLoadingQuestions ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Carregando perguntas...
-                      </>
-                    ) : questions.length === 0 ? (
-                      'Erro ao carregar'
-                    ) : (
-                      STRINGS.perfil.comecarQuestionario
-                    )}
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
+// ============================================================
+// INTRO
+// ============================================================
+function IntroState({
+  isLoading,
+  disabled,
+  onStart,
+}: {
+  isLoading: boolean;
+  disabled: boolean;
+  onStart: () => void;
+}) {
+  return (
+    <section className={styles.state}>
+      <div className={styles.introCard}>
+        <div className={styles.introIcon}>
+          <BarChart3 />
+        </div>
+        <h1 className={styles.introTitle}>Questionário de Perfil de Investidor</h1>
+        <p className={styles.introDesc}>
+          Responda 11 perguntas rápidas e descubra qual é o seu perfil. O resultado vai te
+          ajudar a tomar melhores decisões de investimento.
+        </p>
+
+        <div className={styles.introKpis}>
+          <KpiCard icon={KPI_ICONS[0]} value="11" label="Perguntas objetivas" />
+          <KpiCard icon={KPI_ICONS[1]} value="2 min" label="Tempo médio" />
+          <KpiCard icon={KPI_ICONS[2]} value="Instantâneo" label="Resultado na hora" />
+        </div>
+
+        <button
+          type="button"
+          className={styles.introCta}
+          onClick={onStart}
+          disabled={disabled}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="animate-spin" />
+              Carregando perguntas...
+            </>
+          ) : (
+            <>
+              Começar Questionário
+              <ArrowRight />
+            </>
           )}
+        </button>
 
-          {/* Questions Screen */}
-          {screen === 'questions' && currentQuestion && (
-            <motion.div
-              key="questions"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="space-y-6"
-            >
-              {/* Question Card */}
-              <QuestionCard
-                question={currentQuestion}
-                currentIndex={currentIndex}
-                totalQuestions={questions.length}
-                selectedAnswer={currentAnswer}
-                onAnswerSelect={handleAnswerSelect}
-              />
+        <div className={styles.introNote}>
+          <span className={styles.introNoteItem}>
+            <CheckCircle2 />
+            Sem armazenar dados sensíveis
+          </span>
+          <span className={styles.introNoteItem}>
+            <CheckCircle2 />
+            Refaça quando quiser
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-              {/* Navigation */}
-              <div className="flex gap-4">
-                <Button
-                  variant="outline"
-                  onClick={handlePrev}
-                  disabled={currentIndex === 0}
-                  className="flex-1 border-border text-muted-foreground hover:text-foreground hover:border-foreground"
-                >
-                  <ChevronLeft className="w-4 h-4 mr-2" />
-                  Anterior
-                </Button>
-                <Button
-                  onClick={handleNext}
-                  disabled={!currentAnswer}
-                  className="flex-1 nuvary-gradient border-0 font-semibold"
-                >
-                  {isLastQuestion ? 'Ver Resultado' : 'Próxima'}
-                  {!isLastQuestion && <ChevronRight className="w-4 h-4 ml-2" />}
-                </Button>
+function KpiCard({
+  icon: Icon,
+  value,
+  label,
+}: {
+  icon: typeof Target;
+  value: string;
+  label: string;
+}) {
+  return (
+    <div className={styles.introKpi}>
+      <div className={styles.introKpiIc}>
+        <Icon />
+      </div>
+      <div className={styles.introKpiVal}>{value}</div>
+      <div className={styles.introKpiLbl}>{label}</div>
+    </div>
+  );
+}
+
+// ============================================================
+// QUESTION
+// ============================================================
+function QuestionState({
+  question,
+  index,
+  total,
+  selected,
+  isLast,
+  onSelect,
+  onPrev,
+  onNext,
+}: {
+  question: Question;
+  index: number;
+  total: number;
+  selected: string | undefined;
+  isLast: boolean;
+  onSelect: (value: string) => void;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
+  return (
+    <section className={styles.state} key={question.id}>
+      <div className={styles.qCard}>
+        <div className={styles.qTag}>
+          Pergunta {index + 1} de {total}
+        </div>
+        <h2 className={styles.qTitle}>{question.question}</h2>
+        <div className={styles.options}>
+          {question.options.map((opt, i) => {
+            const letter = LETTERS[i] ?? String.fromCharCode(65 + i);
+            const isSelected = selected === opt.value;
+            return (
+              <button
+                type="button"
+                key={opt.value}
+                className={`${styles.option} ${isSelected ? styles.optionSelected : ''}`}
+                onClick={() => onSelect(opt.value)}
+              >
+                <div className={styles.optLetter}>{letter}</div>
+                <div className={styles.optText}>{opt.text}</div>
+                <div className={styles.optKbd}>{letter}</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className={styles.qNav}>
+        <button
+          type="button"
+          className={`${styles.navBtn} ${styles.navPrev}`}
+          onClick={onPrev}
+          disabled={index === 0}
+        >
+          <ChevronLeft />
+          Anterior
+        </button>
+        <button
+          type="button"
+          className={`${styles.navBtn} ${styles.navNext} ${selected ? styles.navNextReady : ''}`}
+          onClick={onNext}
+          disabled={!selected}
+        >
+          {isLast ? 'Ver resultado' : 'Próxima'}
+          <ChevronRight />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// LOADING
+// ============================================================
+function LoadingState() {
+  return (
+    <section className={styles.state}>
+      <div className={styles.loadingCard}>
+        <div className={styles.loadingSpinner}>
+          <Loader2 />
+        </div>
+        <div className={styles.loadingTitle}>Analisando suas respostas...</div>
+        <div className={styles.loadingDesc}>Calculando seu perfil de investidor</div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// RESULT
+// ============================================================
+function ResultState({
+  result,
+  onWallet,
+  onRestart,
+}: {
+  result: QuestionnaireResult;
+  onWallet: () => void;
+  onRestart: () => void;
+}) {
+  const tipoBackend =
+    typeof result.profile === 'string' ? result.profile : result.profile?.type;
+  const tipo: PerfilTipo = normalizePerfilTipo(tipoBackend);
+  const profile = PROFILES[tipo];
+  const HeroIcon = profile.icon;
+
+  return (
+    <section className={styles.state}>
+      <div className={styles.resultHero} data-perfil={tipo}>
+        <div className={styles.resultHeroInner}>
+          <div className={styles.resultIcon}>
+            <HeroIcon />
+          </div>
+          <div className={styles.resultLabel}>Seu perfil é</div>
+          <h1 className={styles.resultName}>{profile.name}</h1>
+          <p className={styles.resultDesc}>{profile.description}</p>
+        </div>
+      </div>
+
+      <AllocationCard profile={profile} />
+
+      <div className={styles.profileTips}>
+        <h3>
+          <HelpCircle />
+          O que esperar do perfil{' '}
+          <span className={styles.tipsName} style={{ color: profile.color }}>
+            {profile.name}
+          </span>
+        </h3>
+        <div className={styles.tipsGrid}>
+          {profile.tips.map((tip) => {
+            const TipIcon = tip.icon;
+            return (
+              <div key={tip.title} className={styles.tip}>
+                <div className={styles.tipIc}>
+                  <TipIcon />
+                </div>
+                <strong className={styles.tipTitle}>{tip.title}</strong>
+                <span className={styles.tipDesc}>{tip.description}</span>
               </div>
-            </motion.div>
-          )}
+            );
+          })}
+        </div>
+      </div>
 
-          {/* Loading Screen */}
-          {screen === 'loading' && (
-            <motion.div
-              key="loading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <Card className="border border-border shadow-lg">
-                <CardContent className="p-12 text-center">
-                  <div className="w-16 h-16 nuvary-gradient rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Loader2 className="w-8 h-8 text-white animate-spin" />
+      <div className={styles.resultActions}>
+        <button type="button" className={`${styles.resultCta} ${styles.resultCtaPrimary}`} onClick={onWallet}>
+          <Wallet />
+          Ir para Minha Carteira
+        </button>
+        <button
+          type="button"
+          className={`${styles.resultCta} ${styles.resultCtaSecondary}`}
+          onClick={onRestart}
+        >
+          <RefreshCw />
+          Refazer Questionário
+        </button>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// ALLOCATION (donut + stacked bar + legend)
+// ============================================================
+function AllocationCard({ profile }: { profile: (typeof PROFILES)[PerfilTipo] }) {
+  const RADIUS = 42;
+  const C = 2 * Math.PI * RADIUS;
+
+  // Recompute cumulative offsets for the donut once per profile change.
+  const segments = useMemo(() => {
+    let cumulative = 0;
+    return profile.allocation.map((item) => {
+      const dashLen = (item.value / 100) * C;
+      const offset = -((cumulative / 100) * C);
+      cumulative += item.value;
+      return { item, dashLen, offset };
+    });
+  }, [profile, C]);
+
+  // Stagger donut animation: start at 0 then fill on mount.
+  const [animated, setAnimated] = useState(false);
+  const lastProfileRef = useRef<string>('');
+  useEffect(() => {
+    if (lastProfileRef.current !== profile.type) {
+      setAnimated(false);
+      lastProfileRef.current = profile.type;
+      const t = setTimeout(() => setAnimated(true), 50);
+      return () => clearTimeout(t);
+    }
+    setAnimated(true);
+  }, [profile.type]);
+
+  return (
+    <div className={styles.allocationCard}>
+      <div className={styles.allocationHead}>
+        <h2>
+          <PieChart />
+          Alocação Recomendada
+        </h2>
+        <span className={styles.allocationBadge}>Sugerida pela IA</span>
+      </div>
+
+      <div className={styles.allocationGrid}>
+        <div className={styles.allocationDonut}>
+          <svg viewBox="0 0 100 100">
+            <circle className={styles.donutTrack} cx="50" cy="50" r={RADIUS} />
+            {segments.map(({ item, dashLen, offset }) => (
+              <circle
+                key={item.name}
+                className={styles.donutSeg}
+                cx="50"
+                cy="50"
+                r={RADIUS}
+                stroke={item.color}
+                strokeDasharray={animated ? `${dashLen} ${C}` : `0 ${C}`}
+                strokeDashoffset={offset}
+              />
+            ))}
+          </svg>
+          <div className={styles.donutCenter}>
+            <div>
+              <div className={styles.donutLbl}>Risco</div>
+              <div className={styles.donutVal} style={{ color: profile.color }}>
+                {profile.risk}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className={styles.allocationBar}>
+            {profile.allocation.map((item) => (
+              <div
+                key={item.name}
+                className={styles.barSeg}
+                style={{ width: `${item.value}%`, background: item.color }}
+                title={`${item.name}: ${item.value}%`}
+              >
+                {item.value >= 10 ? `${item.value}%` : ''}
+              </div>
+            ))}
+          </div>
+          <div className={styles.allocationLegend}>
+            {profile.allocation.map((item) => {
+              const LegendIcon = item.icon;
+              return (
+                <div key={item.name} className={styles.legendRow}>
+                  <div className={styles.legendIc} style={{ color: item.color }}>
+                    <LegendIcon />
                   </div>
-                  <p className="text-lg font-semibold text-foreground">Analisando suas respostas...</p>
-                  <p className="text-muted-foreground mt-2">
-                    Calculando seu perfil de investidor
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-
-          {/* Result Screen */}
-          {screen === 'result' && result && (
-            <motion.div
-              key="result"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <ResultCard result={result} onRestart={handleRestart} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  <div className={styles.legendName}>{item.name}</div>
+                  <div className={styles.legendVal}>{item.value}%</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+
