@@ -20,6 +20,7 @@ import {
   gerarConversaId,
   contarMensagens,
   listarConversas,
+  contarConversasIniciadasHoje,
 } from '@/services/chatService';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePremium } from '@/hooks/usePremium';
@@ -190,12 +191,12 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     }
   }, [messages]);
 
-  // Conta conversas do usuario (para o gate Free de 10)
+  // Conta conversas que o usuario iniciou HOJE (gate Free de 10/dia, renova a meia-noite)
   const recarregarTotalConversas = useCallback(async () => {
     if (!user) return;
     try {
-      const lista = await listarConversas();
-      setTotalConversas(lista.length);
+      const total = await contarConversasIniciadasHoje();
+      setTotalConversas(total);
     } catch {
       // silencioso — gate usa 0 e nao bloqueia
     }
@@ -531,10 +532,10 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
                     <strong style={{ color: 'var(--t1)' }}>
                       {totalConversas} de {FREE_LIMITS.MAX_CONVERSAS}
                     </strong>{' '}
-                    conversas.
+                    conversas hoje.
                     {limiteConversasAtingido
-                      ? ' Faça upgrade para conversas ilimitadas.'
-                      : ` Restam ${FREE_LIMITS.MAX_CONVERSAS - totalConversas}.`}
+                      ? ' Limite renova amanhã. Faça upgrade para conversas ilimitadas.'
+                      : ` Restam ${FREE_LIMITS.MAX_CONVERSAS - totalConversas} hoje.`}
                   </span>
                   <button
                     onClick={() => router.push('/premium')}

@@ -78,6 +78,47 @@ export async function buscarMensagensPorConversa(conversaId: string): Promise<Me
   return data || [];
 }
 
+/**
+ * Conta quantas conversas NOVAS o usuario iniciou hoje (00:00 ate agora).
+ * Usado no gate Free de 10 conversas/dia. Conversas iniciadas em dias anteriores
+ * (mesmo que continuadas hoje) nao entram na contagem.
+ */
+export async function contarConversasIniciadasHoje(): Promise<number> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return 0;
+
+  const inicioDia = new Date();
+  inicioDia.setHours(0, 0, 0, 0);
+  const inicioISO = inicioDia.toISOString();
+
+  // Conversa_ids com pelo menos uma mensagem hoje
+  const { data: hoje, error: errHoje } = await supabase
+    .from('chat_historico')
+    .select('conversa_id')
+    .eq('user_id', user.id)
+    .gte('created_at', inicioISO)
+    .not('conversa_id', 'is', null);
+
+  if (errHoje) throw errHoje;
+  const idsHoje = Array.from(
+    new Set((hoje ?? []).map((m) => m.conversa_id).filter((id): id is string => !!id))
+  );
+  if (idsHoje.length === 0) return 0;
+
+  // Quais desses ja existiam ANTES de hoje? (continuacao, nao conta)
+  const { data: antes, error: errAntes } = await supabase
+    .from('chat_historico')
+    .select('conversa_id')
+    .eq('user_id', user.id)
+    .lt('created_at', inicioISO)
+    .in('conversa_id', idsHoje);
+
+  if (errAntes) throw errAntes;
+  const idsContinuando = new Set((antes ?? []).map((m) => m.conversa_id));
+
+  return idsHoje.filter((id) => !idsContinuando.has(id)).length;
+}
+
 export async function listarConversas(): Promise<Conversa[]> {
   const { data: { user } } = await supabase.auth.getUser();
 
