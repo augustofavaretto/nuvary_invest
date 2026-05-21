@@ -71,7 +71,7 @@ const STEPS = [
   {
     n: '01',
     title: 'Crie sua conta grátis',
-    text: 'Cadastro rápido com seus dados básicos. Sem cartão de crédito, sem letra miúda.',
+    text: 'Cadastro rápido com seus dados básicos. Sem cartão de crédito.',
   },
   {
     n: '02',
@@ -560,7 +560,7 @@ export default function LandingPage() {
               Comece grátis. Evolua quando quiser.
             </h2>
             <p className="mt-4 text-slate-400 text-lg">
-              Sem fidelidade. Sem letra miúda. Cancele em um clique.
+              Sem fidelidade. Cancele em um clique.
             </p>
           </div>
 
