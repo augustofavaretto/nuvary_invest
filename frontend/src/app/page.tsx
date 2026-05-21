@@ -139,7 +139,7 @@ const FAQS = [
   },
   {
     q: 'Como funcionam as recomendações da IA?',
-    a: 'Combinamos seu perfil de risco, objetivos e horizonte com dados de mercado em tempo real (B3, Alpaca, NewsAPI) para sugerir alocações coerentes. Cada recomendação vem com explicação clara — você decide se aplica ou não.',
+    a: 'Combinamos seu perfil de risco e objetivos com dados de mercado em tempo real para sugerir alocações coerentes. Cada recomendação vem com explicação clara e você decide se aplica ou não.',
   },
 ];
 
