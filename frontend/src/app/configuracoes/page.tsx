@@ -94,7 +94,7 @@ export default function ConfiguracoesPage() {
       if (res.ok && json.ok) {
         setTesteResultado({
           ok: true,
-          msg: `E-mail enviado para ${json.sentTo} (Resend ID: ${json.resendId ?? '—'}). ${json.observacao ?? ''}`,
+          msg: `E-mail enviado para ${json.sentTo}.`,
         });
       } else {
         setTesteResultado({
