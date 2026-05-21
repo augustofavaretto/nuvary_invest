@@ -503,7 +503,7 @@ export default function LandingPage() {
           {/* Texto */}
           <div>
             <p className="text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">
-              Assistente IA
+              Assistente Nuvary
             </p>
             <h2
               className="font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight"

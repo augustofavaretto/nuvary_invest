@@ -315,7 +315,7 @@ const docs: DocItem[] = [
   {
     number: '07',
     title: 'Chatbot de Investimentos',
-    description: 'Assistente IA com OpenAI, contexto de perfil e sugestões personalizadas',
+    description: 'Assistente Nuvary com OpenAI, contexto de perfil e sugestões personalizadas',
     date: 'Janeiro 2026',
     version: '1.6.0',
     status: 'Concluído',
