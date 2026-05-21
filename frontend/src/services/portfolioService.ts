@@ -251,7 +251,7 @@ export async function fetchAssetPrice(
       price: null,
       currency: 'BRL',
       source: 'API',
-      error: 'Preço não disponível para esta criptomoeda',
+      error: 'Não conseguimos buscar a cotação dessa cripto agora. Informe o preço manualmente conferindo o valor atual na sua corretora.',
     };
   }
 
@@ -282,7 +282,7 @@ export async function fetchAssetPrice(
       price: null,
       currency: 'BRL',
       source: 'API',
-      error: 'Preço não disponível para este BDR.',
+      error: 'Não conseguimos buscar a cotação desse BDR agora. Informe o preço manualmente conferindo o valor atual na sua corretora.',
     };
   }
 
@@ -301,7 +301,7 @@ export async function fetchAssetPrice(
       price: null,
       currency: 'BRL',
       source: 'API',
-      error: 'Preço não disponível. Verifique o código do ativo.',
+      error: 'Não conseguimos buscar a cotação agora. Verifique o ticker e informe o preço manualmente conferindo o valor atual na sua corretora.',
     };
   }
 
@@ -320,7 +320,7 @@ export async function fetchAssetPrice(
       price: null,
       currency: 'BRL',
       source: 'API',
-      error: 'Preço não disponível para este FII.',
+      error: 'Não conseguimos buscar a cotação desse FII agora. Informe o preço manualmente conferindo o valor atual na sua corretora.',
     };
   }
 

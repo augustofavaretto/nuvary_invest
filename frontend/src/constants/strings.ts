@@ -166,7 +166,7 @@ export const STRINGS = {
     ate: 'até',
     adicionarAtivo: 'Adicionar Ativo',
     precoMedio: 'Preço Médio (R$)',
-    precoNaoDisponivel: 'Preço não disponível via API',
+    precoNaoDisponivel: 'Não conseguimos buscar a cotação agora. Informe o preço manualmente conferindo o valor atual na sua corretora.',
     precoObtidoVia: 'Preço obtido via',
     tickerCodigo: 'Ticker / Código',
     codigo: 'Código',
@@ -183,7 +183,7 @@ export const STRINGS = {
     valorInvestido: 'Valor Investido (R$)',
     valorTotalAplicado: 'Valor Total Aplicado',
     taxaObtidaVia: 'Taxa obtida via',
-    taxaNaoDisponivel: 'Informe a taxa contratada manualmente.',
+    taxaNaoDisponivel: 'Não conseguimos buscar a taxa agora. Informe a taxa contratada manualmente conferindo o valor no contrato/extrato.',
     selicReferencia: (taxa: number) => `Referência: Selic/CDI atual ${taxa.toFixed(2)}% a.a. (Brapi)`,
   },
 

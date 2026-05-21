@@ -258,7 +258,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
           price: null,
           currency: 'BRL',
           source: 'API',
-          error: 'Erro ao buscar preço. Informe manualmente.',
+          error: 'Não conseguimos buscar a cotação agora. Informe o preço manualmente conferindo o valor atual na sua corretora.',
         });
       } finally {
         setPriceLoading(false);
