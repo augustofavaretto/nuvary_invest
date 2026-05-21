@@ -43,7 +43,7 @@ const BENEFITS = [
   {
     icon: Brain,
     title: 'Inteligência Artificial',
-    text: 'Recomendações personalizadas baseadas no seu perfil de risco, horizonte e objetivos — explicadas em linguagem simples.',
+    text: 'Recomendações personalizadas baseadas no seu perfil de risco e objetivos — explicadas em linguagem simples.',
   },
   {
     icon: ChartPie,
@@ -57,8 +57,8 @@ const BENEFITS = [
   },
   {
     icon: MessageSquare,
-    title: 'Chatbot Inteligente',
-    text: 'Assistente virtual 24/7 para tirar dúvidas sobre investimentos, conceitos e análises de mercado em tempo real.',
+    title: 'Assistente Nuvary',
+    text: 'Assistente virtual disponível sempre que precisar para tirar dúvidas sobre investimentos, conceitos e análises de mercado em tempo real.',
   },
   {
     icon: Bell,
