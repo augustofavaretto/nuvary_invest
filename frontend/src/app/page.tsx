@@ -90,7 +90,7 @@ const TESTIMONIALS = [
     name: 'Mariana Castro',
     role: 'Designer, 27 anos · Porto Alegre',
     text:
-      'Eu sabia que precisava investir, mas travava com tanto jargão. O chatbot da Nuvary me explicou cada recomendação como se fosse um amigo. Em um mês já tinha reserva de emergência montada.',
+      'Eu queria começar a investir, mas não entendia nada. Aqui as explicações são claras e me ajudaram a tomar as primeiras decisões com segurança. Em um mês já tinha minha reserva de emergência organizada.',
     rating: 5,
     initials: 'MC',
   },
@@ -98,7 +98,7 @@ const TESTIMONIALS = [
     name: 'Rafael Bonato',
     role: 'Engenheiro de Software, 34 anos · São Paulo',
     text:
-      'Migrei da XP para acompanhar tudo num lugar só. Os alertas em tempo real e o chat IA contextualizado já pagam o Premium — economizo umas 4h por mês que gastava planilhando carteira.',
+      'Eu acompanhava minha carteira em planilhas e perdia muito tempo com isso. Agora vejo tudo num só lugar e recebo avisos quando algo importante acontece. Ganhei tempo e tranquilidade.',
     rating: 5,
     initials: 'RB',
   },
@@ -106,7 +106,7 @@ const TESTIMONIALS = [
     name: 'Júlia Mendes',
     role: 'Estudante de Administração, 21 anos · Curitiba',
     text:
-      'As trilhas de educação financeira são absurdamente didáticas. Aprendi mais aqui em 3 semanas do que em meses tentando ler conteúdo solto no YouTube.',
+      'As aulas são curtas e fáceis de entender. Em poucas semanas aprendi mais do que tentando estudar sozinha por meses. Hoje me sinto preparada para investir.',
     rating: 5,
     initials: 'JM',
   },
@@ -114,7 +114,7 @@ const TESTIMONIALS = [
     name: 'Carlos Henrique Lima',
     role: 'Médico, 41 anos · Belo Horizonte',
     text:
-      'Não tenho tempo para acompanhar mercado todo dia. A Nuvary cuida do monitoramento e me avisa só quando algo realmente importa. Tranquilidade que vale o preço.',
+      'Não tenho tempo para acompanhar o mercado todos os dias. A plataforma cuida disso por mim e me avisa só quando algo importa de verdade. Vale muito a pena.',
     rating: 5,
     initials: 'CHL',
   },
