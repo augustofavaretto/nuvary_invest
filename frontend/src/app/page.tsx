@@ -656,7 +656,7 @@ export default function LandingPage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section id="depoimentos" className="py-20 sm:py-28">
+      <section id="depoimentos" className="py-20 sm:py-28 overflow-hidden">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="max-w-2xl">
             <p className="text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">
@@ -669,20 +669,31 @@ export default function LandingPage() {
               Histórias reais de quem deixou o medo de lado.
             </h2>
           </div>
+        </div>
 
-          <div className="mt-14 grid md:grid-cols-2 gap-5">
-            {TESTIMONIALS.map((t, i) => (
-              <motion.figure
-                key={t.name}
-                initial={reducedMotion ? false : { opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="p-7 rounded-2xl border border-white/[0.06] bg-white/[0.02] flex flex-col"
+        {/* Carrossel marquee horizontal infinito — duplica a lista pra loop sem corte */}
+        <div className="mt-14 relative group">
+          {/* Mascara de fade nas bordas */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#020817] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#020817] to-transparent z-10" />
+
+          <motion.div
+            className="flex gap-5 w-max"
+            animate={reducedMotion ? undefined : { x: ['0%', '-50%'] }}
+            transition={
+              reducedMotion
+                ? undefined
+                : { duration: 45, repeat: Infinity, ease: 'linear' }
+            }
+          >
+            {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
+              <figure
+                key={`${t.name}-${i}`}
+                className="shrink-0 w-[320px] sm:w-[420px] p-7 rounded-2xl border border-white/[0.06] bg-white/[0.02] flex flex-col"
               >
                 <div className="flex items-center gap-1 text-cyan-400 mb-4">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
+                  {Array.from({ length: t.rating }).map((_, j) => (
+                    <Star key={j} size={14} fill="currentColor" strokeWidth={0} />
                   ))}
                 </div>
                 <blockquote className="text-slate-200 leading-relaxed">
@@ -700,9 +711,9 @@ export default function LandingPage() {
                     <div className="text-xs text-slate-400">{t.role}</div>
                   </div>
                 </figcaption>
-              </motion.figure>
+              </figure>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
