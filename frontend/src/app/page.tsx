@@ -43,7 +43,7 @@ const BENEFITS = [
   {
     icon: Brain,
     title: 'Inteligência Artificial',
-    text: 'Recomendações personalizadas baseadas no seu perfil de risco e objetivos — explicadas em linguagem simples.',
+    text: 'Recomendações personalizadas baseadas no seu perfil de risco e objetivos, explicadas em linguagem simples.',
   },
   {
     icon: ChartPie,
@@ -53,7 +53,7 @@ const BENEFITS = [
   {
     icon: GraduationCap,
     title: 'Educação Financeira',
-    text: 'Trilhas progressivas com aulas, glossários e webinars para você decidir com autonomia — não no escuro.',
+    text: 'Trilhas progressivas com aulas, glossários e webinars para você decidir com autonomia, não no escuro.',
   },
   {
     icon: MessageSquare,
@@ -63,7 +63,7 @@ const BENEFITS = [
   {
     icon: Bell,
     title: 'Monitoramento em Tempo Real',
-    text: 'Alertas de variação, eventos e risco direto no painel — sem precisar acompanhar manualmente toda hora.',
+    text: 'Alertas de variação, eventos e risco direto no painel, sem precisar acompanhar manualmente toda hora.',
   },
 ];
 
