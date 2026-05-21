@@ -77,19 +77,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .eq('id', userId)
       .single();
 
+    const meta = (user?.user_metadata ?? {}) as Record<string, unknown>;
+    // Aceita varios formatos de chave por compatibilidade (nome, full_name, name).
+    const nomeMeta =
+      (meta.nome as string | undefined) ||
+      (meta.full_name as string | undefined) ||
+      (meta.name as string | undefined) ||
+      '';
+
     if (data) {
-      // Preenche campos extras do user_metadata como fallback se não estiverem no perfil
-      const meta = user?.user_metadata ?? {};
+      // Preenche campos extras do user_metadata como fallback se não estiverem no perfil.
+      // Para `nome`, usa OR (nao ??) pra que string vazia no DB caia no metadata.
       setProfile({
         ...data,
+        nome: data.nome || nomeMeta,
         cpf: data.cpf ?? meta.cpf ?? null,
         data_nascimento: data.data_nascimento ?? meta.data_nascimento ?? null,
         telefone: data.telefone ?? meta.telefone ?? null,
         aceite_termos: data.aceite_termos ?? meta.aceite_termos ?? false,
         data_aceite_termos: data.data_aceite_termos ?? meta.data_aceite_termos ?? null,
       });
+    } else if (user) {
+      // Sem linha na tabela `profiles` — monta um stub a partir do user_metadata
+      // pra que Dashboard/TopBar ja exibam o nome certo.
+      setProfile({
+        id: user.id,
+        nome: nomeMeta,
+        email: user.email ?? '',
+        aceite_termos: (meta.aceite_termos as boolean) ?? false,
+        cpf: (meta.cpf as string | null) ?? null,
+        data_nascimento: (meta.data_nascimento as string | null) ?? null,
+        telefone: (meta.telefone as string | null) ?? null,
+      });
     } else {
-      setProfile(data);
+      setProfile(null);
     }
   }
 
