@@ -7,7 +7,6 @@ import { User, IdCard, Calendar, Phone, Mail } from 'lucide-react';
 import { AuthLayout } from '@/components/public/AuthLayout';
 import { Field, PasswordInput } from '@/components/public/AuthFields';
 import { cadastrar } from '@/services/authService';
-import supabase from '@/lib/supabase';
 import { isValidCPF } from '@/lib/cpf';
 
 // Mascaras visuais (CPF, data, telefone) — apenas display.
@@ -128,10 +127,11 @@ export default function CadastroPage() {
         aceiteTermos: form.aceite,
       });
 
-      // Se a sessao foi criada (email confirmation desligado), vai direto
-      // para o questionario. Senao, leva para login com flag de sucesso.
-      const { data: { session } } = await supabase.auth.getSession();
-      router.push(session ? '/questionario' : '/login?registered=true');
+      // Apos cadastro vai sempre pro questionario. Se a sessao ja existe
+      // (email confirmation desligado no Supabase) o questionario carrega
+      // direto; se nao, o usuario confirma o email e o link redireciona
+      // pra /questionario tambem (emailRedirectTo configurado em authService).
+      router.push('/questionario');
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       if (/already registered|already been registered/i.test(msg)) {
