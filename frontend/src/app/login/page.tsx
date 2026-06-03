@@ -21,9 +21,12 @@ function LoginContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [registered, setRegistered] = useState(false);
+  const [verifiqueEmail, setVerifiqueEmail] = useState(false);
 
   useEffect(() => {
-    if (searchParams.get('registered') === 'true') {
+    if (searchParams.get('verifique-email') === '1') {
+      setVerifiqueEmail(true);
+    } else if (searchParams.get('registered') === 'true') {
       setRegistered(true);
       const t = setTimeout(() => setRegistered(false), 5000);
       return () => clearTimeout(t);
@@ -81,6 +84,17 @@ function LoginContent() {
               Acesse sua conta para continuar
             </p>
           </header>
+
+          {verifiqueEmail && (
+            <div className="mb-5 rounded-lg border border-cyan-500/30 bg-cyan-500/5 px-3 py-3 text-sm text-cyan-200">
+              <p className="font-semibold mb-1">Confirme seu e-mail</p>
+              <p className="text-cyan-200/80">
+                Enviamos um link de confirmação. Acesse seu e-mail e clique no
+                link para ativar a conta. Depois disso você será levado direto
+                ao questionário de perfil.
+              </p>
+            </div>
+          )}
 
           {registered && (
             <div className="mb-5 rounded-lg border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm text-emerald-300">

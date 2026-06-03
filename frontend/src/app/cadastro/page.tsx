@@ -7,6 +7,7 @@ import { User, IdCard, Calendar, Phone, Mail } from 'lucide-react';
 import { AuthLayout } from '@/components/public/AuthLayout';
 import { Field, PasswordInput } from '@/components/public/AuthFields';
 import { cadastrar } from '@/services/authService';
+import supabase from '@/lib/supabase';
 import { isValidCPF } from '@/lib/cpf';
 
 // Mascaras visuais (CPF, data, telefone) — apenas display.
@@ -127,11 +128,14 @@ export default function CadastroPage() {
         aceiteTermos: form.aceite,
       });
 
-      // Apos cadastro vai sempre pro questionario. Se a sessao ja existe
-      // (email confirmation desligado no Supabase) o questionario carrega
-      // direto; se nao, o usuario confirma o email e o link redireciona
-      // pra /questionario tambem (emailRedirectTo configurado em authService).
-      router.push('/questionario');
+      // Com email confirmation LIGADO no Supabase nao ha sessao apos signUp:
+      // mandamos pra /login com flag pra mostrar "confirme seu email". O link
+      // de confirmacao no email aponta pra /questionario (emailRedirectTo
+      // em authService.ts), entao apos confirmar o usuario cai direto la.
+      // Se a sessao ja existir (email confirmation desligado), vai direto
+      // pro questionario.
+      const { data: { session } } = await supabase.auth.getSession();
+      router.push(session ? '/questionario' : '/login?verifique-email=1');
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       if (/already registered|already been registered/i.test(msg)) {
