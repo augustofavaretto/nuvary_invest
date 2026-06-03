@@ -3,6 +3,7 @@ import {
   createPreference,
   getPaymentById,
   getPreapprovalById,
+  cancelPreapproval,
   verifyWebhookSignature,
   PLANS,
 } from '../services/mercadopago.js';
@@ -93,6 +94,63 @@ export async function createPayment(req, res, next) {
       init_point: preference.init_point,
       preference_id: preference.id,
     });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// ============================================================
+// POST /api/mercadopago/cancel-subscription
+// Body: { userId }
+//
+// Cancela a assinatura Premium do usuario. Se houver preapproval
+// recorrente (cartao), cancela no MP. Em todos os casos marca o
+// profile como 'cancelled' — o acesso permanece ate subscription_expires_at.
+// ============================================================
+export async function cancelSubscription(req, res, next) {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: 'Campo obrigatorio: userId' });
+    }
+
+    const admin = getSupabaseAdmin();
+
+    const { data: profile, error } = await admin
+      .from('profiles')
+      .select('subscription_status, mp_preapproval_id')
+      .eq('id', userId)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!profile) {
+      return res.status(404).json({ error: 'Perfil nao encontrado' });
+    }
+    if (profile.subscription_status !== 'active') {
+      return res.status(400).json({ error: 'Nenhuma assinatura ativa para cancelar' });
+    }
+
+    // Cancela a recorrencia no MP (somente assinaturas de cartao tem preapproval)
+    if (profile.mp_preapproval_id) {
+      try {
+        await cancelPreapproval(profile.mp_preapproval_id);
+      } catch (mpErr) {
+        console.error('[MP cancel] Falha ao cancelar preapproval no MP:', mpErr?.message || mpErr);
+        // Segue mesmo assim — marca local como cancelled para refletir a intencao do usuario
+      }
+    }
+
+    // Marca como cancelado. Acesso continua valido ate subscription_expires_at.
+    await admin
+      .from('profiles')
+      .update({
+        subscription_status: 'cancelled',
+        subscription_updated_at: new Date().toISOString(),
+      })
+      .eq('id', userId);
+
+    return res.json({ ok: true, status: 'cancelled' });
   } catch (err) {
     next(err);
   }

@@ -5,8 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Bell, ChevronDown, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { Bell, ChevronDown, LogOut, Settings, Sparkles, User as UserIcon } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePremium } from '@/hooks/usePremium';
 
 interface TopBarProps {
   /** Opcional: substitui o sino padrao por um componente custom (ex: NotificationBell). */
@@ -17,6 +18,7 @@ interface TopBarProps {
 export function TopBar({ notificationSlot }: TopBarProps) {
   const router = useRouter();
   const { user, profile, logout } = useAuth();
+  const { isPremium } = usePremium();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -110,8 +112,9 @@ export function TopBar({ notificationSlot }: TopBarProps) {
           </span>
 
           <span className="hidden sm:flex flex-col text-left leading-tight">
-            <strong className="text-sm font-semibold text-[var(--t1)]">
+            <strong className="text-sm font-semibold text-[var(--t1)] flex items-center gap-1.5">
               {nome}
+              {isPremium && <ProBadge />}
             </strong>
             <small className="text-[11px] text-[var(--t2)] truncate max-w-[180px]">
               {email}
@@ -165,5 +168,22 @@ export function TopBar({ notificationSlot }: TopBarProps) {
         )}
       </div>
     </header>
+  );
+}
+
+// ── Badge PRO — identifica visualmente assinantes Premium ───────────────────
+function ProBadge() {
+  return (
+    <span
+      title="Assinante Premium"
+      className="inline-flex items-center gap-0.5 px-1.5 py-[1px] rounded-[var(--r-pill)] text-[9px] font-bold uppercase tracking-wider"
+      style={{
+        background: 'linear-gradient(135deg, var(--cyan), var(--cyan-700))',
+        color: 'white',
+      }}
+    >
+      <Sparkles className="w-2.5 h-2.5" />
+      PRO
+    </span>
   );
 }

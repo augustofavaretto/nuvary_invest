@@ -141,6 +141,18 @@ export async function getPreapprovalById(preapprovalId) {
 }
 
 // ============================================================
+// 4b) Cancelar preapproval (assinatura recorrente no cartao)
+// Seta status 'cancelled' no MP — interrompe cobrancas futuras.
+// ============================================================
+export async function cancelPreapproval(preapprovalId) {
+  const preapproval = new PreApproval(getClient());
+  return preapproval.update({
+    id: preapprovalId,
+    body: { status: 'cancelled' },
+  });
+}
+
+// ============================================================
 // 5) Validacao da assinatura do webhook
 //
 // MP envia headers:

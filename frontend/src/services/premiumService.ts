@@ -72,10 +72,12 @@ export async function getSubscriptionState(): Promise<SubscriptionState> {
   };
 }
 
-// True se o usuario tem acesso Premium ATIVO no momento
+// True se o usuario tem acesso Premium ATIVO no momento.
+// Assinaturas 'cancelled' mantem o acesso ate a data de expiracao
+// (usuario ja pagou pelo periodo vigente; so nao havera renovacao).
 export function isPremiumActive(state: SubscriptionState): boolean {
-  if (state.status !== 'active') return false;
-  if (!state.expiresAt) return true; // assinatura ativa sem expiracao = vitalicio (whitelist)
+  if (state.status !== 'active' && state.status !== 'cancelled') return false;
+  if (!state.expiresAt) return state.status === 'active'; // sem expiracao = vitalicio (whitelist)
   return new Date(state.expiresAt).getTime() > Date.now();
 }
 
@@ -113,6 +115,25 @@ export async function createCreditCardSubscription(
     throw new Error(err.error || 'Falha ao criar assinatura');
   }
   return res.json();
+}
+
+// Cancela a assinatura Premium do usuario logado.
+// Interrompe a recorrencia (cartao) no MP e marca o status como 'cancelled'.
+// O acesso permanece ate subscription_expires_at.
+export async function cancelSubscription(): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Usuário não autenticado');
+
+  const res = await fetch(`${API_URL}/mercadopago/cancel-subscription`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId: user.id }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Falha ao cancelar assinatura');
+  }
 }
 
 // Cria pagamento unico PIX/Boleto — retorna URL do MP pra concluir

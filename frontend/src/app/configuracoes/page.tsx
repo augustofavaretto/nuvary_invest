@@ -7,6 +7,7 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { usePremium } from '@/hooks/usePremium';
+import { cancelSubscription } from '@/services/premiumService';
 import { getAlertsEnabled, setAlertsEnabled } from '@/services/alertasService';
 import {
   getEmailRelatoriosAtivo,
@@ -27,18 +28,23 @@ import {
   Send,
   Loader2,
   Lock,
+  Crown,
+  AlertTriangle,
 } from 'lucide-react';
 
 export default function ConfiguracoesPage() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { theme, setTheme } = useTheme();
-  const { isPremium, loading: premiumLoading } = usePremium();
+  const { isPremium, state: subscriptionState, loading: premiumLoading, refresh: refreshPremium } = usePremium();
 
   const [alertasVariacao, setAlertasVariacaoState] = useState(true);
   const [emailRelatorios, setEmailRelatoriosState] = useState(false);
   const [enviandoTeste, setEnviandoTeste] = useState(false);
   const [testeResultado, setTesteResultado] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [confirmandoCancelamento, setConfirmandoCancelamento] = useState(false);
+  const [cancelando, setCancelando] = useState(false);
+  const [cancelErro, setCancelErro] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -111,6 +117,26 @@ export default function ConfiguracoesPage() {
       setEnviandoTeste(false);
     }
   };
+
+  const handleCancelarAssinatura = async () => {
+    if (cancelando) return;
+    setCancelando(true);
+    setCancelErro(null);
+    try {
+      await cancelSubscription();
+      await refreshPremium();
+      setConfirmandoCancelamento(false);
+    } catch (e) {
+      setCancelErro(e instanceof Error ? e.message : 'Falha ao cancelar assinatura');
+    } finally {
+      setCancelando(false);
+    }
+  };
+
+  // Assinatura paga real (whitelist/vitalicio tem expiresAt null e nao pode cancelar)
+  const temAssinaturaPaga =
+    !!subscriptionState.expiresAt &&
+    (subscriptionState.status === 'active' || subscriptionState.status === 'cancelled');
 
   if (authLoading) return null;
 
@@ -290,6 +316,145 @@ export default function ConfiguracoesPage() {
           )}
         </SettingSection>
 
+        {/* === ASSINATURA === (apenas para quem tem assinatura paga real) */}
+        {temAssinaturaPaga && (
+          <SettingSection
+            delay={0.09}
+            icon={<Crown className="w-5 h-5" />}
+            title="Assinatura Premium"
+            description="Gerencie seu plano e renovação"
+          >
+            {/* Resumo do plano */}
+            <div
+              className="flex items-center justify-between gap-3 px-4 py-3.5 rounded-[var(--r-md)] mb-4"
+              style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
+            >
+              <div className="min-w-0">
+                <strong className="text-[14px] font-semibold flex items-center gap-2" style={{ color: 'var(--t1)' }}>
+                  Plano {subscriptionState.plan === 'anual' ? 'Anual' : 'Mensal'}
+                  <span
+                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold uppercase tracking-wider"
+                    style={{
+                      background:
+                        subscriptionState.status === 'cancelled'
+                          ? 'rgba(245,158,11,0.15)'
+                          : 'rgba(16,185,129,0.12)',
+                      color:
+                        subscriptionState.status === 'cancelled' ? 'var(--warn)' : 'var(--gain)',
+                    }}
+                  >
+                    {subscriptionState.status === 'cancelled' ? 'Cancelada' : 'Ativa'}
+                  </span>
+                </strong>
+                <span className="text-[12px]" style={{ color: 'var(--t2)' }}>
+                  {subscriptionState.status === 'cancelled'
+                    ? `Acesso Premium até ${formatarData(subscriptionState.expiresAt)} — sem renovação`
+                    : `Próxima renovação em ${formatarData(subscriptionState.expiresAt)}`}
+                </span>
+              </div>
+            </div>
+
+            {/* Acao de cancelar — somente quando ainda esta ativa */}
+            {subscriptionState.status === 'active' && (
+              <>
+                {!confirmandoCancelamento ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCancelErro(null);
+                      setConfirmandoCancelamento(true);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13px] font-semibold transition-colors"
+                    style={{
+                      background: 'rgba(239,68,68,0.08)',
+                      border: '1px solid rgba(239,68,68,0.30)',
+                      color: 'var(--loss)',
+                    }}
+                  >
+                    <X className="w-4 h-4" />
+                    Cancelar assinatura
+                  </button>
+                ) : (
+                  <div
+                    className="px-4 py-3.5 rounded-[var(--r-md)]"
+                    style={{
+                      background: 'rgba(239,68,68,0.06)',
+                      border: '1px solid rgba(239,68,68,0.25)',
+                    }}
+                  >
+                    <div className="flex items-start gap-2.5 mb-3.5">
+                      <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--loss)' }} />
+                      <p className="text-[12.5px] leading-relaxed" style={{ color: 'var(--t1)' }}>
+                        Tem certeza? Você continuará com acesso Premium até{' '}
+                        <strong>{formatarData(subscriptionState.expiresAt)}</strong>, mas a
+                        assinatura não será renovada.
+                      </p>
+                    </div>
+
+                    {cancelErro && (
+                      <div
+                        className="mb-3 px-3 py-2 rounded-[var(--r-sm)] text-[12px]"
+                        style={{
+                          background: 'rgba(239,68,68,0.10)',
+                          border: '1px solid rgba(239,68,68,0.30)',
+                          color: 'var(--loss)',
+                        }}
+                      >
+                        {cancelErro}
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={handleCancelarAssinatura}
+                        disabled={cancelando}
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-[var(--r-sm)] text-[12.5px] font-semibold transition-colors disabled:opacity-50"
+                        style={{ background: 'var(--loss)', color: 'white' }}
+                      >
+                        {cancelando ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            Cancelando…
+                          </>
+                        ) : (
+                          'Sim, cancelar'
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmandoCancelamento(false)}
+                        disabled={cancelando}
+                        className="flex-1 px-3.5 py-2 rounded-[var(--r-sm)] text-[12.5px] font-semibold transition-colors disabled:opacity-50"
+                        style={{
+                          background: 'var(--surface-2)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--t1)',
+                        }}
+                      >
+                        Manter assinatura
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Quando ja cancelada, oferece reativar */}
+            {subscriptionState.status === 'cancelled' && (
+              <button
+                type="button"
+                onClick={() => router.push('/premium')}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13px] font-semibold transition-opacity hover:opacity-90"
+                style={{ background: 'var(--cyan)', color: 'white' }}
+              >
+                <Sparkles className="w-4 h-4" />
+                Reativar Premium
+              </button>
+            )}
+          </SettingSection>
+        )}
+
         {/* === CONTA E SEGURANCA === */}
         <SettingSection
           delay={0.1}
@@ -315,6 +480,14 @@ export default function ConfiguracoesPage() {
       </div>
     </DashboardLayout>
   );
+}
+
+// Formata ISO date para "12 de março de 2026" (pt-BR). Retorna '—' se invalido.
+function formatarData(iso: string | null): string {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '—';
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
 // ── Section card ───────────────────────────────────────────────────────────────
