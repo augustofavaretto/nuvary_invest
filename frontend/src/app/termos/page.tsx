@@ -208,10 +208,10 @@ export default function TermosPage() {
           Dúvidas, sugestões ou solicitações relacionadas a estes Termos podem
           ser enviadas para{' '}
           <a
-            href="mailto:contato@nuvaryinvest.com.br"
+            href="mailto:investnet123@gmail.com"
             className="text-cyan-400 hover:text-cyan-300"
           >
-            contato@nuvaryinvest.com.br
+            investnet123@gmail.com
           </a>
           .
         </p>

@@ -45,19 +45,19 @@ export default function PrivacidadePage() {
           <div>
             <span className="text-slate-400">E-mail:</span>{' '}
             <a
-              href="mailto:contato@nuvaryinvest.com.br"
+              href="mailto:investnet123@gmail.com"
               className="text-cyan-400 hover:text-cyan-300"
             >
-              contato@nuvaryinvest.com.br
+              investnet123@gmail.com
             </a>
           </div>
           <div>
             <span className="text-slate-400">Encarregado de Dados (DPO):</span>{' '}
             <a
-              href="mailto:dpo@nuvaryinvest.com.br"
+              href="mailto:investnet123@gmail.com"
               className="text-cyan-400 hover:text-cyan-300"
             >
-              dpo@nuvaryinvest.com.br
+              investnet123@gmail.com
             </a>
           </div>
         </div>
@@ -208,10 +208,10 @@ export default function PrivacidadePage() {
           Para exercer qualquer desses direitos, entre em contato com nosso DPO
           em{' '}
           <a
-            href="mailto:dpo@nuvaryinvest.com.br"
+            href="mailto:investnet123@gmail.com"
             className="text-cyan-400 hover:text-cyan-300"
           >
-            dpo@nuvaryinvest.com.br
+            investnet123@gmail.com
           </a>
           . Responderemos em até 15 dias úteis.
         </p>
@@ -265,10 +265,10 @@ export default function PrivacidadePage() {
           <div>
             E-mail:{' '}
             <a
-              href="mailto:dpo@nuvaryinvest.com.br"
+              href="mailto:investnet123@gmail.com"
               className="text-cyan-400 hover:text-cyan-300"
             >
-              dpo@nuvaryinvest.com.br
+              investnet123@gmail.com
             </a>
           </div>
           <div className="text-slate-400 text-sm">
