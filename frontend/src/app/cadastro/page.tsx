@@ -8,6 +8,7 @@ import { AuthLayout } from '@/components/public/AuthLayout';
 import { Field, PasswordInput } from '@/components/public/AuthFields';
 import { cadastrar } from '@/services/authService';
 import supabase from '@/lib/supabase';
+import { isValidCPF } from '@/lib/cpf';
 
 // Mascaras visuais (CPF, data, telefone) — apenas display.
 // O payload enviado ao backend e limpo via .replace(/\D/g, '').
@@ -70,15 +71,26 @@ export default function CadastroPage() {
   const [showPwd2, setShowPwd2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // Marca que o usuario ja saiu do campo CPF — so mostramos o erro depois do
+  // primeiro blur pra nao acusar "invalido" enquanto ele esta digitando.
+  const [cpfTouched, setCpfTouched] = useState(false);
 
   function set<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
   const senhaForca = useMemo(() => calcStrength(form.senha), [form.senha]);
+  const cpfValido = isValidCPF(form.cpf);
+  const cpfDigits = form.cpf.replace(/\D/g, '').length;
+  const cpfErrorMsg =
+    cpfTouched && cpfDigits > 0 && !cpfValido
+      ? cpfDigits < 11
+        ? 'CPF incompleto.'
+        : 'CPF inválido. Verifique os números digitados.'
+      : '';
   const podeEnviar =
     !!form.nome &&
-    form.cpf.replace(/\D/g, '').length === 11 &&
+    cpfValido &&
     form.email.includes('@') &&
     form.senha.length >= 8 &&
     form.senha === form.confirmarSenha &&
@@ -88,6 +100,11 @@ export default function CadastroPage() {
     e.preventDefault();
     setError('');
 
+    if (!cpfValido) {
+      setCpfTouched(true);
+      setError('Informe um CPF válido para continuar.');
+      return;
+    }
     if (form.senha !== form.confirmarSenha) {
       setError('As senhas não coincidem.');
       return;
@@ -161,10 +178,12 @@ export default function CadastroPage() {
               icon={IdCard}
               value={form.cpf}
               onChange={(v) => set('cpf', maskCPF(v))}
+              onBlur={() => setCpfTouched(true)}
               placeholder="000.000.000-00"
               inputMode="numeric"
               maxLength={14}
               required
+              error={cpfErrorMsg}
             />
 
             <div className="grid sm:grid-cols-2 gap-4">
