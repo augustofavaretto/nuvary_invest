@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import supabase from '@/lib/supabase';
+import { verificarSeTemPerfil } from '@/services/perfilService';
 import {
   AnimatePresence,
   motion,
@@ -144,6 +147,7 @@ const FAQS = [
 ];
 
 export default function LandingPage() {
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number>(0);
   const [scrolled, setScrolled] = useState(false);
@@ -158,6 +162,31 @@ export default function LandingPage() {
     const onScroll = () => setScrolled(window.scrollY > 16);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Email confirmation: Supabase entrega o callback com hash #access_token=...
+  // na landing quando o redirect_to nao bate com a whitelist. Detectamos isso,
+  // esperamos a sessao ser estabelecida e mandamos pra /questionario (ou
+  // /dashboard se ja tem perfil) sem precisar de clique manual em "Entrar".
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hasAuthCallback =
+      window.location.hash.includes('access_token=') ||
+      window.location.hash.includes('type=signup') ||
+      window.location.hash.includes('type=recovery');
+    if (!hasAuthCallback) return;
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event) => {
+        if (event !== 'SIGNED_IN' && event !== 'INITIAL_SESSION') return;
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) return;
+        const temPerfil = await verificarSeTemPerfil().catch(() => false);
+        router.replace(temPerfil ? '/dashboard' : '/questionario');
+      },
+    );
+    return () => subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const manrope = { fontFamily: 'var(--font-manrope)' } as const;
