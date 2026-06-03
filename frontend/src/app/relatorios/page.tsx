@@ -77,13 +77,8 @@ function RelatoriosContent() {
     if (!isAuthenticated) return;
     async function load() {
       setLoadingData(true);
-      try {
-        await refreshAllPrices(false);
-        const [pd, a, txs] = await Promise.all([getPortfolioData(), getAllAssets(), getTransactions()]);
-        setPortfolioData(pd);
-        setAssets(a);
-        setSellTransactions(txs.filter(t => t.tipo === 'venda'));
-        // Busca CDI atual do backend
+
+      const fetchCdi = async () => {
         try {
           const res = await fetch(`${API_URL}/bcb/rates`);
           if (res.ok) {
@@ -91,9 +86,29 @@ function RelatoriosContent() {
             setCdiAnual(data.cdi?.taxa ?? null);
           }
         } catch { /* CDI ficará null */ }
+      };
+
+      try {
+        // 1) Carrega o que já está no banco em paralelo e renderiza os gráficos
+        //    imediatamente, sem esperar as APIs de preço externas.
+        const [pd, a, txs] = await Promise.all([getPortfolioData(), getAllAssets(), getTransactions()]);
+        setPortfolioData(pd);
+        setAssets(a);
+        setSellTransactions(txs.filter(t => t.tipo === 'venda'));
+        fetchCdi(); // fire-and-forget — não bloqueia os gráficos
       } finally {
         setLoadingData(false);
       }
+
+      // 2) Atualiza preços de mercado em background; se mudou, recarrega o afetado.
+      try {
+        const updated = await refreshAllPrices(false);
+        if (updated) {
+          const [pd, a] = await Promise.all([getPortfolioData(), getAllAssets()]);
+          setPortfolioData(pd);
+          setAssets(a);
+        }
+      } catch { /* mantém os dados já exibidos */ }
     }
     load();
   }, [isAuthenticated]);

@@ -689,39 +689,43 @@ export async function refreshAllPrices(force = false): Promise<boolean> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return false;
 
-  for (const asset of toRefresh) {
-    try {
-      const result = await fetchAssetPrice(asset.ticker, asset.type as CategoryId, asset.name);
-      if (!result.price || result.price <= 0) continue;
+  // Busca todos os preços em paralelo (antes era em série, somando latências).
+  // Portfolios típicos têm poucos ativos de mercado, dentro dos limites das APIs.
+  await Promise.all(
+    toRefresh.map(async (asset) => {
+      try {
+        const result = await fetchAssetPrice(asset.ticker, asset.type as CategoryId, asset.name);
+        if (!result.price || result.price <= 0) return;
 
-      // Sanity check: rejeita preco que diverge da ordem de grandeza do
-      // averagePrice (provavel erro de API ou conversao de moeda errada).
-      // Ex: BTC averagePrice R$ 500k e API retorna R$ 30 — preserva o valor
-      // anterior em vez de poluir a carteira e disparar alerta falso.
-      if (asset.averagePrice > 0) {
-        const ratio = result.price / asset.averagePrice;
-        if (ratio < 0.05 || ratio > 20) {
-          console.warn(
-            `[refreshAllPrices] preco suspeito para ${asset.ticker}: ${result.price} vs averagePrice ${asset.averagePrice} (ratio ${ratio.toFixed(3)}). Update ignorado.`,
-          );
-          continue;
+        // Sanity check: rejeita preco que diverge da ordem de grandeza do
+        // averagePrice (provavel erro de API ou conversao de moeda errada).
+        // Ex: BTC averagePrice R$ 500k e API retorna R$ 30 — preserva o valor
+        // anterior em vez de poluir a carteira e disparar alerta falso.
+        if (asset.averagePrice > 0) {
+          const ratio = result.price / asset.averagePrice;
+          if (ratio < 0.05 || ratio > 20) {
+            console.warn(
+              `[refreshAllPrices] preco suspeito para ${asset.ticker}: ${result.price} vs averagePrice ${asset.averagePrice} (ratio ${ratio.toFixed(3)}). Update ignorado.`,
+            );
+            return;
+          }
         }
-      }
 
-      const variation = asset.averagePrice > 0
-        ? ((result.price - asset.averagePrice) / asset.averagePrice) * 100
-        : 0;
-      const totalValue = asset.quantity * result.price;
-      const { error } = await supabase
-        .from('portfolio_assets')
-        .update({ current_price: result.price, total_value: totalValue, variation })
-        .eq('id', asset.id)
-        .eq('user_id', user.id);
-      if (error) console.error(`Erro ao atualizar preço de ${asset.ticker}:`, error);
-    } catch {
-      // silencioso — mantém preço anterior
-    }
-  }
+        const variation = asset.averagePrice > 0
+          ? ((result.price - asset.averagePrice) / asset.averagePrice) * 100
+          : 0;
+        const totalValue = asset.quantity * result.price;
+        const { error } = await supabase
+          .from('portfolio_assets')
+          .update({ current_price: result.price, total_value: totalValue, variation })
+          .eq('id', asset.id)
+          .eq('user_id', user.id);
+        if (error) console.error(`Erro ao atualizar preço de ${asset.ticker}:`, error);
+      } catch {
+        // silencioso — mantém preço anterior
+      }
+    }),
+  );
 
   localStorage.setItem(PRICE_CACHE_KEY, now.toString());
 

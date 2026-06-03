@@ -70,9 +70,19 @@ export default function CarteiraPage() {
   const loadData = async (runMigration = false, forceRefresh = false) => {
     try {
       if (runMigration) await migrateLocalStorageToSupabase();
-      await refreshAllPrices(forceRefresh);
+
+      // 1) Renderiza imediatamente com os valores já salvos no banco —
+      //    o gráfico aparece sem esperar as APIs de preço externas.
       const data = await getPortfolioData();
       setPortfolioData(data);
+      setLoading(false);
+
+      // 2) Atualiza preços de mercado em background; só re-renderiza se mudou.
+      const updated = await refreshAllPrices(forceRefresh);
+      if (updated) {
+        const fresh = await getPortfolioData();
+        setPortfolioData(fresh);
+      }
     } catch (error) {
       console.error('Erro ao carregar portfolio:', error);
     } finally {
