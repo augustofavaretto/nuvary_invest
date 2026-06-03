@@ -462,13 +462,13 @@ export async function addAsset(assetData: {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Usuário não autenticado');
 
-  // Renda Fixa e Tesouro: quantity = R$ investido, averagePrice = taxa (%)
+  // Renda Fixa e Tesouro: quantity = R$ investido, averagePrice = taxa (%).
+  // currentPrice nasce igual ao averagePrice; a primeira execucao de
+  // refreshAllPrices() vai puxar o preco real e atualizar.
   const isFixedIncome = assetData.class === 'renda_fixa';
-  const variationPercent = isFixedIncome ? 0 : (Math.random() * 20) - 5;
-  const currentPrice = isFixedIncome
-    ? assetData.averagePrice
-    : assetData.averagePrice * (1 + variationPercent / 100);
+  const currentPrice = assetData.averagePrice;
   const totalValue = isFixedIncome ? assetData.quantity : assetData.quantity * currentPrice;
+  const variationPercent = 0;
 
   const newAsset: Asset = {
     id: generateId(),
@@ -692,18 +692,32 @@ export async function refreshAllPrices(force = false): Promise<boolean> {
   for (const asset of toRefresh) {
     try {
       const result = await fetchAssetPrice(asset.ticker, asset.type as CategoryId, asset.name);
-      if (result.price && result.price > 0) {
-        const variation = asset.averagePrice > 0
-          ? ((result.price - asset.averagePrice) / asset.averagePrice) * 100
-          : 0;
-        const totalValue = asset.quantity * result.price;
-        const { error } = await supabase
-          .from('portfolio_assets')
-          .update({ current_price: result.price, total_value: totalValue, variation })
-          .eq('id', asset.id)
-          .eq('user_id', user.id);
-        if (error) console.error(`Erro ao atualizar preço de ${asset.ticker}:`, error);
+      if (!result.price || result.price <= 0) continue;
+
+      // Sanity check: rejeita preco que diverge da ordem de grandeza do
+      // averagePrice (provavel erro de API ou conversao de moeda errada).
+      // Ex: BTC averagePrice R$ 500k e API retorna R$ 30 — preserva o valor
+      // anterior em vez de poluir a carteira e disparar alerta falso.
+      if (asset.averagePrice > 0) {
+        const ratio = result.price / asset.averagePrice;
+        if (ratio < 0.05 || ratio > 20) {
+          console.warn(
+            `[refreshAllPrices] preco suspeito para ${asset.ticker}: ${result.price} vs averagePrice ${asset.averagePrice} (ratio ${ratio.toFixed(3)}). Update ignorado.`,
+          );
+          continue;
+        }
       }
+
+      const variation = asset.averagePrice > 0
+        ? ((result.price - asset.averagePrice) / asset.averagePrice) * 100
+        : 0;
+      const totalValue = asset.quantity * result.price;
+      const { error } = await supabase
+        .from('portfolio_assets')
+        .update({ current_price: result.price, total_value: totalValue, variation })
+        .eq('id', asset.id)
+        .eq('user_id', user.id);
+      if (error) console.error(`Erro ao atualizar preço de ${asset.ticker}:`, error);
     } catch {
       // silencioso — mantém preço anterior
     }

@@ -134,6 +134,15 @@ interface AssetBaselineRow {
   alert_baseline_price: number | null;
 }
 
+// Filtro adicional: o preco corrente precisa estar na mesma ordem de
+// grandeza do averagePrice. Protege contra dados ruins de API que poderiam
+// disparar alertas com valores absurdos (ex: "BTC chegou a R$ 29").
+function isPriceWithinReasonableRange(asset: Asset): boolean {
+  if (asset.averagePrice <= 0) return true; // sem averagePrice nao da pra comparar
+  const ratio = Number(asset.currentPrice) / asset.averagePrice;
+  return ratio >= 0.05 && ratio <= 20;
+}
+
 export async function checkAlertsForAssets(assets: Asset[]): Promise<Alert[]> {
   const enabled = await getAlertsEnabled();
   if (!enabled) return [];
@@ -141,7 +150,9 @@ export async function checkAlertsForAssets(assets: Asset[]): Promise<Alert[]> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return [];
 
-  const elegiveis = assets.filter((a) => a.id && a.currentPrice);
+  const elegiveis = assets.filter(
+    (a) => a.id && a.currentPrice && isPriceWithinReasonableRange(a),
+  );
   if (elegiveis.length === 0) return [];
 
   // Busca os baselines atuais de todos os ativos em uma unica query
