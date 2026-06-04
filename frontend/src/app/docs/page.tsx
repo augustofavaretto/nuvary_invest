@@ -40,6 +40,7 @@ const CATEGORIES: { id: CategoryId; label: string; emoji: string }[] = [
 
 // Mapeia cada doc à sua categoria principal (docs cross-cutting vão para a área dominante).
 const DOC_CATEGORY: Record<string, Exclude<CategoryId, 'todos'>> = {
+  '39': 'carteira',
   '38': 'config', '37': 'landing', '36': 'config', '35': 'landing', '34': 'dashboard',
   '33': 'chat', '32': 'dashboard', '31': 'relatorios', '30': 'config', '29': 'trilhas',
   '28': 'carteira', '27': 'chat', '26': 'backend', '25': 'relatorios', '24': 'backend',
@@ -77,6 +78,16 @@ const SUPABASE_TABLES: { table: string; desc: string }[] = [
 ];
 
 const docs: DocItem[] = [
+  {
+    number: '39',
+    title: 'Remoção do Tesouro Direto + Docs por Categoria',
+    description: 'Feature de Tesouro Direto removida da carteira (API de taxas com problema) e página /docs reorganizada por categorias com abas (Landing, Dashboard, Carteira, Chat IA, Relatórios, Trilhas, Configurações, Backend)',
+    date: 'Junho 2026',
+    version: '4.12.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #334155 0%, #64748b 100%)',
+    href: '/docs-html/doc39.html'
+  },
   {
     number: '38',
     title: 'Cancelamento de Assinatura, Badge PRO e Performance',

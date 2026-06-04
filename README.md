@@ -2,7 +2,7 @@
 
 Plataforma de consultoria de investimentos com assistente IA, voltada ao investidor brasileiro.
 
-**Versão atual:** v4.11.0 — Cancelamento de assinatura Premium pelo app + badge PRO ao lado do nome + gráficos de carteira/relatórios sem bloquear no carregamento + limpeza de código morto.
+**Versão atual:** v4.12.0 — Remoção da feature de Tesouro Direto (API de taxas com problema) + documentação `/docs` organizada por categorias com abas.
 
 ---
 
