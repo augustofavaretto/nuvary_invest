@@ -12,7 +12,7 @@ interface SellAssetModalProps {
   onSell: (assetId: string, quantidadeVendida: number, vendaTotal: boolean) => Promise<void>;
 }
 
-const FIXED_INCOME_TYPES = ['renda_fixa', 'tesouro'];
+const FIXED_INCOME_TYPES = ['renda_fixa'];
 
 export function SellAssetModal({ asset, onClose, onSell }: SellAssetModalProps) {
   const [quantidade, setQuantidade] = useState('');

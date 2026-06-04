@@ -12,7 +12,6 @@ import aiRoutes from './routes/ai.js';
 import riskProfileRoutes from './routes/riskProfile.js';
 import brapiRoutes from './routes/brapi.js';
 import anbimaRoutes from './routes/anbima.js';
-import tesouroDiretoRoutes from './routes/tesouroDireto.js';
 import bcbRoutes from './routes/bcb.js';
 import mercadopagoRoutes from './routes/mercadopago.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -37,7 +36,6 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/profile', riskProfileRoutes);
 app.use('/api/brapi', brapiRoutes);
 app.use('/api/anbima', anbimaRoutes);
-app.use('/api/tesouro', tesouroDiretoRoutes);
 app.use('/api/bcb', bcbRoutes);
 app.use('/api/mercadopago', mercadopagoRoutes);
 

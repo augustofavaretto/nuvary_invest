@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Loader2, Wallet, Calendar, RefreshCw, Plus,
-  PiggyBank, Landmark, TrendingUp, Building, Globe, Coins, ChevronRight, Lock,
+  PiggyBank, TrendingUp, Building, Globe, Coins, ChevronRight, Lock,
 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
@@ -124,7 +124,7 @@ export default function CarteiraPage() {
     ];
     const asset = allAssets.find(a => a.id === assetId);
     if (asset) {
-      const isFixed = ['renda_fixa', 'tesouro'].includes(asset.type);
+      const isFixed = asset.type === 'renda_fixa';
       await saveTransaction({
         tipo: 'venda',
         ticker: asset.ticker,
@@ -320,7 +320,6 @@ export default function CarteiraPage() {
 
             {[
               { id: 'renda_fixa', name: 'Renda Fixa', description: 'CDBs, LCIs, LCAs e Debêntures', icon: PiggyBank, color: '#1E3A5F' },
-              { id: 'tesouro', name: 'Tesouro Direto', description: 'Títulos públicos federais', icon: Landmark, color: '#047857' },
               { id: 'renda_variavel', name: 'Renda Variável', description: 'Ações, ETFs e BDRs', icon: TrendingUp, color: '#00B8D9' },
               { id: 'fiis', name: 'Fundos Imobiliários', description: 'FIIs listados na B3', icon: Building, color: '#10B981' },
               { id: 'internacional', name: 'Internacional', description: 'BDRs e ETFs globais', icon: Globe, color: '#7C3AED' },

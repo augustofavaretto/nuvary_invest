@@ -62,7 +62,6 @@ const BACKEND_ROUTES: { route: string; fonte: string }[] = [
   { route: '/api/profile', fonte: 'Perfil de risco (questionário)' },
   { route: '/api/brapi', fonte: 'Brapi — B3 / FIIs / Selic' },
   { route: '/api/anbima', fonte: 'ANBIMA — renda fixa' },
-  { route: '/api/tesouro', fonte: 'Tesouro Direto (JSON + CSV)' },
   { route: '/api/bcb', fonte: 'BCB SGS + OLINDA (Selic, CDI, IPCA, IGP-M, Focus)' },
   { route: '/api/mercadopago', fonte: 'Assinatura Premium (preapproval, PIX/Boleto, webhook, cancelamento)' },
 ];

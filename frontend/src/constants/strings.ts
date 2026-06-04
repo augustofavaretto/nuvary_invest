@@ -177,7 +177,7 @@ export const STRINGS = {
     tickerObrigatorio: 'Ticker é obrigatório',
     nomeObrigatorio: 'Nome é obrigatório',
     precoDeveSerMaior: 'Preço deve ser maior que zero',
-    // Renda Fixa / Tesouro Direto
+    // Renda Fixa
     taxaContratada: 'Taxa Contratada (%)',
     taxaDeveSerMaior: 'Taxa deve ser maior que zero',
     valorInvestido: 'Valor Investido (R$)',

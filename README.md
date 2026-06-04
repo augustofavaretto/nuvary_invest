@@ -17,7 +17,7 @@ Plataforma de consultoria de investimentos com assistente IA, voltada ao investi
 | **Pagamento** | Mercado Pago (subscription recorrente + PIX/Boleto one-time) |
 | **E-mail** | Resend + Vercel Cron (relatório diário 8h BRT) |
 | **IA** | OpenAI (Chat) |
-| **APIs externas** | BCB SGS, Tesouro Direto, Brapi (B3), Finnhub (US), Alpha Vantage (cripto), News API |
+| **APIs externas** | BCB SGS, Brapi (B3), Finnhub (US), Alpha Vantage (cripto), News API |
 | **UI** | lucide-react · Framer Motion · Recharts |
 
 ---
@@ -44,10 +44,10 @@ O frontend lê `NEXT_PUBLIC_API_URL=http://localhost:3001/api` para acessar o ba
 
 ```
 nuvary-invest/
-├── backend/                     # Express ESM — APIs externas (BCB, Brapi, Tesouro)
+├── backend/                     # Express ESM — APIs externas (BCB, Brapi, etc.)
 │   └── src/
 │       ├── server.js            # Registra todas as rotas
-│       └── controllers/         # bcbController, tesouroDiretoController, etc.
+│       └── controllers/         # bcbController, brapiController, etc.
 │
 ├── frontend/                    # Next.js 16 App Router
 │   ├── public/

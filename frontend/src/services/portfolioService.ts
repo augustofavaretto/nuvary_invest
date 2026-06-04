@@ -4,7 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 import supabase from '@/lib/supabase';
 
 export type AssetClass = 'renda_fixa' | 'renda_variavel' | 'fiis' | 'internacional';
-export type CategoryId = 'renda_fixa' | 'tesouro' | 'renda_variavel' | 'fiis' | 'internacional' | 'cripto';
+export type CategoryId = 'renda_fixa' | 'renda_variavel' | 'fiis' | 'internacional' | 'cripto';
 
 export interface AssetClassData {
   name: string;
@@ -57,37 +57,6 @@ export interface PortfolioData {
 
 // Storage key
 const STORAGE_KEY = 'nuvary_portfolio_assets';
-
-// Mapeamento de tickers internos → nome oficial no Tesouro Direto
-// Nomes exatos conforme o CSV do Tesouro Transparente e o portal JSON
-const TESOURO_TICKER_TO_NOME: Record<string, string> = {
-  // Tesouro Selic
-  'SELIC-2025': 'Tesouro Selic 2025',
-  'SELIC-2026': 'Tesouro Selic 2026',
-  'SELIC-2027': 'Tesouro Selic 2027',
-  'SELIC-2028': 'Tesouro Selic 2028',
-  'SELIC-2029': 'Tesouro Selic 2029',
-  'SELIC-2031': 'Tesouro Selic 2031',
-  // Tesouro IPCA+
-  'IPCA-2026': 'Tesouro IPCA+ 2026',
-  'IPCA-2029': 'Tesouro IPCA+ 2029',
-  'IPCA-2035': 'Tesouro IPCA+ 2035',
-  'IPCA-2045': 'Tesouro IPCA+ 2045',
-  // Tesouro Prefixado
-  'PREFIXADO-2025': 'Tesouro Prefixado 2025',
-  'PREFIXADO-2026': 'Tesouro Prefixado 2026',
-  'PREFIXADO-2027': 'Tesouro Prefixado 2027',
-  'PREFIXADO-2028': 'Tesouro Prefixado 2028',
-  'PREFIXADO-2029': 'Tesouro Prefixado 2029',
-  'PREFIXADO-2031': 'Tesouro Prefixado 2031',
-  // Tesouro Educa+ e RendA+
-  'EDUCA-2030': 'Tesouro Educa+ 2030',
-  'EDUCA-2031': 'Tesouro Educa+ 2031',
-  'EDUCA-2033': 'Tesouro Educa+ 2033',
-  'EDUCA-2035': 'Tesouro Educa+ 2035',
-  'EDUCA-2045': 'Tesouro Educa+ 2045',
-  'RENDA-2030': 'Tesouro RendA+ 2030',
-};
 
 // Mapeamento de BDRs para símbolos americanos
 const BDR_TO_US_SYMBOL: Record<string, string> = {
@@ -155,33 +124,6 @@ async function fetchBCBRates(): Promise<{ selic: number | null; cdi: number | nu
     // silencioso
   }
   return { selic: null, cdi: null, ipca: null };
-}
-
-// Buscar taxa de um título do Tesouro Direto via backend proxy
-async function fetchTesouroDiretoRate(ticker: string): Promise<{ taxa: number | null; fonte: string }> {
-  try {
-    const res = await fetch(`${API_URL}/tesouro/rates`);
-    if (res.ok) {
-      const data = await res.json();
-      const nomeOficial = TESOURO_TICKER_TO_NOME[ticker];
-      if (nomeOficial && data.rates && data.rates[nomeOficial]) {
-        return { taxa: data.rates[nomeOficial].taxaCompra || null, fonte: data.fonte || 'Tesouro Direto' };
-      }
-
-      // Busca parcial: tenta encontrar um título que contenha o nome mapeado
-      if (nomeOficial) {
-        const chaveEncontrada = Object.keys(data.rates || {}).find(k =>
-          k.toLowerCase().includes(nomeOficial.toLowerCase().split(' ').slice(1, 3).join(' ').toLowerCase())
-        );
-        if (chaveEncontrada) {
-          return { taxa: data.rates[chaveEncontrada].taxaCompra || null, fonte: data.fonte || 'Tesouro Direto' };
-        }
-      }
-    }
-  } catch {
-    // silencioso — fallback para entrada manual
-  }
-  return { taxa: null, fonte: 'Manual' };
 }
 
 // Buscar preço de ação/FII da B3 via Brapi
@@ -321,36 +263,6 @@ export async function fetchAssetPrice(
       currency: 'BRL',
       source: 'API',
       error: 'Não conseguimos buscar a cotação desse FII agora. Informe o preço manualmente conferindo o valor atual na sua corretora.',
-    };
-  }
-
-  // Tesouro Direto — busca taxa anual no portal oficial com fallback CSV
-  if (category === 'tesouro') {
-    const { taxa, fonte } = await fetchTesouroDiretoRate(ticker);
-    if (taxa !== null) {
-      return {
-        price: taxa,
-        currency: 'BRL',
-        source: fonte,
-      };
-    }
-
-    // Fallback: Selic do BCB como referência para Tesouro Selic
-    const { selic } = await fetchBCBRates();
-    const isTesouroSelic = ticker.startsWith('SELIC');
-    if (isTesouroSelic && selic !== null) {
-      return {
-        price: selic,
-        currency: 'BRL',
-        source: `BCB SGS (Selic ${selic.toFixed(2)}% a.a.)`,
-      };
-    }
-
-    return {
-      price: null,
-      currency: 'BRL',
-      source: 'Manual',
-      error: 'Taxa não encontrada. Informe manualmente.',
     };
   }
 
