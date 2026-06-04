@@ -140,6 +140,15 @@
         }
             .cat-header { font-size: 1.35rem; font-weight: 700; color: #1e1b4b; margin: 34px 0 14px; padding-bottom: 8px; border-bottom: 3px solid #6366f1; }
         .cat-header:first-of-type { margin-top: 8px; }
+    
+        .cat-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 14px 20px; position: sticky; top: 0; z-index: 50; background: var(--white); border-bottom: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+        .cat-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; font-size: 0.875rem; font-weight: 600; background: #f1f5f9; color: #475569; border: none; cursor: pointer; transition: background 0.2s; }
+        .cat-pill:hover { background: #e2e8f0; }
+        .cat-pill.active { background: var(--primary-dark); color: #fff; }
+        .cat-pill .cnt { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; background: #fff; color: var(--gray); }
+        .cat-pill.active .cnt { background: rgba(255,255,255,0.25); color: #fff; }
+        .cat-section.hidden { display: none; }
+        .cat-header { font-size: 1.35rem; font-weight: 700; color: var(--dark); margin: 30px 0 16px; padding-bottom: 8px; border-bottom: 3px solid var(--primary); }
     </style>
 </head>
 <body>
@@ -151,22 +160,20 @@
     </header>
 
     <main class="container">
-        <ul class="docs-list">
-            <!-- Roadmap sempre no topo -->
-            <a href="doc13.html" class="doc-item" style="border: 2px solid #6366f1; background: linear-gradient(135deg, #fafafe 0%, #f0f0ff 100%);">
-                <div class="doc-number" style="background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%); font-size: 1.8rem;">&#x1F5FA;</div>
-                <div class="doc-info">
-                    <h3>Roadmap do Projeto</h3>
-                    <p>Visao completa de todas as tarefas concluidas, pendentes e melhorias futuras</p>
-                    <span class="status-badge" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">295 Concluídos | v4.7.0</span>
-                </div>
-                <div class="doc-date">
-                    Maio 2026<br>
-                    <small>Atualizado v4.7.0</small>
-                </div>
-            </a>
+        <nav class="cat-nav">
+            <button class="cat-pill active" data-filter="todos">📚 Todos<span class="cnt">35</span></button>
+            <button class="cat-pill" data-filter="landing">🚀 Landing Page<span class="cnt">2</span></button>
+            <button class="cat-pill" data-filter="dashboard">📊 Dashboard<span class="cnt">3</span></button>
+            <button class="cat-pill" data-filter="carteira">💼 Carteira<span class="cnt">2</span></button>
+            <button class="cat-pill" data-filter="chat">💬 Chat IA<span class="cnt">4</span></button>
+            <button class="cat-pill" data-filter="relatorios">📈 Relatórios<span class="cnt">3</span></button>
+            <button class="cat-pill" data-filter="trilhas">🎓 Trilhas Educativas<span class="cnt">2</span></button>
+            <button class="cat-pill" data-filter="config">⚙️ Configurações<span class="cnt">5</span></button>
+            <button class="cat-pill" data-filter="backend">🔌 Backend (APIs & DB)<span class="cnt">14</span></button>
+        </nav>
 
-            <li class="cat-header">🚀 Landing Page</li>
+        <section class="cat-section" data-cat="landing" id="cat-landing">
+            <h2 class="cat-header">🚀 Landing Page</h2>
             <a href="doc37.html" class="doc-item" style="border: 1px solid #6366f1; background: linear-gradient(135deg, #fafafe 0%, #f0f0ff 100%);">
                 <div class="doc-number" style="background: linear-gradient(135deg, #4c1d95 0%, #06b6d4 100%);">37</div>
                 <div class="doc-info">
@@ -193,6 +200,10 @@
             </a>
 
             <li class="cat-header">📊 Dashboard</li>
+        </section>
+
+        <section class="cat-section" data-cat="dashboard" id="cat-dashboard">
+            <h2 class="cat-header">📊 Dashboard</h2>
             <a href="doc34.html" class="doc-item" style="border: 1px solid #00B8D9; background: linear-gradient(135deg, #f0fdff 0%, #e0f7ff 100%);">
                 <div class="doc-number" style="background: linear-gradient(135deg, #0B1F33 0%, #007EA7 50%, #00B8D9 100%);">34</div>
                 <div class="doc-info">
@@ -231,6 +242,10 @@
             </a>
 
             <li class="cat-header">💼 Carteira</li>
+        </section>
+
+        <section class="cat-section" data-cat="carteira" id="cat-carteira">
+            <h2 class="cat-header">💼 Carteira</h2>
             <a href="doc28.html" class="doc-item" style="border: 1px solid #00B8D9; background: linear-gradient(135deg, #f0fdff 0%, #e0f7ff 100%);">
                 <div class="doc-number" style="background: linear-gradient(135deg, #0B1F33 0%, #007EA7 50%, #00B8D9 100%);">28</div>
                 <div class="doc-info">
@@ -257,6 +272,10 @@
             </a>
 
             <li class="cat-header">💬 Chat IA</li>
+        </section>
+
+        <section class="cat-section" data-cat="chat" id="cat-chat">
+            <h2 class="cat-header">💬 Chat IA</h2>
             <a href="doc33.html" class="doc-item" style="border: 1px solid #00B8D9; background: linear-gradient(135deg, #f0fdff 0%, #e0f7ff 100%);">
                 <div class="doc-number" style="background: linear-gradient(135deg, #0B1F33 0%, #007EA7 50%, #00B8D9 100%);">33</div>
                 <div class="doc-info">
@@ -307,6 +326,10 @@
             </a>
 
             <li class="cat-header">📈 Relatórios</li>
+        </section>
+
+        <section class="cat-section" data-cat="relatorios" id="cat-relatorios">
+            <h2 class="cat-header">📈 Relatórios</h2>
             <a href="doc31.html" class="doc-item" style="border: 1px solid #00B8D9; background: linear-gradient(135deg, #f0fdff 0%, #e0f7ff 100%);">
                 <div class="doc-number" style="background: linear-gradient(135deg, #0B1F33 0%, #007EA7 50%, #00B8D9 100%);">31</div>
                 <div class="doc-info">
@@ -345,6 +368,10 @@
             </a>
 
             <li class="cat-header">🎓 Trilhas Educativas</li>
+        </section>
+
+        <section class="cat-section" data-cat="trilhas" id="cat-trilhas">
+            <h2 class="cat-header">🎓 Trilhas Educativas</h2>
             <a href="doc29.html" class="doc-item" style="border: 1px solid #10b981; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);">
                 <div class="doc-number" style="background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%);">29</div>
                 <div class="doc-info">
@@ -371,6 +398,10 @@
             </a>
 
             <li class="cat-header">⚙️ Configurações</li>
+        </section>
+
+        <section class="cat-section" data-cat="config" id="cat-config">
+            <h2 class="cat-header">⚙️ Configurações</h2>
             <a href="doc38.html" class="doc-item" style="border: 1px solid #10b981; background: linear-gradient(135deg, #f0fdfa 0%, #e0fff4 100%);">
                 <div class="doc-number" style="background: linear-gradient(135deg, #0e7490 0%, #10b981 100%);">38</div>
                 <div class="doc-info">
@@ -433,6 +464,10 @@
             </a>
 
             <li class="cat-header">🔌 Backend (APIs & DB)</li>
+        </section>
+
+        <section class="cat-section" data-cat="backend" id="cat-backend">
+            <h2 class="cat-header">🔌 Backend (APIs & DB)</h2>
             <a href="doc26.html" class="doc-item" style="border: 1px solid #0066CC;">
                 <div class="doc-number" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0066CC 100%);">26</div>
                 <div class="doc-info">
@@ -603,11 +638,30 @@
             </a>
 
             <!-- Novas documentações serão adicionadas aqui -->
-        </ul>
+        </section>
+    
     </main>
 
     <footer>
         <p>Nuvary Invest © 2026 - Documentação do Projeto</p>
     </footer>
+
+    <script>
+      (function () {
+        var pills = document.querySelectorAll('.cat-pill');
+        var sections = document.querySelectorAll('.cat-section');
+        pills.forEach(function (p) {
+          p.addEventListener('click', function () {
+            pills.forEach(function (x) { x.classList.remove('active'); });
+            p.classList.add('active');
+            var f = p.getAttribute('data-filter');
+            sections.forEach(function (s) {
+              s.classList.toggle('hidden', f !== 'todos' && s.getAttribute('data-cat') !== f);
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+      })();
+    </script>
 </body>
 </html>
