@@ -641,21 +641,6 @@ export async function getPortfolioData(): Promise<PortfolioData> {
   return calculatePortfolioData(savedAssets);
 }
 
-export async function getPortfolioSummary(): Promise<PortfolioSummary> {
-  const savedAssets = await getAllAssetsFromDB();
-  return calculatePortfolioData(savedAssets).summary;
-}
-
-export async function getPortfolioByClass(): Promise<AssetClassData[]> {
-  const savedAssets = await getAllAssetsFromDB();
-  return calculatePortfolioData(savedAssets).byClass;
-}
-
-export async function getPortfolioByBroker(): Promise<Broker[]> {
-  const savedAssets = await getAllAssetsFromDB();
-  return calculatePortfolioData(savedAssets).byBroker;
-}
-
 // Get all assets
 export async function getAllAssets(): Promise<Asset[]> {
   return getAllAssetsFromDB();
