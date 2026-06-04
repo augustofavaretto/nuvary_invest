@@ -13,6 +13,16 @@ interface DocItem {
 
 const docs: DocItem[] = [
   {
+    number: '38',
+    title: 'Cancelamento de Assinatura, Badge PRO e Performance',
+    description: 'Botão de cancelar assinatura Premium (preapproval no Mercado Pago), badge PRO ao lado do nome, gráficos de carteira/relatórios sem bloquear no carregamento e limpeza de código morto',
+    date: 'Junho 2026',
+    version: '4.11.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #0e7490 0%, #10b981 100%)',
+    href: '/docs-html/doc38.html'
+  },
+  {
     number: '37',
     title: 'Animações Landing + Chat IA Preview',
     description: '4 efeitos no scroll (reveal, hero animado, CTA pulse, parallax) + seção dedicada com mock animado do Chat IA em loop',

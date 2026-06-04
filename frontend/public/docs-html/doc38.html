@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc 38 - Cancelamento de Assinatura, Badge PRO e Performance | Nuvary Invest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #06b6d4; --primary-dark: #0e7490; --secondary: #10b981; --dark: #0f172a; --gray: #6B7280; --light: #F3F4F6; --white: #ffffff; --code-bg: #1e293b; --border: #E5E7EB; }
+        body { font-family: 'Inter', 'Segoe UI', sans-serif; line-height: 1.6; color: #334155; background: var(--light); }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #0e7490 0%, #10b981 100%); color: white; padding: 40px 0; text-align: center; }
+        .version-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; }
+        header h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        header p { font-size: 1.1rem; opacity: 0.95; }
+        nav { background: var(--white); padding: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; }
+        nav a { color: var(--gray); text-decoration: none; font-weight: 500; }
+        nav a:hover { color: var(--primary); }
+        main { padding: 40px 0; }
+        section { background: var(--white); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        h2 { color: var(--dark); font-size: 1.5rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid var(--primary); }
+        h3 { color: var(--dark); font-size: 1.1rem; margin: 20px 0 12px; font-weight: 600; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; margin-bottom: 20px; font-weight: 500; }
+        .update-notice { background: linear-gradient(135deg, #0e7490 0%, #10b981 100%); color: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; }
+        .update-notice strong { font-size: 1.1rem; }
+        code { background: var(--code-bg); color: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; font-family: 'Fira Code', monospace; }
+        pre { background: var(--code-bg); color: #e2e8f0; padding: 20px; border-radius: 8px; margin: 15px 0; overflow-x: auto; font-size: 0.85rem; line-height: 1.8; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .info-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+        .info-card .label { font-size: 0.8rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .info-card .value { font-size: 1rem; font-weight: 600; color: var(--dark); }
+        .step-list { list-style: none; }
+        .step-item { display: flex; align-items: flex-start; gap: 15px; padding: 15px; margin-bottom: 10px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--primary); }
+        .step-num { background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; }
+        .step-text { color: #475569; font-size: 0.95rem; }
+        .step-text strong { color: var(--dark); }
+        .change-list { list-style: none; }
+        .change-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 15px; margin-bottom: 8px; background: #f8fafc; border-radius: 8px; }
+        .change-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .change-text { color: #475569; font-size: 0.95rem; }
+        .arch-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 15px 0; }
+        .arch-box .arch-title { font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+        .arch-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+        .arch-row:last-child { border-bottom: none; }
+        .arch-label { font-weight: 600; color: var(--dark); min-width: 180px; font-size: 0.9rem; }
+        .arch-value { color: #475569; font-size: 0.9rem; }
+        footer { text-align: center; padding: 30px 0; color: var(--gray); }
+        footer a { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <span class="version-badge">Junho 2026 - v4.11.0</span>
+            <h1>Cancelamento de Assinatura, Badge PRO e Performance</h1>
+            <p>Cancelar Premium pelo app, identificacao visual de assinante, graficos mais rapidos e faxina de codigo morto</p>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html" style="color: #10b981; font-weight: 600;">Indice</a></li>
+            <li><a href="#visao">Visao Geral</a></li>
+            <li><a href="#cancelamento">Cancelamento</a></li>
+            <li><a href="#badge">Badge PRO</a></li>
+            <li><a href="#performance">Performance</a></li>
+            <li><a href="#limpeza">Limpeza de Codigo</a></li>
+            <li><a href="#legal">E-mails Legais</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <a href="index.html" class="back-link">← Voltar para o indice</a>
+
+        <div class="update-notice">
+            <span style="font-size: 1.5rem;">✨</span>
+            <div>
+                <strong>v4.11.0 — Gestao da assinatura + ganho de performance</strong>
+                <p style="margin: 0; opacity: 0.9;">O usuario passa a cancelar a assinatura Premium direto nas Configuracoes, ganha um badge PRO ao lado do nome, e os graficos da carteira e dos relatorios deixam de esperar as APIs de preco para aparecer. Tambem removemos ~285 linhas de codigo morto.</p>
+            </div>
+        </div>
+
+        <section id="visao">
+            <h2>📋 Visao Geral</h2>
+            <div class="info-grid">
+                <div class="info-card"><div class="label">Versao</div><div class="value">v4.11.0</div></div>
+                <div class="info-card"><div class="label">Data</div><div class="value">Junho 2026</div></div>
+                <div class="info-card"><div class="label">Pagamento</div><div class="value">Mercado Pago (preapproval)</div></div>
+                <div class="info-card"><div class="label">Areas</div><div class="value">Configuracoes, TopBar, Carteira, Relatorios</div></div>
+            </div>
+
+            <h3>O que mudou</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🛑</span><span class="change-text"><strong>Cancelar assinatura</strong> — nova secao "Assinatura Premium" em /configuracoes com cancelamento e confirmacao inline</span></li>
+                <li class="change-item"><span class="change-icon">⭐</span><span class="change-text"><strong>Badge PRO</strong> — selo ao lado do nome do usuario no TopBar para assinantes Premium</span></li>
+                <li class="change-item"><span class="change-icon">⚡</span><span class="change-text"><strong>Graficos mais rapidos</strong> — carteira e relatorios renderizam com os dados do banco na hora; precos atualizam em background</span></li>
+                <li class="change-item"><span class="change-icon">🧹</span><span class="change-text"><strong>Limpeza</strong> — 6 arquivos orfaos, a pagina legada /extratos e 3 exports mortos removidos</span></li>
+                <li class="change-item"><span class="change-icon">📧</span><span class="change-text"><strong>Legal</strong> — Termos e Privacidade passam a citar o e-mail real de contato</span></li>
+            </ul>
+        </section>
+
+        <section id="cancelamento">
+            <h2>🛑 Cancelamento de Assinatura</h2>
+            <p>O usuario com assinatura paga agora gerencia o plano em <code>/configuracoes</code>, numa secao que so aparece para quem tem assinatura real (whitelist vitalicio nao ve, pois nao ha o que cancelar).</p>
+
+            <h3>Fluxo no backend</h3>
+            <ul class="step-list">
+                <li class="step-item"><span class="step-num">1</span><span class="step-text">Front chama <code>POST /api/mercadopago/cancel-subscription</code> com o <code>userId</code></span></li>
+                <li class="step-item"><span class="step-num">2</span><span class="step-text">O controller valida que existe assinatura <code>active</code> e busca o <code>mp_preapproval_id</code> no profile</span></li>
+                <li class="step-item"><span class="step-num">3</span><span class="step-text">Se houver preapproval (assinatura de cartao), cancela a recorrencia no Mercado Pago via <code>cancelPreapproval()</code></span></li>
+                <li class="step-item"><span class="step-num">4</span><span class="step-text">Marca o profile como <code>cancelled</code> — o acesso continua valido ate <code>subscription_expires_at</code></span></li>
+            </ul>
+
+            <h3>Regra de acesso pos-cancelamento</h3>
+            <p>O <code>isPremiumActive()</code> passou a honrar o status <code>cancelled</code> enquanto a data de expiracao for futura: o usuario ja pagou o periodo vigente, entao mantem o Premium ate o fim — so nao ha renovacao.</p>
+            <pre>export function isPremiumActive(state) {
+  if (state.status !== 'active' &amp;&amp; state.status !== 'cancelled') return false;
+  if (!state.expiresAt) return state.status === 'active'; // vitalicio (whitelist)
+  return new Date(state.expiresAt).getTime() &gt; Date.now();
+}</pre>
+            <p>Na UI, a secao mostra o plano (Mensal/Anual), o status (Ativa/Cancelada) e a data de renovacao/expiracao. Quando ja cancelada, oferece "Reativar Premium".</p>
+        </section>
+
+        <section id="badge">
+            <h2>⭐ Badge PRO</h2>
+            <p>No <code>TopBar</code>, assinantes Premium ganham um selo <strong>PRO</strong> ao lado do nome — gradiente ciano com icone Sparkles. A visibilidade usa o hook <code>usePremium()</code>, entao cobre tanto assinantes pagos quanto contas da whitelist (Premium vitalicio).</p>
+            <div class="arch-box">
+                <div class="arch-row"><span class="arch-label">Onde aparece</span><span class="arch-value">Ao lado do nome, no pill de usuario do TopBar</span></div>
+                <div class="arch-row"><span class="arch-label">Condicao</span><span class="arch-value"><code>usePremium().isPremium === true</code></span></div>
+                <div class="arch-row"><span class="arch-label">Visual</span><span class="arch-value">Gradiente ciano + icone Sparkles + texto "PRO"</span></div>
+            </div>
+        </section>
+
+        <section id="performance">
+            <h2>⚡ Performance dos Graficos</h2>
+            <p>Antes, carteira e relatorios faziam um <strong>waterfall</strong> que bloqueava o render: esperavam <code>refreshAllPrices()</code> terminar (chamadas externas em serie) antes de mostrar qualquer grafico.</p>
+
+            <h3>O que mudou</h3>
+            <ul class="step-list">
+                <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Render imediato</strong> — as paginas carregam primeiro os valores ja salvos no Supabase (<code>getPortfolioData()</code>) e pintam os graficos na hora</span></li>
+                <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Precos em background</strong> — <code>refreshAllPrices()</code> roda depois; so re-renderiza se algum preco mudou</span></li>
+                <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Busca paralela</strong> — o loop de precos virou <code>Promise.all</code>; o tempo cai de "soma das latencias" para "a maior latencia"</span></li>
+                <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>CDI nao bloqueia</strong> — em relatorios, a busca do CDI virou fire-and-forget</span></li>
+            </ul>
+            <p><strong>Resultado:</strong> no refresh/login, os graficos aparecem assim que o banco responde (1 round-trip), e os precos de mercado entram suavemente depois, sem tela em branco.</p>
+        </section>
+
+        <section id="limpeza">
+            <h2>🧹 Limpeza de Codigo Morto</h2>
+            <p>Varredura e remocao de codigo sem nenhuma referencia — validado com <code>tsc</code> e <code>build</code>, sem impacto em runtime ou usabilidade.</p>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">📄</span><span class="change-text"><strong>6 arquivos orfaos</strong> — ProtectedRoute, shared/Logo, types/auth, lib/validators, ui/input, layout/index.ts (barrel)</span></li>
+                <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text"><strong>Pagina /extratos</strong> — placeholder "Em breve" com styling pre-redesign, ja substituido por Relatorios &gt; aba Extratos</span></li>
+                <li class="change-item"><span class="change-icon">✂️</span><span class="change-text"><strong>3 exports mortos</strong> — getPortfolioSummary / getPortfolioByClass / getPortfolioByBroker no portfolioService</span></li>
+            </ul>
+            <p>Total: ~285 linhas removidas. As funcoes equivalentes ja eram supridas por outro caminho em producao (guards inline, &lt;Image&gt; direto, tipos do Supabase, <code>getPortfolioData()</code>).</p>
+        </section>
+
+        <section id="legal">
+            <h2>📧 E-mails Legais</h2>
+            <p>As paginas de <strong>Termos de Uso</strong> e <strong>Politica de Privacidade</strong> passaram a citar o e-mail real de contato em todas as ocorrencias (antes usavam enderecos ficticios <code>contato@</code> / <code>dpo@nuvaryinvest.com.br</code>), incluindo as secoes de contato e de exercicio de direitos LGPD.</p>
+        </section>
+    </main>
+    <footer><p>Nuvary Invest © 2026 — <a href="index.html">Voltar ao indice</a></p></footer>
+</body>
+</html>
