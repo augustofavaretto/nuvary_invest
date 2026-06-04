@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 
 interface DocItem {
@@ -10,6 +13,69 @@ interface DocItem {
   gradient: string;
   href: string;
 }
+
+// ── Categorias funcionais ───────────────────────────────────────────────────
+type CategoryId =
+  | 'todos'
+  | 'landing'
+  | 'dashboard'
+  | 'carteira'
+  | 'chat'
+  | 'relatorios'
+  | 'trilhas'
+  | 'config'
+  | 'backend';
+
+const CATEGORIES: { id: CategoryId; label: string; emoji: string }[] = [
+  { id: 'todos', label: 'Todos', emoji: '📚' },
+  { id: 'landing', label: 'Landing Page', emoji: '🚀' },
+  { id: 'dashboard', label: 'Dashboard', emoji: '📊' },
+  { id: 'carteira', label: 'Carteira', emoji: '💼' },
+  { id: 'chat', label: 'Chat IA', emoji: '💬' },
+  { id: 'relatorios', label: 'Relatórios', emoji: '📈' },
+  { id: 'trilhas', label: 'Trilhas Educativas', emoji: '🎓' },
+  { id: 'config', label: 'Configurações', emoji: '⚙️' },
+  { id: 'backend', label: 'Backend (APIs & DB)', emoji: '🔌' },
+];
+
+// Mapeia cada doc à sua categoria principal (docs cross-cutting vão para a área dominante).
+const DOC_CATEGORY: Record<string, Exclude<CategoryId, 'todos'>> = {
+  '38': 'config', '37': 'landing', '36': 'config', '35': 'landing', '34': 'dashboard',
+  '33': 'chat', '32': 'dashboard', '31': 'relatorios', '30': 'config', '29': 'trilhas',
+  '28': 'carteira', '27': 'chat', '26': 'backend', '25': 'relatorios', '24': 'backend',
+  '23': 'relatorios', '22': 'config', '21': 'backend', '20': 'trilhas', '19': 'backend',
+  '18': 'backend', '17': 'backend', '16': 'backend', '15': 'carteira', '14': 'dashboard',
+  '13': 'backend', '12': 'backend', '11': 'config', '10': 'chat', '09': 'backend',
+  '08': 'backend', '07': 'chat', '06': 'backend', '05': 'backend', '04': 'backend',
+  '03': 'backend', '02': 'backend', '01': 'backend',
+};
+
+// Referência do Backend — rotas montadas em backend/src/app.js e tabelas Supabase.
+const BACKEND_ROUTES: { route: string; fonte: string }[] = [
+  { route: '/api/stocks', fonte: 'Alpha Vantage — ações' },
+  { route: '/api/forex', fonte: 'Câmbio / moedas' },
+  { route: '/api/crypto', fonte: 'Alpha Vantage — cripto' },
+  { route: '/api/search', fonte: 'Busca de ativos' },
+  { route: '/api/finnhub', fonte: 'Finnhub — ações US' },
+  { route: '/api/news', fonte: 'News API — notícias' },
+  { route: '/api/ai', fonte: 'OpenAI — Chat IA' },
+  { route: '/api/profile', fonte: 'Perfil de risco (questionário)' },
+  { route: '/api/brapi', fonte: 'Brapi — B3 / FIIs / Selic' },
+  { route: '/api/anbima', fonte: 'ANBIMA — renda fixa' },
+  { route: '/api/tesouro', fonte: 'Tesouro Direto (JSON + CSV)' },
+  { route: '/api/bcb', fonte: 'BCB SGS + OLINDA (Selic, CDI, IPCA, IGP-M, Focus)' },
+  { route: '/api/mercadopago', fonte: 'Assinatura Premium (preapproval, PIX/Boleto, webhook, cancelamento)' },
+];
+
+const SUPABASE_TABLES: { table: string; desc: string }[] = [
+  { table: 'profiles', desc: 'Perfil + colunas de assinatura (status, plano, expira_em) + toggles de e-mail/alertas' },
+  { table: 'portfolio_assets', desc: 'Carteira do usuário (RF, ações, FIIs, internacional, cripto)' },
+  { table: 'portfolio_transactions', desc: 'Operações de venda (base para IR)' },
+  { table: 'chat_historico', desc: 'Histórico de conversas do assistente IA' },
+  { table: 'perfil_investidor', desc: 'Resposta do questionário (perfil de risco)' },
+  { table: 'alertas_variacao', desc: 'Alertas quando um ativo varia ≥5%' },
+  { table: 'subscription_payments', desc: 'Histórico de pagamentos do Mercado Pago' },
+];
 
 const docs: DocItem[] = [
   {
@@ -395,13 +461,23 @@ const docs: DocItem[] = [
 ];
 
 export default function DocsPage() {
+  const [active, setActive] = useState<CategoryId>('todos');
+
+  const countOf = (id: CategoryId) =>
+    id === 'todos' ? docs.length : docs.filter((d) => DOC_CATEGORY[d.number] === id).length;
+
+  const visibleDocs =
+    active === 'todos' ? docs : docs.filter((d) => DOC_CATEGORY[d.number] === active);
+
+  const activeMeta = CATEGORIES.find((c) => c.id === active)!;
+
   return (
     <div className="min-h-screen bg-[#f1f5f9]">
       {/* Header */}
       <header className="bg-gradient-to-br from-[#1e1b4b] via-[#4f46e5] to-[#6366f1] text-white py-16 text-center">
         <div className="max-w-[900px] mx-auto px-5">
           <h1 className="text-4xl font-bold mb-2">Nuvary Invest</h1>
-          <p className="text-lg opacity-90">Histórico de Documentações do Projeto</p>
+          <p className="text-lg opacity-90">Documentação do Projeto por Categoria</p>
           <span className="inline-block bg-[#10b981] text-white px-4 py-1.5 rounded-full text-sm mt-4 font-medium">
             {docs.length} Documentos
           </span>
@@ -409,8 +485,8 @@ export default function DocsPage() {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white py-4 sticky top-0 shadow-md z-50">
-        <div className="max-w-[900px] mx-auto px-5">
+      <nav className="bg-white py-4 shadow-sm">
+        <div className="max-w-[1000px] mx-auto px-5">
           <ul className="flex justify-center gap-8 flex-wrap">
             <li>
               <Link href="/" className="text-[#10b981] font-semibold hover:underline">
@@ -431,10 +507,95 @@ export default function DocsPage() {
         </div>
       </nav>
 
+      {/* Tabs de categoria — sticky */}
+      <div className="bg-white border-b border-[#e2e8f0] sticky top-0 z-40 shadow-sm">
+        <div className="max-w-[1000px] mx-auto px-5">
+          <div className="flex gap-2 overflow-x-auto py-3">
+            {CATEGORIES.map((cat) => {
+              const isActive = active === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setActive(cat.id)}
+                  className={`
+                    inline-flex items-center gap-2 whitespace-nowrap
+                    px-4 py-2 rounded-full text-sm font-semibold transition-colors
+                    ${isActive
+                      ? 'bg-[#4f46e5] text-white'
+                      : 'bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0]'}
+                  `}
+                >
+                  <span>{cat.emoji}</span>
+                  {cat.label}
+                  <span
+                    className={`
+                      inline-flex items-center justify-center min-w-[20px] h-5 px-1.5
+                      rounded-full text-xs font-bold
+                      ${isActive ? 'bg-white/25 text-white' : 'bg-white text-[#64748b]'}
+                    `}
+                  >
+                    {countOf(cat.id)}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
       {/* Content */}
-      <main className="max-w-[900px] mx-auto px-5 py-10">
+      <main className="max-w-[1000px] mx-auto px-5 py-10">
+        {/* Título da categoria ativa */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-[#1e1b4b] flex items-center gap-2.5">
+            <span>{activeMeta.emoji}</span>
+            {activeMeta.label}
+          </h2>
+          <p className="text-[#64748b] text-sm mt-1">
+            {visibleDocs.length} {visibleDocs.length === 1 ? 'documento' : 'documentos'}
+            {active === 'backend' && ' · APIs e banco de dados abaixo'}
+          </p>
+        </div>
+
+        {/* Referência do Backend — só na aba Backend */}
+        {active === 'backend' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-8">
+            {/* Rotas da API */}
+            <section className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-lg font-semibold text-[#1e1b4b] mb-4 flex items-center gap-2">
+                🌐 Rotas da API <span className="text-xs font-normal text-[#94a3b8]">(Express · porta 3001)</span>
+              </h3>
+              <ul className="space-y-2">
+                {BACKEND_ROUTES.map((r) => (
+                  <li key={r.route} className="flex flex-col sm:flex-row sm:items-baseline gap-x-3 text-sm border-b border-[#f1f5f9] pb-2 last:border-0">
+                    <code className="text-[#4f46e5] font-semibold whitespace-nowrap">{r.route}</code>
+                    <span className="text-[#64748b]">{r.fonte}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            {/* Tabelas do banco */}
+            <section className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-lg font-semibold text-[#1e1b4b] mb-4 flex items-center gap-2">
+                🗄️ Tabelas <span className="text-xs font-normal text-[#94a3b8]">(Supabase · RLS por auth.uid())</span>
+              </h3>
+              <ul className="space-y-2">
+                {SUPABASE_TABLES.map((t) => (
+                  <li key={t.table} className="flex flex-col gap-0.5 text-sm border-b border-[#f1f5f9] pb-2 last:border-0">
+                    <code className="text-[#10b981] font-semibold">{t.table}</code>
+                    <span className="text-[#64748b]">{t.desc}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+        )}
+
+        {/* Lista de docs da categoria */}
         <ul className="list-none">
-          {docs.map((doc) => (
+          {visibleDocs.map((doc) => (
             <a
               key={doc.number}
               href={doc.href}
