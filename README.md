@@ -65,8 +65,8 @@ nuvary-invest/
 │       │   ├── docs/            # Histórico de releases (inline)
 │       │   └── api/
 │       │       ├── cron/weekly-report/    # Vercel Cron diário 8h BRT
-│       │       ├── email/send-test/       # Diagnóstico manual de e-mail
-│       │       └── webhooks/mercadopago/  # Atualiza subscription_state
+│       │       └── email/send-test/       # Diagnóstico manual de e-mail
+│       │       # (webhook + cancelamento do Mercado Pago ficam no backend)
 │       ├── components/
 │       │   ├── layout/          # Sidebar, TopBar, TickerTape, PremiumUpgradeBanner
 │       │   ├── dashboard/       # GreetingCard, PatrimonioCard, EvolucaoChart, etc.
@@ -101,7 +101,7 @@ nuvary-invest/
 | `perfil_investidor` | Resposta do questionário (perfil de risco) |
 | `alertas_variacao` | Alertas quando ativo varia ≥5% |
 | `portfolio_transactions` | Operações de venda (base para IR) |
-| `mercadopago_subscriptions` | Estado da assinatura Premium |
+| `subscription_payments` | Histórico de pagamentos do Mercado Pago (estado da assinatura fica em colunas de `profiles`) |
 
 Todas com **RLS habilitado** filtrando por `auth.uid()`.
 
@@ -119,8 +119,8 @@ NEXT_PUBLIC_APP_URL=https://nuvary-invest.vercel.app
 RESEND_API_KEY=...
 EMAIL_FROM=Nuvary Invest <relatorios@seudominio.com>
 CRON_SECRET=...
-MP_ACCESS_TOKEN=...
-MP_WEBHOOK_SECRET=...
+MERCADOPAGO_ACCESS_TOKEN=...
+MERCADOPAGO_WEBHOOK_SECRET=...
 OPENAI_API_KEY=...
 ```
 

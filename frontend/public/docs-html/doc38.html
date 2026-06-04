@@ -147,12 +147,26 @@
         <section id="limpeza">
             <h2>🧹 Limpeza de Codigo Morto</h2>
             <p>Varredura e remocao de codigo sem nenhuma referencia — validado com <code>tsc</code> e <code>build</code>, sem impacto em runtime ou usabilidade.</p>
+            <h3>Frontend</h3>
             <ul class="change-list">
                 <li class="change-item"><span class="change-icon">📄</span><span class="change-text"><strong>6 arquivos orfaos</strong> — ProtectedRoute, shared/Logo, types/auth, lib/validators, ui/input, layout/index.ts (barrel)</span></li>
                 <li class="change-item"><span class="change-icon">🗑️</span><span class="change-text"><strong>Pagina /extratos</strong> — placeholder "Em breve" com styling pre-redesign, ja substituido por Relatorios &gt; aba Extratos</span></li>
                 <li class="change-item"><span class="change-icon">✂️</span><span class="change-text"><strong>3 exports mortos</strong> — getPortfolioSummary / getPortfolioByClass / getPortfolioByBroker no portfolioService</span></li>
+                <li class="change-item"><span class="change-icon">📦</span><span class="change-text"><strong>3 deps npm nao usadas</strong> — react-hook-form, zod, @hookform/resolvers (forms usam input nativo + validacao inline)</span></li>
             </ul>
-            <p>Total: ~285 linhas removidas. As funcoes equivalentes ja eram supridas por outro caminho em producao (guards inline, &lt;Image&gt; direto, tipos do Supabase, <code>getPortfolioData()</code>).</p>
+
+            <h3>Backend</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🔌</span><span class="change-text"><strong>authController.js</strong> — controller legado da era pre-Supabase, sem rota montada e importando um <code>services/auth.js</code> que nem existe. Auth hoje e 100% client-side via Supabase.</span></li>
+            </ul>
+
+            <h3>Documentacao corrigida (README)</h3>
+            <ul class="change-list">
+                <li class="change-item"><span class="change-icon">🛠️</span><span class="change-text">Estrutura citava <code>app/api/webhooks/mercadopago</code> (inexistente) — webhook/cancelamento ficam no backend</span></li>
+                <li class="change-item"><span class="change-icon">🗄️</span><span class="change-text">Tabela <code>mercadopago_subscriptions</code> (inexistente) corrigida para <code>subscription_payments</code></span></li>
+                <li class="change-item"><span class="change-icon">🔑</span><span class="change-text">Env vars <code>MP_ACCESS_TOKEN</code>/<code>MP_WEBHOOK_SECRET</code> corrigidas para <code>MERCADOPAGO_ACCESS_TOKEN</code>/<code>MERCADOPAGO_WEBHOOK_SECRET</code></span></li>
+            </ul>
+            <p>Validado com <code>tsc</code>, <code>build</code> e <code>node --check</code> no backend — sem impacto em runtime ou usabilidade.</p>
         </section>
 
         <section id="legal">
