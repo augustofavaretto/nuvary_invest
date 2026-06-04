@@ -510,7 +510,7 @@ export default function DocsPage() {
       {/* Tabs de categoria — sticky */}
       <div className="bg-white border-b border-[#e2e8f0] sticky top-0 z-40 shadow-sm">
         <div className="max-w-[1000px] mx-auto px-5">
-          <div className="flex gap-2 overflow-x-auto py-3">
+          <div className="flex flex-wrap justify-center gap-2 py-3">
             {CATEGORIES.map((cat) => {
               const isActive = active === cat.id;
               return (
