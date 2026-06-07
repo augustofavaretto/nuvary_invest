@@ -7,9 +7,10 @@ interface Webmail {
 }
 
 const WEBMAIL_BY_DOMAIN: Record<string, Webmail> = {
-  // Google
+  // Google (inclui domínios institucionais com Google Workspace)
   'gmail.com': { name: 'Gmail', url: 'https://mail.google.com/mail/' },
   'googlemail.com': { name: 'Gmail', url: 'https://mail.google.com/mail/' },
+  'atitus.edu.br': { name: 'Gmail', url: 'https://mail.google.com/mail/' },
   // Microsoft
   'outlook.com': { name: 'Outlook', url: 'https://outlook.live.com/mail/' },
   'outlook.com.br': { name: 'Outlook', url: 'https://outlook.live.com/mail/' },
