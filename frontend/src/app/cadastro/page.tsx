@@ -129,13 +129,18 @@ export default function CadastroPage() {
       });
 
       // Com email confirmation LIGADO no Supabase nao ha sessao apos signUp:
-      // mandamos pra /login com flag pra mostrar "confirme seu email". O link
-      // de confirmacao no email aponta pra /questionario (emailRedirectTo
-      // em authService.ts), entao apos confirmar o usuario cai direto la.
+      // mandamos pra /confirme-email (passando o e-mail) para mostrar a tela
+      // de confirmacao com botao de abrir a caixa de entrada. O link de
+      // confirmacao no email aponta pra /questionario (emailRedirectTo em
+      // authService.ts), entao apos confirmar o usuario cai direto la.
       // Se a sessao ja existir (email confirmation desligado), vai direto
       // pro questionario.
       const { data: { session } } = await supabase.auth.getSession();
-      router.push(session ? '/questionario' : '/login?verifique-email=1');
+      router.push(
+        session
+          ? '/questionario'
+          : `/confirme-email?email=${encodeURIComponent(form.email)}`,
+      );
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       if (/already registered|already been registered/i.test(msg)) {
