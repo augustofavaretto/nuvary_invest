@@ -40,6 +40,8 @@ const CATEGORIES: { id: CategoryId; label: string; emoji: string }[] = [
 
 // Mapeia cada doc à sua categoria principal (docs cross-cutting vão para a área dominante).
 const DOC_CATEGORY: Record<string, Exclude<CategoryId, 'todos'>> = {
+  '41': 'config',
+  '40': 'backend',
   '39': 'carteira',
   '38': 'config', '37': 'landing', '36': 'config', '35': 'landing', '34': 'dashboard',
   '33': 'chat', '32': 'dashboard', '31': 'relatorios', '30': 'config', '29': 'trilhas',
@@ -78,6 +80,26 @@ const SUPABASE_TABLES: { table: string; desc: string }[] = [
 ];
 
 const docs: DocItem[] = [
+  {
+    number: '41',
+    title: 'Central de Ajuda e Onboarding Guiado',
+    description: 'Nova página /suporte com FAQ + contato por e-mail, e tour guiado com spotlight para novos usuários no primeiro acesso (destaca carteira, chat, relatórios, trilhas, alertas e conta)',
+    date: 'Junho 2026',
+    version: '4.14.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #1e3a5f 0%, #00B8D9 100%)',
+    href: '/docs-html/doc41.html'
+  },
+  {
+    number: '40',
+    title: 'Alertas de Variação Corrigidos',
+    description: 'Cotação de cripto migrada para CoinGecko (Alpha Vantage virou premium), dólar real via BCB PTAX no lugar do fixo 5,0 e token Brapi resiliente para FIIs — alertas voltam a disparar com preços corretos',
+    date: 'Junho 2026',
+    version: '4.13.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #0e7490 0%, #f59e0b 100%)',
+    href: '/docs-html/doc40.html'
+  },
   {
     number: '39',
     title: 'Remoção do Tesouro Direto + Docs por Categoria',

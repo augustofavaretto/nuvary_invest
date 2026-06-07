@@ -2,7 +2,7 @@
 
 Plataforma de consultoria de investimentos com assistente IA, voltada ao investidor brasileiro.
 
-**Versão atual:** v4.12.0 — Remoção da feature de Tesouro Direto (API de taxas com problema) + documentação `/docs` organizada por categorias com abas.
+**Versão atual:** v4.14.0 — Central de Ajuda (`/suporte`) com FAQ + onboarding guiado para novos usuários, e correção dos alertas de variação (cripto via CoinGecko, dólar via BCB PTAX, token Brapi para FIIs).
 
 ---
 
@@ -60,9 +60,10 @@ nuvary-invest/
 │       │   ├── relatorios/      # Performance + Extratos + IR
 │       │   ├── trilhas/         # Aulas em vídeo
 │       │   ├── perfil/          # Dados pessoais + questionário
-│       │   ├── configuracoes/   # Theme toggle + premium gates
+│       │   ├── configuracoes/   # Theme toggle + premium gates + cancelar assinatura
+│       │   ├── suporte/         # Central de Ajuda (FAQ + contato + refazer tour)
 │       │   ├── premium/         # Página de upgrade (planos + checkout MP)
-│       │   ├── docs/            # Histórico de releases (inline)
+│       │   ├── docs/            # Histórico de releases (por categoria)
 │       │   └── api/
 │       │       ├── cron/weekly-report/    # Vercel Cron diário 8h BRT
 │       │       └── email/send-test/       # Diagnóstico manual de e-mail
