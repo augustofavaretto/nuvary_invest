@@ -16,6 +16,7 @@ const SGS_SERIES = {
   ipca_mensal:         433,
   ipca_12m:            13522,
   igpm_mensal:         189,
+  usd_ptax:            1,      // Dólar americano (PTAX) diário
 };
 
 // Busca os N últimos valores de uma série SGS
@@ -64,6 +65,25 @@ export const bcbController = {
           taxa:    meta.status === 'fulfilled'
                      ? meta.value.valor
                      : anual.status === 'fulfilled' ? anual.value.valor : null,
+          updatedAt: new Date().toISOString(),
+        };
+      });
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // GET /api/bcb/dolar
+  // Retorna a cotação USD/BRL (PTAX diária, série SGS 1)
+  async getDolar(req, res, next) {
+    try {
+      const result = await withCache('bcb_dolar', async () => {
+        const ptax = await fetchSGS(SGS_SERIES.usd_ptax);
+        return {
+          taxa: ptax.valor,
+          data: ptax.data,
+          fonte: 'BCB SGS (PTAX)',
           updatedAt: new Date().toISOString(),
         };
       });

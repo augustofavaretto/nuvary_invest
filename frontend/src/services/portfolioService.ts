@@ -76,8 +76,32 @@ const BDR_TO_US_SYMBOL: Record<string, string> = {
   'SPXI11': 'SPY',
 };
 
-// Cotação do dólar (aproximada, em produção buscar de API forex)
+// Cotação do dólar — fallback caso a API do BCB não responda
 const USD_TO_BRL = 5.0;
+
+// Busca a cotação USD/BRL real (PTAX) no backend BCB, com cache de 1h.
+// Cai no fallback USD_TO_BRL se a API falhar.
+let usdBrlCache: { value: number; ts: number } | null = null;
+const USD_BRL_TTL = 60 * 60 * 1000; // 1h
+
+async function fetchUsdToBrl(): Promise<number> {
+  const now = Date.now();
+  if (usdBrlCache && now - usdBrlCache.ts < USD_BRL_TTL) return usdBrlCache.value;
+  try {
+    const res = await fetch(`${API_URL}/bcb/dolar`);
+    if (res.ok) {
+      const data = await res.json();
+      const taxa = Number(data?.taxa);
+      if (taxa > 0) {
+        usdBrlCache = { value: taxa, ts: now };
+        return taxa;
+      }
+    }
+  } catch {
+    // silencioso — usa fallback
+  }
+  return USD_TO_BRL;
+}
 
 export interface PriceResult {
   price: number | null;
@@ -213,8 +237,9 @@ export async function fetchAssetPrice(
     const usSymbol = BDR_TO_US_SYMBOL[ticker] || ticker;
     const usPrice = await fetchUSStockPrice(usSymbol);
     if (usPrice) {
+      const usdBrl = await fetchUsdToBrl();
       return {
-        price: usPrice * USD_TO_BRL,
+        price: usPrice * usdBrl,
         currency: 'BRL',
         source: `Finnhub (${usSymbol})`,
       };

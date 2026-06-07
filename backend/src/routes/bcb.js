@@ -15,6 +15,9 @@ router.get('/ipca', bcbController.getIPCA);
 // GET /api/bcb/igpm   — IGP-M mensal
 router.get('/igpm', bcbController.getIGPM);
 
+// GET /api/bcb/dolar  — Cotação USD/BRL (PTAX diária, série SGS 1)
+router.get('/dolar', bcbController.getDolar);
+
 // GET /api/bcb/focus  — Expectativas Focus (BCB OLINDA OData)
 router.get('/focus', bcbController.getFocus);
 
