@@ -7,7 +7,6 @@ import { User, IdCard, Calendar, Phone, Mail } from 'lucide-react';
 import { AuthLayout } from '@/components/public/AuthLayout';
 import { Field, PasswordInput } from '@/components/public/AuthFields';
 import { cadastrar } from '@/services/authService';
-import supabase from '@/lib/supabase';
 import { isValidCPF } from '@/lib/cpf';
 
 // Mascaras visuais (CPF, data, telefone) — apenas display.
@@ -118,7 +117,7 @@ export default function CadastroPage() {
     try {
       // Backend espera o mesmo payload de antes: cpf e telefone sem mascara,
       // data no formato DD/MM/AAAA (string), aceiteTermos boolean.
-      await cadastrar({
+      const signUpData = await cadastrar({
         nome: form.nome,
         cpf: form.cpf.replace(/\D/g, ''),
         dataNascimento: form.nascimento,
@@ -128,16 +127,14 @@ export default function CadastroPage() {
         aceiteTermos: form.aceite,
       });
 
-      // Com email confirmation LIGADO no Supabase nao ha sessao apos signUp:
-      // mandamos pra /confirme-email (passando o e-mail) para mostrar a tela
-      // de confirmacao com botao de abrir a caixa de entrada. O link de
-      // confirmacao no email aponta pra /questionario (emailRedirectTo em
-      // authService.ts), entao apos confirmar o usuario cai direto la.
-      // Se a sessao ja existir (email confirmation desligado), vai direto
-      // pro questionario.
-      const { data: { session } } = await supabase.auth.getSession();
+      // Decide pelo retorno do proprio signUp (NAO por getSession, que poderia
+      // ler uma sessao antiga do navegador). Com "Confirm email" ligado no
+      // Supabase, signUp.session = null -> vamos para /confirme-email (com o
+      // botao de abrir a caixa de entrada). O link no e-mail aponta para
+      // /questionario (emailRedirectTo em authService.ts). Se a confirmacao
+      // estiver desligada, ha sessao e vai direto pro questionario.
       router.push(
-        session
+        signUpData?.session
           ? '/questionario'
           : `/confirme-email?email=${encodeURIComponent(form.email)}`,
       );
