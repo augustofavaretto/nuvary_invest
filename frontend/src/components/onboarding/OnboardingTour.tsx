@@ -162,13 +162,9 @@ export function OnboardingTour({ steps, run, onFinish }: OnboardingTourProps) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.18 }}
-          style={cardStyle}
-          className="rounded-[var(--r-lg)] shadow-2xl p-5"
+          style={{ ...cardStyle, background: 'var(--surface-1)', border: '1px solid var(--border)', padding: 18 }}
+          className="rounded-[var(--r-lg)] shadow-2xl"
         >
-          <div
-            className="rounded-[var(--r-lg)]"
-            style={{ background: 'var(--surface-1)', border: '1px solid var(--border-hi, var(--border))', padding: 18, position: 'relative' }}
-          >
             {/* Fechar/pular */}
             <button
               type="button"
@@ -196,23 +192,23 @@ export function OnboardingTour({ steps, run, onFinish }: OnboardingTourProps) {
               {step.description}
             </p>
 
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-2">
               {/* Progresso */}
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 min-w-0 overflow-hidden">
                 {steps.map((_, i) => (
                   <span
                     key={i}
-                    className="rounded-full transition-all"
+                    className="rounded-full transition-all shrink-0"
                     style={{
-                      width: i === index ? 18 : 6,
-                      height: 6,
+                      width: i === index ? 16 : 5,
+                      height: 5,
                       background: i === index ? 'var(--cyan)' : 'var(--surface-3, var(--border))',
                     }}
                   />
                 ))}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 {!isFirst && (
                   <button
                     type="button"
@@ -244,7 +240,6 @@ export function OnboardingTour({ steps, run, onFinish }: OnboardingTourProps) {
                 </button>
               </div>
             </div>
-          </div>
         </motion.div>
       </AnimatePresence>
     </div>,
