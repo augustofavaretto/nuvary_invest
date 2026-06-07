@@ -83,6 +83,7 @@ export function TopBar({ notificationSlot }: TopBarProps) {
         <button
           type="button"
           onClick={() => setMenuOpen((v) => !v)}
+          data-tour="conta"
           className="
             flex items-center gap-3
             pl-1.5 pr-3.5 py-1.5

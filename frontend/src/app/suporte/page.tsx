@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
-import { LifeBuoy, HelpCircle, ChevronDown, Mail, Send } from 'lucide-react';
+import { LifeBuoy, HelpCircle, ChevronDown, Mail, Send, Compass } from 'lucide-react';
+import { START_ONBOARDING_EVENT } from '@/components/onboarding/OnboardingGate';
 
 // Contato de suporte (mesmo e-mail do mailto pré-preenchido)
 const SUPORTE_EMAIL = 'investnet123@gmail.com';
@@ -172,14 +173,25 @@ export default function SuportePage() {
             Fale direto com a nossa equipe — respondemos no e-mail{' '}
             <strong style={{ color: 'var(--t1)' }}>{SUPORTE_EMAIL}</strong>.
           </p>
-          <a
-            href={SUPORTE_HREF}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13px] font-semibold transition-opacity hover:opacity-90"
-            style={{ background: 'var(--cyan)', color: 'white', boxShadow: '0 4px 14px rgba(0,184,217,0.28)' }}
-          >
-            <Send className="w-4 h-4" />
-            Falar com o suporte
-          </a>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <a
+              href={SUPORTE_HREF}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13px] font-semibold transition-opacity hover:opacity-90"
+              style={{ background: 'var(--cyan)', color: 'white', boxShadow: '0 4px 14px rgba(0,184,217,0.28)' }}
+            >
+              <Send className="w-4 h-4" />
+              Falar com o suporte
+            </a>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent(START_ONBOARDING_EVENT))}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13px] font-semibold transition-colors"
+              style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--t1)' }}
+            >
+              <Compass className="w-4 h-4" style={{ color: 'var(--cyan)' }} />
+              Refazer tour da plataforma
+            </button>
+          </div>
         </motion.section>
 
         {/* Atalho para os termos/privacidade */}

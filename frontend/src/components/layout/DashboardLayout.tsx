@@ -5,6 +5,7 @@ import { TopBar } from './TopBar';
 import { PremiumUpgradeBanner } from './PremiumUpgradeBanner';
 import { NotificationBell } from '@/components/dashboard/NotificationBell';
 import { AlertToastContainer } from '@/components/dashboard/AlertToastContainer';
+import { OnboardingGate } from '@/components/onboarding/OnboardingGate';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -46,6 +47,7 @@ export function DashboardLayout({ children, hideTopBar = false }: DashboardLayou
       </div>
 
       <AlertToastContainer />
+      <OnboardingGate />
     </div>
   );
 }

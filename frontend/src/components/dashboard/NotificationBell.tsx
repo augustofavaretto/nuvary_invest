@@ -129,6 +129,7 @@ export function NotificationBell() {
     <div className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
+        data-tour="alertas"
         className="relative p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
         aria-label="Notificações"
       >

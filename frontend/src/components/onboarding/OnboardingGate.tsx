@@ -1,0 +1,107 @@
+'use client';
+
+import { useCallback, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { OnboardingTour, type TourStep } from './OnboardingTour';
+
+const STORAGE_KEY = 'nuvary_onboarding_v1';
+
+// Evento global para refazer o tour (disparado, ex., pela Central de Ajuda)
+export const START_ONBOARDING_EVENT = 'nuvary:start-onboarding';
+
+const ALL_STEPS: TourStep[] = [
+  {
+    title: 'Bem-vindo à Nuvary Invest! 👋',
+    description:
+      'Vamos te mostrar rapidinho onde fica cada coisa. Leva menos de um minuto — use “Próximo” ou as setas do teclado.',
+  },
+  {
+    target: '[data-tour="carteira"]',
+    title: 'Sua carteira',
+    description:
+      'Monte e acompanhe seus investimentos — ações, FIIs, renda fixa, internacional e cripto — com preços atualizados automaticamente.',
+    placement: 'right',
+  },
+  {
+    target: '[data-tour="chat"]',
+    title: 'Assistente de IA',
+    description:
+      'Tire dúvidas sobre investimentos com a IA, que entende o contexto da sua carteira e do seu perfil.',
+    placement: 'right',
+  },
+  {
+    target: '[data-tour="relatorios"]',
+    title: 'Relatórios',
+    description:
+      'Veja performance, extratos e o informe de Imposto de Renda, com gráficos e opção de exportar.',
+    placement: 'right',
+  },
+  {
+    target: '[data-tour="trilhas"]',
+    title: 'Trilhas educativas',
+    description:
+      'Aprenda do básico ao avançado com vídeos organizados por tema.',
+    placement: 'right',
+  },
+  {
+    target: '[data-tour="alertas"]',
+    title: 'Alertas de variação',
+    description:
+      'Quando um ativo da sua carteira varia 5% ou mais, o aviso aparece aqui no sino. (recurso Premium)',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="conta"]',
+    title: 'Sua conta',
+    description:
+      'Acesse seu perfil, as configurações e a assinatura Premium por este menu.',
+    placement: 'bottom',
+  },
+  {
+    title: 'Tudo pronto! 🚀',
+    description:
+      'Explore à vontade. Você pode refazer este tour quando quiser na Central de Ajuda (menu Suporte).',
+  },
+];
+
+export function OnboardingGate() {
+  const pathname = usePathname();
+  const [run, setRun] = useState(false);
+  const [steps, setSteps] = useState<TourStep[]>([]);
+
+  // Filtra para os passos cujos alvos existem (ex.: no mobile a sidebar fica oculta)
+  const start = useCallback(() => {
+    const effective = ALL_STEPS.filter(
+      (s) => !s.target || document.querySelector(s.target),
+    );
+    setSteps(effective);
+    setRun(true);
+  }, []);
+
+  // Auto-início no primeiro acesso — só no dashboard, após a UI renderizar
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (pathname !== '/dashboard') return;
+    if (localStorage.getItem(STORAGE_KEY)) return;
+    const t = setTimeout(start, 900);
+    return () => clearTimeout(t);
+  }, [pathname, start]);
+
+  // Refazer manualmente via evento
+  useEffect(() => {
+    const onReplay = () => start();
+    window.addEventListener(START_ONBOARDING_EVENT, onReplay);
+    return () => window.removeEventListener(START_ONBOARDING_EVENT, onReplay);
+  }, [start]);
+
+  const finish = useCallback(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, '1');
+    } catch {
+      /* ignore */
+    }
+    setRun(false);
+  }, []);
+
+  return <OnboardingTour steps={steps} run={run} onFinish={finish} />;
+}

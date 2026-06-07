@@ -66,6 +66,7 @@ function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
                 <Link
                   href={item.href}
                   onClick={onItemClick}
+                  data-tour={item.id}
                   aria-current={isActive ? 'page' : undefined}
                   className={`relative flex flex-col items-center justify-center gap-1 py-2.5 px-0 rounded-[var(--r-md)] text-center text-[10.5px] font-medium leading-[1.15] tracking-[-0.005em] transition-colors duration-200 ease-[var(--ease)] ${
                     isActive
