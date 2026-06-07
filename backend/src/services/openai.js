@@ -221,7 +221,7 @@ Forneça:
   // === ASSISTENTE GERAL ===
 
   async assistantChat(message, conversationHistory = [], userContext = {}) {
-    const { profile, portfolio } = userContext;
+    const { profile, portfolio, portfolioEmpty } = userContext;
 
     // Busca dados de mercado em tempo real (com fallback silencioso)
     let market = null;
@@ -349,6 +349,16 @@ ${categoryLines}
 - **Principais ativos (top 10)**:
 ${topAssets}
 Ao analisar a carteira, avalie diversificação, concentração de risco e aderência ao perfil.`;
+    } else if (portfolioEmpty) {
+      // Carteira carregada e vazia — orienta o usuário a cadastrar ativos primeiro
+      systemPrompt += `
+
+## Carteira do usuário
+O usuário **ainda NÃO tem ativos cadastrados** na carteira.
+Quando a pergunta dele for sobre a carteira dele (ex.: "por que minha carteira caiu/subiu?", "como está meu desempenho?", "devo rebalancear?", "qual é a minha alocação?", "analise minha carteira"):
+1. **PRIMEIRO** avise, de forma amigável, que ele ainda não tem ativos cadastrados e que, **para uma análise precisa e personalizada, é preciso cadastrar os ativos** na página **Minha Carteira → botão "Adicionar Ativo"**.
+2. Só depois, se fizer sentido, ofereça uma explicação geral/educativa, deixando claro que é genérica por não haver dados da carteira ainda.
+Para perguntas que NÃO dependem da carteira (conceitos, mercado, educação, dúvidas gerais), responda normalmente.`;
     }
 
     systemPrompt += `

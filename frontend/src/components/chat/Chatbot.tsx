@@ -82,6 +82,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState<InvestorProfileContext | null>(initialProfile);
   const [portfolioAssets, setPortfolioAssets] = useState<Array<{ name: string; ticker: string; type: string; totalValue: number }>>([]);
+  const [portfolioLoaded, setPortfolioLoaded] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -168,7 +169,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
         type: a.type,
         totalValue: a.totalValue,
       })));
-    }).catch(() => {});
+    }).catch(() => {}).finally(() => setPortfolioLoaded(true));
   }, [user]);
 
   // Inicializa com mensagem de boas-vindas (sempre ignora gate — apenas
@@ -346,6 +347,9 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
           },
         }),
         ...(portfolioAssets.length > 0 && { portfolio: portfolioAssets }),
+        // Sinaliza carteira vazia só quando ela JÁ carregou (evita orientar a
+        // cadastrar ativos quem na verdade tem, mas enviou antes de carregar).
+        ...(portfolioLoaded && portfolioAssets.length === 0 && { portfolioEmpty: true }),
       };
 
       const response = await fetch(`${API_URL}/ai/chat`, {
@@ -409,7 +413,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
       setIsLoading(false);
       inputRef.current?.focus();
     }
-  }, [isLoading, messages, profile, user, conversaAtual, limiteConversasAtingido, router]);
+  }, [isLoading, messages, profile, user, conversaAtual, limiteConversasAtingido, router, portfolioAssets, portfolioLoaded]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
