@@ -1,30 +1,27 @@
 import { alphaVantageService } from '../services/alphaVantage.js';
+import { coingeckoService } from '../services/coingecko.js';
 
 export const cryptoController = {
+  // Cotacao de cripto via CoinGecko (gratis, sem chave, BRL nativo).
+  // Default em BRL — o Alpha Vantage CURRENCY_EXCHANGE_RATE virou premium.
   async getExchangeRate(req, res, next) {
     try {
       const { symbol } = req.params;
-      const { currency = 'USD' } = req.query;
-      const data = await alphaVantageService.getCryptoExchangeRate(symbol, currency);
-
-      const rate = data['Realtime Currency Exchange Rate'];
-      if (!rate) {
-        return res.status(404).json({ error: 'Criptomoeda não encontrada' });
-      }
+      const { currency = 'BRL' } = req.query;
+      const data = await coingeckoService.getCryptoPrice(symbol, currency);
 
       res.json({
-        symbol: rate['1. From_Currency Code'],
-        name: rate['2. From_Currency Name'],
-        currency: rate['3. To_Currency Code'],
-        currencyName: rate['4. To_Currency Name'],
-        price: parseFloat(rate['5. Exchange Rate']),
-        lastRefreshed: rate['6. Last Refreshed'],
-        timezone: rate['7. Time Zone'],
-        bidPrice: parseFloat(rate['8. Bid Price']) || null,
-        askPrice: parseFloat(rate['9. Ask Price']) || null,
+        symbol: data.symbol,
+        price: data.price,
+        currency: data.currency,
+        change24h: data.change24h,
+        source: data.source,
         fromCache: data.fromCache || false,
       });
     } catch (error) {
+      if (error.statusCode === 404) {
+        return res.status(404).json({ error: error.message });
+      }
       next(error);
     }
   },

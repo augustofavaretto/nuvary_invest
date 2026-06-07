@@ -156,10 +156,10 @@ async function fetchUSStockPrice(symbol: string): Promise<number | null> {
   return null;
 }
 
-// Buscar preço de criptomoeda via Alpha Vantage
+// Buscar preço de criptomoeda via CoinGecko (BRL nativo)
 async function fetchCryptoPrice(symbol: string): Promise<number | null> {
   try {
-    const res = await fetch(`${API_URL}/crypto/${symbol}/rate?currency=USD`);
+    const res = await fetch(`${API_URL}/crypto/${symbol}/rate?currency=BRL`);
     if (res.ok) {
       const data = await res.json();
       return data.price || null;
@@ -178,14 +178,14 @@ export async function fetchAssetPrice(
   category: CategoryId,
   name?: string
 ): Promise<PriceResult> {
-  // Categoria cripto - buscar via Alpha Vantage (USD) e converter para BRL
+  // Categoria cripto - buscar via CoinGecko (já em BRL)
   if (category === 'cripto') {
-    const usdPrice = await fetchCryptoPrice(ticker);
-    if (usdPrice) {
+    const brlPrice = await fetchCryptoPrice(ticker);
+    if (brlPrice) {
       return {
-        price: usdPrice * USD_TO_BRL,
+        price: brlPrice,
         currency: 'BRL',
-        source: 'Alpha Vantage (Crypto)',
+        source: 'CoinGecko',
       };
     }
 
