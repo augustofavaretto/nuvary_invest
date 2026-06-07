@@ -2,7 +2,7 @@
 
 Plataforma de consultoria de investimentos com assistente IA, voltada ao investidor brasileiro.
 
-**Versão atual:** v4.14.0 — Central de Ajuda (`/suporte`) com FAQ + onboarding guiado para novos usuários, e correção dos alertas de variação (cripto via CoinGecko, dólar via BCB PTAX, token Brapi para FIIs).
+**Versão atual:** v4.15.0 — Página `/confirme-email` pós-cadastro com botão que abre o webmail do usuário (Gmail, Outlook, etc.), tour guiado iniciando na carteira e refinos de UX. (v4.14.0: Central de Ajuda + onboarding; correção dos alertas de variação.)
 
 ---
 

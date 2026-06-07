@@ -40,6 +40,7 @@ const CATEGORIES: { id: CategoryId; label: string; emoji: string }[] = [
 
 // Mapeia cada doc à sua categoria principal (docs cross-cutting vão para a área dominante).
 const DOC_CATEGORY: Record<string, Exclude<CategoryId, 'todos'>> = {
+  '42': 'landing',
   '41': 'config',
   '40': 'backend',
   '39': 'carteira',
@@ -80,6 +81,16 @@ const SUPABASE_TABLES: { table: string; desc: string }[] = [
 ];
 
 const docs: DocItem[] = [
+  {
+    number: '42',
+    title: 'Confirmação de E-mail + Refinos do Onboarding',
+    description: 'Página /confirme-email pós-cadastro com botão que abre o webmail certo do usuário (Gmail, Outlook, atitus.edu.br, etc.), tour guiado agora inicia na carteira e correções de UX',
+    date: 'Junho 2026',
+    version: '4.15.0',
+    status: 'Concluído',
+    gradient: 'linear-gradient(135deg, #020817 0%, #06b6d4 100%)',
+    href: '/docs-html/doc42.html'
+  },
   {
     number: '41',
     title: 'Central de Ajuda e Onboarding Guiado',
