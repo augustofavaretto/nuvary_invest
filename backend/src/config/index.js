@@ -34,7 +34,8 @@ export const config = {
 
   brapi: {
     baseUrl: process.env.BRAPI_BASE_URL || 'https://brapi.dev/api',
-    token: process.env.BRAPI_API_TOKEN,
+    // Aceita os dois nomes de env (BRAPI_API_TOKEN canonico; BRAPI_TOKEN legado)
+    token: process.env.BRAPI_API_TOKEN || process.env.BRAPI_TOKEN,
   },
 
   anbima: {

@@ -21,8 +21,12 @@ function setCache(key, data) {
 }
 
 async function brapiGet(endpoint) {
-  const separator = endpoint.includes('?') ? '&' : '?';
-  const url = `${BRAPI_URL}${endpoint}${separator}token=${BRAPI_TOKEN}`;
+  // Só anexa o token se ele existir — evita mandar "token=undefined", que o
+  // Brapi rejeita com INVALID_TOKEN (afeta FIIs, que exigem token válido).
+  let url = `${BRAPI_URL}${endpoint}`;
+  if (BRAPI_TOKEN) {
+    url += `${endpoint.includes('?') ? '&' : '?'}token=${BRAPI_TOKEN}`;
+  }
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Brapi error: ${res.status} ${res.statusText}`);
