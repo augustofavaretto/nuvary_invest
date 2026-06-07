@@ -17,20 +17,6 @@ import {
   LifeBuoy,
 } from 'lucide-react';
 
-// Mailto pre-preenchido para o canal de suporte
-const SUPORTE_EMAIL = 'investnet123@gmail.com';
-const SUPORTE_SUBJECT = 'Suporte Nuvary Invest';
-const SUPORTE_BODY = `Olá, equipe Nuvary Invest!
-
-Preciso de ajuda com:
-
-[descreva sua dúvida ou problema aqui]
-
-Obrigado!`;
-const SUPORTE_HREF = `mailto:${SUPORTE_EMAIL}?subject=${encodeURIComponent(
-  SUPORTE_SUBJECT,
-)}&body=${encodeURIComponent(SUPORTE_BODY)}`;
-
 interface MenuItem {
   id: string;
   label: string;
@@ -117,17 +103,22 @@ function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
         </ul>
       </nav>
 
-      {/* Suporte — fixo na base, abre o cliente de e-mail com mensagem pre-preenchida */}
+      {/* Suporte — fixo na base, abre a Central de Ajuda (FAQ + contato) */}
       <div className="w-full px-2 mt-2 pt-3 border-t border-[var(--border)]">
-        <a
-          href={SUPORTE_HREF}
+        <Link
+          href="/suporte"
           onClick={onItemClick}
-          title="Falar com o suporte por e-mail"
-          className="flex flex-col items-center justify-center gap-1 py-2.5 px-0 rounded-[var(--r-md)] text-center text-[10.5px] font-medium leading-[1.15] tracking-[-0.005em] text-[var(--t2)] hover:text-[var(--t1)] hover:bg-[var(--glass)] transition-colors duration-200 ease-[var(--ease)]"
+          aria-current={pathname === '/suporte' ? 'page' : undefined}
+          title="Central de Ajuda — FAQ e contato"
+          className={`flex flex-col items-center justify-center gap-1 py-2.5 px-0 rounded-[var(--r-md)] text-center text-[10.5px] font-medium leading-[1.15] tracking-[-0.005em] transition-colors duration-200 ease-[var(--ease)] ${
+            pathname === '/suporte'
+              ? 'bg-[var(--cyan)] text-[var(--navy-deep)] shadow-[var(--shadow-glow)]'
+              : 'text-[var(--t2)] hover:text-[var(--t1)] hover:bg-[var(--glass)]'
+          }`}
         >
           <LifeBuoy className="w-[22px] h-[22px] shrink-0" />
           <span>Suporte</span>
-        </a>
+        </Link>
       </div>
     </>
   );
