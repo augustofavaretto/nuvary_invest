@@ -2,9 +2,14 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { OnboardingTour, type TourStep } from './OnboardingTour';
 
+// Flag por usuário: cada conta vê o tour uma vez (mesmo compartilhando o
+// navegador). Sem o id, cai no global como fallback.
 const STORAGE_KEY = 'nuvary_onboarding_v1';
+const storageKeyFor = (userId?: string | null) =>
+  userId ? `${STORAGE_KEY}_${userId}` : STORAGE_KEY;
 
 // Evento global para refazer o tour (disparado, ex., pela Central de Ajuda)
 export const START_ONBOARDING_EVENT = 'nuvary:start-onboarding';
@@ -66,6 +71,7 @@ const ALL_STEPS: TourStep[] = [
 
 export function OnboardingGate() {
   const pathname = usePathname();
+  const { user } = useAuth();
   const [run, setRun] = useState(false);
   const [steps, setSteps] = useState<TourStep[]>([]);
 
@@ -79,14 +85,15 @@ export function OnboardingGate() {
   }, []);
 
   // Auto-início no primeiro acesso — na carteira (1ª página após cadastro +
-  // questionário), após a UI renderizar
+  // questionário), após a UI renderizar e o usuário carregar
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (pathname !== '/carteira') return;
-    if (localStorage.getItem(STORAGE_KEY)) return;
+    if (!user?.id) return; // espera a sessão para usar o flag por usuário
+    if (localStorage.getItem(storageKeyFor(user.id))) return;
     const t = setTimeout(start, 900);
     return () => clearTimeout(t);
-  }, [pathname, start]);
+  }, [pathname, user?.id, start]);
 
   // Refazer manualmente via evento
   useEffect(() => {
@@ -97,12 +104,12 @@ export function OnboardingGate() {
 
   const finish = useCallback(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, '1');
+      localStorage.setItem(storageKeyFor(user?.id), '1');
     } catch {
       /* ignore */
     }
     setRun(false);
-  }, []);
+  }, [user?.id]);
 
   return <OnboardingTour steps={steps} run={run} onFinish={finish} />;
 }
