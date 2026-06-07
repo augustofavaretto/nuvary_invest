@@ -84,7 +84,7 @@ const STEPS = [
   {
     n: '03',
     title: 'Cadastre sua carteira',
-    text: 'Alocação recomendada, monitoramento em tempo real e trilhas educacionais sob medida.',
+    text: 'Cadastre seus ativos, monitoramento em tempo real e trilhas educacionais sob medida.',
   },
 ];
 
