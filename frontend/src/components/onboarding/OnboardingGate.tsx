@@ -78,10 +78,11 @@ export function OnboardingGate() {
     setRun(true);
   }, []);
 
-  // Auto-início no primeiro acesso — só no dashboard, após a UI renderizar
+  // Auto-início no primeiro acesso — na carteira (1ª página após cadastro +
+  // questionário), após a UI renderizar
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (pathname !== '/dashboard') return;
+    if (pathname !== '/carteira') return;
     if (localStorage.getItem(STORAGE_KEY)) return;
     const t = setTimeout(start, 900);
     return () => clearTimeout(t);

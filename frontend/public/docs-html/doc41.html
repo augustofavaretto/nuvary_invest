@@ -98,7 +98,7 @@
 
         <section id="tour">
             <h2>🧭 Onboarding Guiado</h2>
-            <p>No primeiro acesso ao <code>/dashboard</code>, um tour com spotlight destaca os elementos reais da interface e explica cada um. Construido sem lib externa (so framer-motion + portal).</p>
+            <p>No primeiro acesso à <code>/carteira</code> (1ª página após o cadastro + questionário), um tour com spotlight destaca os elementos reais da interface e explica cada um. Construido sem lib externa (so framer-motion + portal).</p>
 
             <h3>Os 8 passos</h3>
             <ul class="step-list">
@@ -115,7 +115,7 @@
             <h3>Detalhes tecnicos</h3>
             <div class="arch-box">
                 <div class="arch-row"><span class="arch-label">Componentes</span><span class="arch-value"><code>OnboardingTour</code> (spotlight) + <code>OnboardingGate</code> (passos/persistencia)</span></div>
-                <div class="arch-row"><span class="arch-label">Auto-inicio</span><span class="arch-value">so em /dashboard, 1x, via <code>localStorage['nuvary_onboarding_v1']</code></span></div>
+                <div class="arch-row"><span class="arch-label">Auto-inicio</span><span class="arch-value">so em /carteira, 1x, via <code>localStorage['nuvary_onboarding_v1']</code></span></div>
                 <div class="arch-row"><span class="arch-label">Alvos</span><span class="arch-value">atributos <code>data-tour</code> na Sidebar, sino e menu do usuario</span></div>
                 <div class="arch-row"><span class="arch-label">Acessibilidade</span><span class="arch-value">teclado (setas/Esc), progresso e passos sem alvo sao pulados (mobile)</span></div>
                 <div class="arch-row"><span class="arch-label">Refazer</span><span class="arch-value">evento <code>nuvary:start-onboarding</code> (botao na Central de Ajuda)</span></div>
