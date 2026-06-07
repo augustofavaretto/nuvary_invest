@@ -33,6 +33,9 @@ export const metadata: Metadata = {
   title: "Nuvary Invest | Consultoria de Investimentos com IA",
   description: "Plataforma de consultoria de investimentos orientada por Inteligência Artificial, com foco em automação de carteiras, monitoramento contínuo e trilhas de educação financeira.",
   keywords: ["investimentos", "fintech", "inteligência artificial", "carteira", "consultoria financeira"],
+  // Projeto acadêmico/demo — não indexar em buscadores (reduz exposição
+  // sem afetar o funcionamento; o app segue acessível por link direto).
+  robots: { index: false, follow: false, nocache: true },
 };
 
 export default function RootLayout({
