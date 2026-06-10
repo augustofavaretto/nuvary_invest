@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
-  Loader2, Wallet, Calendar, RefreshCw, Plus,
+  Loader2, Wallet, Calendar, RefreshCw, Plus, TrendingDown,
   PiggyBank, TrendingUp, Building, Globe, Coins, ChevronRight, Lock,
 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
@@ -18,6 +18,7 @@ import {
   PortfolioByBrokerCard,
   AddAssetModal,
   SellAssetModal,
+  SellAssetPicker,
 } from '@/components/portfolio';
 import type { NewAssetData } from '@/components/portfolio';
 import {
@@ -42,6 +43,17 @@ export default function CarteiraPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedModalCategory, setSelectedModalCategory] = useState<string | null>(null);
   const [assetToSell, setAssetToSell] = useState<Asset | null>(null);
+  const [isSellPickerOpen, setIsSellPickerOpen] = useState(false);
+
+  // Lista achatada de todos os ativos (para o seletor de venda)
+  const todosAtivos: Asset[] = portfolioData
+    ? [
+        ...portfolioData.byProduct.rendaFixa,
+        ...portfolioData.byProduct.rendaVariavel,
+        ...portfolioData.byProduct.fiis,
+        ...portfolioData.byProduct.internacional,
+      ]
+    : [];
 
   // Conta total de ativos para o gate de 10 do plano free
   const totalAtivos = portfolioData
@@ -203,6 +215,21 @@ export default function CarteiraPage() {
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
               Atualizar
             </button>
+            {totalAtivos > 0 && (
+              <button
+                onClick={() => setIsSellPickerOpen(true)}
+                title="Vender ou resgatar um ativo da carteira"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-sm)] text-[13.5px] font-semibold transition-colors hover:opacity-90"
+                style={{
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  color: 'var(--loss)',
+                  border: '1px solid rgba(239, 68, 68, 0.30)',
+                }}
+              >
+                <TrendingDown className="w-3.5 h-3.5" />
+                Vender Ativo
+              </button>
+            )}
             <button
               onClick={() => tentarAdicionarAtivo(null)}
               title={
@@ -365,6 +392,16 @@ export default function CarteiraPage() {
           </div>
         )}
       </div>
+
+      <SellAssetPicker
+        isOpen={isSellPickerOpen}
+        assets={todosAtivos}
+        onClose={() => setIsSellPickerOpen(false)}
+        onSelect={(asset) => {
+          setIsSellPickerOpen(false);
+          setAssetToSell(asset);
+        }}
+      />
 
       <SellAssetModal
         asset={assetToSell}
