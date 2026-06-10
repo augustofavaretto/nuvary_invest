@@ -215,7 +215,7 @@ export default function CarteiraPage() {
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
               Atualizar
             </button>
-            {totalAtivos > 0 && (
+            {hasAssets && (
               <button
                 onClick={() => setIsSellPickerOpen(true)}
                 title="Vender ou resgatar um ativo da carteira"
