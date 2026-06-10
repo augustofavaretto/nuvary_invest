@@ -27,6 +27,7 @@ export interface Asset {
   variation: number;
   broker: string;
   createdAt?: string;
+  dataAplicacao?: string;
 }
 
 export interface Broker {
@@ -366,6 +367,7 @@ function dbRowToAsset(row: Record<string, unknown>): Asset {
     percentageOfPortfolio: 0,
     percentageOfProduct: 0,
     createdAt: row.created_at as string | undefined,
+    dataAplicacao: (row.data_aplicacao as string | null) ?? undefined,
   };
 }
 
@@ -383,6 +385,7 @@ function assetToDbRow(asset: Asset, userId: string) {
     total_value: asset.totalValue,
     variation: asset.variation,
     broker: asset.broker,
+    data_aplicacao: asset.dataAplicacao ?? null,
   };
 }
 
@@ -407,6 +410,7 @@ export async function addAsset(assetData: {
   averagePrice: number;
   class: AssetClass;
   broker: string;
+  dataAplicacao?: string;
 }): Promise<Asset> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Usuário não autenticado');
@@ -432,6 +436,7 @@ export async function addAsset(assetData: {
     percentageOfProduct: 0,
     variation: variationPercent,
     broker: assetData.broker,
+    dataAplicacao: assetData.dataAplicacao,
   };
 
   const { error } = await supabase.from('portfolio_assets').insert(assetToDbRow(newAsset, user.id));
@@ -468,16 +473,32 @@ export async function updateAsset(assetId: string, updates: Partial<Asset>): Pro
 }
 
 // Calculate portfolio data from saved assets
-// Rendimento acumulado da renda fixa: aplica a taxa contratada (% a.a., já
-// efetiva mesmo para "XXX% CDI") sobre o valor investido, em juros compostos
-// por dias corridos desde a data de cadastro. Demais tipos: inalterado.
+// Conta dias úteis (seg–sex) entre duas datas. Aproximação: ignora feriados.
+function businessDaysBetween(start: Date, end: Date): number {
+  const ms = end.getTime() - start.getTime();
+  if (ms <= 0) return 0;
+  const totalDays = Math.floor(ms / 86_400_000);
+  const fullWeeks = Math.floor(totalDays / 7);
+  let businessDays = fullWeeks * 5;
+  let dow = start.getDay(); // 0=dom .. 6=sáb
+  for (let i = 0; i < totalDays - fullWeeks * 7; i++) {
+    dow = (dow + 1) % 7;
+    if (dow !== 0 && dow !== 6) businessDays++;
+  }
+  return businessDays;
+}
+
+// Rendimento acumulado da renda fixa: juros compostos da taxa contratada
+// (% a.a., já efetiva mesmo para "XXX% CDI") em base 252 dias úteis, desde a
+// data de aplicação (fallback: data de cadastro). Demais tipos: inalterado.
 function withFixedIncomeYield(asset: Asset): Asset {
   if (asset.type !== 'renda_fixa') return asset;
   const rate = asset.averagePrice;   // taxa efetiva % a.a.
   const invested = asset.quantity;   // R$ investido
-  if (!asset.createdAt || rate <= 0 || invested <= 0) return asset;
-  const days = Math.max(0, (Date.now() - new Date(asset.createdAt).getTime()) / 86_400_000);
-  const accrued = invested * Math.pow(1 + rate / 100, days / 365);
+  const startStr = asset.dataAplicacao || asset.createdAt;
+  if (!startStr || rate <= 0 || invested <= 0) return asset;
+  const du = businessDaysBetween(new Date(startStr), new Date());
+  const accrued = invested * Math.pow(1 + rate / 100, du / 252);
   const variation = ((accrued - invested) / invested) * 100;
   return { ...asset, totalValue: accrued, currentPrice: rate, variation };
 }

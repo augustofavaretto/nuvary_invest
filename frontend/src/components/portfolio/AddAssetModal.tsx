@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, Plus, Hash, Building2, ChevronLeft,
   TrendingUp, Building, Globe, Coins, PiggyBank,
-  Search, Loader2, AlertCircle, Percent
+  Search, Loader2, AlertCircle, Percent, Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AssetClass, CategoryId, fetchAssetPrice, PriceResult } from '@/services/portfolioService';
@@ -25,7 +25,11 @@ export interface NewAssetData {
   averagePrice: number;
   class: AssetClass;
   broker: string;
+  dataAplicacao?: string;
 }
+
+// Data de hoje em YYYY-MM-DD (default do campo "data de aplicação")
+const hojeISO = () => new Date().toISOString().slice(0, 10);
 
 // Categorias de investimento
 const CATEGORIES = [
@@ -188,6 +192,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
     quantity: 0,
     averagePrice: 0,
     broker: 'XP Investimentos',
+    dataAplicacao: hojeISO(),
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -214,6 +219,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
       quantity: 0,
       averagePrice: 0,
       broker: 'XP Investimentos',
+      dataAplicacao: hojeISO(),
     });
     setErrors({});
     setPriceLoading(false);
@@ -321,6 +327,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
         averagePrice: formData.averagePrice,
         class: CATEGORY_TO_CLASS[selectedCategory],
         broker: formData.broker,
+        dataAplicacao: formData.dataAplicacao || undefined,
       });
 
       handleClose();
@@ -667,6 +674,28 @@ export function AddAssetModal({ isOpen, onClose, onAdd, initialCategory = null }
                               ))}
                             </select>
                           </div>
+                        </div>
+
+                        {/* Data de aplicação — usada no rendimento da renda fixa */}
+                        <div>
+                          <label className="block text-sm font-medium text-foreground mb-1">
+                            Data de aplicação
+                          </label>
+                          <div className="relative">
+                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <input
+                              type="date"
+                              value={formData.dataAplicacao}
+                              max={hojeISO()}
+                              onChange={(e) => setFormData(prev => ({ ...prev, dataAplicacao: e.target.value }))}
+                              className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B8D9] bg-card"
+                            />
+                          </div>
+                          {isFixedIncome && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              O rendimento da renda fixa é calculado a partir desta data.
+                            </p>
+                          )}
                         </div>
 
                         {/* Valor Total Preview */}

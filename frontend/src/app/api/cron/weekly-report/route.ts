@@ -27,6 +27,34 @@ interface AssetRow {
   quantity: number;
   average_price: number;
   total_value: number;
+  data_aplicacao: string | null;
+  created_at: string | null;
+}
+
+// Conta dias úteis (seg–sex) entre duas datas. Ignora feriados (aproximação).
+function businessDaysBetween(start: Date, end: Date): number {
+  const ms = end.getTime() - start.getTime();
+  if (ms <= 0) return 0;
+  const totalDays = Math.floor(ms / 86_400_000);
+  const fullWeeks = Math.floor(totalDays / 7);
+  let businessDays = fullWeeks * 5;
+  let dow = start.getDay();
+  for (let i = 0; i < totalDays - fullWeeks * 7; i++) {
+    dow = (dow + 1) % 7;
+    if (dow !== 0 && dow !== 6) businessDays++;
+  }
+  return businessDays;
+}
+
+// Rendimento acumulado da renda fixa: juros compostos da taxa (% a.a.) em
+// base 252 dias úteis desde a data de aplicação (fallback: created_at).
+function rendaFixaAtual(a: AssetRow): number {
+  const invested = Number(a.quantity);
+  const rate = Number(a.average_price);
+  const startStr = a.data_aplicacao || a.created_at;
+  if (!startStr || rate <= 0 || invested <= 0) return invested;
+  const du = businessDaysBetween(new Date(startStr), new Date());
+  return invested * Math.pow(1 + rate / 100, du / 252);
 }
 
 export async function GET(req: NextRequest) {
@@ -80,7 +108,7 @@ export async function GET(req: NextRequest) {
     try {
       const { data: assets } = await admin
         .from('portfolio_assets')
-        .select('type, quantity, average_price, total_value')
+        .select('type, quantity, average_price, total_value, data_aplicacao, created_at')
         .eq('user_id', u.id);
 
       const list = (assets ?? []) as AssetRow[];
@@ -94,7 +122,10 @@ export async function GET(req: NextRequest) {
         const investido = isFixedIncome
           ? Number(a.quantity)
           : Number(a.quantity) * Number(a.average_price);
-        const atual = Number(a.total_value) || investido;
+        // Renda fixa: rendimento acumulado pela taxa × dias úteis. Demais: total_value.
+        const atual = isFixedIncome
+          ? rendaFixaAtual(a)
+          : Number(a.total_value) || investido;
 
         totalInvestido += investido;
         totalAtual += atual;
