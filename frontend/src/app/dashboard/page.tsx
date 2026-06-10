@@ -18,7 +18,7 @@ import { ChatPreviewWidget } from '@/components/dashboard/ChatPreviewWidget';
 import { MercadoCard } from '@/components/dashboard/MercadoCard';
 import { NoticiasCard } from '@/components/dashboard/NoticiasCard';
 
-import { getPortfolioData, type PortfolioData } from '@/services/portfolioService';
+import { getPortfolioData, refreshAllPrices, type PortfolioData } from '@/services/portfolioService';
 import { gerarEvolucao } from '@/lib/evolucao';
 
 const SUGESTOES = [
@@ -68,7 +68,8 @@ function DashboardContent() {
     if (!authLoading && !isAuthenticated) router.push('/login');
   }, [authLoading, isAuthenticated, router]);
 
-  // Portfolio
+  // Portfolio — mostra o saldo do banco imediatamente e atualiza os preços de
+  // mercado em background; se algo mudou, re-renderiza o saldo.
   useEffect(() => {
     if (!isAuthenticated) return;
     let active = true;
@@ -76,6 +77,11 @@ function DashboardContent() {
       .then((p) => active && setPortfolio(p))
       .catch(() => active && setPortfolio(null))
       .finally(() => active && setCarregandoPortfolio(false));
+    refreshAllPrices(false)
+      .then((updated) => {
+        if (updated && active) getPortfolioData().then((p) => active && setPortfolio(p));
+      })
+      .catch(() => {});
     return () => {
       active = false;
     };

@@ -635,7 +635,9 @@ export async function getAllAssets(): Promise<Asset[]> {
 
 // ── Refresh de preços com cache ───────────────────────────────────────────────
 const PRICE_CACHE_KEY = 'nuvary_price_cache_ts';
-const PRICE_CACHE_TTL = 15 * 60 * 1000; // 15 minutos
+// Cache curto (2 min) para o saldo ficar sempre fresco ao abrir carteira/dashboard,
+// sem estourar limites das APIs em navegações rápidas. O botão "Atualizar" força (force=true).
+const PRICE_CACHE_TTL = 2 * 60 * 1000;
 
 // Tipos que têm preço de mercado (renda fixa usa taxa fixa, não precisa refresh)
 const MARKET_PRICE_TYPES: CategoryId[] = ['renda_variavel', 'fiis', 'internacional', 'cripto'];
