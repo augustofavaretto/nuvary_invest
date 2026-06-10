@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { Resend } from 'resend';
+import { sendMail, isEmailConfigured } from '@/lib/email-sender';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import {
   generateWeeklyReportHtml,
@@ -56,11 +56,11 @@ export async function POST(req: NextRequest) {
   const userId = sessionData.user.id;
 
   // 3. Confere variaveis de ambiente
-  if (!process.env.RESEND_API_KEY) {
+  if (!isEmailConfigured()) {
     return NextResponse.json(
       {
         ok: false,
-        error: 'RESEND_API_KEY ausente no Vercel. Adicione em Settings → Environment Variables.',
+        error: 'GMAIL_USER / GMAIL_APP_PASSWORD ausentes no Vercel. Adicione em Settings → Environment Variables.',
       },
       { status: 500 },
     );
@@ -141,30 +141,13 @@ export async function POST(req: NextRequest) {
     appUrl,
   };
 
-  // 6. Envia o e-mail
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const sender = process.env.EMAIL_FROM || 'Nuvary Invest <onboarding@resend.dev>';
-
+  // 6. Envia o e-mail via Gmail SMTP
   try {
-    const { data: sendData, error: sendErr } = await resend.emails.send({
-      from: sender,
+    const { from: sender } = await sendMail({
       to: profile.email,
       subject: '[TESTE] Seu resumo diario — Nuvary Invest',
       html: generateWeeklyReportHtml(reportData),
     });
-
-    if (sendErr) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: 'Resend recusou o envio',
-          resendError: sendErr.message,
-          sender,
-          to: profile.email,
-        },
-        { status: 502 },
-      );
-    }
 
     // Atualiza ultimo envio para ficar coerente com o cron (idempotencia)
     await admin
@@ -176,7 +159,6 @@ export async function POST(req: NextRequest) {
       ok: true,
       sentTo: profile.email,
       sender,
-      resendId: sendData?.id,
       relatorioAtivo: profile.email_relatorios_ativo,
       observacao: profile.email_relatorios_ativo
         ? 'Toggle de relatorios diarios ativo — voce recebera todos os dias as 8h BRT.'

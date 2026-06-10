@@ -15,7 +15,7 @@ Plataforma de consultoria de investimentos com assistente IA, voltada ao investi
 | **Banco** | Supabase PostgreSQL (auth + portfólio + chat + perfil + alertas + premium) |
 | **Hosting** | Vercel (frontend) + Vercel (backend separado) |
 | **Pagamento** | Mercado Pago (subscription recorrente + PIX/Boleto one-time) |
-| **E-mail** | Resend + Vercel Cron (relatório diário 8h BRT) |
+| **E-mail** | Gmail SMTP (nodemailer) + Vercel Cron (relatório diário 8h BRT) |
 | **IA** | OpenAI (Chat) |
 | **APIs externas** | BCB SGS, Brapi (B3), Finnhub (US), Alpha Vantage (cripto), News API |
 | **UI** | lucide-react · Framer Motion · Recharts |
@@ -117,8 +117,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
 NEXT_PUBLIC_API_URL=https://nuvary-invest-backend.vercel.app/api
 NEXT_PUBLIC_APP_URL=https://nuvary-invest.vercel.app
-RESEND_API_KEY=...
-EMAIL_FROM=Nuvary Invest <relatorios@seudominio.com>
+GMAIL_USER=...            # e-mail da conta Gmail usada para enviar os relatórios
+GMAIL_APP_PASSWORD=...    # App Password de 16 dígitos (Google → Segurança → Senhas de app)
 CRON_SECRET=...
 MERCADOPAGO_ACCESS_TOKEN=...
 MERCADOPAGO_WEBHOOK_SECRET=...

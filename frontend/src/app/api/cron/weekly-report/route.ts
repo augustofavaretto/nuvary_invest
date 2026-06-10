@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import { sendMail, isEmailConfigured } from '@/lib/email-sender';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import {
   generateWeeklyReportHtml,
@@ -36,15 +36,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  if (!process.env.RESEND_API_KEY) {
+  if (!isEmailConfigured()) {
     return NextResponse.json(
-      { error: 'RESEND_API_KEY nao configurada' },
+      { error: 'GMAIL_USER / GMAIL_APP_PASSWORD nao configurados' },
       { status: 500 }
     );
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const sender = process.env.EMAIL_FROM || 'Nuvary Invest <onboarding@resend.dev>';
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://nuvary-invest.vercel.app';
   const admin = getSupabaseAdmin();
 
@@ -128,14 +126,11 @@ export async function GET(req: NextRequest) {
 
       const html = generateWeeklyReportHtml(reportData);
 
-      const { error: sendErr } = await resend.emails.send({
-        from: sender,
+      await sendMail({
         to: u.email,
         subject: 'Seu resumo diário — Nuvary Invest',
         html,
       });
-
-      if (sendErr) throw new Error(sendErr.message);
 
       await admin
         .from('profiles')
