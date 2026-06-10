@@ -182,9 +182,9 @@ export function PortfolioByProductCard({
                       }}
                       className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-[11.5px] font-semibold transition-colors"
                       style={{
-                        background: 'rgba(245, 158, 11, 0.15)',
-                        color: 'var(--warn)',
-                        border: '1px solid rgba(245, 158, 11, 0.3)',
+                        background: 'rgba(239, 68, 68, 0.08)',
+                        color: 'var(--loss)',
+                        border: '1px solid rgba(239, 68, 68, 0.30)',
                       }}
                       title="Vender ativo"
                     >
