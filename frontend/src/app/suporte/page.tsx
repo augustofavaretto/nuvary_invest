@@ -30,10 +30,6 @@ const FAQS: { q: string; a: string }[] = [
     a: 'Vá em Minha Carteira, escolha a categoria (Renda Fixa, Ações, FIIs, Internacional ou Criptomoedas) e clique para adicionar. Informe o ticker, a quantidade e o preço médio de compra — o preço atual é buscado automaticamente.',
   },
   {
-    q: 'Os preços dos ativos são atualizados automaticamente?',
-    a: 'Sim. Ações e FIIs vêm da B3 (Brapi), as criptomoedas do CoinGecko e os indicadores (CDI, Selic, dólar) do Banco Central. A atualização roda em segundo plano ao abrir a carteira, e você também pode forçar pelo botão de atualizar.',
-  },
-  {
     q: 'Como funcionam os alertas de variação?',
     a: 'Quando um ativo da sua carteira varia 5% ou mais, você recebe um alerta no sino do topo. É um recurso Premium e pode ser ligado ou desligado em Configurações → Funcionalidades Premium.',
   },
@@ -60,10 +56,6 @@ const FAQS: { q: string; a: string }[] = [
   {
     q: 'O que é o perfil de investidor?',
     a: 'Um questionário rápido que classifica você entre conservador, moderado, arrojado ou agressivo, ajustando as sugestões da plataforma. Você pode refazê-lo a qualquer momento na página Perfil.',
-  },
-  {
-    q: 'Meus dados estão seguros?',
-    a: 'Sim. Autenticação e dados ficam no Supabase com regras de acesso por usuário (cada conta só enxerga os próprios dados) e a comunicação é via HTTPS. Veja mais na Política de Privacidade.',
   },
 ];
 
