@@ -468,8 +468,22 @@ export async function updateAsset(assetId: string, updates: Partial<Asset>): Pro
 }
 
 // Calculate portfolio data from saved assets
-export function calculatePortfolioData(assets: Asset[]): PortfolioData {
-  if (assets.length === 0) {
+// Rendimento acumulado da renda fixa: aplica a taxa contratada (% a.a., já
+// efetiva mesmo para "XXX% CDI") sobre o valor investido, em juros compostos
+// por dias corridos desde a data de cadastro. Demais tipos: inalterado.
+function withFixedIncomeYield(asset: Asset): Asset {
+  if (asset.type !== 'renda_fixa') return asset;
+  const rate = asset.averagePrice;   // taxa efetiva % a.a.
+  const invested = asset.quantity;   // R$ investido
+  if (!asset.createdAt || rate <= 0 || invested <= 0) return asset;
+  const days = Math.max(0, (Date.now() - new Date(asset.createdAt).getTime()) / 86_400_000);
+  const accrued = invested * Math.pow(1 + rate / 100, days / 365);
+  const variation = ((accrued - invested) / invested) * 100;
+  return { ...asset, totalValue: accrued, currentPrice: rate, variation };
+}
+
+export function calculatePortfolioData(rawAssets: Asset[]): PortfolioData {
+  if (rawAssets.length === 0) {
     return {
       summary: {
         totalValue: 0,
@@ -488,6 +502,9 @@ export function calculatePortfolioData(assets: Asset[]): PortfolioData {
       byBroker: [],
     };
   }
+
+  // Renda fixa: aplica o rendimento acumulado (taxa contratada % a.a. × tempo)
+  const assets = rawAssets.map(withFixedIncomeYield);
 
   // Calculate totals
   const totalValue = assets.reduce((sum, a) => sum + a.totalValue, 0);
