@@ -137,6 +137,18 @@ export function PortfolioByProductCard({
                   <div className="text-[11.5px] mt-0.5" style={{ color: 'var(--t2)' }}>
                     {asset.ticker}
                   </div>
+                  {/* Lote: quantas unidades e a que preço foi comprado */}
+                  {asset.type === 'renda_fixa' ? (
+                    <div className="text-[11px] mt-1 tabular-nums" style={{ color: 'var(--t2)' }}>
+                      {formatCurrency(asset.quantity)} aplicado · {asset.averagePrice.toFixed(2)}% a.a.
+                    </div>
+                  ) : (
+                    <div className="text-[11px] mt-1 tabular-nums" style={{ color: 'var(--t2)' }}>
+                      <strong style={{ color: 'var(--t1)' }}>{asset.quantity}</strong> ×{' '}
+                      {formatCurrency(asset.averagePrice)}{' '}
+                      <span style={{ opacity: 0.75 }}>(compra)</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Valor + variacao */}
