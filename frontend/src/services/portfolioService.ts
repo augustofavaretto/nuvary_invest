@@ -195,6 +195,17 @@ async function fetchCryptoPrice(symbol: string): Promise<number | null> {
 }
 
 
+// Tickers de cripto conhecidos. Usado para rotear ao CoinGecko mesmo quando o
+// ativo foi salvo com type='renda_variavel' — 'cripto' não existe em AssetClass,
+// então no cadastro a categoria cripto cai em renda_variavel. Sem isso, o BTC
+// seria buscado via Brapi (B3), que não tem cripto, e o preço nunca atualizaria.
+const CRYPTO_TICKERS = new Set([
+  'BTC', 'ETH', 'BNB', 'SOL', 'ADA', 'XRP', 'DOT', 'LINK', 'MATIC', 'AVAX',
+]);
+function isCryptoTicker(ticker: string): boolean {
+  return CRYPTO_TICKERS.has((ticker || '').toUpperCase());
+}
+
 // Função principal para buscar preço de qualquer ativo
 // name: nome do ativo (opcional) — usado para calcular taxa CDI de renda fixa
 export async function fetchAssetPrice(
@@ -202,8 +213,9 @@ export async function fetchAssetPrice(
   category: CategoryId,
   name?: string
 ): Promise<PriceResult> {
-  // Categoria cripto - buscar via CoinGecko (já em BRL)
-  if (category === 'cripto') {
+  // Cripto — via CoinGecko (BRL). Inclui ativos salvos como renda_variavel
+  // cujo ticker é uma cripto conhecida (ex.: BTC, ETH).
+  if (category === 'cripto' || isCryptoTicker(ticker)) {
     const brlPrice = await fetchCryptoPrice(ticker);
     if (brlPrice) {
       return {
