@@ -156,6 +156,7 @@ function RelatoriosContent() {
         categoria: TYPE_LABEL[a.type] ?? a.type,
         qtd: a.quantity,
         preco: a.averagePrice,
+        precoAtual: a.currentPrice as number | undefined,
         total: a.totalValue,
         type: a.type,
         broker: a.broker ?? '',
@@ -169,6 +170,7 @@ function RelatoriosContent() {
       categoria: TYPE_LABEL[t.asset_type] ?? t.asset_type,
       qtd: t.quantity,
       preco: t.price,
+      precoAtual: undefined as number | undefined,
       total: t.total_value,
       type: t.asset_type,
       broker: '',
@@ -615,7 +617,11 @@ function RelatoriosContent() {
 
   // ── Exportar Extratos XLS ─────────────────────────────────────────────────
   function exportarXLS() {
-    const cabecalho = ['Data', 'Tipo', 'Ticker', 'Nome', 'Categoria', 'Qtd / R$', 'Preço / Taxa', 'Total'];
+    const cabecalho = ['Data', 'Tipo', 'Ticker', 'Nome', 'Categoria', 'Qtd / R$', 'Preço Compra', 'Preço Atual', 'Total'];
+    const fmtPrecoAtual = (t: typeof transacoesFiltradas[number]) =>
+      t.tipo === 'Venda' || t.type === 'renda_fixa' || t.precoAtual == null
+        ? '—'
+        : t.precoAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const linhas = transacoesFiltradas.map(t => [
       new Date(t.data).toLocaleDateString('pt-BR'),
       t.tipo,
@@ -624,10 +630,11 @@ function RelatoriosContent() {
       t.categoria,
       t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      fmtPrecoAtual(t),
       t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
     ].join('\t'));
     const totalGeral = transacoesFiltradas.reduce((s, t) => s + t.total, 0);
-    const totalRow = ['Total', '', '', '', '', '', '', `R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`].join('\t');
+    const totalRow = ['Total', '', '', '', '', '', '', '', `R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`].join('\t');
     // \uFEFF = BOM UTF-8 para Excel reconhecer acentos corretamente
     const conteudo = '\uFEFF' + [cabecalho.join('\t'), ...linhas, totalRow].join('\n');
     const blob = new Blob([conteudo], { type: 'application/vnd.ms-excel;charset=utf-8;' });
@@ -643,6 +650,10 @@ function RelatoriosContent() {
   function exportarPDF() {
     const agora = new Date();
     const totalGeral = transacoesFiltradas.reduce((s, t) => s + t.total, 0);
+    const precoAtualStr = (t: typeof transacoesFiltradas[number]) =>
+      t.tipo === 'Venda' || t.type === 'renda_fixa' || t.precoAtual == null
+        ? '—'
+        : `R$ ${t.precoAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     const linhas = transacoesFiltradas.map(t => `
       <tr>
         <td>${new Date(t.data).toLocaleDateString('pt-BR')}</td>
@@ -652,6 +663,7 @@ function RelatoriosContent() {
         <td>${t.categoria}</td>
         <td style="text-align:right">${t.qtd.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         <td style="text-align:right">R$ ${t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align:right">${precoAtualStr(t)}</td>
         <td style="text-align:right;font-weight:600">R$ ${t.total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
       </tr>`).join('');
 
@@ -687,7 +699,7 @@ function RelatoriosContent() {
 <table>
   <thead><tr>
     <th>Data</th><th>Tipo</th><th>Ticker</th><th>Nome</th><th>Categoria</th>
-    <th style="text-align:right">Qtd / R$</th><th style="text-align:right">Preço / Taxa</th><th style="text-align:right">Total</th>
+    <th style="text-align:right">Qtd / R$</th><th style="text-align:right">Preço Compra</th><th style="text-align:right">Preço Atual</th><th style="text-align:right">Total</th>
   </tr></thead>
   <tbody>${linhas}</tbody>
   <tfoot><tr class="total-row">
@@ -1275,7 +1287,7 @@ function RelatoriosContent() {
                 <table className="w-full border-collapse">
                   <thead>
                     <tr>
-                      {['Data', 'Tipo', 'Ticker', 'Nome', 'Categoria', 'Qtd / R$', 'Preço / Taxa', 'Total'].map((h, i) => (
+                      {['Data', 'Tipo', 'Ticker', 'Nome', 'Categoria', 'Qtd / R$', 'Preço Compra', 'Preço Atual', 'Total'].map((h, i) => (
                         <th
                           key={h}
                           className="text-[11.5px] font-medium uppercase tracking-wider px-[18px] py-4"
@@ -1294,7 +1306,7 @@ function RelatoriosContent() {
                   <tbody>
                     {transacoesFiltradas.length === 0 ? (
                       <tr>
-                        <td colSpan={8} className="text-center py-12 text-[13px]" style={{ color: 'var(--t2)' }}>
+                        <td colSpan={9} className="text-center py-12 text-[13px]" style={{ color: 'var(--t2)' }}>
                           Nenhuma transação encontrada
                         </td>
                       </tr>
@@ -1343,6 +1355,24 @@ function RelatoriosContent() {
                           {t.type === 'renda_fixa'
                             ? `${t.preco.toFixed(2)}% a.a.`
                             : `R$ ${t.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                        </td>
+                        <td className="px-[18px] py-3.5 text-[13.5px] text-right tabular-nums" style={{ borderBottom: '1px solid var(--border)' }}>
+                          {t.tipo === 'Venda' || t.type === 'renda_fixa' || t.precoAtual == null ? (
+                            <span style={{ color: 'var(--t3, var(--t2))' }}>—</span>
+                          ) : (
+                            <span
+                              style={{
+                                color:
+                                  t.precoAtual > t.preco
+                                    ? 'var(--gain)'
+                                    : t.precoAtual < t.preco
+                                      ? 'var(--loss)'
+                                      : 'var(--t1)',
+                              }}
+                            >
+                              R$ {t.precoAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </span>
+                          )}
                         </td>
                         <td className="px-[18px] py-3.5 text-right" style={{ borderBottom: '1px solid var(--border)' }}>
                           <strong className="text-[13.5px] tabular-nums" style={{ color: 'var(--t1)' }}>
