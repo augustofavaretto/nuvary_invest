@@ -131,13 +131,15 @@ O frontend lê `NEXT_PUBLIC_API_URL=http://localhost:3001/api` para acessar o ba
 
 ### Variáveis de ambiente
 
+Os valores abaixo são para **desenvolvimento local**. Em produção, troque as URLs pelas dos deploys na Vercel (ver seção Deploy).
+
 **Frontend**
 ```
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
-NEXT_PUBLIC_API_URL=http://localhost:3001/api
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_API_URL=http://localhost:3001/api   # produção: https://<backend>.vercel.app/api
+NEXT_PUBLIC_APP_URL=http://localhost:3000       # produção: https://<frontend>.vercel.app
 GMAIL_USER=...            # conta Gmail usada para enviar os relatórios
 GMAIL_APP_PASSWORD=...    # App Password de 16 dígitos
 CRON_SECRET=...
