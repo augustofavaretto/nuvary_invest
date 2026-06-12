@@ -2,8 +2,7 @@
 
 import type { MarketQuote } from '@/services/dashboardService';
 
-// Cotacoes de exemplo usadas como fallback quando a API ainda nao respondeu.
-// Sao os mesmos tickers que costumam vir do useDashboardData.marketData.
+// Cotacoes de exemplo usadas como fallback quando a API ainda nao respondeu. Sao os mesmos tickers que costumam vir do useDashboardData.marketData.
 const SAMPLE: MarketQuote[] = [
   { symbol: 'B3SA3', name: 'B3 ON',     currentPrice: 17.29, change: -0.30, changePercent: -1.71, highPrice: 0, lowPrice: 0, openPrice: 0, previousClose: 0, timestamp: 0 },
   { symbol: 'RENT3', name: 'Localiza',  currentPrice: 46.33, change: -0.70, changePercent: -1.47, highPrice: 0, lowPrice: 0, openPrice: 0, previousClose: 0, timestamp: 0 },
@@ -32,10 +31,7 @@ function formatPrice(symbol: string, price: number): string {
   return price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-// ── TickerTape — fita de cotacoes scroll horizontal infinito ─────────────────
-// Padrao do mockup: scroll suave da direita pra esquerda, com mascaras de
-// gradient nas pontas. Anima via CSS keyframes; respeita prefers-reduced-motion
-// (definido em tokens.css globalmente).
+// TickerTape — fita de cotacoes scroll horizontal infinito Padrao do mockup: scroll suave da direita pra esquerda, com mascaras de gradient nas pontas. Anima via CSS keyframes; respeita prefers-reduced-motion (definido em tokens.css globalmente).
 export function TickerTape({ quotes }: TickerTapeProps) {
   const list = quotes && quotes.length > 0 ? quotes : SAMPLE;
   // Duplicamos a lista para a animacao loop sem "salto"

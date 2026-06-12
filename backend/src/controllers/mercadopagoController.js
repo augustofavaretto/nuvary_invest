@@ -9,13 +9,7 @@ import {
 } from '../services/mercadopago.js';
 import { getSupabaseAdmin } from '../lib/supabaseAdmin.js';
 
-// ============================================================
-// POST /api/mercadopago/create-subscription
-// Body: { userId, plan: 'mensal'|'anual', payerEmail }
-//
-// Cria assinatura recorrente no cartao (preapproval) e retorna a URL
-// para o usuario concluir o pagamento.
-// ============================================================
+// POST /api/mercadopago/create-subscription — cria assinatura recorrente (preapproval) e retorna a URL de pagamento
 export async function createSubscription(req, res, next) {
   try {
     const { userId, plan, payerEmail } = req.body;
@@ -53,14 +47,7 @@ export async function createSubscription(req, res, next) {
   }
 }
 
-// ============================================================
-// POST /api/mercadopago/create-payment
-// Body: { userId, plan, payerEmail, method: 'pix'|'boleto' }
-//
-// Cria pagamento unico via Checkout Pro (PIX ou Boleto) e retorna
-// a URL para o usuario concluir. Validade de acesso (mensal ou anual)
-// e aplicada quando o webhook confirmar aprovacao.
-// ============================================================
+// POST /api/mercadopago/create-payment — pagamento unico via Checkout Pro (PIX ou Boleto)
 export async function createPayment(req, res, next) {
   try {
     const { userId, plan, payerEmail, method } = req.body;
@@ -99,14 +86,7 @@ export async function createPayment(req, res, next) {
   }
 }
 
-// ============================================================
-// POST /api/mercadopago/cancel-subscription
-// Body: { userId }
-//
-// Cancela a assinatura Premium do usuario. Se houver preapproval
-// recorrente (cartao), cancela no MP. Em todos os casos marca o
-// profile como 'cancelled' — o acesso permanece ate subscription_expires_at.
-// ============================================================
+// POST /api/mercadopago/cancel-subscription — cancela a assinatura; acesso permanece ate subscription_expires_at
 export async function cancelSubscription(req, res, next) {
   try {
     const { userId } = req.body;
@@ -156,10 +136,7 @@ export async function cancelSubscription(req, res, next) {
   }
 }
 
-// ============================================================
-// POST /api/mercadopago/webhook
-// MP chama este endpoint a cada evento (payment, subscription_preapproval, etc.)
-// ============================================================
+// POST /api/mercadopago/webhook — MP chama este endpoint a cada evento (payment, subscription_preapproval, etc.)
 export async function webhook(req, res, next) {
   try {
     const xSignature = req.headers['x-signature'];
@@ -200,10 +177,7 @@ export async function webhook(req, res, next) {
   }
 }
 
-// ============================================================
-// Processador de evento de pagamento (PIX/Boleto unico OU cobranca
-// recorrente de assinatura)
-// ============================================================
+// Processa evento de pagamento (PIX/Boleto unico ou cobranca recorrente)
 async function processPaymentEvent(paymentId) {
   const payment = await getPaymentById(paymentId);
   const admin = getSupabaseAdmin();
@@ -263,9 +237,7 @@ async function processPaymentEvent(paymentId) {
   }
 }
 
-// ============================================================
 // Processador de evento de preapproval (assinatura recorrente)
-// ============================================================
 async function processPreapprovalEvent(preapprovalId) {
   const preapproval = await getPreapprovalById(preapprovalId);
   const admin = getSupabaseAdmin();
@@ -310,9 +282,7 @@ async function processPreapprovalEvent(preapprovalId) {
   await admin.from('profiles').update(updates).eq('id', userId);
 }
 
-// ============================================================
 // Helpers
-// ============================================================
 function mapPaymentMethod(mpType) {
   if (!mpType) return null;
   if (mpType === 'credit_card') return 'credit_card';

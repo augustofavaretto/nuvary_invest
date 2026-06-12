@@ -5,8 +5,7 @@ interface AuthLayoutProps {
   children: React.ReactNode;
 }
 
-// Wrapper para /login, /cadastro e /recuperar-senha — fundo dark navy
-// + atmospherics ciano. Espelha o design publico da landing.
+// Wrapper para /login, /cadastro e /recuperar-senha — fundo dark navy + atmospherics ciano. Espelha o design publico da landing.
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div

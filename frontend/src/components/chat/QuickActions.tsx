@@ -74,9 +74,7 @@ interface QuickActionsProps {
   disabled?: boolean;
 }
 
-// Pills compactos no estilo do mini-chat do dashboard (rounded-full,
-// sem icones, flex-wrap). Padroniza visualmente as sugestoes em todos
-// os pontos do app.
+// Pills compactos no estilo do mini-chat do dashboard (rounded-full, sem icones, flex-wrap). Padroniza visualmente as sugestoes em todos os pontos do app.
 export function QuickActions({ onAction, disabled }: QuickActionsProps) {
   const container = {
     hidden: { opacity: 0 },

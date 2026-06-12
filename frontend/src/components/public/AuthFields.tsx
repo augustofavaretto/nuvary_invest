@@ -15,8 +15,7 @@ interface FieldProps {
   required?: boolean;
   inputMode?: 'text' | 'numeric' | 'tel' | 'email' | 'search' | 'url' | 'none' | 'decimal';
   maxLength?: number;
-  /** Mensagem de erro a exibir abaixo do campo. Quando preenchida, o input
-   *  ganha borda vermelha. */
+  // Mensagem de erro a exibir abaixo do campo. Quando preenchida, o input ganha borda vermelha.
   error?: string;
 }
 

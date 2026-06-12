@@ -15,6 +15,20 @@ interface DonutChartProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: { name: string; value: number; percentage: number } }> }) {
+  if (active && payload && payload.length) {
+    const item = payload[0].payload;
+    return (
+      <div className="bg-card shadow-lg rounded-lg p-3 border border-border">
+        <p className="font-semibold text-foreground">{item.name}</p>
+        <p className="text-sm text-muted-foreground">{formatCurrency(item.value)}</p>
+        <p className="text-sm text-[#00B8D9]">{formatPercentage(item.percentage)} da carteira</p>
+      </div>
+    );
+  }
+  return null;
+}
+
 export function DonutChart({ data, centerValue, centerLabel, size = 'md' }: DonutChartProps) {
   const dimensions = {
     sm: { width: 160, height: 160, innerRadius: 50, outerRadius: 70 },
@@ -23,20 +37,6 @@ export function DonutChart({ data, centerValue, centerLabel, size = 'md' }: Donu
   };
 
   const { width, height, innerRadius, outerRadius } = dimensions[size];
-
-  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: { name: string; value: number; percentage: number } }> }) => {
-    if (active && payload && payload.length) {
-      const item = payload[0].payload;
-      return (
-        <div className="bg-card shadow-lg rounded-lg p-3 border border-border">
-          <p className="font-semibold text-foreground">{item.name}</p>
-          <p className="text-sm text-muted-foreground">{formatCurrency(item.value)}</p>
-          <p className="text-sm text-[#00B8D9]">{formatPercentage(item.percentage)} da carteira</p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div className="relative" style={{ width, height }}>

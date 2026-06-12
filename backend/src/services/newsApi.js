@@ -11,6 +11,7 @@ class NewsApiService {
     this.currentKeyIndex = 0;
   }
 
+  // Rotaciona entre as chaves configuradas para diluir o rate limit
   getApiKey() {
     const key = this.apiKeys[this.currentKeyIndex];
     this.currentKeyIndex = (this.currentKeyIndex + 1) % this.apiKeys.length;
@@ -43,100 +44,8 @@ class NewsApiService {
     return response.data;
   }
 
-  // === TOP HEADLINES ===
-
-  async getTopHeadlines(options = {}) {
-    const {
-      country = 'us',
-      category,
-      sources,
-      q,
-      pageSize = 20,
-      page = 1,
-    } = options;
-
-    const params = { pageSize, page };
-
-    if (sources) {
-      params.sources = sources;
-    } else {
-      if (country) params.country = country;
-      if (category) params.category = category;
-    }
-
-    if (q) params.q = q;
-
-    return this.request('/top-headlines', params);
-  }
-
-  async getTopHeadlinesByCountry(country = 'us', pageSize = 20) {
-    return this.getTopHeadlines({ country, pageSize });
-  }
-
-  async getTopHeadlinesByCategory(category, country = 'us', pageSize = 20) {
-    return this.getTopHeadlines({ category, country, pageSize });
-  }
-
-  async getTopHeadlinesBySource(sources, pageSize = 20) {
-    return this.getTopHeadlines({ sources, pageSize });
-  }
-
-  // === EVERYTHING ===
-
-  async searchNews(options = {}) {
-    const {
-      q,
-      sources,
-      domains,
-      from,
-      to,
-      language,
-      sortBy = 'publishedAt',
-      pageSize = 20,
-      page = 1,
-    } = options;
-
-    const params = { pageSize, page, sortBy };
-
-    if (q) params.q = q;
-    if (sources) params.sources = sources;
-    if (domains) params.domains = domains;
-    if (from) params.from = from;
-    if (to) params.to = to;
-    if (language) params.language = language;
-
-    return this.request('/everything', params);
-  }
-
-  async searchByKeyword(keyword, options = {}) {
-    return this.searchNews({ q: keyword, ...options });
-  }
-
-  async searchByDomain(domains, options = {}) {
-    return this.searchNews({ domains, ...options });
-  }
-
-  // === SOURCES ===
-
-  async getSources(options = {}) {
-    const { category, language, country } = options;
-    const params = {};
-
-    if (category) params.category = category;
-    if (language) params.language = language;
-    if (country) params.country = country;
-
-    return this.request('/top-headlines/sources', params);
-  }
-
-  // === BUSINESS NEWS (Atalho para notícias financeiras) ===
-
   async getBusinessNews(country = 'us', pageSize = 20) {
-    return this.getTopHeadlinesByCategory('business', country, pageSize);
-  }
-
-  async getTechNews(country = 'us', pageSize = 20) {
-    return this.getTopHeadlinesByCategory('technology', country, pageSize);
+    return this.request('/top-headlines', { country, category: 'business', pageSize });
   }
 }
 

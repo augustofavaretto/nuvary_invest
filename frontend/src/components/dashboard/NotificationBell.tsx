@@ -17,9 +17,7 @@ import {
 import { refreshAllPrices } from '@/services/portfolioService';
 import { AlertItem } from './AlertItem';
 
-// Periodicidade do check global de variacao (5 min). O refreshAllPrices ja
-// tem cache interno de 15min, mas chamamos com force=true neste fluxo para
-// garantir que a verificacao acontece independente da pagina aberta.
+// Periodicidade do check global de variacao (5 min). O refreshAllPrices ja tem cache interno de 15min, mas chamamos com force=true neste fluxo para garantir que a verificacao acontece independente da pagina aberta.
 const GLOBAL_CHECK_INTERVAL_MS = 5 * 60 * 1000;
 
 export function NotificationBell() {
@@ -35,14 +33,11 @@ export function NotificationBell() {
     setUnread(count);
   }, []);
 
-  // Dispara refreshAllPrices que internamente chama checkAlertsForAssets.
-  // Cache de 15min ja protege contra chamadas demais. Roda em paralelo
-  // com a UI; falhas sao toleradas em silencio.
+  // Dispara refreshAllPrices que internamente chama checkAlertsForAssets. Cache de 15min ja protege contra chamadas demais. Roda em paralelo com a UI; falhas sao toleradas em silencio.
   const verificarVariacoes = useCallback(async (force = false) => {
     try {
       await refreshAllPrices(force);
-      // Apos refresh, recarrega a lista local (o realtime tambem dispara,
-      // mas garantimos atualizacao mesmo se o Realtime estiver desligado)
+      // Apos refresh, recarrega a lista local (o realtime tambem dispara, mas garantimos atualizacao mesmo se o Realtime estiver desligado)
       await refresh();
     } catch (e) {
       console.error('[NotificationBell] falha ao verificar variacoes:', e);

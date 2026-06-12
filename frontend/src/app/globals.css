@@ -117,10 +117,7 @@
 .bg-gradient-hero  { background-image: var(--gradient-hero); }
 .bg-gradient-glow  { background-image: var(--gradient-glow); }
 
-/* ============================================
-   NUVARY INVEST - BRAND COLORS
-   Baseado no manual_marca_nuvaryinvest.md
-   ============================================ */
+/* NUVARY INVEST — cores da marca */
 
 :root {
   --radius: 0.5rem;
@@ -305,24 +302,18 @@
   background: linear-gradient(180deg, #00B8D9 0%, #007EA7 100%);
 }
 
-/* Chat sidebar — botão três pontos SEMPRE 100% visível (estilo Claude Chat).
-   Cor padrao tinged-gray; hover/focus muda cor + bg para destaque. */
+/* Chat sidebar — botão três pontos sempre visível; hover/focus muda cor + bg */
 .conversa-dots-btn {
   opacity: 1;
   transition: background-color 150ms ease, color 150ms ease;
 }
 
-/* Radix ScrollArea (shadcn) — o Viewport interno usa display:table por padrao,
-   o que quebra "truncate" + "flex-1 min-w-0" dos filhos. Forcamos block aqui
-   para o truncate funcionar corretamente em todos os itens da lista. */
+/* Radix ScrollArea (shadcn) — o Viewport interno usa display:table por padrao, o que quebra "truncate" + "flex-1 min-w-0" dos filhos. Forcamos block aqui para o truncate funcionar corretamente em todos os itens da lista. */
 [data-slot="scroll-area-viewport"] > div {
   display: block !important;
 }
 
-/* ============================================================================
-   NUVARY REDESIGN — UTILITIES GLOBAIS (mockup exemplo frontend.html)
-   Classes auxiliares disponiveis em qualquer componente do redesign.
-   ============================================================================ */
+/* NUVARY REDESIGN — UTILITIES GLOBAIS (mockup exemplo frontend.html) Classes auxiliares disponiveis em qualquer componente do redesign. */
 
 /* Background ambient — gradient radial sutil, fixo atras de tudo */
 .nv-ambient {

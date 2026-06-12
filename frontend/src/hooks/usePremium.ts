@@ -23,15 +23,7 @@ const DEFAULT_STATE: SubscriptionState = {
   startedAt: null,
 };
 
-// Hook central para gates de feature Premium.
-// Use em qualquer componente para decidir mostrar/esconder/desabilitar
-// algo conforme o status da assinatura.
-//
-// Exemplo:
-//   const { isPremium, loading } = usePremium();
-//   if (loading) return <Skeleton />;
-//   if (!isPremium) return <PremiumGate feature="alertas" />;
-//   return <Alertas />;
+// Hook central para gates de feature Premium. Use em qualquer componente para decidir mostrar/esconder/desabilitar algo conforme o status da assinatura. Exemplo: const { isPremium, loading } = usePremium(); if (loading) return <Skeleton />; if (!isPremium) return <PremiumGate feature="alertas" />; return <Alertas />;
 export function usePremium(): UsePremiumResult {
   const { isAuthenticated } = useAuth();
   const [state, setState] = useState<SubscriptionState>(DEFAULT_STATE);

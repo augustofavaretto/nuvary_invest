@@ -35,8 +35,7 @@ function businessDaysBetween(start: Date, end: Date): number {
   return businessDays;
 }
 
-// Rendimento acumulado da renda fixa: juros compostos da taxa (% a.a.) em
-// base 252 dias úteis desde a data de aplicação (fallback: created_at).
+// Rendimento acumulado da renda fixa: juros compostos da taxa (% a.a.) em base 252 dias úteis desde a data de aplicação (fallback: created_at).
 function rendaFixaAtual(a: AssetRow): number {
   const invested = Number(a.quantity);
   const rate = Number(a.average_price);
@@ -46,9 +45,7 @@ function rendaFixaAtual(a: AssetRow): number {
   return invested * Math.pow(1 + rate / 100, du / 252);
 }
 
-// Endpoint de teste — usuario autenticado dispara envio do relatorio
-// imediatamente para o proprio e-mail, ignorando a janela de idempotencia.
-// Retorna detalhes do que aconteceu para facilitar diagnostico.
+// Endpoint de teste — usuario autenticado dispara envio do relatorio imediatamente para o proprio e-mail, ignorando a janela de idempotencia. Retorna detalhes do que aconteceu para facilitar diagnostico.
 export async function POST(req: NextRequest) {
   // 1. Autentica o usuario via Bearer token (session do Supabase)
   const authHeader = req.headers.get('authorization');

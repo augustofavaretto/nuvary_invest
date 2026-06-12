@@ -22,8 +22,7 @@ const TABS = [
   { id: 'internacional', label: 'Internacional', color: '#7C3AED' },
 ];
 
-// Sua carteira por produto — visual fiel ao mockup
-// (.classe-filter + .product-row + .row-actions)
+// Sua carteira por produto — visual fiel ao mockup (.classe-filter + .product-row + .row-actions)
 export function PortfolioByProductCard({
   rendaFixa,
   rendaVariavel,

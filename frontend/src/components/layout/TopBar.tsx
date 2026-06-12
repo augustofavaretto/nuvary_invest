@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Bell, ChevronDown, LogOut, Settings, Sparkles, User as UserIcon } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,7 +15,6 @@ interface TopBarProps {
 
 // ── TopBar do redesign — 80px, navy-deep, cloud + notif + user pill ──────────
 export function TopBar({ notificationSlot }: TopBarProps) {
-  const router = useRouter();
   const { user, profile, logout } = useAuth();
   const { isPremium } = usePremium();
   const [menuOpen, setMenuOpen] = useState(false);

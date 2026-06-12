@@ -58,8 +58,7 @@ export default function ConfiguracoesPage() {
     getEmailRelatoriosAtivo().then(setEmailRelatoriosState);
   }, [isAuthenticated]);
 
-  // Gate Premium — usuario free tentando ativar funcionalidade premium
-  // e redirecionado para /premium em vez de toggle.
+  // Gate Premium — usuario free tentando ativar funcionalidade premium e redirecionado para /premium em vez de toggle.
   const tentarAtivarPremium = (): boolean => {
     if (!isPremium && !premiumLoading) {
       router.push('/premium');

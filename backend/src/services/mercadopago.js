@@ -21,9 +21,7 @@ function getClient() {
   return mpClient;
 }
 
-// ============================================================
 // Planos Nuvary Premium
-// ============================================================
 export const PLANS = {
   mensal: {
     id: 'mensal',
@@ -43,9 +41,7 @@ export const PLANS = {
   },
 };
 
-// ============================================================
-// 1) Cartao recorrente — cria preapproval (assinatura)
-// ============================================================
+// Cartao recorrente — cria preapproval (assinatura)
 export async function createPreapproval({ userId, plan, payerEmail }) {
   const planData = PLANS[plan];
   if (!planData) throw new Error(`Plano invalido: ${plan}`);
@@ -74,9 +70,7 @@ export async function createPreapproval({ userId, plan, payerEmail }) {
   };
 }
 
-// ============================================================
-// 2) PIX / Boleto — cria preference (pagamento unico)
-// ============================================================
+// PIX/Boleto — cria preference (pagamento unico)
 export async function createPreference({ userId, plan, payerEmail, method }) {
   const planData = PLANS[plan];
   if (!planData) throw new Error(`Plano invalido: ${plan}`);
@@ -124,26 +118,19 @@ export async function createPreference({ userId, plan, payerEmail, method }) {
   };
 }
 
-// ============================================================
-// 3) Buscar pagamento por ID (usado no webhook)
-// ============================================================
+// Busca pagamento por ID (usado no webhook)
 export async function getPaymentById(paymentId) {
   const payment = new Payment(getClient());
   return payment.get({ id: paymentId });
 }
 
-// ============================================================
-// 4) Buscar preapproval por ID
-// ============================================================
+// Busca preapproval por ID
 export async function getPreapprovalById(preapprovalId) {
   const preapproval = new PreApproval(getClient());
   return preapproval.get({ id: preapprovalId });
 }
 
-// ============================================================
-// 4b) Cancelar preapproval (assinatura recorrente no cartao)
-// Seta status 'cancelled' no MP — interrompe cobrancas futuras.
-// ============================================================
+// Cancela preapproval no MP — interrompe cobrancas futuras
 export async function cancelPreapproval(preapprovalId) {
   const preapproval = new PreApproval(getClient());
   return preapproval.update({
@@ -152,17 +139,7 @@ export async function cancelPreapproval(preapprovalId) {
   });
 }
 
-// ============================================================
-// 5) Validacao da assinatura do webhook
-//
-// MP envia headers:
-//   x-signature: ts=1234567890,v1=hexsignature
-//   x-request-id: <uuid>
-//
-// Calculo: HMAC SHA256 do template
-//   id:<data.id>;request-id:<x-request-id>;ts:<ts>;
-// com a chave MERCADOPAGO_WEBHOOK_SECRET
-// ============================================================
+// Valida assinatura do webhook: HMAC SHA256 de id:<data.id>;request-id:<x-request-id>;ts:<ts>; com MERCADOPAGO_WEBHOOK_SECRET
 export function verifyWebhookSignature({ xSignature, xRequestId, dataId }) {
   const secret = config.mercadopago.webhookSecret;
   if (!secret) {

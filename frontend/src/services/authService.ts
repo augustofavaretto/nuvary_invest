@@ -11,9 +11,7 @@ interface CadastroData {
 }
 
 export async function cadastrar({ nome, cpf, dataNascimento, telefone, email, senha, aceiteTermos }: CadastroData) {
-  // Limpa qualquer sessao antiga do navegador para o estado pos-signup ser
-  // autoritativo (evita pular a confirmacao de e-mail por uma sessao residual
-  // de um teste/login anterior).
+  // Limpa qualquer sessao antiga do navegador para o estado pos-signup ser autoritativo (evita pular a confirmacao de e-mail por uma sessao residual de um teste/login anterior).
   await supabase.auth.signOut().catch(() => {});
 
   const { data, error } = await supabase.auth.signUp({

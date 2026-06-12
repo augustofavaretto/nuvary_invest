@@ -7,8 +7,7 @@ interface PerfilCardProps {
   helper?: string;
 }
 
-// "Seu perfil" — badge ambar para Arrojado/Moderado/Conservador/Agressivo.
-// Fiel ao mockup (.profile-side + .profile-tag).
+// "Seu perfil" — badge ambar para Arrojado/Moderado/Conservador/Agressivo. Fiel ao mockup (.profile-side + .profile-tag).
 export function PerfilCard({
   perfil,
   helper = 'Focando em crescimento de longo prazo',

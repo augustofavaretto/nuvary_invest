@@ -1,8 +1,6 @@
 import type { Periodo } from '@/components/dashboard/EvolucaoChart';
 
-// Geracao deterministica de evolucao patrimonial (seed por dia) — mesma
-// estrategia usada em /relatorios para evitar dependencia de snapshots
-// historicos no banco. Quando snapshots existirem, substituir por dados reais.
+// Geracao deterministica de evolucao patrimonial (seed por dia) — mesma estrategia usada em /relatorios para evitar dependencia de snapshots historicos no banco. Quando snapshots existirem, substituir por dados reais.
 export function gerarEvolucao(
   periodo: Periodo,
   valorFinal: number

@@ -21,9 +21,7 @@ interface EvolucaoChartProps {
   data: Array<{ i: number; v: number }>;
 }
 
-// Evolucao Patrimonial — card-header com title + period-tabs pill,
-// valor + delta colorido, AreaChart Recharts com gradient ciano.
-// Fiel ao mockup (.evo-card + .period-tabs).
+// Evolucao Patrimonial — card-header com title + period-tabs pill, valor + delta colorido, AreaChart Recharts com gradient ciano. Fiel ao mockup (.evo-card + .period-tabs).
 export function EvolucaoChart({
   valor,
   valorInicial,

@@ -9,8 +9,6 @@ class OpenAIService {
     this.model = config.openai.model;
   }
 
-  // === CHAT COMPLETION ===
-
   async chat(messages, options = {}) {
     const { model = this.model } = options;
 
@@ -24,82 +22,6 @@ class OpenAIService {
       usage: response.usage,
       model: response.model,
     };
-  }
-
-  async ask(question, options = {}) {
-    return this.chat([{ role: 'user', content: question }], options);
-  }
-
-  // === ANÁLISE FINANCEIRA ===
-
-  async analyzeStock(symbol, stockData) {
-    const systemPrompt = `Você é um analista financeiro especializado em mercado de ações.
-Analise os dados fornecidos e forneça insights claros e objetivos em português.
-Seja direto e forneça recomendações práticas.`;
-
-    const userPrompt = `Analise a ação ${symbol} com os seguintes dados:
-${JSON.stringify(stockData, null, 2)}
-
-Forneça:
-1. Análise geral da situação atual
-2. Pontos positivos
-3. Pontos de atenção
-4. Perspectiva de curto prazo`;
-
-    return this.chat(
-      [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      { temperature: 0.5 }
-    );
-  }
-
-  async analyzeNews(newsArticles, symbol = null) {
-    const systemPrompt = `Você é um analista de mercado especializado em interpretar notícias financeiras.
-Analise as notícias fornecidas e identifique tendências e impactos potenciais no mercado.
-Responda sempre em português.`;
-
-    const context = symbol ? ` relacionadas a ${symbol}` : '';
-    const userPrompt = `Analise estas notícias${context} e forneça um resumo dos principais pontos e possíveis impactos no mercado:
-
-${newsArticles.map((n, i) => `${i + 1}. ${n.title}\n   ${n.description || ''}`).join('\n\n')}
-
-Forneça:
-1. Resumo geral do sentimento das notícias
-2. Principais temas identificados
-3. Possíveis impactos no mercado
-4. Recomendações para investidores`;
-
-    return this.chat(
-      [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      { temperature: 0.5, maxTokens: 1500 }
-    );
-  }
-
-  async explainTerm(term) {
-    const systemPrompt = `Você é um educador financeiro. Explique termos e conceitos financeiros
-de forma clara e acessível, usando exemplos práticos quando possível.
-Responda sempre em português.`;
-
-    const userPrompt = `Explique de forma clara e didática o seguinte termo/conceito financeiro: "${term}"
-
-Inclua:
-1. Definição simples
-2. Como funciona na prática
-3. Exemplo prático
-4. Por que é importante para investidores`;
-
-    return this.chat(
-      [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      { temperature: 0.6 }
-    );
   }
 
   async generateInvestmentSuggestion(profile) {
@@ -130,59 +52,7 @@ Forneça:
     );
   }
 
-  async compareTwoStocks(stock1, stock2, data1, data2) {
-    const systemPrompt = `Você é um analista financeiro comparativo. Compare ações de forma objetiva,
-destacando pontos fortes e fracos de cada uma. Responda sempre em português.`;
-
-    const userPrompt = `Compare as ações ${stock1} e ${stock2}:
-
-${stock1}:
-${JSON.stringify(data1, null, 2)}
-
-${stock2}:
-${JSON.stringify(data2, null, 2)}
-
-Forneça:
-1. Tabela comparativa dos principais indicadores
-2. Pontos fortes de cada ação
-3. Pontos fracos de cada ação
-4. Qual parece mais atrativa no momento e por quê
-5. Para qual perfil de investidor cada uma é mais adequada`;
-
-    return this.chat(
-      [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      { temperature: 0.5, maxTokens: 2000 }
-    );
-  }
-
-  async summarizeMarket(marketData) {
-    const systemPrompt = `Você é um comentarista de mercado financeiro. Forneça resumos claros
-e objetivos sobre a situação atual do mercado. Responda sempre em português.`;
-
-    const userPrompt = `Faça um resumo da situação atual do mercado com base nestes dados:
-
-${JSON.stringify(marketData, null, 2)}
-
-Forneça:
-1. Visão geral do mercado
-2. Principais movimentos do dia
-3. Setores em destaque (positivo e negativo)
-4. O que ficar de olho nos próximos dias`;
-
-    return this.chat(
-      [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      { temperature: 0.5, maxTokens: 1500 }
-    );
-  }
-
-  // === DADOS DE MERCADO EM TEMPO REAL ===
-
+  // Busca indicadores SGS do BCB usados no contexto do assistente
   async fetchMarketData() {
     const SGS = {
       selic_meta: 432,
@@ -217,8 +87,6 @@ Forneça:
       igpm:  igpm.status  === 'fulfilled' ? igpm.value  : null,
     };
   }
-
-  // === ASSISTENTE GERAL ===
 
   async assistantChat(message, conversationHistory = [], userContext = {}) {
     const { profile, portfolio, portfolioEmpty } = userContext;

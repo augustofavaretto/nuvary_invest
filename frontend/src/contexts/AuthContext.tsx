@@ -86,8 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       '';
 
     if (data) {
-      // Preenche campos extras do user_metadata como fallback se não estiverem no perfil.
-      // Para `nome`, usa OR (nao ??) pra que string vazia no DB caia no metadata.
+      // Preenche campos extras do user_metadata como fallback se não estiverem no perfil. Para `nome`, usa OR (nao ??) pra que string vazia no DB caia no metadata.
       setProfile({
         ...data,
         nome: data.nome || nomeMeta,
@@ -98,8 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data_aceite_termos: data.data_aceite_termos ?? meta.data_aceite_termos ?? null,
       });
     } else if (user) {
-      // Sem linha na tabela `profiles` — monta um stub a partir do user_metadata
-      // pra que Dashboard/TopBar ja exibam o nome certo.
+      // Sem linha na tabela `profiles` — monta um stub a partir do user_metadata pra que Dashboard/TopBar ja exibam o nome certo.
       setProfile({
         id: user.id,
         nome: nomeMeta,

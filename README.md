@@ -1,141 +1,33 @@
 # Nuvary Invest
 
-Plataforma de consultoria de investimentos com assistente IA, voltada ao investidor brasileiro.
-
-**Versão atual:** v4.15.0 — Página `/confirme-email` pós-cadastro com botão que abre o webmail do usuário (Gmail, Outlook, etc.), tour guiado iniciando na carteira e refinos de UX. (v4.14.0: Central de Ajuda + onboarding; correção dos alertas de variação.)
+Plataforma de consultoria de investimentos com assistente de IA, voltada ao investidor brasileiro.
 
 ---
 
-## Stack
+## Visão Geral
 
-| Camada | Tecnologia |
-|---|---|
-| **Frontend** | Next.js 16 (App Router) · React 19 · TypeScript 5 · Tailwind v4 (`@theme inline`) |
-| **Backend** | Node.js + Express (ESM) — porta 3001 |
-| **Banco** | Supabase PostgreSQL (auth + portfólio + chat + perfil + alertas + premium) |
-| **Hosting** | Vercel (frontend) + Vercel (backend separado) |
-| **Pagamento** | Mercado Pago (subscription recorrente + PIX/Boleto one-time) |
-| **E-mail** | Gmail SMTP (nodemailer) + Vercel Cron (relatório diário 8h BRT) |
-| **IA** | OpenAI (Chat) |
-| **APIs externas** | BCB SGS, Brapi (B3), Finnhub (US), Alpha Vantage (cripto), News API |
-| **UI** | lucide-react · Framer Motion · Recharts |
+A Nuvary Invest reúne em um só lugar o acompanhamento de carteira, educação financeira e consultoria assistida por inteligência artificial. O usuário cadastra seus ativos (renda fixa, ações da B3, FIIs, internacional e criptomoedas), responde a um questionário de perfil de investidor e passa a contar com um dashboard consolidado, relatórios, alertas de variação e um chat de IA com contexto da carteira real e de indicadores de mercado em tempo real (Selic, CDI, IPCA, IGP-M).
+
+O projeto é dividido em duas aplicações independentes:
+
+- **Frontend** — Next.js (App Router), responsável pela interface, autenticação e acesso direto ao Supabase.
+- **Backend** — API Express que centraliza as integrações externas (cotações, indicadores, IA e pagamentos).
 
 ---
 
-## Como rodar localmente
+## Funcionalidades
 
-```bash
-# Backend (porta 3001)
-cd backend
-npm install
-node src/server.js
+- **Dashboard** — patrimônio consolidado, evolução, alocação por classe, notícias e mercado em tempo real
+- **Minha Carteira** — cadastro e venda de ativos com preços atualizados por APIs de mercado
+- **Chat IA** — assistente de investimentos com contexto do perfil, da carteira e de indicadores do BCB
+- **Questionário de Perfil** — classificação em Conservador, Moderado, Arrojado ou Agressivo
+- **Relatórios** — performance, extratos (XLS/PDF) e Informe de Rendimentos (PDF)
+- **Trilhas Educativas** — aulas em vídeo organizadas por categoria
+- **Alertas de variação** — notificação quando um ativo varia ≥5%
+- **Relatório diário por e-mail** — enviado via cron (Gmail SMTP)
+- **Plano Premium** — assinatura via Mercado Pago (cartão recorrente, PIX ou boleto)
 
-# Frontend (porta 3000)
-cd frontend
-npm install
-npm run dev
-```
-
-O frontend lê `NEXT_PUBLIC_API_URL=http://localhost:3001/api` para acessar o backend.
-
----
-
-## Estrutura do projeto
-
-```
-nuvary-invest/
-├── backend/                     # Express ESM — APIs externas (BCB, Brapi, etc.)
-│   └── src/
-│       ├── server.js            # Registra todas as rotas
-│       └── controllers/         # bcbController, brapiController, etc.
-│
-├── frontend/                    # Next.js 16 App Router
-│   ├── public/
-│   │   └── brand/               # Logos oficiais (icon, vertical, horizontal)
-│   └── src/
-│       ├── app/                 # Rotas
-│       │   ├── dashboard/       # Painel principal
-│       │   ├── carteira/        # Portfólio
-│       │   ├── chat/            # Assistente IA
-│       │   ├── relatorios/      # Performance + Extratos + IR
-│       │   ├── trilhas/         # Aulas em vídeo
-│       │   ├── perfil/          # Dados pessoais + questionário
-│       │   ├── configuracoes/   # Theme toggle + premium gates + cancelar assinatura
-│       │   ├── suporte/         # Central de Ajuda (FAQ + contato + refazer tour)
-│       │   ├── premium/         # Página de upgrade (planos + checkout MP)
-│       │   ├── docs/            # Histórico de releases (por categoria)
-│       │   └── api/
-│       │       ├── cron/weekly-report/    # Vercel Cron diário 8h BRT
-│       │       └── email/send-test/       # Diagnóstico manual de e-mail
-│       │       # (webhook + cancelamento do Mercado Pago ficam no backend)
-│       ├── components/
-│       │   ├── layout/          # Sidebar, TopBar, TickerTape, PremiumUpgradeBanner
-│       │   ├── dashboard/       # GreetingCard, PatrimonioCard, EvolucaoChart, etc.
-│       │   ├── portfolio/      # Donuts, AddAssetModal, SellAssetModal
-│       │   └── chat/           # Chatbot, ChatSidebar, QuickActions
-│       ├── contexts/           # AuthContext, ThemeContext
-│       ├── hooks/              # useDashboardData, usePremium
-│       ├── services/           # portfolioService, alertasService, emailReportService, etc.
-│       ├── styles/tokens.css   # Tokens unificados Light + Dark
-│       └── constants/strings.ts # Strings pt-BR centralizadas
-│
-├── sql/                         # Migrations Supabase
-│   ├── alertas_variacao.sql
-│   ├── portfolio_assets_alert_baseline.sql
-│   ├── email_relatorios_setup.sql
-│   ├── mercadopago_subscriptions_setup.sql
-│   └── avatars_storage.sql
-│
-├── supabase_setup.sql           # Setup inicial (profiles + triggers)
-└── manual_marca_nuvaryinvest.md # Identidade visual da marca
-```
-
----
-
-## Tabelas Supabase
-
-| Tabela | Função |
-|---|---|
-| `profiles` | Perfil básico (nome, e-mail, CPF) + toggles de alertas e e-mail |
-| `portfolio_assets` | Carteira do usuário (renda fixa, ações, FIIs, internacional, cripto) |
-| `chat_historico` | Histórico de conversas do assistente IA |
-| `perfil_investidor` | Resposta do questionário (perfil de risco) |
-| `alertas_variacao` | Alertas quando ativo varia ≥5% |
-| `portfolio_transactions` | Operações de venda (base para IR) |
-| `subscription_payments` | Histórico de pagamentos do Mercado Pago (estado da assinatura fica em colunas de `profiles`) |
-
-Todas com **RLS habilitado** filtrando por `auth.uid()`.
-
----
-
-## Variáveis de ambiente (Vercel)
-
-### Frontend
-```
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-SUPABASE_SERVICE_ROLE_KEY=...
-NEXT_PUBLIC_API_URL=https://nuvary-invest-backend.vercel.app/api
-NEXT_PUBLIC_APP_URL=https://nuvary-invest.vercel.app
-GMAIL_USER=...            # e-mail da conta Gmail usada para enviar os relatórios
-GMAIL_APP_PASSWORD=...    # App Password de 16 dígitos (Google → Segurança → Senhas de app)
-CRON_SECRET=...
-MERCADOPAGO_ACCESS_TOKEN=...
-MERCADOPAGO_WEBHOOK_SECRET=...
-OPENAI_API_KEY=...
-```
-
-### Backend
-```
-BRAPI_API_TOKEN=...   # token Brapi (brapi.dev) — obrigatório para FIIs; ações funcionam sem
-FINNHUB_API_KEY=...
-ALPHAVANTAGE_API_KEY=...
-NEWS_API_KEY=...
-```
-
----
-
-## Funcionalidades por plano
+### Funcionalidades por plano
 
 | Recurso | Free | Premium |
 |---|:---:|:---:|
@@ -151,22 +43,132 @@ NEWS_API_KEY=...
 
 ---
 
-## Histórico de releases
+## Tecnologias Utilizadas
 
-Veja `/docs` no app rodando, ou consulte `frontend/src/app/docs/page.tsx` para a versão de código.
+| Camada | Tecnologia |
+|---|---|
+| **Frontend** | Next.js 16 (App Router) · React 19 · TypeScript 5 · Tailwind CSS v4 |
+| **Backend** | Node.js + Express (ESM) — porta 3001 |
+| **Banco de dados** | Supabase PostgreSQL (auth, portfólio, chat, perfil, alertas, premium) com RLS |
+| **IA** | OpenAI (chat e sugestões de investimento) |
+| **Pagamentos** | Mercado Pago (assinatura recorrente + PIX/Boleto) |
+| **E-mail** | Gmail SMTP (nodemailer) + Vercel Cron (relatório diário) |
+| **APIs de mercado** | BCB SGS (indicadores) · Brapi (B3) · Finnhub (EUA) · CoinGecko (cripto) · News API |
+| **UI** | lucide-react · Framer Motion · Recharts · shadcn/ui |
 
 ---
 
-## Convenções de código
+## Estrutura do Projeto
 
-- **Strings pt-BR** centralizadas em `frontend/src/constants/strings.ts` (`STRINGS.dominio.chave`)
-- **Tokens visuais** em `frontend/src/styles/tokens.css` — sempre usar `var(--surface-1)`, `var(--cyan)`, etc.
-- **Valores monetários** sempre via `formatCurrency()` ou `formatBRL()` (2 casas decimais)
-- **Componentes Premium** usam `usePremium()` para gates; caminho default é redirecionar para `/premium`
-- **Commits**: `feat()`, `fix()`, `chore()` com mensagem em português
+```
+nuvary_invest/
+├── backend/                       # API Express (ESM)
+│   ├── api/index.js               # Entry point serverless (Vercel)
+│   └── src/
+│       ├── app.js                 # Registro de middlewares e rotas
+│       ├── server.js              # Servidor local (porta 3001)
+│       ├── config/                # Variáveis de ambiente centralizadas
+│       ├── routes/                # ai, bcb, brapi, crypto, finnhub, news, riskProfile, mercadopago
+│       ├── controllers/           # Lógica de cada rota
+│       ├── services/              # Integrações (OpenAI, Finnhub, CoinGecko, News API, Mercado Pago)
+│       ├── middleware/            # errorHandler, rateLimiter
+│       ├── lib/                   # Cliente Supabase service-role
+│       └── data/                  # Questionário de perfil de investidor
+│
+└── frontend/                      # Next.js 16 App Router
+    ├── public/brand/              # Logos oficiais
+    └── src/
+        ├── app/                   # Rotas (dashboard, carteira, chat, relatorios, trilhas,
+        │   │                      #   perfil, configuracoes, suporte, premium, auth, legais)
+        │   └── api/               # Route handlers: cron do relatório diário + teste de e-mail
+        ├── components/            # layout, dashboard, portfolio, chat, questionnaire, ui
+        ├── contexts/              # AuthContext, ThemeContext
+        ├── hooks/                 # useDashboardData, usePremium
+        ├── services/              # portfolioService, chatService, alertasService, etc.
+        ├── lib/                   # format, evolucao, cpf, e-mail, supabase
+        ├── styles/tokens.css      # Design tokens (dark/light)
+        └── constants/strings.ts   # Strings pt-BR centralizadas
+```
+
+### Tabelas Supabase
+
+| Tabela | Função |
+|---|---|
+| `profiles` | Perfil básico (nome, e-mail, CPF) + status da assinatura + toggles |
+| `portfolio_assets` | Carteira do usuário |
+| `portfolio_transactions` | Operações de venda (base para IR) |
+| `chat_historico` | Histórico de conversas do assistente IA |
+| `perfil_investidor` | Resultado do questionário de perfil de risco |
+| `alertas_variacao` | Alertas de variação ≥5% |
+| `subscription_payments` | Histórico de pagamentos do Mercado Pago |
+
+Todas com **RLS habilitado** filtrando por `auth.uid()`.
+
+---
+
+## Instalação
+
+Pré-requisitos: Node.js 20+ e um projeto Supabase configurado.
+
+```bash
+# Clonar o repositório
+git clone https://github.com/augustofavaretto/nuvary_invest.git
+cd nuvary_invest
+
+# Backend (porta 3001)
+cd backend
+npm install
+cp .env.example .env   # preencher as chaves
+npm run dev
+
+# Frontend (porta 3000) — em outro terminal
+cd frontend
+npm install
+npm run dev
+```
+
+O frontend lê `NEXT_PUBLIC_API_URL=http://localhost:3001/api` para acessar o backend.
+
+### Variáveis de ambiente
+
+**Frontend**
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+GMAIL_USER=...            # conta Gmail usada para enviar os relatórios
+GMAIL_APP_PASSWORD=...    # App Password de 16 dígitos
+CRON_SECRET=...
+```
+
+**Backend** — ver `backend/.env.example` (Finnhub, News API, OpenAI, Brapi, Mercado Pago e Supabase).
+
+---
+
+## Deploy
+
+O projeto é hospedado na **Vercel** em dois deploys independentes:
+
+1. **Backend** — projeto Vercel apontando para `backend/` (entry serverless em `backend/api/index.js`).
+2. **Frontend** — projeto Vercel apontando para `frontend/`, com as variáveis de ambiente configuradas e o cron do relatório diário habilitado.
+
+Após o deploy, configurar:
+- `NEXT_PUBLIC_API_URL` do frontend apontando para a URL pública do backend.
+- Webhook do Mercado Pago apontando para `<backend>/api/mercadopago/webhook`.
+
+---
+
+## Equipe
+
+| Integrante | Papel |
+|---|---|
+| Augusto Favaretto | Desenvolvimento |
+| Vitor Girardi | Desenvolvimento |
 
 ---
 
 ## Licença
 
-Projeto acadêmico — uso interno.
+Projeto acadêmico (TCC) — uso educacional. Todos os direitos reservados aos autores.

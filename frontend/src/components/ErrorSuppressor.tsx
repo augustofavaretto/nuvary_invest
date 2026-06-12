@@ -2,10 +2,7 @@
 
 import { useEffect } from 'react';
 
-/**
- * Componente que suprime erros de AbortError do React 19 Strict Mode + Next.js 16
- * Esses erros sao inofensivos e ocorrem apenas em desenvolvimento
- */
+// Componente que suprime erros de AbortError do React 19 Strict Mode + Next.js 16 Esses erros sao inofensivos e ocorrem apenas em desenvolvimento
 export function ErrorSuppressor({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Handler para unhandled promise rejections

@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ErrorSuppressor } from "@/components/ErrorSuppressor";
 import "./globals.css";
 
-// Fonte oficial da marca: Inter (UI) — pesos do brandbook
+// Fonte oficial da marca: Inter (UI)
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -33,8 +33,7 @@ export const metadata: Metadata = {
   title: "Nuvary Invest | Consultoria de Investimentos com IA",
   description: "Plataforma de consultoria de investimentos orientada por Inteligência Artificial, com foco em automação de carteiras, monitoramento contínuo e trilhas de educação financeira.",
   keywords: ["investimentos", "fintech", "inteligência artificial", "carteira", "consultoria financeira"],
-  // Projeto acadêmico/demo — não indexar em buscadores (reduz exposição
-  // sem afetar o funcionamento; o app segue acessível por link direto).
+  // Projeto acadêmico/demo — não indexar em buscadores (reduz exposição sem afetar o funcionamento; o app segue acessível por link direto).
   robots: { index: false, follow: false, nocache: true },
 };
 
@@ -43,9 +42,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Script inline que aplica o tema (dark|light) ANTES da hidratacao,
-  // lendo do localStorage (mesma chave do ThemeContext). Evita o flash
-  // de tela branca quando o usuario tem tema dark.
+  // Script inline que aplica o tema (dark|light) ANTES da hidratacao, lendo do localStorage (mesma chave do ThemeContext). Evita o flash de tela branca quando o usuario tem tema dark.
   const themeBootScript = `
     (function() {
       try {

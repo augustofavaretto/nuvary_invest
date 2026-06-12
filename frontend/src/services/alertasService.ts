@@ -123,10 +123,7 @@ async function hasRecentAlert(
   return !!data && data.length > 0;
 }
 
-// Limite maximo de variacao plausivel (defesa contra erros de cadastro de
-// averagePrice errado ou preco da API absurdo). Acima disso o snapshot e
-// atualizado mas o alerta NAO e disparado — o usuario nao recebe spam de
-// "BTC subiu 3474%".
+// Limite maximo de variacao plausivel (defesa contra erros de cadastro de averagePrice errado ou preco da API absurdo). Acima disso o snapshot e atualizado mas o alerta NAO e disparado — o usuario nao recebe spam de "BTC subiu 3474%".
 const MAX_PLAUSIBLE_VARIATION_PCT = 50;
 
 interface AssetBaselineRow {
@@ -134,9 +131,7 @@ interface AssetBaselineRow {
   alert_baseline_price: number | null;
 }
 
-// Filtro adicional: o preco corrente precisa estar na mesma ordem de
-// grandeza do averagePrice. Protege contra dados ruins de API que poderiam
-// disparar alertas com valores absurdos (ex: "BTC chegou a R$ 29").
+// Filtro adicional: o preco corrente precisa estar na mesma ordem de grandeza do averagePrice. Protege contra dados ruins de API que poderiam disparar alertas com valores absurdos (ex: "BTC chegou a R$ 29").
 function isPriceWithinReasonableRange(asset: Asset): boolean {
   if (asset.averagePrice <= 0) return true; // sem averagePrice nao da pra comparar
   const ratio = Number(asset.currentPrice) / asset.averagePrice;
@@ -187,8 +182,7 @@ export async function checkAlertsForAssets(assets: Asset[]): Promise<Alert[]> {
     const variation = ((current - baseline) / baseline) * 100;
     if (Math.abs(variation) < ALERT_THRESHOLD) continue;
 
-    // Sanity check: variacao irreal entre duas verificacoes = bug de dado.
-    // Atualiza baseline para nao ficar travado nesse cenario, mas nao alerta.
+    // Sanity check: variacao irreal entre duas verificacoes = bug de dado. Atualiza baseline para nao ficar travado nesse cenario, mas nao alerta.
     if (Math.abs(variation) > MAX_PLAUSIBLE_VARIATION_PCT) {
       await supabase
         .from('portfolio_assets')
@@ -202,8 +196,7 @@ export async function checkAlertsForAssets(assets: Asset[]): Promise<Alert[]> {
 
     const skip = await hasRecentAlert(user.id, asset.ticker, direction);
     if (skip) {
-      // Mesmo pulando por dedup, atualiza o baseline para nao ficar comparando
-      // contra valor muito antigo na proxima verificacao
+      // Mesmo pulando por dedup, atualiza o baseline para nao ficar comparando contra valor muito antigo na proxima verificacao
       await supabase
         .from('portfolio_assets')
         .update({ alert_baseline_price: current })

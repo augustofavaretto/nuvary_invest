@@ -121,9 +121,9 @@ export default function PerfilPage() {
       const msg = err instanceof Error ? err.message : String(err);
       const lower = msg.toLowerCase();
       if (lower.includes('bucket') && (lower.includes('not found') || lower.includes('does not exist'))) {
-        setErroFoto('Bucket "avatars" não existe no Supabase Storage. Rode o script sql/avatars_storage.sql no SQL Editor.');
+        setErroFoto('Bucket "avatars" não existe no Supabase Storage. Crie o bucket no painel do Supabase.');
       } else if (lower.includes('row-level security') || lower.includes('rls') || lower.includes('policy')) {
-        setErroFoto('Sem permissão no bucket "avatars". Rode o script sql/avatars_storage.sql para criar as policies de Storage.');
+        setErroFoto('Sem permissão no bucket "avatars". Verifique as policies de Storage no Supabase.');
       } else {
         setErroFoto(`Erro ao fazer upload: ${msg}`);
       }

@@ -1,10 +1,6 @@
 import supabase from '@/lib/supabase';
 
-// ============================================================
-// Whitelist Premium — emails que tem acesso vitalicio sem pagamento.
-// Util para conta do dono, testes internos e contas de demo.
-// Comparacao e case-insensitive.
-// ============================================================
+// Whitelist Premium — emails que tem acesso vitalicio sem pagamento. Util para conta do dono, testes internos e contas de demo. Comparacao e case-insensitive.
 export const PREMIUM_WHITELIST: readonly string[] = [
   'investnet123@gmail.com',
   'luciano.cruz@atitus.edu.br',
@@ -36,9 +32,7 @@ export interface SubscriptionState {
   startedAt: string | null;
 }
 
-// Le o estado atual da assinatura do usuario logado.
-// Usuarios na PREMIUM_WHITELIST recebem status 'active' sem expiracao,
-// independente do estado real em profiles.
+// Le o estado atual da assinatura do usuario logado. Usuarios na PREMIUM_WHITELIST recebem status 'active' sem expiracao, independente do estado real em profiles.
 export async function getSubscriptionState(): Promise<SubscriptionState> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -73,18 +67,14 @@ export async function getSubscriptionState(): Promise<SubscriptionState> {
   };
 }
 
-// True se o usuario tem acesso Premium ATIVO no momento.
-// Assinaturas 'cancelled' mantem o acesso ate a data de expiracao
-// (usuario ja pagou pelo periodo vigente; so nao havera renovacao).
+// True se o usuario tem acesso Premium ATIVO no momento. Assinaturas 'cancelled' mantem o acesso ate a data de expiracao (usuario ja pagou pelo periodo vigente; so nao havera renovacao).
 export function isPremiumActive(state: SubscriptionState): boolean {
   if (state.status !== 'active' && state.status !== 'cancelled') return false;
   if (!state.expiresAt) return state.status === 'active'; // sem expiracao = vitalicio (whitelist)
   return new Date(state.expiresAt).getTime() > Date.now();
 }
 
-// ============================================================
 // Chamadas ao backend MP
-// ============================================================
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
@@ -118,9 +108,7 @@ export async function createCreditCardSubscription(
   return res.json();
 }
 
-// Cancela a assinatura Premium do usuario logado.
-// Interrompe a recorrencia (cartao) no MP e marca o status como 'cancelled'.
-// O acesso permanece ate subscription_expires_at.
+// Cancela a assinatura Premium do usuario logado. Interrompe a recorrencia (cartao) no MP e marca o status como 'cancelled'. O acesso permanece ate subscription_expires_at.
 export async function cancelSubscription(): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Usuário não autenticado');

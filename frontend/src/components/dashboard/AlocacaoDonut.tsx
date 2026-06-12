@@ -35,8 +35,7 @@ function classeKey(name: string): string {
     .replace(/í/g, 'i');
 }
 
-// Alocacao atual por classe — donut Recharts com legenda lateral.
-// Fiel ao mockup (.alloc-card + .donut + .alloc-rows).
+// Alocacao atual por classe — donut Recharts com legenda lateral. Fiel ao mockup (.alloc-card + .donut + .alloc-rows).
 export function AlocacaoDonut({ byClass, total }: AlocacaoDonutProps) {
   const hasData = byClass.length > 0;
   const data = hasData

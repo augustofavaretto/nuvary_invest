@@ -83,8 +83,7 @@ export default function CarteiraPage() {
     try {
       if (runMigration) await migrateLocalStorageToSupabase();
 
-      // 1) Renderiza imediatamente com os valores já salvos no banco —
-      //    o gráfico aparece sem esperar as APIs de preço externas.
+      // 1) Renderiza imediatamente com os valores já salvos no banco o gráfico aparece sem esperar as APIs de preço externas.
       const data = await getPortfolioData();
       setPortfolioData(data);
       setLoading(false);
@@ -106,7 +105,6 @@ export default function CarteiraPage() {
     if (isAuthenticated) {
       loadData(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const handleRefresh = async () => {

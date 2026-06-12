@@ -1,6 +1,4 @@
-// Formatadores pt-BR para valores monetarios, percentuais e datas.
-// Use estes helpers em TODO lugar que exibe numero monetario para garantir
-// consistencia (BRL, virgula decimal, tabular-nums).
+// Formatadores pt-BR para valores monetarios, percentuais e datas. Use estes helpers em TODO lugar que exibe numero monetario para garantir consistencia (BRL, virgula decimal, tabular-nums).
 
 export const formatBRL = (n: number, opts?: Intl.NumberFormatOptions) =>
   new Intl.NumberFormat("pt-BR", {

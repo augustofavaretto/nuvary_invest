@@ -9,8 +9,7 @@ import { Field, PasswordInput } from '@/components/public/AuthFields';
 import { cadastrar } from '@/services/authService';
 import { isValidCPF } from '@/lib/cpf';
 
-// Mascaras visuais (CPF, data, telefone) — apenas display.
-// O payload enviado ao backend e limpo via .replace(/\D/g, '').
+// Mascaras visuais (CPF, data, telefone) — apenas display. O payload enviado ao backend e limpo via .replace(/\D/g, '').
 function maskCPF(v: string) {
   return v
     .replace(/\D/g, '')
@@ -70,8 +69,7 @@ export default function CadastroPage() {
   const [showPwd2, setShowPwd2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  // Marca que o usuario ja saiu do campo CPF — so mostramos o erro depois do
-  // primeiro blur pra nao acusar "invalido" enquanto ele esta digitando.
+  // Marca que o usuario ja saiu do campo CPF — so mostramos o erro depois do primeiro blur pra nao acusar "invalido" enquanto ele esta digitando.
   const [cpfTouched, setCpfTouched] = useState(false);
 
   function set<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
@@ -115,8 +113,7 @@ export default function CadastroPage() {
 
     setLoading(true);
     try {
-      // Backend espera o mesmo payload de antes: cpf e telefone sem mascara,
-      // data no formato DD/MM/AAAA (string), aceiteTermos boolean.
+      // Backend espera o mesmo payload de antes: cpf e telefone sem mascara, data no formato DD/MM/AAAA (string), aceiteTermos boolean.
       const signUpData = await cadastrar({
         nome: form.nome,
         cpf: form.cpf.replace(/\D/g, ''),
@@ -127,12 +124,7 @@ export default function CadastroPage() {
         aceiteTermos: form.aceite,
       });
 
-      // Decide pelo retorno do proprio signUp (NAO por getSession, que poderia
-      // ler uma sessao antiga do navegador). Com "Confirm email" ligado no
-      // Supabase, signUp.session = null -> vamos para /confirme-email (com o
-      // botao de abrir a caixa de entrada). O link no e-mail aponta para
-      // /questionario (emailRedirectTo em authService.ts). Se a confirmacao
-      // estiver desligada, ha sessao e vai direto pro questionario.
+      // Decide pelo retorno do proprio signUp (NAO por getSession, que poderia ler uma sessao antiga do navegador). Com "Confirm email" ligado no Supabase, signUp.session = null -> vamos para /confirme-email (com o botao de abrir a caixa de entrada). O link no e-mail aponta para /questionario (emailRedirectTo em authService.ts). Se a confirmacao estiver desligada, ha sessao e vai direto pro questionario.
       router.push(
         signUpData?.session
           ? '/questionario'

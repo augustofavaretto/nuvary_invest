@@ -1,5 +1,4 @@
-// Mapeia o domínio do e-mail para a URL do webmail correspondente,
-// para o botão "Abrir meu e-mail" levar o usuário direto à caixa de entrada.
+// Mapeia o domínio do e-mail para a URL do webmail correspondente, para o botão "Abrir meu e-mail" levar o usuário direto à caixa de entrada.
 
 interface Webmail {
   name: string;
@@ -47,9 +46,7 @@ export interface WebmailResult {
   domain: string;
 }
 
-// Retorna o webmail do e-mail informado. Para domínios conhecidos, devolve a
-// URL exata + o nome do provedor. Para desconhecidos, faz um best-effort
-// abrindo o domínio (name = null).
+// Retorna o webmail do e-mail informado. Para domínios conhecidos, devolve a URL exata + o nome do provedor. Para desconhecidos, faz um best-effort abrindo o domínio (name = null).
 export function getWebmail(email: string | null | undefined): WebmailResult | null {
   const domain = email?.split('@')[1]?.toLowerCase().trim();
   if (!domain) return null;

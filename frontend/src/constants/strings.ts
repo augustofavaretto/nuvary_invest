@@ -1,21 +1,4 @@
-/**
- * strings.ts — Fonte única de verdade para todas as strings de UI em pt-BR.
- *
- * Organização por domínio:
- *   STRINGS.errors   → mensagens de erro genéricas
- *   STRINGS.auth     → autenticação (login / cadastro)
- *   STRINGS.nav      → navegação / sidebar
- *   STRINGS.dashboard → widgets do dashboard
- *   STRINGS.chat     → interface de chat
- *   STRINGS.perfil   → questionário e perfil de investidor
- *   STRINGS.carteira → portfólio / ativos
- *   STRINGS.ui       → elementos genéricos de interface
- *
- * Uso:
- *   import { STRINGS } from '@/constants/strings';
- *   <p>{STRINGS.errors.usuarioNaoAutenticado}</p>
- *   <p>{STRINGS.chat.diasAtras(3)}</p>
- */
+// strings.ts — Fonte única de verdade para todas as strings de UI em pt-BR. Organização por domínio: STRINGS.errors   → mensagens de erro genéricas STRINGS.auth     → autenticação (login / cadastro) STRINGS.nav      → navegação / sidebar STRINGS.dashboard → widgets do dashboard STRINGS.chat     → interface de chat STRINGS.perfil   → questionário e perfil de investidor STRINGS.carteira → portfólio / ativos STRINGS.ui       → elementos genéricos de interface Uso: import { STRINGS } from '@/constants/strings'; <p>{STRINGS.errors.usuarioNaoAutenticado}</p> <p>{STRINGS.chat.diasAtras(3)}</p>
 
 export const STRINGS = {
   // ─── Erros genéricos ──────────────────────────────────────────────────────

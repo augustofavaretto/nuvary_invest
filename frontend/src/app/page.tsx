@@ -164,10 +164,7 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Email confirmation: Supabase entrega o callback com hash #access_token=...
-  // na landing quando o redirect_to nao bate com a whitelist. Detectamos isso,
-  // esperamos a sessao ser estabelecida e mandamos pra /questionario (ou
-  // /dashboard se ja tem perfil) sem precisar de clique manual em "Entrar".
+  // Email confirmation: Supabase entrega o callback com hash #access_token=... na landing quando o redirect_to nao bate com a whitelist. Detectamos isso, esperamos a sessao ser estabelecida e mandamos pra /questionario (ou /dashboard se ja tem perfil) sem precisar de clique manual em "Entrar".
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const hasAuthCallback =
@@ -894,8 +891,7 @@ function LogoMark({ small = false }: { small?: boolean }) {
   );
 }
 
-// Contador animado de 0 ate o target. Usa useMotionValue + useTransform
-// para evitar re-render a cada frame.
+// Contador animado de 0 ate o target. Usa useMotionValue + useTransform para evitar re-render a cada frame.
 function CountUp({
   target,
   decimals = 1,
@@ -1035,15 +1031,7 @@ function HeroPortfolioMock() {
   );
 }
 
-// ─── ChatPreviewMock ───────────────────────────────────────────────────────
-// Demonstracao animada do Chat IA em loop. Sequencia:
-//   1. Welcome bubble do bot
-//   2. Quick prompts aparecem
-//   3. User envia uma das perguntas
-//   4. 3 dots animados (bot pensando)
-//   5. Resposta da IA com efeito typewriter + cursor piscando
-//   6. Pausa e reinicia
-// Respeita prefers-reduced-motion: mostra a conversa completa estatica.
+// ChatPreviewMock Demonstracao animada do Chat IA em loop. Sequencia: 1. Welcome bubble do bot 2. Quick prompts aparecem 3. User envia uma das perguntas 4. 3 dots animados (bot pensando) 5. Resposta da IA com efeito typewriter + cursor piscando 6. Pausa e reinicia Respeita prefers-reduced-motion: mostra a conversa completa estatica.
 
 type ChatStep = 'idle' | 'welcome' | 'prompts' | 'user' | 'thinking' | 'response' | 'complete';
 

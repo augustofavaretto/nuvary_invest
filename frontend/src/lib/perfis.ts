@@ -1,9 +1,4 @@
-// Config dos 4 perfis de investidor. Usado como fallback quando o backend
-// nao retorna todos os campos (descricao, tips, alocacao) ou quando renderizamos
-// previews durante o questionario.
-//
-// IMPORTANTE: o backend ja retorna o perfil calculado (campo `type`). Aqui
-// guardamos apenas dados visuais e textos que nao vem da API.
+// Config dos 4 perfis de investidor. Usado como fallback quando o backend nao retorna todos os campos (descricao, tips, alocacao) ou quando renderizamos previews durante o questionario. IMPORTANTE: o backend ja retorna o perfil calculado (campo `type`). Aqui guardamos apenas dados visuais e textos que nao vem da API.
 
 import {
   Shield,

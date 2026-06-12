@@ -43,8 +43,7 @@ function RelatoriosContent() {
   const { loading: authLoading, isAuthenticated, profile } = useAuth();
   const { isPremium, loading: premiumLoading } = usePremium();
 
-  // Gate: redireciona para /premium se usuario free clicar em
-  // export/informe (ambos sao recursos Premium).
+  // Gate: redireciona para /premium se usuario free clicar em export/informe (ambos sao recursos Premium).
   const exigirPremium = (): boolean => {
     if (!isPremium && !premiumLoading) {
       router.push('/premium');
@@ -89,8 +88,7 @@ function RelatoriosContent() {
       };
 
       try {
-        // 1) Carrega o que já está no banco em paralelo e renderiza os gráficos
-        //    imediatamente, sem esperar as APIs de preço externas.
+        // 1) Carrega o que já está no banco em paralelo e renderiza os gráficos imediatamente, sem esperar as APIs de preço externas.
         const [pd, a, txs] = await Promise.all([getPortfolioData(), getAllAssets(), getTransactions()]);
         setPortfolioData(pd);
         setAssets(a);
@@ -113,8 +111,7 @@ function RelatoriosContent() {
     load();
   }, [isAuthenticated]);
 
-  // ── Dados derivados ──────────────────────────────────────────────────────
-  // Variação por ativo (para o gráfico de barras)
+  // Dados derivados Variação por ativo (para o gráfico de barras)
   const variacaoPorAtivo = useMemo(() =>
     assets
       .filter(a => a.type !== 'renda_fixa')            // variação não se aplica a renda fixa da mesma forma
@@ -251,157 +248,13 @@ function RelatoriosContent() {
     setTimeout(() => { win.print(); }, 500);
   }
 
-  function gerarDARF() {
-    const agora = new Date();
-    const mes = String(agora.getMonth() + 1).padStart(2, '0');
-    const ano = agora.getFullYear();
-    const periodoApuracao = `${mes}/${ano}`;
-    // Vencimento: último dia útil do mês seguinte (aproximado: dia 30)
-    const mesVenc = String((agora.getMonth() + 2) > 12 ? 1 : agora.getMonth() + 2).padStart(2, '0');
-    const anoVenc = agora.getMonth() + 2 > 12 ? ano + 1 : ano;
-    const vencimento = `${String(new Date(anoVenc, Number(mesVenc) - 1, 0).getDate()).padStart(2, '0')}/${mesVenc}/${anoVenc}`;
-    const valorIR = lucroTotal > 0 ? lucroTotal * 0.15 : 0;
-    const nomeUsuario = profile?.nome || 'Contribuinte';
-    const emailUsuario = profile?.email || '';
-
-    // CPF do cadastro formatado como XXX.XXX.XXX-XX (fallback se nao informado)
-    const cpfLimpo = (profile?.cpf || '').replace(/\D/g, '');
-    const cpfFormatado = cpfLimpo.length === 11
-      ? cpfLimpo.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4')
-      : '___.___.___-__';
-
-    const html = `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8"/>
-<title>DARF - Nuvary Invest</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: Arial, sans-serif; font-size: 11px; color: #000; background: #fff; padding: 20px; }
-  .header { border: 2px solid #000; padding: 8px 12px; margin-bottom: 0; }
-  .header-top { display: flex; justify-content: space-between; align-items: center; }
-  .header h1 { font-size: 14px; font-weight: bold; }
-  .header h2 { font-size: 11px; font-weight: normal; }
-  .rfb { font-size: 10px; text-align: right; }
-  .titulo-darf { background: #000; color: #fff; text-align: center; font-size: 13px; font-weight: bold; padding: 4px; margin-bottom: 0; }
-  table { width: 100%; border-collapse: collapse; }
-  td, th { border: 1px solid #000; padding: 4px 6px; vertical-align: top; }
-  .label { font-size: 8px; color: #333; display: block; margin-bottom: 2px; }
-  .valor { font-size: 11px; font-weight: bold; }
-  .valor-destaque { font-size: 14px; font-weight: bold; color: #000; }
-  .footer { border: 1px solid #000; border-top: none; padding: 6px 8px; font-size: 9px; color: #555; }
-  .aviso { margin-top: 16px; border: 1px solid #aaa; padding: 8px; font-size: 9px; color: #555; background: #f9f9f9; }
-  .logo-area { font-size: 9px; text-align: center; margin-top: 2px; }
-  @media print {
-    body { padding: 10px; }
-    .no-print { display: none; }
-  }
-</style>
-</head>
-<body>
-<div class="header">
-  <div class="header-top">
-    <div>
-      <div class="logo-area">MINISTÉRIO DA FAZENDA</div>
-      <h1>RECEITA FEDERAL DO BRASIL</h1>
-      <h2>Secretaria Especial da Receita Federal do Brasil</h2>
-    </div>
-    <div class="rfb">
-      <strong>DARF</strong><br/>
-      Documento de Arrecadação<br/>de Receitas Federais
-    </div>
-  </div>
-</div>
-<div class="titulo-darf">DARF — DOCUMENTO DE ARRECADAÇÃO DE RECEITAS FEDERAIS</div>
-<table>
-  <tr>
-    <td colspan="3">
-      <span class="label">01 — PERÍODO DE APURAÇÃO</span>
-      <span class="valor">${periodoApuracao}</span>
-    </td>
-    <td colspan="3">
-      <span class="label">02 — NÚMERO DO CPF / CNPJ</span>
-      <span class="valor">${cpfFormatado}</span>
-    </td>
-    <td colspan="4">
-      <span class="label">03 — CÓDIGO DA RECEITA</span>
-      <span class="valor">6015 — Ganhos Líquidos em Operações em Bolsa</span>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="10">
-      <span class="label">04 — NOME DO CONTRIBUINTE</span>
-      <span class="valor">${nomeUsuario.toUpperCase()}</span>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4">
-      <span class="label">05 — DATA DE VENCIMENTO</span>
-      <span class="valor">${vencimento}</span>
-    </td>
-    <td colspan="3">
-      <span class="label">06 — VALOR DO PRINCIPAL (R$)</span>
-      <span class="valor-destaque">${valorIR.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-    </td>
-    <td colspan="3">
-      <span class="label">07 — MULTA (R$)</span>
-      <span class="valor">0,00</span>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4">
-      <span class="label">08 — JUROS / ENCARGOS (R$)</span>
-      <span class="valor">0,00</span>
-    </td>
-    <td colspan="3">
-      <span class="label">09 — TOTAL (R$)</span>
-      <span class="valor-destaque">${valorIR.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-    </td>
-    <td colspan="3">
-      <span class="label">10 — AUTENTICAÇÃO BANCÁRIA</span>
-      <span class="valor" style="font-size:9px;">Gerado em ${agora.toLocaleDateString('pt-BR')} às ${agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="10" style="padding:6px 8px;">
-      <span class="label">INFORMAÇÕES COMPLEMENTARES</span>
-      <span style="font-size:10px;">
-        Contribuinte: ${nomeUsuario} ${emailUsuario ? '| E-mail: ' + emailUsuario : ''}<br/>
-        Lucro estimado no período: R$ ${lucroTotal > 0 ? lucroTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0,00'}<br/>
-        Alíquota: 15% — Swing Trade / Renda Variável (Art. 2º da Lei 11.033/2004)<br/>
-        Base de cálculo: Resultado positivo entre patrimônio atual e valor total aportado
-      </span>
-    </td>
-  </tr>
-</table>
-<div class="footer">
-  * Este DARF foi gerado pela plataforma Nuvary Invest com fins demonstrativos. Os valores são estimativas baseadas nos ativos cadastrados na carteira.
-  Para declaração oficial, consulte um contador ou utilize o programa GCAP (Receita Federal). Código de receita 6015 aplicável a renda variável (ações, FIIs).
-</div>
-<div class="aviso">
-  <strong>ATENÇÃO:</strong> Este documento tem caráter <strong>informativo e demonstrativo</strong>. Não substitui a apuração oficial do Imposto de Renda.
-  O cálculo correto de IR exige o histórico completo de operações de compra e venda. Consulte sempre um profissional contábil habilitado.
-</div>
-<div style="text-align:center;margin-top:12px;font-size:9px;color:#999;">
-  Gerado por Nuvary Invest em ${agora.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
-</div>
-<div class="no-print" style="text-align:center;margin-top:20px;">
-  <button onclick="window.print()" style="padding:10px 24px;background:#1a56db;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;">Imprimir / Salvar PDF</button>
-</div>
-</body>
-</html>`;
-
-    abrirJanelaPDF(html, 'DARF - Nuvary Invest');
-  }
-
   function gerarInformeRendimentos() {
     const agora = new Date();
     const anoBase = agora.getFullYear() - (agora.getMonth() < 2 ? 1 : 0); // ano-calendário
     const nomeUsuario = profile?.nome || 'Investidor';
     const emailUsuario = profile?.email || '';
 
-    // CPF do cadastro: aceita "12345678900" ou "123.456.789-00"; formata para XXX.XXX.XXX-XX.
-    // Fallback para placeholder quando o usuario nao informou.
+    // CPF do cadastro: aceita "12345678900" ou "123.456.789-00"; formata para XXX.XXX.XXX-XX. Fallback para placeholder quando o usuario nao informou.
     const cpfLimpo = (profile?.cpf || '').replace(/\D/g, '');
     const cpfFormatado = cpfLimpo.length === 11
       ? cpfLimpo.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4')

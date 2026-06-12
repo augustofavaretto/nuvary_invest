@@ -5,8 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { OnboardingTour, type TourStep } from './OnboardingTour';
 
-// Flag por usuário: cada conta vê o tour uma vez (mesmo compartilhando o
-// navegador). Sem o id, cai no global como fallback.
+// Flag por usuário: cada conta vê o tour uma vez (mesmo compartilhando o navegador). Sem o id, cai no global como fallback.
 const STORAGE_KEY = 'nuvary_onboarding_v1';
 const storageKeyFor = (userId?: string | null) =>
   userId ? `${STORAGE_KEY}_${userId}` : STORAGE_KEY;
@@ -84,8 +83,7 @@ export function OnboardingGate() {
     setRun(true);
   }, []);
 
-  // Auto-início no primeiro acesso — na carteira (1ª página após cadastro +
-  // questionário), após a UI renderizar e o usuário carregar
+  // Auto-início no primeiro acesso — na carteira (1ª página após cadastro + questionário), após a UI renderizar e o usuário carregar
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (pathname !== '/carteira') return;

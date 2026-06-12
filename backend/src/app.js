@@ -2,16 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { config } from './config/index.js';
-import stockRoutes from './routes/stocks.js';
-import forexRoutes from './routes/forex.js';
 import cryptoRoutes from './routes/crypto.js';
-import searchRoutes from './routes/search.js';
 import finnhubRoutes from './routes/finnhub.js';
 import newsRoutes from './routes/news.js';
 import aiRoutes from './routes/ai.js';
 import riskProfileRoutes from './routes/riskProfile.js';
 import brapiRoutes from './routes/brapi.js';
-import anbimaRoutes from './routes/anbima.js';
 import bcbRoutes from './routes/bcb.js';
 import mercadopagoRoutes from './routes/mercadopago.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -26,16 +22,12 @@ app.use(cors());
 app.use(express.json());
 app.use(rateLimiter);
 
-app.use('/api/stocks', stockRoutes);
-app.use('/api/forex', forexRoutes);
 app.use('/api/crypto', cryptoRoutes);
-app.use('/api/search', searchRoutes);
 app.use('/api/finnhub', finnhubRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/profile', riskProfileRoutes);
 app.use('/api/brapi', brapiRoutes);
-app.use('/api/anbima', anbimaRoutes);
 app.use('/api/bcb', bcbRoutes);
 app.use('/api/mercadopago', mercadopagoRoutes);
 
@@ -44,10 +36,8 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     timestamp: new Date().toISOString(),
     apis: {
-      alphaVantage: config.alphaVantage.apiKeys.length > 0,
       finnhub: !!config.finnhub.apiKey,
       brapi: !!config.brapi.token,
-      anbima: !!config.anbima.clientId,
       newsApi: config.newsApi.apiKeys.length > 0,
       openai: !!config.openai.apiKey,
       mercadopago: !!config.mercadopago.accessToken,

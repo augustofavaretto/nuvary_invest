@@ -283,9 +283,7 @@ export function Questionnaire() {
   );
 }
 
-// ============================================================
 // INTRO
-// ============================================================
 function IntroState({
   isLoading,
   disabled,
@@ -367,9 +365,7 @@ function KpiCard({
   );
 }
 
-// ============================================================
 // QUESTION
-// ============================================================
 function QuestionState({
   question,
   index,
@@ -440,9 +436,7 @@ function QuestionState({
   );
 }
 
-// ============================================================
 // LOADING
-// ============================================================
 function LoadingState() {
   return (
     <section className={styles.state}>
@@ -457,9 +451,7 @@ function LoadingState() {
   );
 }
 
-// ============================================================
 // RESULT
-// ============================================================
 function ResultState({
   result,
   onWallet,
@@ -532,21 +524,20 @@ function ResultState({
   );
 }
 
-// ============================================================
 // ALLOCATION (donut + stacked bar + legend)
-// ============================================================
 function AllocationCard({ profile }: { profile: (typeof PROFILES)[PerfilTipo] }) {
   const RADIUS = 42;
   const C = 2 * Math.PI * RADIUS;
 
-  // Recompute cumulative offsets for the donut once per profile change.
+  // Recalcula os offsets acumulados do donut a cada mudança de perfil
   const segments = useMemo(() => {
-    let cumulative = 0;
-    return profile.allocation.map((item) => {
-      const dashLen = (item.value / 100) * C;
-      const offset = -((cumulative / 100) * C);
-      cumulative += item.value;
-      return { item, dashLen, offset };
+    return profile.allocation.map((item, i) => {
+      const start = profile.allocation.slice(0, i).reduce((sum, it) => sum + it.value, 0);
+      return {
+        item,
+        dashLen: (item.value / 100) * C,
+        offset: -((start / 100) * C),
+      };
     });
   }, [profile, C]);
 

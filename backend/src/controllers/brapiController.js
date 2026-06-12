@@ -21,8 +21,7 @@ function setCache(key, data) {
 }
 
 async function brapiGet(endpoint) {
-  // Só anexa o token se ele existir — evita mandar "token=undefined", que o
-  // Brapi rejeita com INVALID_TOKEN (afeta FIIs, que exigem token válido).
+  // Só anexa o token se ele existir — evita mandar "token=undefined", que o Brapi rejeita com INVALID_TOKEN (afeta FIIs, que exigem token válido).
   let url = `${BRAPI_URL}${endpoint}`;
   if (BRAPI_TOKEN) {
     url += `${endpoint.includes('?') ? '&' : '?'}token=${BRAPI_TOKEN}`;
@@ -75,82 +74,6 @@ export const brapiController = {
       }
 
       res.status(404).json({ error: 'Ativo não encontrado' });
-    } catch (error) {
-      next(error);
-    }
-  },
-
-  // GET /api/brapi/quote/list - Lista de todas as ações disponíveis
-  async listStocks(req, res, next) {
-    try {
-      const { search, sortBy, sortOrder, limit } = req.query;
-      const cacheKey = `list_${search || ''}_${sortBy || ''}_${sortOrder || ''}_${limit || ''}`;
-      const cached = getCached(cacheKey);
-      if (cached) return res.json({ ...cached, fromCache: true });
-
-      let endpoint = '/quote/list?';
-      if (search) endpoint += `search=${search}&`;
-      if (sortBy) endpoint += `sortBy=${sortBy}&`;
-      if (sortOrder) endpoint += `sortOrder=${sortOrder}&`;
-      if (limit) endpoint += `limit=${limit}&`;
-
-      const data = await brapiGet(endpoint);
-      setCache(cacheKey, data);
-      res.json(data);
-    } catch (error) {
-      next(error);
-    }
-  },
-
-  // GET /api/brapi/crypto - Cotação de criptomoedas
-  async getCrypto(req, res, next) {
-    try {
-      const { coin, currency } = req.query;
-      const cacheKey = `crypto_${coin || 'all'}_${currency || 'BRL'}`;
-      const cached = getCached(cacheKey);
-      if (cached) return res.json({ ...cached, fromCache: true });
-
-      let endpoint = '/v2/crypto?';
-      if (coin) endpoint += `coin=${coin}&`;
-      if (currency) endpoint += `currency=${currency}&`;
-
-      const data = await brapiGet(endpoint);
-      setCache(cacheKey, data);
-      res.json(data);
-    } catch (error) {
-      next(error);
-    }
-  },
-
-  // GET /api/brapi/currency - Cotações de moedas
-  async getCurrency(req, res, next) {
-    try {
-      const { currencies } = req.query;
-      const cacheKey = `currency_${currencies || 'USD-BRL'}`;
-      const cached = getCached(cacheKey);
-      if (cached) return res.json({ ...cached, fromCache: true });
-
-      let endpoint = '/v2/currency?';
-      if (currencies) endpoint += `currency=${currencies}&`;
-
-      const data = await brapiGet(endpoint);
-      setCache(cacheKey, data);
-      res.json(data);
-    } catch (error) {
-      next(error);
-    }
-  },
-
-  // GET /api/brapi/inflation - Dados de inflação
-  async getInflation(req, res, next) {
-    try {
-      const cacheKey = 'inflation';
-      const cached = getCached(cacheKey);
-      if (cached) return res.json({ ...cached, fromCache: true });
-
-      const data = await brapiGet('/v2/inflation');
-      setCache(cacheKey, data);
-      res.json(data);
     } catch (error) {
       next(error);
     }

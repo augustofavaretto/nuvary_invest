@@ -1,5 +1,4 @@
-// Questionário de Perfil de Investidor - 11 Perguntas Objetivas
-// Categorias: Tolerância a Risco, Horizonte de Investimento, Objetivos Financeiros
+// Questionário de Perfil de Investidor - 11 Perguntas Objetivas Categorias: Tolerância a Risco, Horizonte de Investimento, Objetivos Financeiros
 
 export const questionnaire = {
   title: 'Questionário de Perfil de Investidor',

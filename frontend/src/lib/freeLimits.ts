@@ -1,5 +1,4 @@
-// Limites do plano Free. Usuario Premium nao tem limite.
-// Centralizado aqui para que os gates fiquem consistentes em todo o app.
+// Limites do plano Free. Usuario Premium nao tem limite. Centralizado aqui para que os gates fiquem consistentes em todo o app.
 
 export const FREE_LIMITS = {
   /** Maximo de ativos na carteira para usuario free. */

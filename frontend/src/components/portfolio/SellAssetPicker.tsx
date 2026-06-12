@@ -11,8 +11,7 @@ interface SellAssetPickerProps {
   onSelect: (asset: Asset) => void;
 }
 
-// Seletor de ativo para venda — lista os ativos da carteira; ao escolher um,
-// abre o SellAssetModal. Acionado pelo botão "Vender Ativo" do cabeçalho.
+// Seletor de ativo para venda — lista os ativos da carteira; ao escolher um, abre o SellAssetModal. Acionado pelo botão "Vender Ativo" do cabeçalho.
 export function SellAssetPicker({ isOpen, assets, onClose, onSelect }: SellAssetPickerProps) {
   return (
     <AnimatePresence>

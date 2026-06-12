@@ -7,8 +7,7 @@ interface GreetingCardProps {
   dataHoje: string;
 }
 
-// Card de saudacao do dashboard — "Olá, {nome}!" + data.
-// Layout fiel ao mockup (exemplo frontend.html: .greeting).
+// Card de saudacao do dashboard — "Olá, {nome}!" + data. Layout fiel ao mockup (exemplo frontend.html: .greeting).
 export function GreetingCard({ nome, dataHoje }: GreetingCardProps) {
   return (
     <div className="bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--r-lg)] px-8 py-7">

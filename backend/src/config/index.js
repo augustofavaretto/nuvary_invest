@@ -6,14 +6,6 @@ export const config = {
   port: process.env.PORT || 3001,
   nodeEnv: process.env.NODE_ENV || 'development',
 
-  alphaVantage: {
-    baseUrl: process.env.ALPHA_VANTAGE_BASE_URL || 'https://www.alphavantage.co/query',
-    apiKeys: [
-      process.env.ALPHA_VANTAGE_API_KEY_1,
-      process.env.ALPHA_VANTAGE_API_KEY_2,
-    ].filter(Boolean),
-  },
-
   finnhub: {
     baseUrl: process.env.FINNHUB_BASE_URL || 'https://finnhub.io/api/v1',
     apiKey: process.env.FINNHUB_API_KEY,
@@ -38,21 +30,11 @@ export const config = {
     token: process.env.BRAPI_API_TOKEN || process.env.BRAPI_TOKEN,
   },
 
-  anbima: {
-    baseUrl: process.env.ANBIMA_BASE_URL || 'https://api.anbima.com.br',
-    clientId: process.env.ANBIMA_CLIENT_ID,
-    clientSecret: process.env.ANBIMA_CLIENT_SECRET,
-  },
-
   cache: {
     ttl: parseInt(process.env.CACHE_TTL) || 300,
   },
 
-  // JWT Configuration
-  jwtSecret: process.env.JWT_SECRET || 'nuvary-invest-jwt-secret-change-in-production',
-  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'nuvary-invest-refresh-secret-change-in-production',
-
-  // Mercado Pago (plano Premium — Fase 3 da integracao)
+  // Mercado Pago (plano Premium)
   mercadopago: {
     accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
     webhookSecret: process.env.MERCADOPAGO_WEBHOOK_SECRET,

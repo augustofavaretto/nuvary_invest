@@ -1,19 +1,7 @@
 import { questionnaire, investorProfiles } from '../data/questionnaire.js';
 
-// Armazenamento em memória dos perfis de usuários
-const userProfiles = new Map();
-
 class RiskProfileService {
-  /**
-   * Retorna o questionário completo
-   */
-  getQuestionnaire() {
-    return questionnaire;
-  }
-
-  /**
-   * Retorna apenas as perguntas (sem as pontuações)
-   */
+  // Retorna apenas as perguntas (sem as pontuações)
   getQuestionsOnly() {
     return {
       title: questionnaire.title,
@@ -30,11 +18,7 @@ class RiskProfileService {
     };
   }
 
-  /**
-   * Calcula a pontuação total baseada nas respostas
-   * @param {Object} answers - Objeto com as respostas { "1": "A", "2": "B", ... }
-   * @returns {number} - Pontuação total (10-40)
-   */
+  // Calcula a pontuação total a partir das respostas { "1": "A", ... }
   calculateScore(answers) {
     let totalScore = 0;
 
@@ -51,11 +35,7 @@ class RiskProfileService {
     return totalScore;
   }
 
-  /**
-   * Classifica o perfil do investidor baseado na pontuação
-   * @param {number} score - Pontuação total
-   * @returns {Object} - Perfil do investidor
-   */
+  // Classifica o perfil do investidor baseado na pontuação
   classifyProfile(score) {
     for (const [key, profile] of Object.entries(investorProfiles)) {
       if (score >= profile.minScore && score <= profile.maxScore) {
@@ -73,11 +53,7 @@ class RiskProfileService {
     };
   }
 
-  /**
-   * Analisa as respostas por categoria
-   * @param {Object} answers - Respostas do usuário
-   * @returns {Object} - Análise por categoria
-   */
+  // Analisa as respostas agrupadas por categoria
   analyzeByCategory(answers) {
     const categories = {
       tolerancia_risco: { score: 0, maxScore: 0, questions: 0 },
@@ -115,9 +91,7 @@ class RiskProfileService {
     return analysis;
   }
 
-  /**
-   * Determina o nível de uma categoria baseado no percentual
-   */
+  // Determina o nível de uma categoria baseado no percentual
   getCategoryLevel(ratio) {
     if (ratio <= 0.25) return 'Muito Baixo';
     if (ratio <= 0.5) return 'Baixo';
@@ -125,12 +99,7 @@ class RiskProfileService {
     return 'Alto';
   }
 
-  /**
-   * Processa as respostas e retorna o resultado completo
-   * @param {string} userId - ID do usuário
-   * @param {Object} answers - Respostas do questionário
-   * @returns {Object} - Resultado completo da análise
-   */
+  // Processa as respostas e retorna o resultado completo da análise
   processAnswers(userId, answers) {
     // Valida se todas as perguntas foram respondidas
     const missingQuestions = questionnaire.questions.filter(
@@ -145,13 +114,11 @@ class RiskProfileService {
       };
     }
 
-    // Calcula pontuação e classifica
     const score = this.calculateScore(answers);
     const profile = this.classifyProfile(score);
     const categoryAnalysis = this.analyzeByCategory(answers);
 
-    // Monta resultado
-    const result = {
+    return {
       success: true,
       userId,
       timestamp: new Date().toISOString(),
@@ -165,111 +132,6 @@ class RiskProfileService {
       categoryAnalysis,
       answers,
     };
-
-    // Armazena o perfil do usuário
-    this.saveUserProfile(userId, result);
-
-    return result;
-  }
-
-  /**
-   * Salva o perfil do usuário
-   */
-  saveUserProfile(userId, profileData) {
-    const existingProfiles = userProfiles.get(userId) || [];
-    existingProfiles.push({
-      ...profileData,
-      savedAt: new Date().toISOString(),
-    });
-
-    // Mantém apenas os últimos 10 registros
-    if (existingProfiles.length > 10) {
-      existingProfiles.shift();
-    }
-
-    userProfiles.set(userId, existingProfiles);
-  }
-
-  /**
-   * Recupera o perfil atual do usuário
-   */
-  getUserProfile(userId) {
-    const profiles = userProfiles.get(userId);
-    if (!profiles || profiles.length === 0) {
-      return null;
-    }
-    return profiles[profiles.length - 1]; // Retorna o mais recente
-  }
-
-  /**
-   * Recupera o histórico de perfis do usuário
-   */
-  getUserProfileHistory(userId) {
-    return userProfiles.get(userId) || [];
-  }
-
-  /**
-   * Lista todos os perfis disponíveis
-   */
-  getAllProfiles() {
-    return Object.entries(investorProfiles).map(([key, profile]) => ({
-      type: key,
-      name: profile.name,
-      color: profile.color,
-      description: profile.description,
-      scoreRange: `${profile.minScore}-${profile.maxScore}`,
-    }));
-  }
-
-  /**
-   * Retorna detalhes de um perfil específico
-   */
-  getProfileDetails(profileType) {
-    const profile = investorProfiles[profileType];
-    if (!profile) {
-      return null;
-    }
-    return {
-      type: profileType,
-      ...profile,
-    };
-  }
-
-  /**
-   * Exclui o perfil de um usuário
-   */
-  deleteUserProfile(userId) {
-    const existed = userProfiles.has(userId);
-    userProfiles.delete(userId);
-    return existed;
-  }
-
-  /**
-   * Estatísticas gerais (para admin)
-   */
-  getStatistics() {
-    const stats = {
-      totalUsers: userProfiles.size,
-      totalAssessments: 0,
-      profileDistribution: {
-        conservador: 0,
-        moderado: 0,
-        arrojado: 0,
-        agressivo: 0,
-      },
-    };
-
-    userProfiles.forEach((profiles) => {
-      stats.totalAssessments += profiles.length;
-      if (profiles.length > 0) {
-        const latestProfile = profiles[profiles.length - 1];
-        if (latestProfile.profile && latestProfile.profile.type) {
-          stats.profileDistribution[latestProfile.profile.type]++;
-        }
-      }
-    });
-
-    return stats;
   }
 }
 

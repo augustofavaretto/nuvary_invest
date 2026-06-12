@@ -9,15 +9,10 @@ import { usePremium } from '@/hooks/usePremium';
 
 const DISMISS_KEY = 'nuvary_premium_banner_dismissed';
 
-// Rotas onde o banner NAO deve aparecer:
-// - /premium, /login, /cadastro, /questionario: fluxo de pagamento/onboarding
-// - /chat: tela de produto principal, ruido visual atrapalha
-// - /configuracoes: ja tem secao Premium dedicada
+// Rotas onde o banner NAO deve aparecer: /premium, /login, /cadastro, /questionario: fluxo de pagamento/onboarding /chat: tela de produto principal, ruido visual atrapalha /configuracoes: ja tem secao Premium dedicada
 const HIDDEN_ROUTES = ['/premium', '/login', '/cadastro', '/questionario', '/chat', '/configuracoes'];
 
-// Banner global de upsell para usuario no plano free. Aparece no topo do
-// app em todas as paginas autenticadas, dismissivel por sessao (volta a
-// aparecer quando o usuario abrir o sistema de novo).
+// Banner global de upsell para usuario no plano free. Aparece no topo do app em todas as paginas autenticadas, dismissivel por sessao (volta a aparecer quando o usuario abrir o sistema de novo).
 export function PremiumUpgradeBanner() {
   const pathname = usePathname();
   const { isPremium, loading } = usePremium();

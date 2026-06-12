@@ -68,8 +68,7 @@ function DashboardContent() {
     if (!authLoading && !isAuthenticated) router.push('/login');
   }, [authLoading, isAuthenticated, router]);
 
-  // Portfolio — mostra o saldo do banco imediatamente e atualiza os preços de
-  // mercado em background; se algo mudou, re-renderiza o saldo.
+  // Portfolio — mostra o saldo do banco imediatamente e atualiza os preços de mercado em background; se algo mudou, re-renderiza o saldo.
   useEffect(() => {
     if (!isAuthenticated) return;
     let active = true;

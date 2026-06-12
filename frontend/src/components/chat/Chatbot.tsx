@@ -3,11 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
 import { ChatMessage } from './ChatMessage';
 import { QuickActions } from './QuickActions';
 import { ChatSidebar } from './ChatSidebar';
@@ -18,22 +15,12 @@ import {
   salvarMensagem,
   buscarMensagensPorConversa,
   gerarConversaId,
-  contarMensagens,
-  listarConversas,
   contarConversasIniciadasHoje,
 } from '@/services/chatService';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePremium } from '@/hooks/usePremium';
 import { FREE_LIMITS } from '@/lib/freeLimits';
-import {
-  Send,
-  Bot,
-  User,
-  Sparkles,
-  Menu,
-  ChevronUp,
-  RefreshCw,
-} from 'lucide-react';
+import { Send, Bot, User, Menu } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { STRINGS } from '@/constants/strings';
@@ -94,15 +81,11 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sidebarKey, setSidebarKey] = useState(0); // Para forçar re-render
 
-  // Estados para paginação de mensagens antigas
-  const [carregandoMais, setCarregandoMais] = useState(false);
-
   // Gate Premium: total de conversas para limitar plano Free
   const { isPremium, loading: premiumLoading } = usePremium();
   const [totalConversas, setTotalConversas] = useState<number>(0);
 
-  // Auto-resize do textarea conforme o conteudo (padrao Claude/ChatGPT).
-  // Limite max-height: 200px (CSS); acima disso o textarea ganha scroll vertical.
+  // Auto-resize do textarea conforme o conteudo (max 200px, depois scroll)
   useEffect(() => {
     const el = inputRef.current;
     if (!el) return;
@@ -110,10 +93,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
   }, [inputValue]);
 
-  // Preenche o input quando vem de outra pagina com ?q=... (ex: dashboard
-  // → /chat?q=Devo rebalancear...). Roda apenas no mount + se o input
-  // estiver vazio, e remove o query param da URL para nao reativar em
-  // navegacoes subsequentes.
+  // Preenche o input quando vem de outra pagina com ?q=... (ex: dashboard → /chat?q=Devo rebalancear...). Roda apenas no mount + se o input estiver vazio, e remove o query param da URL para nao reativar em navegacoes subsequentes.
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -172,9 +152,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     }).catch(() => {}).finally(() => setPortfolioLoaded(true));
   }, [user]);
 
-  // Inicializa com mensagem de boas-vindas (sempre ignora gate — apenas
-  // recria a tela inicial, nao adiciona conversa permanente ate a primeira
-  // mensagem ser enviada).
+  // Inicializa com mensagem de boas-vindas (sempre ignora gate — apenas recria a tela inicial, nao adiciona conversa permanente ate a primeira mensagem ser enviada).
   useEffect(() => {
     if (!isInitialized && user) {
       setIsInitialized(true);
@@ -275,8 +253,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isLoading) return;
 
-    // Gate Free: se vai iniciar uma nova conversa (so tem mensagem de
-    // boas-vindas) e ja atingiu o limite, redireciona para /premium.
+    // Gate Free: se vai iniciar uma nova conversa (so tem mensagem de boas-vindas) e ja atingiu o limite, redireciona para /premium.
     const ehNovaConversa = messages.length <= 1 && messages[0]?.id === 'welcome';
     if (ehNovaConversa && limiteConversasAtingido) {
       router.push('/premium');
@@ -347,8 +324,7 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
           },
         }),
         ...(portfolioAssets.length > 0 && { portfolio: portfolioAssets }),
-        // Sinaliza carteira vazia só quando ela JÁ carregou (evita orientar a
-        // cadastrar ativos quem na verdade tem, mas enviou antes de carregar).
+        // Sinaliza carteira vazia só quando ela JÁ carregou (evita orientar a cadastrar ativos quem na verdade tem, mas enviou antes de carregar).
         ...(portfolioLoaded && portfolioAssets.length === 0 && { portfolioEmpty: true }),
       };
 
@@ -424,13 +400,6 @@ export function Chatbot({ initialProfile = null }: ChatbotProps) {
     // Apenas preenche o input — o usuario revisa/edita e envia manualmente.
     setInputValue(prompt);
     inputRef.current?.focus();
-  };
-
-  const profileColors = {
-    conservador: 'bg-blue-500',
-    moderado: 'bg-green-500',
-    arrojado: 'bg-amber-500',
-    agressivo: 'bg-red-500',
   };
 
   return (

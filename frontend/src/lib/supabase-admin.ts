@@ -1,11 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Cliente Supabase com service-role key. SO USAR EM ROUTE HANDLERS / SERVER.
-// Nunca importar deste arquivo a partir de um componente client-side.
-//
-// Inicializacao lazy: as env vars nao sao validadas no import, apenas na
-// primeira chamada. Isso evita quebrar o build do Next.js quando as vars
-// ainda nao foram configuradas no ambiente de deploy.
+// Cliente Supabase com service-role key. SO USAR EM ROUTE HANDLERS / SERVER. Nunca importar deste arquivo a partir de um componente client-side. Inicializacao lazy: as env vars nao sao validadas no import, apenas na primeira chamada. Isso evita quebrar o build do Next.js quando as vars ainda nao foram configuradas no ambiente de deploy.
 
 let cached: SupabaseClient | null = null;
 

@@ -27,8 +27,7 @@ function timeAgo(iso?: string): string {
   return `há ${d}d`;
 }
 
-// Noticias Financeiras — top N noticias com thumbnail cyan, titulo e meta.
-// Fiel ao mockup (.news-card + .news-item).
+// Noticias Financeiras — top N noticias com thumbnail cyan, titulo e meta. Fiel ao mockup (.news-card + .news-item).
 export function NoticiasCard({
   news,
   onRefresh,

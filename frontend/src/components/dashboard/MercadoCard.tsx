@@ -16,8 +16,7 @@ interface MercadoCardProps {
   loading?: boolean;
 }
 
-// Mercado em Tempo Real — 5 cards horizontais com nome, preco e delta.
-// Fiel ao mockup (.market-card + .market-row + .market-stock).
+// Mercado em Tempo Real — 5 cards horizontais com nome, preco e delta. Fiel ao mockup (.market-card + .market-row + .market-stock).
 export function MercadoCard({ acoes, onRefresh, loading = false }: MercadoCardProps) {
   return (
     <div className="bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--r-lg)] p-6">

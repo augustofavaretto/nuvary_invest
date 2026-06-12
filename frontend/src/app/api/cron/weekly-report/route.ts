@@ -10,9 +10,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-// Janela de idempotencia para envio diario: 20h. Se o cron disparar duas
-// vezes no mesmo dia (manualmente via "Run" + agendamento), o segundo
-// envio e pulado.
+// Janela de idempotencia para envio diario: 20h. Se o cron disparar duas vezes no mesmo dia (manualmente via "Run" + agendamento), o segundo envio e pulado.
 const IDEMPOTENCY_WINDOW_MS = 20 * 60 * 60 * 1000;
 
 interface ProfileRow {
@@ -46,8 +44,7 @@ function businessDaysBetween(start: Date, end: Date): number {
   return businessDays;
 }
 
-// Rendimento acumulado da renda fixa: juros compostos da taxa (% a.a.) em
-// base 252 dias úteis desde a data de aplicação (fallback: created_at).
+// Rendimento acumulado da renda fixa: juros compostos da taxa (% a.a.) em base 252 dias úteis desde a data de aplicação (fallback: created_at).
 function rendaFixaAtual(a: AssetRow): number {
   const invested = Number(a.quantity);
   const rate = Number(a.average_price);

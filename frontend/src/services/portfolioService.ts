@@ -80,8 +80,7 @@ const BDR_TO_US_SYMBOL: Record<string, string> = {
 // Cotação do dólar — fallback caso a API do BCB não responda
 const USD_TO_BRL = 5.0;
 
-// Busca a cotação USD/BRL real (PTAX) no backend BCB, com cache de 1h.
-// Cai no fallback USD_TO_BRL se a API falhar.
+// Busca a cotação USD/BRL real (PTAX) no backend BCB, com cache de 1h. Cai no fallback USD_TO_BRL se a API falhar.
 let usdBrlCache: { value: number; ts: number } | null = null;
 const USD_BRL_TTL = 60 * 60 * 1000; // 1h
 
@@ -196,10 +195,7 @@ async function fetchCryptoPrice(symbol: string): Promise<number | null> {
 }
 
 
-// Tickers de cripto conhecidos. Usado para rotear ao CoinGecko mesmo quando o
-// ativo foi salvo com type='renda_variavel' — 'cripto' não existe em AssetClass,
-// então no cadastro a categoria cripto cai em renda_variavel. Sem isso, o BTC
-// seria buscado via Brapi (B3), que não tem cripto, e o preço nunca atualizaria.
+// Tickers de cripto conhecidos. Usado para rotear ao CoinGecko mesmo quando o ativo foi salvo com type='renda_variavel' — 'cripto' não existe em AssetClass, então no cadastro a categoria cripto cai em renda_variavel. Sem isso, o BTC seria buscado via Brapi (B3), que não tem cripto, e o preço nunca atualizaria.
 const CRYPTO_TICKERS = new Set([
   'BTC', 'ETH', 'BNB', 'SOL', 'ADA', 'XRP', 'DOT', 'LINK', 'MATIC', 'AVAX',
 ]);
@@ -207,15 +203,13 @@ function isCryptoTicker(ticker: string): boolean {
   return CRYPTO_TICKERS.has((ticker || '').toUpperCase());
 }
 
-// Função principal para buscar preço de qualquer ativo
-// name: nome do ativo (opcional) — usado para calcular taxa CDI de renda fixa
+// Função principal para buscar preço de qualquer ativo name: nome do ativo (opcional) — usado para calcular taxa CDI de renda fixa
 export async function fetchAssetPrice(
   ticker: string,
   category: CategoryId,
   name?: string
 ): Promise<PriceResult> {
-  // Cripto — via CoinGecko (BRL). Inclui ativos salvos como renda_variavel
-  // cujo ticker é uma cripto conhecida (ex.: BTC, ETH).
+  // Cripto — via CoinGecko (BRL). Inclui ativos salvos como renda_variavel cujo ticker é uma cripto conhecida (ex.: BTC, ETH).
   if (category === 'cripto' || isCryptoTicker(ticker)) {
     const brlPrice = await fetchCryptoPrice(ticker);
     if (brlPrice) {
@@ -304,8 +298,7 @@ export async function fetchAssetPrice(
     };
   }
 
-  // Renda Fixa (CDB, LCI, LCA, Debêntures)
-  // Se o nome contiver "XXX% CDI" (ex: "120% CDI"), calcula CDI × multiplicador automaticamente
+  // Renda Fixa (CDB, LCI, LCA, Debêntures) Se o nome contiver "XXX% CDI" (ex: "120% CDI"), calcula CDI × multiplicador automaticamente
   const { cdi, selic } = await fetchBCBRates();
   const taxaBase = cdi ?? selic;
 
@@ -415,9 +408,7 @@ export async function addAsset(assetData: {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Usuário não autenticado');
 
-  // Renda Fixa e Tesouro: quantity = R$ investido, averagePrice = taxa (%).
-  // currentPrice nasce igual ao averagePrice; a primeira execucao de
-  // refreshAllPrices() vai puxar o preco real e atualizar.
+  // Renda Fixa e Tesouro: quantity = R$ investido, averagePrice = taxa (%). currentPrice nasce igual ao averagePrice; a primeira execucao de refreshAllPrices() vai puxar o preco real e atualizar.
   const isFixedIncome = assetData.class === 'renda_fixa';
   const currentPrice = assetData.averagePrice;
   const totalValue = isFixedIncome ? assetData.quantity : assetData.quantity * currentPrice;
@@ -472,8 +463,7 @@ export async function updateAsset(assetId: string, updates: Partial<Asset>): Pro
   if (error) console.error('Erro ao atualizar ativo:', error);
 }
 
-// Calculate portfolio data from saved assets
-// Conta dias úteis (seg–sex) entre duas datas. Aproximação: ignora feriados.
+// Calculate portfolio data from saved assets Conta dias úteis (seg–sex) entre duas datas. Aproximação: ignora feriados.
 function businessDaysBetween(start: Date, end: Date): number {
   const ms = end.getTime() - start.getTime();
   if (ms <= 0) return 0;
@@ -488,9 +478,7 @@ function businessDaysBetween(start: Date, end: Date): number {
   return businessDays;
 }
 
-// Rendimento acumulado da renda fixa: juros compostos da taxa contratada
-// (% a.a., já efetiva mesmo para "XXX% CDI") em base 252 dias úteis, desde a
-// data de aplicação (fallback: data de cadastro). Demais tipos: inalterado.
+// Rendimento acumulado da renda fixa: juros compostos da taxa contratada (% a.a., já efetiva mesmo para "XXX% CDI") em base 252 dias úteis, desde a data de aplicação (fallback: data de cadastro). Demais tipos: inalterado.
 function withFixedIncomeYield(asset: Asset): Asset {
   if (asset.type !== 'renda_fixa') return asset;
   const rate = asset.averagePrice;   // taxa efetiva % a.a.
@@ -635,8 +623,7 @@ export async function getAllAssets(): Promise<Asset[]> {
 
 // ── Refresh de preços com cache ───────────────────────────────────────────────
 const PRICE_CACHE_KEY = 'nuvary_price_cache_ts';
-// Cache curto (2 min) para o saldo ficar sempre fresco ao abrir carteira/dashboard,
-// sem estourar limites das APIs em navegações rápidas. O botão "Atualizar" força (force=true).
+// Cache curto (2 min) para o saldo ficar sempre fresco ao abrir carteira/dashboard, sem estourar limites das APIs em navegações rápidas. O botão "Atualizar" força (force=true).
 const PRICE_CACHE_TTL = 2 * 60 * 1000;
 
 // Tipos que têm preço de mercado (renda fixa usa taxa fixa, não precisa refresh)
@@ -663,18 +650,14 @@ export async function refreshAllPrices(force = false): Promise<boolean> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return false;
 
-  // Busca todos os preços em paralelo (antes era em série, somando latências).
-  // Portfolios típicos têm poucos ativos de mercado, dentro dos limites das APIs.
+  // Busca todos os preços em paralelo (antes era em série, somando latências). Portfolios típicos têm poucos ativos de mercado, dentro dos limites das APIs.
   await Promise.all(
     toRefresh.map(async (asset) => {
       try {
         const result = await fetchAssetPrice(asset.ticker, asset.type as CategoryId, asset.name);
         if (!result.price || result.price <= 0) return;
 
-        // Sanity check: rejeita preco que diverge da ordem de grandeza do
-        // averagePrice (provavel erro de API ou conversao de moeda errada).
-        // Ex: BTC averagePrice R$ 500k e API retorna R$ 30 — preserva o valor
-        // anterior em vez de poluir a carteira e disparar alerta falso.
+        // Sanity check: rejeita preco que diverge da ordem de grandeza do averagePrice (provavel erro de API ou conversao de moeda errada). Ex: BTC averagePrice R$ 500k e API retorna R$ 30 — preserva o valor anterior em vez de poluir a carteira e disparar alerta falso.
         if (asset.averagePrice > 0) {
           const ratio = result.price / asset.averagePrice;
           if (ratio < 0.05 || ratio > 20) {

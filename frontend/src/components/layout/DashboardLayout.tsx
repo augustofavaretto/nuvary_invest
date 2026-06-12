@@ -13,15 +13,7 @@ interface DashboardLayoutProps {
   hideTopBar?: boolean;
 }
 
-// ── DashboardLayout (AppShell) ──────────────────────────────────────────────
-// Estrutura padrao do redesign:
-//   ┌─────────┬──────────────────────────────────────┐
-//   │         │  TopBar (80px, sticky)               │
-//   │ Sidebar ├──────────────────────────────────────┤
-//   │  96px   │  Main (children)                     │
-//   │ (fixa)  │                                      │
-//   └─────────┴──────────────────────────────────────┘
-// Tela inteira em dark, com ambient gradient sutil de fundo.
+// DashboardLayout (AppShell) Estrutura padrao do redesign: │         │  TopBar (80px, sticky)               │ │ Sidebar ├──────────────────────────────────────┤ │  96px   │  Main (children)                     │ │ (fixa)  │                                      │ Tela inteira em dark, com ambient gradient sutil de fundo.
 export function DashboardLayout({ children, hideTopBar = false }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--t1)]">

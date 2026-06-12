@@ -12,8 +12,7 @@ interface PatrimonioCardProps {
   onToggleMostrarSaldo: () => void;
 }
 
-// Patrimonio Total — saldo enriquecido com brilho ciano de fundo e badge
-// de delta colorido (gain/loss). Fiel ao mockup (.balance-card).
+// Patrimonio Total — saldo enriquecido com brilho ciano de fundo e badge de delta colorido (gain/loss). Fiel ao mockup (.balance-card).
 export function PatrimonioCard({
   valor,
   variacao,

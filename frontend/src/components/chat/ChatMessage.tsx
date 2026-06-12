@@ -11,9 +11,7 @@ interface ChatMessageProps {
   message: ChatMessageType;
 }
 
-// Bubble de mensagem do chat — bot a esquerda com avatar gradient ciano,
-// user a direita com bubble brand. Fiel ao mockup (.msg + .msg-bot-icon
-// + .msg-body).
+// Bubble de mensagem do chat — bot a esquerda com avatar gradient ciano, user a direita com bubble brand. Fiel ao mockup (.msg + .msg-bot-icon + .msg-body).
 export function ChatMessage({ message }: ChatMessageProps) {
   const isAssistant = message.role === 'assistant';
 

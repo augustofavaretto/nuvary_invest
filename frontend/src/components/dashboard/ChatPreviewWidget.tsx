@@ -14,8 +14,7 @@ interface ChatPreviewWidgetProps {
   sugestoes: Sugestao[];
 }
 
-// Atalho do chat IA — snippet do assistant + 3 sugestoes clicaveis + CTA.
-// Fiel ao mockup (.chat-widget).
+// Atalho do chat IA — snippet do assistant + 3 sugestoes clicaveis + CTA. Fiel ao mockup (.chat-widget).
 export function ChatPreviewWidget({ aiSuggestion, sugestoes }: ChatPreviewWidgetProps) {
   return (
     <div className="bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--r-lg)] p-6 flex flex-col">

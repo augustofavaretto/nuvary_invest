@@ -8,8 +8,7 @@ interface PortfolioSummaryCardProps {
   summary: PortfolioSummary;
 }
 
-// Patrimonio Total — visual fiel ao .wallet-total do mockup
-// (gradient ciano + glow radial, valor 40px e 3 celulas surface-2)
+// Patrimonio Total — visual fiel ao .wallet-total do mockup (gradient ciano + glow radial, valor 40px e 3 celulas surface-2)
 export function PortfolioSummaryCard({ summary }: PortfolioSummaryCardProps) {
   const isProfit = summary.totalProfit >= 0;
   const lastUpdate = new Date(summary.lastUpdate);

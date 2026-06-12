@@ -1,7 +1,4 @@
-// Validacao oficial de CPF (algoritmo dos digitos verificadores).
-// Aceita o CPF com ou sem mascara. Rejeita formatos invalidos e sequencias
-// repetidas (000.000.000-00, 111.111.111-11, ...) que satisfazem o algoritmo
-// mas nao sao CPFs reais.
+// Validacao oficial de CPF (algoritmo dos digitos verificadores). Aceita o CPF com ou sem mascara. Rejeita formatos invalidos e sequencias repetidas (000.000.000-00, 111.111.111-11, ...) que satisfazem o algoritmo mas nao sao CPFs reais.
 
 export function isValidCPF(input: string): boolean {
   const digits = (input ?? '').replace(/\D/g, '');

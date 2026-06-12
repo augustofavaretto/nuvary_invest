@@ -16,6 +16,15 @@ const ThemeContext = createContext<ThemeContextType>({
   setTheme: () => {},
 });
 
+// Aplica/remove a classe 'dark' no <html>
+function applyTheme(t: Theme) {
+  if (t === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('dark');
 
@@ -38,14 +47,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       return () => mq.removeEventListener('change', handler);
     }
   }, []);
-
-  const applyTheme = (t: Theme) => {
-    if (t === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
 
   const setTheme = (t: Theme) => {
     setThemeState(t);

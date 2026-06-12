@@ -1,12 +1,6 @@
 import nodemailer from 'nodemailer';
 
-// Envio de e-mail via Gmail SMTP (nodemailer).
-// Substitui o Resend nos relatórios: o Resend em sandbox só envia para o dono
-// da conta; o Gmail SMTP envia para qualquer destinatário (até ~500/dia).
-//
-// Variáveis de ambiente necessárias (Vercel → Settings → Environment Variables):
-//   GMAIL_USER          → o e-mail da conta Gmail (ex.: investnet123@gmail.com)
-//   GMAIL_APP_PASSWORD  → App Password de 16 dígitos (myaccount.google.com → Segurança → Senhas de app)
+// Envio de e-mail via Gmail SMTP (nodemailer) — requer GMAIL_USER e GMAIL_APP_PASSWORD no ambiente
 
 let transporter: nodemailer.Transporter | null = null;
 

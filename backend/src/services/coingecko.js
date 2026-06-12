@@ -1,8 +1,7 @@
 import axios from 'axios';
 import NodeCache from 'node-cache';
 
-// CoinGecko — API publica e gratuita, sem chave, cotacao em BRL nativa.
-// Substitui o Alpha Vantage CURRENCY_EXCHANGE_RATE (virou endpoint premium).
+// CoinGecko — API publica e gratuita, sem chave, cotacao em BRL nativa. Substitui o Alpha Vantage CURRENCY_EXCHANGE_RATE (virou endpoint premium).
 const BASE_URL = 'https://api.coingecko.com/api/v3';
 
 // Cache curto para nao estourar o rate limit do CoinGecko (~30 req/min no free).

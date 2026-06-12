@@ -78,11 +78,7 @@ export async function buscarMensagensPorConversa(conversaId: string): Promise<Me
   return data || [];
 }
 
-/**
- * Conta quantas conversas NOVAS o usuario iniciou hoje (00:00 ate agora).
- * Usado no gate Free de 10 conversas/dia. Conversas iniciadas em dias anteriores
- * (mesmo que continuadas hoje) nao entram na contagem.
- */
+// Conta quantas conversas NOVAS o usuario iniciou hoje (00:00 ate agora). Usado no gate Free de 10 conversas/dia. Conversas iniciadas em dias anteriores (mesmo que continuadas hoje) nao entram na contagem.
 export async function contarConversasIniciadasHoje(): Promise<number> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return 0;

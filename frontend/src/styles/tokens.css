@@ -1,12 +1,4 @@
-/* ============================================================================
-   NUVARY INVEST — DESIGN TOKENS
-   Aderente ao manual_marca_nuvaryinvest.md.
-   Inclui modo dark (default no app) e light (landing/auth).
-
-   Os tokens "novos" (--surface-1/2/3, --glass, --edge, --ease, etc.) vem do
-   mockup oficial (exemplo frontend.html) e sao usados pelos componentes do
-   redesign por-fase.
-   ============================================================================ */
+/* NUVARY INVEST — design tokens (dark default no app; light na landing/auth) */
 
 :root {
   /* === BRAND: NAVY ============================================== */
@@ -181,9 +173,7 @@
   --text-on-glass:  #FFFFFF;
 }
 
-/* ============================================================================
-   ACESSIBILIDADE
-   ============================================================================ */
+/* ACESSIBILIDADE */
 @media (prefers-reduced-transparency: reduce) {
   :root, .dark {
     --bg-glass-nav:   var(--bg-elevated);
